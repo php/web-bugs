@@ -87,6 +87,7 @@ $items = array (
 	"Readline related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Readline related",
 	"Satellite CORBA related"  => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Satellite CORBA related",
 	"Semaphore related"        => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Semaphore related",
+	"Win32API related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Win32API related",
 
 	"*E-commerce functions"        => "&nbsp;&nbsp;&nbsp;&nbsp;E-commerce functions",
 	"Verisign Payflow Pro related" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Verisign Payflow Pro related",
