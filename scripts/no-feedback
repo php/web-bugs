@@ -38,7 +38,7 @@ $result = mysql_query($query)
 
 $in = array('status' => 'No Feedback');
 
-while ($bug = mysql_fetch_array($result,MYSQL_ASSOC)) {
+while ($bug = mysql_fetch_assoc($result)) {
   list($mailto,$mailfrom) = get_bugtype_mail($bug['bug_type']);
 
   mysql_query("INSERT bugdb_comments SET bug=$bug[id],email='$mailfrom',ts=NOW(),comment='".addslashes($message)."'");

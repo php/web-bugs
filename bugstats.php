@@ -158,7 +158,7 @@ if ($phpver > 0) {
 	$query .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
 }
 $res = mysql_query($query);
-$row = mysql_fetch_array($res);
+$row = mysql_fetch_assoc($res);
 
 $half = $row['count']/2;
 $query = "SELECT UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) AS half FROM bugdb WHERE ts2 > ts1";

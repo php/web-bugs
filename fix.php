@@ -82,7 +82,7 @@ $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
 
 $res = mysql_query($query);
 
-if ($res) $bug = mysql_fetch_array($res,MYSQL_ASSOC);
+if ($res) $bug = mysql_fetch_assoc($res);
 if (!$res || !$bug) {
   commonHeader("No such bug.");
   echo "<h1 class=\"error\">No such bug #$id!</h1>";

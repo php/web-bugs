@@ -72,7 +72,7 @@ you can scroll down and click the submit button to really enter the details into
 </tr>
 <?php
 
-				while ($row = mysql_fetch_array($res)) {
+				while ($row = mysql_fetch_assoc($res)) {
 
 					$resolution = mysql_get_one("SELECT comment from bugdb_comments where bug = " . $row['id'] . " order by id desc limit 1");
 

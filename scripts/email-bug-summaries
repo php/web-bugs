@@ -7,7 +7,7 @@
 		$body = " PHP 4 Bug Database summary - http://bugs.php.net\n\n";
 		$body .= " Num Status     Summary ($num total including feature requests)\n";
 		$last_group = "";
-		while($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
+		while($row = mysql_fetch_assoc($result)) {
 			if($row['status']=='Assigned') {
 				$ass[$row['assign']][$row['id']] = $row['sdesc'];
 			}

@@ -26,7 +26,7 @@ $query  = "SELECT id,bug_type,email,sdesc,ldesc,"
 
 $res = @mysql_query($query);
 
-if ($res) $bug = mysql_fetch_array($res,MYSQL_ASSOC);
+if ($res) $bug = mysql_fetch_assoc($res);
 if (!$res || !$bug) {
 	outputHeader(array(),$format);
 	outputFooter($format);
@@ -74,7 +74,7 @@ EOD;
 }
 
 function outputbug($bug, $res, $format) {
-	while ($row = mysql_fetch_array($res,MYSQL_ASSOC)) {
+	while ($row = mysql_fetch_assoc($res)) {
 		switch ($format) {
 			case 'xml':
 				echo "  <comment>\n";
