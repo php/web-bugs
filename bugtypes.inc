@@ -12,7 +12,7 @@ $items = array (
 	"Zend Engine 2 problem"    => "&nbsp;&nbsp;&nbsp;&nbsp;Zend Engine 2 problem",
 	"Session related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Session related",
 	"PEAR related"             => "&nbsp;&nbsp;&nbsp;&nbsp;PEAR related",
-   "Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
+	"Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
 
 	"*Compile Issues" => "&nbsp;&nbsp;&nbsp;&nbsp;Compile Issues",
 	"Compile Failure" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compile Failure",
@@ -99,6 +99,7 @@ $items = array (
 	"*Languages/Translation" => "&nbsp;&nbsp;&nbsp;&nbsp;Languages/Translation",
 	"Gettext related"        => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gettext related",
 	"ICONV related"          => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ICONV related",
+	"mbstring related"       => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MBstring related",
 	"Recode related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Recode related",
 
 	"*Mail Related"      => "&nbsp;&nbsp;&nbsp;&nbsp;Mail Related",
