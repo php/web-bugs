@@ -599,18 +599,10 @@ function get_real_ip () {
 			 * 192.168.0.0/16 -- jim kill me later with my regexp pattern
 			 * below.
 			 */
-			if (!eregi ("^(10|172\.16|192\.168)\.", $ips[$i])) {
-				if (version_compare(phpversion(), "5.0.0", ">=")) {
-					if (ip2long($ips[$i]) != false) {
-						$ip = $ips[$i];
-						break;
-					}
-				} else {
-					if (ip2long($ips[$i]) != -1) {
-						$ip = $ips[$i];
-						break;
-					}
-				}
+			if (!eregi ("^(10|172\.16|192\.168)\.", $ips[$i]) &&
+				preg_match("/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/", $ips[$i])) {
+				$ip = $ips[$i];
+				break;
 			}
 		}
 	}
