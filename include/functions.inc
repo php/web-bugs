@@ -214,7 +214,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 
 	/* user text with attention, headers and previous messages */
     $user_text  = "ATTENTION! Do NOT reply to this email!\n" .
-	              "To reply, use the web interface found at\n" .
+                  "To reply, use the web interface found at\n" .
                   "http://bugs.php.net/?id=$bug[id]&edit=2\n\n\n" .
                   $header_text .
                   $wrapped_text;
