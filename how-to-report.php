@@ -48,13 +48,13 @@ sure that you're not filing a duplicate bug, that's a few more minutes someone
 can spend helping to fix that bug rather than sorting out duplicate bug
 reports.</p>
 
-<h2>Use a CVS snapshot.</h2>
+<h2>Try a CVS snapshot.</h2>
 
-<p>We will most likely ask you to try a CVS snapshot to verify if the problem
-have been fixed in our CVS repository or not. You can save yourself and us some
+<p>We will most likely ask you to try a CVS snapshot to verify whether the problem
+has been fixed in our CVS repository or not. You can save yourself and us some
 time if you first try to reproduce the bug with the latest stable snapshot. If
 the bug still exists, select 4CVS.. as your version. Here are the latest CVS
-snaphosts for version 4 of PHP:
+snapshots for version 4 of PHP:
 <ul>
  <li>
   <a href="http://snaps.php.net/win32/php4-win32-STABLE-latest.zip">Windows</a>
