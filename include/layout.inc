@@ -4,7 +4,7 @@
 #
 
 function spacer($width=1, $height=1, $align=false, $extras=false) {
-	printf('<img src="/gifs/spacer.gif" width="%d" height="%d" border="0" alt="" %s%s>',
+	printf('<img src="gifs/spacer.gif" width="%d" height="%d" border="0" alt="" %s%s>',
 		$width,
 		$height,
 		($align ? 'align="'.$align.'" ' : ''),
@@ -34,11 +34,11 @@ function resize_image($img, $width=1, $height=1) {
 function make_image($file, $alt=false, $align=false, $extras=false, $dir=false, $border=0) {
 	global $HTTP_SERVER_VARS;
 	if (!$dir) {
-		$dir = '/gifs';
+		$dir = 'gifs';
 	}
-      if (is_string($dir) && $dir{0} != "/") {
-          $dir = "/$dir";
-      }
+        if (is_string($dir)) {
+                $dir = "$dir";
+        }
 	$path = $HTTP_SERVER_VARS['DOCUMENT_ROOT']."$dir/$file";
 	if ($size = @getimagesize($path)) {
 		$image = sprintf('<img src="%s/%s" border="%d" %s alt="%s" %s%s>',
@@ -80,7 +80,7 @@ function print_image($file, $alt=false, $align=false, $extras=false, $dir=false,
 #
 function make_submit($file, $alt=false, $align=false, $extras=false, $dir=false, $border=0) {
 	if (!$dir) {
-		$dir = '/gifs';
+		$dir = 'gifs';
 	}
 	$return = make_image($file, $alt, $align, $extras, $dir, $border);
 	if ($return != "<img>") {
@@ -240,8 +240,8 @@ function commonFooter() {
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr class="headersep"><td><?php spacer(1,1);?><br></td></tr>
   <tr class="headerbottom">
-    <td align="right" valign="bottom"><?
-      print_link('/source.php?url='.$HTTP_SERVER_VARS['SCRIPT_NAME'], 'show source', false, 'class="menuWhite"');
+    <td align="right" valign="bottom"><?php
+      print_link('source.php?url='.$HTTP_SERVER_VARS['SCRIPT_NAME'], 'show source', false, 'class="menuWhite"');
       ?>&nbsp;<br>
     </td>
   </tr>

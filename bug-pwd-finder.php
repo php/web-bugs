@@ -5,10 +5,10 @@ require_once 'prepend.inc';
 
 if ($bug_id) {
 
-	mysql_connect ("localhost","nobody","")
+	mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
 		or die("Unable to connect to SQL server. Please try again later.");
 
-	mysql_select_db ("php3");
+	mysql_select_db(BUG_DB_NAME);
 
 	// Clean up the bug id
 	$bug_id = ereg_replace ("[^0-9]+", "", $bug_id);
@@ -63,7 +63,7 @@ in the bug report.
 
 <?php if ($msg) { echo "<p><font color=\"#cc0000\">$msg</font></p>"; } ?>
 
-<form method="post" action="<?php echo $PHP_SELF;?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
 <p><b>Bug Report ID:</b> #<input type="text" size="20" name="bug_id">
 <input type="submit" value="Send"></p>
 </form>

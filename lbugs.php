@@ -1,14 +1,14 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
-mysql_connect("localhost","nobody","")
+mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
   or die("Unable to connect to SQL server\n");
-mysql_select_db("php3");
+mysql_select_db(BUG_DB_NAME);
 
 if ($id) {
 	$result = mysql_query("SELECT id,bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,assign FROM bugdb WHERE id=$id");
 	if(!$result) { echo mysql_error(); exit; }
 	if ($num = mysql_num_rows($result)) {
-		$row = mysql_fetch_array($result);
+		$row = mysql_fetch_assoc($result);
 		echo "<pre><h1>Bug $id</h1>\n";
 		echo "<b>From     : " . htmlspecialchars($row['email']) . "\n";
 		echo "Date     : " . $row['ts1'] . "\n";
@@ -20,7 +20,7 @@ if ($id) {
 		echo "\n" . htmlspecialchars($row['ldesc']) . "\n\n";
 		$query = "SELECT * FROM bugdb_comments WHERE bug=$id ORDER BY ts";
 		if ($comresult = mysql_query($query)) {
-			while ($com = mysql_fetch_array($comresult)) {
+			while ($com = mysql_fetch_assoc($comresult)) {
 				echo "<b><i>[",$com['ts'],"] ",$com['email'],"</i></b><br>\n";
 				$text = addlinks($com['comment']);
 				echo "<blockquote>",$text,"</blockquote>\n";
@@ -37,7 +37,7 @@ if ($id) {
 		echo "<h1>PHP 4.x Bug Database Summary</h1>";
 		echo "<pre> Num Status     Summary ($num total including feature requests)\n";
 		$last_group = "";
-		while ($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
+		while ($row = mysql_fetch_assoc($result)) {
 			if ($last_group != $row[bug_type]) {
 				$last_group = $row[bug_type];
 				echo "===============================================[<b>".$row[bug_type]."]";
@@ -46,7 +46,7 @@ if ($id) {
 				for($i=0;$i<$len; $i++) $s.= "=";
 				echo "$s</b>\n";
 			}
-			printf("<a href=\"%s?id=%d\">%4d</a>",$PHP_SELF,$row[id],$row[id]);
+			printf("<a href=\"%s?id=%d\">%4d</a>", $_SERVER['PHP_SELF'], $row['id'], $row['id']);
 			printf(" %-9s ",$row[status]);
 			echo " ".htmlspecialchars($row[sdesc])."\n";
 		}

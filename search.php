@@ -5,7 +5,7 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
   list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
 }
 
-if ($search_for && !preg_match("/\\D/",trim($search_for))) {
+if (isset($search_for) && !preg_match("/\\D/",trim($search_for))) {
 	$x = $pw ? ($user ? "&edit=1" : "&edit=2") : "";
 	header("Location: bug.php?id=$search_for$x");
 	exit;
@@ -19,9 +19,9 @@ $warnings = array();
 define('BOOLEAN_SEARCH', @intval($boolean));
 
 if (isset($cmd) && $cmd == "display") {
-	@mysql_connect("localhost","nobody","")
+	@mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
 		or die("Unable to connect to SQL server.");
-	@mysql_select_db("php3");
+	@mysql_select_db(BUG_DB_NAME);
 
 	$mysql4 = version_compare(mysql_get_server_info(), "4.0.0", "ge");
 
@@ -103,7 +103,7 @@ if (isset($cmd) && $cmd == "display") {
     if ($order_by || $reorder_by || !strlen($search_for)) {
 		if (!in_array($order_by,$allowed_order)) $order_by = "id";
 		if (isset($reorder_by) && !in_array($reorder_by,$allowed_order)) $reorder_by = "id";
-		if ($direction != "DESC") $direction = "ASC";
+		if (isset($direction) && $direction != "DESC") $direction = "ASC";
 
 		if ($reorder_by) {
 			if ($order_by == $reorder_by) {
@@ -155,7 +155,7 @@ if (isset($cmd) && $cmd == "display") {
 			}
 		}
 		
-		$link = "$PHP_SELF?cmd=display" . 
+		$link = $_SERVER['PHP_SELF'] . "?cmd=display" . 
 				$bug_type_string   .
 				$bug_ntype_string  .
 				"&amp;status="     . urlencode(stripslashes($status)) .
@@ -179,25 +179,25 @@ if (isset($cmd) && $cmd == "display") {
  </tr>
 <?php
 		if ($warnings) display_warnings($warnings);
-		while ($row = mysql_fetch_array($res)) {
+		while ($row = mysql_fetch_assoc($res)) {
 			echo '<tr bgcolor="', get_row_color($row), '">';
 
 			/* Bug ID */
-			echo "<td align=\"center\"><a href=\"bug.php?id=$row[id]\">$row[id]</a>";
-			echo "<br /><a href=\"bug.php?id=$row[id]&amp;edit=1\">(edit)</a></td>";
+			echo "<td align=\"center\"><a href=\"bug.php?id=" . $row['id'] . "\">" . $row['id'] . "</a>";
+			echo "<br /><a href=\"bug.php?id=" . $row['id'] . "&amp;edit=1\">(edit)</a></td>";
 
 			/* Date */
-			echo "<td align=\"center\">".date ("Y-m-d H:i:s", strtotime ($row[ts1]))."</td>";
-			echo "<td>", htmlspecialchars($row[bug_type]), "</td>";
-			echo "<td>", htmlspecialchars($row[status]);
-			if ($row[status] == "Feedback" && $row[unchanged] > 0) {
-				printf ("<br>%d day%s", $row[unchanged], $row[unchanged] > 1 ? "s" : "");
+			echo "<td align=\"center\">".date ("Y-m-d H:i:s", strtotime ($row['ts1']))."</td>";
+			echo "<td>", htmlspecialchars($row['bug_type']), "</td>";
+			echo "<td>", htmlspecialchars($row['status']);
+			if ($row['status'] == "Feedback" && $row['unchanged'] > 0) {
+				printf ("<br>%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? "s" : "");
 			}
 			echo "</td>";
-			echo "<td>", htmlspecialchars($row[php_version]), "</td>";
-			echo "<td>", $row[php_os] ? htmlspecialchars($row[php_os]) : "&nbsp;", "</td>";
-			echo "<td>", $row[sdesc]  ? htmlspecialchars($row[sdesc]) : "&nbsp;",  "</td>";
-			echo "<td>", $row[assign] ? htmlspecialchars($row[assign]) : "&nbsp;", "</td>";
+			echo "<td>", htmlspecialchars($row['php_version']), "</td>";
+			echo "<td>", $row['php_os'] ? htmlspecialchars($row['php_os']) : "&nbsp;", "</td>";
+			echo "<td>", $row['sdesc']  ? htmlspecialchars($row['sdesc']) : "&nbsp;",  "</td>";
+			echo "<td>", $row['assign'] ? htmlspecialchars($row['assign']) : "&nbsp;", "</td>";
 			echo "</tr>\n";
 		}
 
@@ -214,21 +214,21 @@ if (isset($cmd) && $cmd == "display") {
 if ($errors) display_errors($errors);
 if ($warnings) display_warnings($warnings);
 ?>
-<form id="asearch" method="get" action="<?php echo $PHP_SELF?>">
+<form id="asearch" method="get" action="<?php echo $_SERVER['PHP_SELF'];?>">
 <table id="primary" width="95%">
  <tr>
   <th>Find bugs</th>
   <td nowrap="nowrap">with all or any of the words</td>
-  <td><input type="text" name="search_for" value="<?php echo htmlspecialchars(stripslashes($search_for));?>" size="20" maxlength="255" />
+  <td><input type="text" name="search_for" value="<?php if (isset($search_for)) echo htmlspecialchars(stripslashes($search_for));?>" size="20" maxlength="255" />
       <br><?php show_boolean_options(BOOLEAN_SEARCH) ?> (<?php print_link('search-howto.php', '?', true);?>)</td>
   <td rowspan="2">
    <select name="limit"><?php show_limit_options($limit);?></select>
    <br />
    <select name="order_by"><?php show_order_options($limit);?></select>
    <br />
-   <input type="radio" name="direction" value="ASC" <?php if($direction != "DESC") { echo('checked="checked"'); }?>/>Ascending
+   <input type="radio" name="direction" value="ASC" <?php if(!isset($direction) || (isset($direction) && $direction != "DESC")) { echo('checked="checked"'); }?>/>Ascending
    &nbsp;
-   <input type="radio" name="direction" value="DESC" <?php if($direction == "DESC") { echo('checked="checked"'); }?>/>Descending
+   <input type="radio" name="direction" value="DESC" <?php if(isset($direction) && $direction == "DESC") { echo('checked="checked"'); }?>/>Descending
    <br />
    <input type="hidden" name="cmd" value="display" />
    <input type="submit" value="Search" />

@@ -11,7 +11,7 @@ function get_status_count ($status, $category='')
 {
 	global $phpver;
 	
-	$query = "SELECT count(id) from bugdb WHERE";
+	$query = "SELECT count(id) AS total from bugdb WHERE";
 
 	if ($phpver > 0) {
 		$query .= " php_version LIKE '" . $phpver . "%' AND";
@@ -28,9 +28,9 @@ function get_status_count ($status, $category='')
 	$query.= "AND bug_type NOT IN($excluded)";
 
 	$result=mysql_unbuffered_query($query);
-	$row=mysql_fetch_row($result);
+	$row=mysql_fetch_assoc($result);
 	mysql_freeresult($result);
-	return $row[0];
+	return $row['total'];
 }
 
 $statuses = array (	
@@ -52,8 +52,8 @@ if(!isset($phpver)) {
 	echo "<h3>Bug stats for PHP $phpver:</h3>\n<pre>\n";	
 }
 
-mysql_connect("localhost","nobody","");
-mysql_select_db("php3");
+mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS);
+mysql_select_db(BUG_DB_NAME);
 
 if (isset($per_category)) {
 	include ('bugtypes.inc');

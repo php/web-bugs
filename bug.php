@@ -22,9 +22,9 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
   list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
 }
 
-@mysql_connect("localhost","nobody","")
+@mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
 	or die("Unable to connect to SQL server.");
-@mysql_select_db("php3");
+@mysql_select_db(BUG_DB_NAME);
 
 # fetch info about the bug into $bug
 $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
@@ -39,7 +39,7 @@ $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
 
 $res = mysql_query($query);
 
-if ($res) $bug = mysql_fetch_array($res,MYSQL_ASSOC);
+if ($res) $bug = mysql_fetch_assoc($res);
 if (!$res || !$bug) {
   commonHeader("No such bug.");
   echo "<h1 class=\"error\">No such bug #$id!</h1>";
@@ -54,7 +54,7 @@ if ($edit == 1 && isset($delete_comment)) {
 		delete_comment($id, $delete_comment);
 		$addon = '&thanks=1';
 	}
-	header("Location: $PHP_SELF?id=$id&edit=1$addon");
+	header("Location: " . $_SERVER['PHP_SELF'] . "?id=$id&edit=1$addon");
 	exit();
 } 
 
@@ -69,7 +69,7 @@ if ($in && $edit == 3) {
 
 	# Don't allow comments by the original report submitter
 	if (stripslashes($in['commentemail']) == $bug['email']) {
-		header("Location: $PHP_SELF?id=$id&edit=2");
+		header("Location: " . $_SERVER['PHP_SELF'] . "?id=$id&edit=2");
 		exit();
 	}
 	
@@ -88,13 +88,13 @@ if ($in && $edit == 3) {
 
 	if (!$errors) {
 		$query = "INSERT INTO bugdb_comments (bug,email,ts,comment) VALUES"
-		       . " ('$id','$in[commentemail]',NOW(),'$ncomment')";
+		       . " ('$id', '" . $in['commentemail'] . "',NOW(),'$ncomment')";
 		$success = @mysql_query($query);
 	}
 	$from = stripslashes($in['commentemail']);
 }
 elseif ($in && $edit == 2) {
-	if (!$bug[passwd] || $bug[passwd] != stripslashes($pw)) {
+	if (!$bug['passwd'] || $bug['passwd'] != stripslashes($pw)) {
 		$errors[] = "The password you supplied was incorrect.";
 	}
 
@@ -117,7 +117,7 @@ elseif ($in && $edit == 2) {
 		}
 	}
 
-	$from = ($bug[email] != $in[email] && !empty($in[email])) ? $in[email] : $bug[email];
+	$from = ($bug['email'] != $in['email'] && !empty($in['email'])) ? $in['email'] : $bug['email'];
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		/* update bug record */
@@ -174,7 +174,7 @@ elseif ($in && $edit == 1) {
 
 if ($in && !$errors && $success) {
 	mail_bug_updates($bug,$in,$from,$ncomment,$edit);
-	header("Location: $PHP_SELF?id=$id&thanks=$edit");
+	header("Location: " . $_SERVER['PHP_SELF'] . "?id=$id&thanks=$edit");
 	exit;
 }
 
@@ -250,11 +250,11 @@ statistics below.
 
 <div id="controls">
 <?php
-function control($num,$desc) {
+function control($num, $desc) {
   $active = ($GLOBALS['edit'] == $num);
   echo "<span id=\"control_$num\" class=\"control", ($active ? ' active' : ''), "\">",
-       !$active ? "<a href=\"$PHP_SELF?id=$GLOBALS[id]".($num ? "&amp;edit=$num" : "")."\">" : "",
-       $desc, !$active ? "</a>" : "", "</span> ";
+       !$active ? "<a href=\"" . $_SERVER['PHP_SELF'] . "?id=" . $GLOBALS['id'] . ($num ? "&amp;edit=$num" : "")."\">" : "",
+       $desc, !$active ? "</a>" : "", "</span>";
 }
 
 control(0,'View/Vote');
@@ -278,7 +278,7 @@ Some sort of database error has happened. Maybe this will be illuminating:
 }
 
 if ($edit == 1 || $edit == 2) {?>
-<form id="update" action="<?php echo $PHP_SELF?>" method="post">
+<form id="update" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <?php
 if ($edit == 2) {
 	if (!$in && $pw && $bug['passwd'] && stripslashes($pw)==$bug['passwd']) {?>
@@ -293,7 +293,7 @@ just go ahead and add more information to this bug or edit the other fields.
 <?php if (!$in) {?>
 Welcome back! If you're the original bug submitter, here's where you can edit
 the bug or add additional notes. If this is not your bug, you can <a
-href="<?php echo "$PHP_SELF?id=$id&amp;edit=3"?>">add a comment by following
+href="<?php echo $_SERVER['PHP_SELF'] . "?id=$id&amp;edit=3"?>">add a comment by following
 this link</a> or the box above that says 'Add Comment'. If this is your bug,
 but you forgot your password, <a href="bug-pwd-finder.php">you can retrieve
 your password here</a>.
@@ -327,9 +327,9 @@ Welcome back, <?php echo $user?>! (Not <?php echo $user?>? <a href="logout.php">
 <div class="explain">
 <?php if (!$in) {?>
 Welcome! If you don't have a CVS account, you can't do anything here. You can
-<a href="<?php echo "$PHP_SELF?id=$id&amp;edit=3"?>">add a comment by following
+<a href="<?php echo $_SERVER['PHP_SELF'] . "?id=$id&amp;edit=3"; ?>">add a comment by following
 this link</a> or if you reported this bug, you can <a href="<?php echo
-"$PHP_SELF?id=$id&amp;edit=2"?>">edit this bug over here</a>.
+$_SERVER['PHP_SELF'] . "?id=$id&amp;edit=2"?>">edit this bug over here</a>.
 <?php }?>
 <table>
  <tr>
@@ -396,13 +396,13 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
 </form>
 <?php }?>
 <?php if ($edit == 3) {?>
-<form id="comment" action="<?php echo $PHP_SELF?>" method="post">
+<form id="comment" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <?php if (!$in) {?>
 <div class="explain">
 Anyone can comment on a bug. Have a simpler test case? Does it work for you on
 a different platform? Let us know! Just going to say 'Me too!'? Don't clutter
 the database with that please
-<?php if (canvote()) { echo " &mdash; but make sure to <a href=\"$PHP_SELF?id=$id\">vote on the bug</a>"; } ?>!
+<?php if (canvote()) { echo " &mdash; but make sure to <a href=\"" . $_SERVER['PHP_SELF'] . "?id=$id\">vote on the bug</a>"; } ?>!
 </div>
 <?php }?>
 <table>
@@ -476,7 +476,7 @@ $query = "SELECT id,email,comment,UNIX_TIMESTAMP(ts) AS added"
        . " FROM bugdb_comments WHERE bug=$id ORDER BY ts";
 $res = @mysql_query($query);
 if ($res) {
-	while ($row = mysql_fetch_array($res,MYSQL_ASSOC)) {
+	while ($row = mysql_fetch_assoc($res)) {
 		output_note($row['id'], $row['added'], $row['email'], $row['comment']);
 	}
 }
@@ -489,10 +489,10 @@ function output_note($com_id, $ts, $email, $comment)
 
 	echo "<div class=\"comment\">";
 	echo "<b>[",format_date($ts),"] ", htmlspecialchars(spam_protect($email)), "</b>\n";
-	echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href=\"$PHP_SELF?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
+	echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href=\"" . $_SERVER['PHP_SELF'] . "?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
 	echo "<pre class=\"note\">";
 	$note = addlinks(preg_replace("/(\r?\n){3,}/","\n\n",wordwrap($comment,72,"\n",1)));
-	echo preg_replace('/(bug\ *#([0-9]+))/i', "<a href=\"$PHP_SELF?id=\\2\">\\1</a>", $note);
+	echo preg_replace('/(bug\ *#([0-9]+))/i', "<a href=\"" . $_SERVER['PHP_SELF'] . "?id=\\2\">\\1</a>", $note);
 	echo "</pre>\n";
 	echo "</div>";
 }

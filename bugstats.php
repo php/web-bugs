@@ -1,17 +1,21 @@
 <?php /* vim: set noet ts=4 sw=4: : */
-
 require_once 'prepend.inc';
 
 commonHeader("Statistics");
 
-@mysql_connect("localhost","nobody","")
-	or die("unable to connect to database");
-@mysql_select_db("php3")
+@mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
+	or die("unable to connect to database" . mysql_error());
+@mysql_select_db(BUG_DB_NAME)
 	or die("unable to select database");
 
 $query = "SELECT status,bug_type,email,php_version,php_os FROM bugdb";
 
-if ($phpver > 0) {
+// did we ask for a specific version ?
+if (isset($_GET['phpver'])) {
+	$phpver = $_GET['phpver'];
+}
+
+if (isset($phpver) && $phpver > 0) {
 	$query .= " WHERE SUBSTRING(php_version,1,1) = '$phpver'";
 }
 
@@ -19,21 +23,27 @@ $query .= " ORDER BY bug_type";
 
 $result = mysql_unbuffered_query($query);
 
-while ($row = mysql_fetch_array($result)) {
-	$bug_type['all'][$row[bug_type]]++;
+$total = 0;
+
+while ($row = mysql_fetch_assoc($result)) {
+	$bug_type['all'][$row['bug_type']]++;
 	$status_str = strtolower($row['status']);
-	$bug_type[$status_str][$row[bug_type]]++;
+	$bug_type[$status_str][$row['bug_type']]++;
 	$bug_type[$status_str]['all']++;
-	$email[$row[email]]++;
-	$php_version[$row[php_version]]++;
-	$php_os[$row[php_os]]++;
+	$email[$row['email']]++;
+	$php_version[$row['php_version']]++;
+	$php_os[$row['php_os']]++;
 	$status[$row['status']]++;
 	$total++;
 }
 
 // Exit if there are no bugs for this version
 if ($total == 0) {
-	echo '<p>No bugs found for this PHP version</p>';
+	echo '<p>No bugs found';
+	if (isset($phpver)) {
+		echo ' for this PHP version';
+	}
+	echo '</p>';
 	commonFooter();
 	exit;
 }
@@ -158,7 +168,7 @@ if ($phpver > 0) {
 	$query .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
 }
 $res = mysql_query($query);
-$row = mysql_fetch_array($res);
+$row = mysql_fetch_assoc($res);
 
 $half = $row['count']/2;
 $query = "SELECT UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) AS half FROM bugdb WHERE ts2 > ts1";
