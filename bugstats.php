@@ -47,7 +47,7 @@ echo "Display <a href=\"bugstats.php?phpver=4\">PHP 4 bugs only</a> or <a href=\
 function bugstats($status, $type) {
 	global $bug_type, $phpver;
 	if ($bug_type[$status][$type] > 0) {
-		return '<a href="index.php?cmd=display&amp;status=' . ucfirst($status) . "&amp;phpver=" . $phpver . '&amp;bug_type=' . ($type == 'all' ? 'Any' : urlencode($type)) . '&amp;by=Any">' . $bug_type[$status][$type] . "</a>\n";
+		return '<a href="index.php?cmd=display&amp;status=' . ucfirst($status) . "&amp;phpver=" . $phpver . ($type == 'all' ? '' : '&amp;bug_type[]=' . urlencode($type)) . '&amp;by=Any">' . $bug_type[$status][$type] . "</a>\n";
 	}
 }
 

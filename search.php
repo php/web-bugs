@@ -25,7 +25,7 @@ if (isset($cmd) && $cmd == "display") {
 
 	$mysql4 = version_compare(mysql_get_server_info(), "4.0.0", "ge");
 
-	if (!$bug_type) $bug_type = "Any";
+	if (!$bug_type)  $bug_type  = array();
 	if (!$bug_ntype) $bug_ntype = array();
 
 	if ($mysql4)
@@ -35,10 +35,10 @@ if (isset($cmd) && $cmd == "display") {
 
 	$query .= "*, TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
 
-	if ($bug_type == "Any") {
+	if (count($bug_type) == 0) {
 		$where_clause = "WHERE bug_type != 'Feature/Change Request'";
 	} else {
-		$where_clause = "WHERE bug_type = '$bug_type'";
+		$where_clause = "WHERE bug_type IN ('" . join("','", $bug_type) . "')";
 	}
 
 	if (count($bug_ntype) > 0) {
@@ -140,8 +140,14 @@ if (isset($cmd) && $cmd == "display") {
 	}
 	else {
 
-		$bug_ntype_string = '';
+		$bug_type_string = '';
+		if (count($bug_type) > 0) {
+			foreach ($bug_type as $type_str) {
+				$bug_type_string.= '&amp;bug_type[]=' . urlencode($type_str);
+			}
+		}
 
+		$bug_ntype_string = '';
 		if (count($bug_ntype) > 0) {
 			foreach ($bug_ntype as $type_str) {
 				$bug_ntype_string.= '&amp;bug_ntype[]=' . urlencode($type_str);
@@ -149,8 +155,8 @@ if (isset($cmd) && $cmd == "display") {
 		}
 		
 		$link = "$PHP_SELF?cmd=display" . 
+				$bug_type_string   .
 				$bug_ntype_string  .
-				"&amp;bug_type="   . urlencode($bug_type) .
 				"&amp;status="     . urlencode(stripslashes($status)) .
 				"&amp;search_for=" . urlencode(stripslashes($search_for)) .
 				"&amp;php_os="     . urlencode(stripslashes($php_os)) .
@@ -163,9 +169,7 @@ if (isset($cmd) && $cmd == "display") {
  <tr bgcolor="#aaaaaa">
   <th><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=id">Date</a></th>
-<?php if ($bug_type == "Any") {?>
   <th><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
-<?php }?>
   <th><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=php_version">Version</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
@@ -183,10 +187,7 @@ if (isset($cmd) && $cmd == "display") {
 
 			/* Date */
 			echo "<td align=\"center\">".date ("Y-m-d H:i:s", strtotime ($row[ts1]))."</td>";
-
-			if ($bug_type == "Any") {
-				echo "<td>", htmlspecialchars($row[bug_type]), "</td>";
-			}
+			echo "<td>", htmlspecialchars($row[bug_type]), "</td>";
 			echo "<td>", htmlspecialchars($row[status]);
 			if ($row[status] == "Feedback" && $row[unchanged] > 0) {
 				printf ("<br>%d day%s", $row[unchanged], $row[unchanged] > 1 ? "s" : "");
@@ -241,13 +242,13 @@ if ($warnings) display_warnings($warnings);
 <table>
  <tr>
   <th>Category</th>
-  <td nowrap="nowrap">Return only bugs in <b>category</b></td>
-  <td><select name="bug_type"><?php show_types($bug_type,1);?></select></td>
+  <td nowrap="nowrap">Return only bugs in <b>categories</b></td>
+  <td><select name="bug_type[]" multiple size=6><?php show_types($bug_type,2);?></select></td>
  </tr>
  <tr>
   <th>&nbsp;</th>
   <td nowrap="nowrap">Return only bugs <b>NOT</b> in <b>categories</b></td>
-  <td><select name="bug_ntype[]" multiple size=5><?php show_types($bug_ntype,2);?></select></td>
+  <td><select name="bug_ntype[]" multiple size=6><?php show_types($bug_ntype,2);?></select></td>
  </tr>
  <tr>
   <th>OS</th>
