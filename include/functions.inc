@@ -435,7 +435,7 @@ function get_old_comments ($bug_id, $all = 0)
 function addlinks($text) 
 {
 	$text = htmlspecialchars($text);
-    $text = preg_replace("/((mailto|http|ftp|nntp|news):.+?)(&gt;|\\s|\\)|\\.\\s|$)/i","<a href=\"\\1\">\\1</a>\\3",$text);
+    $text = preg_replace("/((mailto|http|ftp|nntp|news):.+?)(&gt;|\\s|\\)|\\.\\s|$)/i","<a rel=\"nofollow\" href=\"\\1\">\\1</a>\\3",$text);
     # what the heck is this for?
     $text = preg_replace("/[.,]?-=-\"/", '"', $text);
 	return $text;
