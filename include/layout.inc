@@ -188,7 +188,7 @@ function commonHeader($title = false, $showsearch = true) {
 	echo delim();
 	print_link('http://www.php.net/support.php', 'support', false, 'class="menuWhite"');
 	echo delim();
-	print_link('http://www.php.net/manual/en/', 'documentation', false, 'class="menuWhite"');
+	print_link('http://www.php.net/docs.php', 'documentation', false, 'class="menuWhite"');
 	echo delim();
 	print_link('report.php', 'report a bug', false, 'class="menuWhite"');
 	echo delim();
