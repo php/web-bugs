@@ -23,6 +23,7 @@ $items = array (
 
 	"*Web Server problem" => "&nbsp;&nbsp;&nbsp;&nbsp;Web Server problem",
 	"Apache related"      => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Apache related",
+	"Apache2 related"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Apache2 related",
 	"IIS related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IIS related",
 	"iPlanet related"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iPlanet related",
 	"PWS related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PWS related",
