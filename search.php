@@ -76,7 +76,7 @@ if (isset($cmd) && $cmd == "display") {
 	}
 
 	if (empty($phpver)) {
-		$where_clause .= " AND (SUBSTRING(php_version,1,1) = '4' OR SUBSTRING(php_version,1,1) = '5')";
+		$where_clause .= " AND (SUBSTRING(php_version,1,1) = '4' OR SUBSTRING(php_version,1,1) = '5') OR php_version = 'Irrelevant'";
 	} else {
 		// there's an index on php_version(1) to speed this up.
 		if (strlen($phpver) == 1) {
