@@ -106,7 +106,6 @@ simply being marked as "bogus".</strong></p>
 2.0.40!!! THIS IS FIXED IN CVS AND YOU CAN TRY THE LATEST SNAPSHOT FROM <a
 href="http://snaps.php.net/php4-latest.tar.bz2">HERE (Unix)</a> OR <a
 href="http://snaps.php.net/win32/php4-win32-latest.zip">HERE (Windows)</a></strong></p>
-
 <?php
 }
 
