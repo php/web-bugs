@@ -369,7 +369,7 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
 Anyone can comment on a bug. Have a simpler test case? Does it work for you on
 a different platform? Let us know! Just going to say 'Me too!'? Don't clutter
 the database with that please
-<?php if (canvote()) { echo " &mdash; but make sure to <a href=\"$PHP_SELF?id=$id"\">vote on the bug</a>"; } ?>!
+<?php if (canvote()) { echo " &mdash; but make sure to <a href=\"$PHP_SELF?id=$id\">vote on the bug</a>"; } ?>!
 </div>
 <?php }?>
 <table>
