@@ -58,7 +58,7 @@ if ($in) {
         }
 
         # mail to appropriate mailing lists
-        if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n-- \n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+        if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
             # mail to reporter
             @mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 

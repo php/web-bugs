@@ -141,7 +141,7 @@ elseif ($in && $edit == 1) {
 }
 
 if ($in && !$errors && $success) {
-	mail_bug_updates($bug,$in,$from,$ncomment);
+	mail_bug_updates($bug,$in,$from,$ncomment,$edit);
 	header("Location: $PHP_SELF?id=$id&thanks=$edit");
 	exit;
 }

@@ -174,7 +174,7 @@ function show_types($current,$show_any,$default="")
 	}
 }
 
-function mail_bug_updates($bug, $in, $from, $ncomment)
+function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 {
     $text = array();
     $headers = array();
@@ -258,15 +258,24 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 	list($mailto,$mailfrom) = get_bugtype_mail(oneof($in['bug_type'],$bug['bug_type']));
 
 	/* send mail if status was changed or there is a comment */
-	if ($status != $bug[status] || $ncomment != "") {
+	if ($in[status] != $bug[status] || $ncomment != "") {
+
+		if ($in[status] != $bug[status]) {	/* status changed */
+			$subj = "#{$bug['id']} [{$bug['status']}->{$in['status']}]: ";
+		} elseif ($edit == 3) {				/* comment */
+			$subj = "#{$bug['id']} [Comment]: ";
+		} else {							/* status did not change and not comment */
+			$subj = "#{$bug['id']} [{$bug['status']}]: ";
+		}
+		
 		@mail($bug[email],
-		      "Bug #$bug[id] Updated: ".txfield('sdesc'),
+		      "Bug $subj" . txfield('sdesc'),
 		      $user_text,
 		      "From: PHP Bug Database <$mailfrom>\n".
 		      "X-PHP-Bug: $bug[id]\n".
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
 		@mail($mailto,
-		      "Bug #$bug[id] Updated: ".txfield('sdesc'),
+		      $subj . txfield('sdesc'),
 		      $dev_text,
 		      "From: $from\n".
 		      "X-PHP-Bug: $bug[id]\n".
