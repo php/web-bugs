@@ -24,6 +24,7 @@ $items = array (
 	"*Configuration Issues"      => "&nbsp;&nbsp;&nbsp;&nbsp;Configuration Issues",
 	"Dynamic loading"            => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dynamic loading",
 	"PHP options/info functions" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PHP options/info functions",
+	"Safe Mode/open_basedir"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Safe Mode/open_basedir related",
 
 	"*Web Server problem" => "&nbsp;&nbsp;&nbsp;&nbsp;Web Server problem",
 	"CGI related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CGI/CLI related",
