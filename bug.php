@@ -79,7 +79,7 @@ elseif ($in && $edit == 2) {
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		/* update bug record */
-		$query = "UPDATE bugdb SET status='$in[status]', bug_type='$in[bug_type]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW(), email='$in[email]' WHERE id=$id";
+		$query = "UPDATE bugdb SET sdesc='$in[sdesc]',status='$in[status]', bug_type='$in[bug_type]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW(), email='$in[email]' WHERE id=$id";
 		$success = @mysql_query($query);
 		
 		/* add comment */
