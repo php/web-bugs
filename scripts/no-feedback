@@ -1,0 +1,48 @@
+#!/usr/local/bin/php -q
+<?php /* vim: set ft=php3 noet ts=4 sw=4 : */
+
+require '../include/functions.inc';
+
+# this script closes bugs due to lack of feedback.
+
+# date interval to close after
+$after = "1 MONTH";
+
+$message =
+'No feedback was provided for this bug for over a month, so it is
+being suspended automatically. If you are able to provide the
+information that was originally requested, please do so and change
+the status of the bug back to "Open".';
+
+$mail_bugs_to = 'php-bugs@lists.php.net';
+
+mysql_connect("localhost", "nobody", "")
+  or die("unable to connect to database");
+mysql_select_db("php3")
+  or die("unable to select db");
+
+# fetch info about the bug into $bug
+$query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
+       . "php_version,php_os,status,ts1,ts2,assign,"
+       . "UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified,"
+       . "COUNT(bug=id) AS votes,"
+       . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
+       . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
+       . "AVG(score)+3 AS average,STD(score) AS deviation"
+       . " FROM bugdb LEFT JOIN bugdb_votes ON id=bug"
+       . " WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(),INTERVAL 1 MONTH)"
+       . " GROUP BY bug";
+
+$result = mysql_query($query)
+  or die("query failed: ".mysql_query()."\n$query");
+
+$in = array('status' => 'No Feedback');
+
+while ($bug = mysql_fetch_array($result,MYSQL_ASSOC)) {
+  list($mailto,$mailfrom) = get_bugtype_mail($bug['bug_type']);
+
+  mysql_query("INSERT bugdb_comments SET bug=$bug[id],email='$mailfrom',ts=NOW(),comment='".addslashes($message)."'");
+  mysql_query("UPDATE bugdb SET status='No Feedback',ts2=NOW() WHERE id=$bug[id]");
+
+  mail_bug_updates($bug,$in,$mailfrom,$message);
+}
