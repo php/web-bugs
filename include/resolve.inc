@@ -111,6 +111,10 @@ list of more appropriate places to ask for help using PHP, please
 visit http://www.php.net/support.php as this bug system is not the
 appropriate forum for asking support questions. 
 
+Even if you think it is not a bug, we often know better than you,
+please consult the support channels first before even considering
+to reopen this report.
+
 Thank you for your interest in PHP.',
   ),
   'nofeedback' => array(
@@ -218,6 +222,10 @@ Thank you for your interest in PHP.',
 not have the same string representation after any processing. That also
 includes writing a floating point value in your script and directly 
 printing it without any mathematical operations.
+
+If you would like to know more about "floats" and what IEEE
+754 is read this:
+http://docs.sun.com/source/806-3568/ncg_goldberg.html
  
 Thank you for your interest in PHP.',
   ),
