@@ -488,6 +488,9 @@ function get_bugtype_mail($bug_type)
 	elseif (eregi("pear", $bug_type)) {
 		return array("pear-dev@lists.php.net","pear-dev@lists.php.net");
 	}
+	elseif (eregi("gtk", $bug_type)) {
+		return array("php-gtk-dev@lists.php.net","php-gtk-dev@lists.php.net");
+	}
 	else {
 		return array($mail_bugs_to,$mail_bugs_to);
 	}

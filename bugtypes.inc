@@ -12,6 +12,7 @@ $items = array (
 	"Zend Engine 2 problem"    => "&nbsp;&nbsp;&nbsp;&nbsp;Zend Engine 2 problem",
 	"Session related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Session related",
 	"PEAR related"             => "&nbsp;&nbsp;&nbsp;&nbsp;PEAR related",
+	"PHP-GTK related"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP-GTK related",
 	"Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
 
 	"*Compile Issues" => "&nbsp;&nbsp;&nbsp;&nbsp;Compile Issues",
