@@ -16,7 +16,7 @@ commonHeader("Search");
 $errors = array();
 
 if (isset($cmd) && $cmd == "display") {
-	@mysql_connect("localhost","nobody","")
+	@mysql_pconnect("localhost","nobody","")
 		or die("Unable to connect to SQL server.");
 	@mysql_select_db("php3");
 

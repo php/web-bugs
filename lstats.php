@@ -25,7 +25,7 @@ if(!isset($phpver)) {
 	echo "<h3>Bug stats for PHP $phpver:</h3><pre>\n";	
 }
 
-mysql_connect("localhost","nobody","");
+mysql_pconnect("localhost","nobody","");
 mysql_select_db("php3");
 
 foreach($statuses as $status) {

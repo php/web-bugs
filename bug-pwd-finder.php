@@ -5,7 +5,7 @@ require_once 'prepend.inc';
 
 if ($bug_id) {
 
-  mysql_connect ("localhost","nobody","")
+  mysql_pconnect ("localhost","nobody","")
     or die("Unable to connect to SQL server. Please try again later.");
 
   mysql_select_db ("php3");

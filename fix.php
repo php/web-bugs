@@ -63,7 +63,7 @@ if ($errors) {
   exit;
 }
 
-@mysql_connect("localhost","nobody","")
+@mysql_pconnect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
