@@ -114,18 +114,19 @@ commonHeader("Quick Fix Descriptions");
         </td>    
     </tr> 
     <tr>
-        <td>We don't support PHP 3 anymore</td>  
-        <td>Status: Won't fix</td>
+        <td>register_globals</td>  
+        <td>Status: Bogus</td>
         <td>
-            We are sorry, but can not support PHP 3 related problems anymore.
-            Momentum is gathering for PHP 5, and we think supporting PHP 3 
-			will lead to a waste of resources which we want to put into getting
-			PHP 5 ready. Ofcourse PHP 4 will will continue to be supported for
-			the forseeable future.
+			In PHP 4.2.0, the 'register_globals' setting default
+			changed to 'off'. See
+			http://www.php.net/release_4_2_0.php for more info.  We
+			are sorry about the inconvenience, but this change was a
+			necessary part of our efforts to make PHP scripting more
+			secure and portable.
         </td>    
     </tr>                                               
     <tr>
-        <td>php3</td>  
+        <td>PHP 3 support discontinued</td>  
         <td>Status: Bogus</td>         
         <td>
             We are sorry, but can not support PHP 3 related problems anymore.
@@ -136,7 +137,7 @@ commonHeader("Quick Fix Descriptions");
         </td>    
     </tr>                                               
     <tr>
-        <td>dst</td>  
+        <td>Daylight Savings</td>  
         <td>Status: Bogus</td>         
         <td>
             We are happy to tell you that you just discovered Daylight Savings
@@ -147,16 +148,18 @@ commonHeader("Quick Fix Descriptions");
         </td>    
     </tr>
 	<tr>
-	    <td>isapi</td>
+	    <td>IIS Stability</td>
 		<td>Status: Bogus</td>
 		<td>
-            We are aware of PHP\'s problems with stability under IIS and are working 
-            to rectify the problem. Unfortunatly your bug report does not contain any
-            extra useful information and we already have enough bug reports open about
-            this issue. If you can provide more detailed information such as a 
-            reproducable crash or a backtrace please do so and reopen this bug. 
-            Otherwise please keep trying new releases as we are working to resolve 
-            the problems on this platform
+			We are aware of PHP's problems with stability under IIS
+			and are working to rectify the problem. Unfortunatly
+			your bug report does not contain any extra useful
+			information and we already have enough bug reports open
+			about this issue. If you can provide more detailed
+			information such as a reproducable crash or a backtrace
+			please do so and reopen this bug.  Otherwise please keep
+			trying new releases as we are working to resolve the
+			problems on this platform
              
             Thanks for your interest in PHP.
         </td>
