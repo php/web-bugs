@@ -22,19 +22,15 @@ mysql_select_db("phpbugdb")
   or die("unable to select db");
 
 # fetch info about the bug into $bug
-$query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
-       . "php_version,php_os,status,ts1,ts2,assign,"
-       . "UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified,"
-       . "COUNT(bug=id) AS votes,"
-       . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
-       . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
-       . "AVG(score)+3 AS average,STD(score) AS deviation"
-       . " FROM bugdb LEFT JOIN bugdb_votes ON id=bug"
-       . " WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(),INTERVAL $after)"
-       . " GROUP BY bug";
+$query = "
+  SELECT id, bug_type, email, passwd, sdesc, ldesc, php_version, php_os, status, ts1, ts2, assign,
+         UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified
+  FROM bugdb
+  WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(),INTERVAL $after)
+";
 
 $result = mysql_query($query)
-  or die("query failed: ".mysql_query()."\n$query");
+  or die("query failed: ".mysql_error()."\n$query");
 
 $in = array('status' => 'No Feedback');
 
