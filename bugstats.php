@@ -1,25 +1,7 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 require_once 'prepend.inc';
 
-function ShowTime($sec) {
-	if($sec<60) {
-		return "$sec seconds";
-	} else if($sec<120) {
-		return (int)($sec/60)." minute ".($sec%60)." seconds";
-	} else if($sec<3600) {
-		return (int)($sec/60)." minutes ".($sec%60)." seconds";
-	} else if($sec<7200) {
-		return (int)($sec/3600)." hour ".(int)(($sec%3600)/60)." minutes ".(($sec%3600)%60)." seconds";
-	} else if($sec<86400) {
-		return (int)($sec/3600)." hours ".(int)(($sec%3600)/60)." minutes ".(($sec%3600)%60)." seconds";
-	} else if($sec<172800) {
-		return (int)($sec/86400)." day ".(int)(($sec%86400)/3600)." hours ".(int)((($sec%86400)%3600)/60)." minutes ".((($sec%86400)%3600)%60)." seconds";
-	} else {
-		return (int)($sec/86400)." days ".(int)(($sec%86400)/3600)." hours ".(int)((($sec%86400)%3600)/60)." minutes ".((($sec%86400)%3600)%60)." seconds";
-	}
-}
-
-commonHeader("Bug Stats");
+commonHeader("Statistics");
 
 if ($phpver > 0) {
 	$other = ($phpver == 4 ? 3 : 4);
@@ -30,8 +12,10 @@ else {
 
 }
 
-mysql_connect("localhost","nobody","");
-mysql_select_db("php3");
+@mysql_connect("localhost","nobody","")
+	or die("unable to connect to database");
+@mysql_select_db("php3")
+    or die("unable to select database");
 
 $query = "SELECT *,UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) AS timetoclose FROM bugdb";
 
@@ -187,4 +171,21 @@ while($i < 20) {
 echo "</table>\n";
 
 commonFooter();
-?>
+
+function ShowTime($sec) {
+	if($sec<60) {
+		return "$sec seconds";
+	} else if($sec<120) {
+		return (int)($sec/60)." minute ".($sec%60)." seconds";
+	} else if($sec<3600) {
+		return (int)($sec/60)." minutes ".($sec%60)." seconds";
+	} else if($sec<7200) {
+		return (int)($sec/3600)." hour ".(int)(($sec%3600)/60)." minutes ".(($sec%3600)%60)." seconds";
+	} else if($sec<86400) {
+		return (int)($sec/3600)." hours ".(int)(($sec%3600)/60)." minutes ".(($sec%3600)%60)." seconds";
+	} else if($sec<172800) {
+		return (int)($sec/86400)." day ".(int)(($sec%86400)/3600)." hours ".(int)((($sec%86400)%3600)/60)." minutes ".((($sec%86400)%3600)%60)." seconds";
+	} else {
+		return (int)($sec/86400)." days ".(int)(($sec%86400)/3600)." hours ".(int)((($sec%86400)%3600)/60)." minutes ".((($sec%86400)%3600)%60)." seconds";
+	}
+}

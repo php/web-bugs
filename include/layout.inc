@@ -191,7 +191,13 @@ function commonHeader($title=false) {
       <?php
 	print_link('http://www.php.net/', 'php.net', false, 'class="menuWhite"');
 	echo delim();
+	print_link('http://www.php.net/support.php', 'support', false, 'class="menuWhite"');
+	echo delim();
 	print_link('http://www.php.net/manual/en/', 'documentation', false, 'class="menuWhite"');
+	echo delim();
+	print_link('report.php', 'report a bug', false, 'class="menuWhite"');
+	echo delim();
+	print_link('search.php', 'advanced search', false, 'class="menuWhite"');
 	echo delim();
 	print_link('bugstats.php', 'statistics', false, 'class="menuWhite"');
       ?>
@@ -201,25 +207,18 @@ function commonHeader($title=false) {
 
   <tr class="headersep"><td colspan="2"><?php spacer(1,1);?><br></td></tr>
 
-<?/*
   <tr class="headerbottom">
-    <form method="POST" action="/search.php">
+    <form method="get" action="search.php">
+    <input type="hidden" name="cmd" value="display" />
       <td align="right" valign="top" colspan="2" nowrap><font color="#ffffff">
-        <small>search for</small>
-<INPUT CLASS="small" TYPE="text" NAME="pattern" VALUE="<?php echo htmlspecialchars($prevsearch) ?>" SIZE="30">
-<small>in the</small>
-<SELECT NAME="show" CLASS="small">
-<OPTION VALUE="maillist">general mailing list
-<OPTION VALUE="manual">manual
-</SELECT>
-<?	echo make_submit('small_submit_white.gif', 'search', 'bottom');
-      ?>&nbsp;<br>
+        <small>search bugs for</small>
+<input class="small" type="text" name="search_for" value="<?php echo htmlspecialchars($prevsearch) ?>" size="30" />
+        <?php echo make_submit('small_submit_white.gif', 'search', 'bottom');?>&nbsp;<br>
      </font></td>
     </form>
   </tr>
 
   <tr class="headersep"><td colspan="2"><?php spacer(1,1);?><br></td></tr>
-*/?>
 </table>
 
 

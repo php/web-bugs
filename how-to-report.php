@@ -1,9 +1,9 @@
 <?php
 require_once 'prepend.inc';
-commonHeader("Bugs Database Dos and Don'ts");
+commonHeader("How to Report a Bug");
 ?>
 
-<h1>PHP Bug reporting Dos And Don'ts</h1>
+<h1>How to Report a Bug</h1>
 
 <ul>
 <li>Please don't report bugs in versions older than two revisions

@@ -1,0 +1,171 @@
+<?php /* vim: set noet ts=4 sw=4: : */
+require_once 'prepend.inc';
+
+commonHeader("Search");
+
+if (isset($cmd) && $cmd == "display") {
+	@mysql_connect("localhost","nobody","")
+		or die("Unable to connect to SQL server.");
+	@mysql_select_db("php3");
+
+	if (!$bug_type) $bug_type = "Any";
+
+    $query  = "SELECT *,TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
+
+	if($bug_type=="Any") {
+		$where_clause = "WHERE bug_type != 'Feature/Change Request'";
+	} else {
+		$where_clause = "WHERE bug_type = '$bug_type'";
+	}
+
+	/* Treat assigned, analyzed and critical bugs as open */
+	if ($status == "Open") {
+		$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical')";
+	} elseif ($status == "Old Feedback") {
+		$where_clause .= " AND status='Feedback' AND TO_DAYS(NOW())-TO_DAYS(ts2)>60";
+	} elseif ($status == "Stale") {
+		$where_clause .= " AND status != 'Closed' AND status != 'Duplicate' AND status != 'Bogus' AND TO_DAYS(NOW())-TO_DAYS(ts2) > 30";
+	} elseif (isset($status) && $status != "All") {
+		$where_clause .= " AND status='$status'";
+	}
+
+	if (strlen($search_for)) {
+		$where_clause .= " AND MATCH (email,sdesc,ldesc) AGAINST ('$search_for')";
+	}
+
+	if ($bug_age) {
+		$where_clause .= " AND ts1 >= DATE_SUB(NOW(), INTERVAL $bug_age DAY)";
+	}
+
+	if ($php_os) {
+		$where_clause .= " AND php_os like '%$php_os%'";
+	}
+
+	if (!isset($phpver)) $phpver = "4";
+	if ($phpver) $where_clause .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
+
+	/* not in the header, but someone can build a query manually with it. */
+	if(strlen($by) and $by!='Any')
+		$where_clause .= " AND dev_id = '$by' ";
+ 
+    $query .= "$where_clause ";
+
+	if (!$order_by) $order_by = "id";
+	if (!$direction) $direction = "ASC";
+
+	if ($reorder_by) {
+		if ($order_by == $reorder_by) {
+			$direction = $direction == "ASC" ? "DESC" : "ASC";
+		}
+		else {
+			$direction = "ASC";
+		}
+		$order_by = $reorder_by;
+	}
+
+	$query .= " ORDER BY $order_by $direction";
+
+	if (!$begin) $begin = 0;
+	if (!isset($limit)) $limit = 30;
+
+	if($limit!='All') $query .= " LIMIT $begin,$limit";
+
+	$res = @mysql_query($query);
+	if (!$res) die(htmlspecialchars($query)."<br>".mysql_error());
+
+	$rows = mysql_numrows($res);
+	if (!$rows) {
+		echo "<h2 class=\"error\">No bugs with the specified criteria were found.</h2>";
+	}
+	else {
+		$link = "$PHP_SELF?cmd=display&amp;bug_type=" . urlencode ($bug_type) . "&amp;status=$status&amp;search_for=".htmlspecialchars(stripslashes($search_for))."&amp;php_os=".htmlspecialchars(stripslashes($php_os))."&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit";
+?>
+<table align="center" border="0" cellspacing="2" width="95%">
+ <?php show_prev_next($begin,$rows,$link,$limit);?>
+ <tr bgcolor="#aaaaaa">
+  <th><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
+<?php if ($bug_type == "Any") {?>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
+<?php }?>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=php_version">Version</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=sdesc">Description</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=assign">Assigned</a></th>
+ </tr>
+<?php
+		while ($row = mysql_fetch_array($res)) {
+			echo '<tr bgcolor="', get_row_color($row), '">';
+			echo "<td align=\"center\"><a href=\"bug.php?id=$row[id]\">$row[id]</a>";
+			echo "<br /><a href=\"bug.php?id=$row[id]&amp;edit=1\">(edit)</a></td>";
+			if ($bug_type == "Any") {
+				echo "<td>", htmlspecialchars($row[bug_type]), "</td>";
+			}
+			echo "<td>", htmlspecialchars($row[status]);
+			if ($row[status] == "Feedback" && $row[unchanged] > 0) {
+				printf ("<br>%d day%s", $row[unchanged], $row[unchanged] > 1 ? "s" : "");
+			}
+			echo "</td>";
+			echo "<td>", htmlspecialchars($row[php_version]), "</td>";
+			echo "<td>", $row[php_os] ? htmlspecialchars($row[php_os]) : "&nbsp;", "</td>";
+			echo "<td>", $row[sdesc]  ? htmlspecialchars($row[sdesc]) : "&nbsp;",  "</td>";
+			echo "<td>", $row[assign] ? htmlspecialchars($row[assign]) : "&nbsp;", "</td>";
+			echo "</tr>\n";
+		}
+
+		show_prev_next($begin,$rows,$link,$limit);
+?>
+</table>
+<?php
+	}
+} else {?>
+<table bgcolor="#ccccff" border="0" cellspacing="1">
+ <form method="POST" action="<?php echo $PHP_SELF?>">
+ <input type="hidden" name="cmd" value="display" />
+  <tr>
+   <td><input type="submit" value="Display" /></td>
+   <td><select name="status"><?php show_state_options($status);?></select></td>
+   <td align="right">bugs of type: </td>
+   <td><select name="bug_type"><?php show_types($bug_type,1);?></select></td>
+   <td align="right">reported since:</td>
+   <td><select name="bug_age"><?php show_byage_options($bug_age);?></select></td>
+  </tr>
+  <tr>
+   <td colspan=2 align=right>OS (substr search):</td>
+   <td colspan="4"><input type="text" name="php_os" value="<?echo htmlspecialchars($php_os);?>">
+  </tr>
+  <tr>
+   <td align="right">with text:</td>
+   <td colspan="3"><input type="text" name="search_for" value="<?echo htmlspecialchars($search_for);?>"> in the report or email address</td>
+   <td colspan="2">max. <select name="limit"><?php show_limit_options($limit);?></select> entries / page.</td>
+  </tr>
+ </form>
+ <tr>
+  <td bgcolor="#000000" colspan="6"><?echo spacer(1,1);?></td>
+ </tr>
+ <form method="GET" action="<?php echo $PHP_SELF;?>">
+  <tr>
+   <td align="right"><input type="submit" value="Edit" /></td>
+   <td align="right">bug number:</td>
+   <td colspan="4"><input type="text" name="id" value="<?echo $id?>"></td>
+   <input type="hidden" name="edit" value="<?php echo isset($MAGIC_COOKIE) ? 1 : 2;?>">
+  </tr>
+ </form>
+</table>
+<?php
+}
+commonFooter();
+
+function show_prev_next($begin,$rows,$link,$limit) {
+	if($limit=='All') return;
+	if ($begin == 0 && $rows < $limit) return;
+	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"9\">";
+    echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr>';
+	if ($begin > 0) {
+		echo "<td align=\"left\"><a href=\"$link&amp;begin=",max(0,$begin-$limit),"\">&laquo; Show Previous $limit Entries</a></td>";
+	}
+	if ($rows >= $limit) {
+		echo "<td align=\"right\"><a href=\"$link&amp;begin=",$begin+$limit,"\">Show Next $limit Entries &raquo;</a></td>";
+	}
+	echo "</tr></table></td></tr>";
+}
