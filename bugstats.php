@@ -29,13 +29,13 @@ $result = mysql_unbuffered_query($query);
 
 while($row=mysql_fetch_array($result)) {
 	$bug_type['all'][$row[bug_type]]++;
-	$status = strtolower($row['status']);
-	if ($status == 'closed' || $status == 'bogus') {
+	$status_str = strtolower($row['status']);
+	if ($status_str == 'closed' || $status_str == 'bogus') {
 		$closed_by[$row['dev_id']]++;
 	}
 
-	$bug_type[$status][$row[bug_type]]++;
-	$bug_type[$status]['all']++;
+	$bug_type[$status_str][$row[bug_type]]++;
+	$bug_type[$status_str]['all']++;
 	$email[$row[email]]++;
 	$php_version[$row[php_version]]++;
 	$php_os[$row[php_os]]++;
