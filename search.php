@@ -102,6 +102,7 @@ if (isset($cmd) && $cmd == "display") {
 	/* we avoid adding an order by clause if using the full text search */
     if ($order_by || $reorder_by || !strlen($search_for)) {
 		if (!in_array($order_by,$allowed_order)) $order_by = "id";
+		if (!in_array($reorder_by,$allowed_order)) $reorder_by = "id";
 		if ($direction != "DESC") $direction = "ASC";
 
 		if ($reorder_by) {
