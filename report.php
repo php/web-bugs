@@ -227,6 +227,24 @@ simply being marked as "bogus".</strong></p>
 
 if ($errors) display_errors($errors);
 ?>
+<script language="javascript" type="text/javascript">
+var irrelevantOn = false;
+
+function handleVersionChange (obj) {
+	if (obj.value == "Website problem") {
+		irrelevantOn = true;
+	
+		document.forms[1].elements[2].options[document.forms[1].elements[2].options.length] = new Option("Irrelevant", "Irrelevant", true, true);
+	} else {
+		if (irrelevantOn) {
+			document.forms[1].elements[2].options[document.forms[1].elements[2].options.length - 1] = null;
+			document.forms[1].elements[2].options[0].selected = true;
+			irrelevantOn = false;
+		}
+	}
+}
+</script>		
+
 <form method="post" action="<?php echo $PHP_SELF;?>">
 <input type="hidden" name="in[did_luser_search]" value="<?php echo $in['did_luser_search'] ? 1 : 0; ?>" />
 <table>
@@ -243,7 +261,7 @@ if ($errors) display_errors($errors);
  </tr><tr>
   <th align="right">Type of bug:</th>
   <td colspan="2">
-    <select name="in[bug_type]"><?php show_types($in['bug_type'],0);?></select>
+    <select name="in[bug_type]" onChange="javascript: handleVersionChange(this)"><?php show_types($in['bug_type'],0);?></select>
   </td>
  </tr><tr>
   <th align="right">Operating system:</th>
