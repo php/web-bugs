@@ -24,6 +24,11 @@ if ($cmd == "send") {
 		$cid = mysql_insert_id();
 
 		$report = "";
+		$report .= "From:             $email\n";
+		$report .= "Operating system: $php_os\n";
+		$report .= "PHP version:      $php_version\n";
+		$report .= "PHP Bug Type:     $bug_type\n";
+		$report .= "Bug description:  ";
 
 		$ldesc = stripslashes($ldesc);
 		$sdesc = stripslashes($sdesc);
@@ -43,12 +48,6 @@ if ($cmd == "send") {
 			commonHeader("Report - Error");
 			
 			echo "<pre>\n";
-
-			$report .= "From:             $email\n";
-			$report .= "Operating system: $php_os\n";
-			$report .= "PHP version:      $php_version\n";
-			$report .= "PHP Bug Type:     $bug_type\n";
-			$report .= "Bug description:  ";
 
 			echo $report;
 
