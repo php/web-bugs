@@ -6,6 +6,8 @@ $items = array (
 	"Feature/Change Request"   => "&nbsp;&nbsp;&nbsp;&nbsp;Feature/Change Request",
 	"Documentation problem"    => "&nbsp;&nbsp;&nbsp;&nbsp;Documentation problem",
 	"Livedocs problem"         => "&nbsp;&nbsp;&nbsp;&nbsp;Livedocs problem",
+	"Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
+	"Systems problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Systems Operation problem",
 	"Output Control"           => "&nbsp;&nbsp;&nbsp;&nbsp;Output Control",
 	"Performance problem"      => "&nbsp;&nbsp;&nbsp;&nbsp;Performance problem",
 	"Reproducible crash"       => "&nbsp;&nbsp;&nbsp;&nbsp;Reproducible crash",
@@ -14,8 +16,6 @@ $items = array (
 	"SPL related"              => "&nbsp;&nbsp;&nbsp;&nbsp;SPL related",
 	"Session related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Session related",
 	"PHP-GTK related"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP-GTK related",
-	"Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
-	"Systems problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Systems Operation problem",
 
 	"*Compile Issues" => "&nbsp;&nbsp;&nbsp;&nbsp;Compile Issues",
 	"Compile Failure" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compile Failure",
