@@ -12,7 +12,7 @@ commonHeader("Quick Fix Descriptions");
 				<tr>
 					<td>{$reason['desc']}</td>
 					<td>Status: {$reason['status']}</td>  
-					<td>{$reason['message']}</td>
+					<td><pre>{$reason['message']}</pre></td>
 				</tr>
 		";
 	} 
