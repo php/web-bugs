@@ -6,11 +6,13 @@ if (!($id = (int)$id)) {
   exit;
 }
 
+if (!isset($score)) die("missing parameter score");
 $score = (int)$score;
 if ($score < -2 || $score > 2) {
   die("invalid score: $score");
 }
 
+if (!isset($reproduced)) die("missing parameter reproduced");
 $reproduced = (int)$reproduced;
 $samever = (int)$samever;
 $sameos = (int)$sameos;
