@@ -19,6 +19,15 @@ function oneof()
 	}
 }
 
+function mysql_get_one($query)
+{
+	$res = mysql_query($query);
+	if ($res && mysql_num_rows($res)) {
+		return mysql_result($res,0);
+	}
+	return false;
+}
+               
 function show_byage_options($current)
 {
 	$opts = array(
