@@ -90,6 +90,10 @@ if (isset($cmd) && $cmd == "display") {
 	if (!empty($assign)) {
 	    $where_clause .= " AND assign = '$assign'";
 	}
+    
+	if (!empty($author_email)) {
+	    $where_clause .= " AND email = '$author_email'";
+	}
 
     $query .= "$where_clause ";
 
@@ -151,6 +155,7 @@ if (isset($cmd) && $cmd == "display") {
 				"&amp;search_for=" . urlencode(stripslashes($search_for)) .
 				"&amp;php_os="     . urlencode(stripslashes($php_os)) .
 				"&amp;boolean="    . BOOLEAN_SEARCH .
+				"&amp;author_email". urlencode(stripslashes($author_email)) .
 				"&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
@@ -265,6 +270,11 @@ if ($warnings) display_warnings($warnings);
     }
 ?>
   </td>
+ </tr>
+ <tr>
+  <th>Developer email</th>
+  <td nowrap="nowrap">Return only bugs with an email from</td>
+  <td><input type="text" name="author_email" value="<?php echo htmlspecialchars(stripslashes($author_email)); ?>" /></td>
  </tr>
  <tr>
   <th>Date</th>
