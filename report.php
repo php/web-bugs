@@ -17,8 +17,6 @@ $mail_bugs_to = "php-dev@lists.php.net";
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
-commonHeader("Report");
-
 if ($cmd == "send") {
 	if (incoming_details_are_valid(1,1)) {
 		$ret = mysql_query("INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$bug_type','$email','$sdesc','$ldesc','$php_version','$php_os','Open',NOW(),'$passwd')");
@@ -29,22 +27,6 @@ if ($cmd == "send") {
 
 		$ldesc = stripslashes($ldesc);
 		$sdesc = stripslashes($sdesc);
-
-		echo "<pre>\n";
-
-		$report .= "From:             $email\n";
-		$report .= "Operating system: $php_os\n";
-		$report .= "PHP version:      $php_version\n";
-		$report .= "PHP Bug Type:     $bug_type\n";
-		$report .= "Bug description:  ";
-
-		echo $report;
-
-        echo htmlspecialchars($sdesc), "\n\n";
-
-        echo wordwrap(htmlspecialchars($ldesc));
-
-		echo "</pre>\n";
 
 		$ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
 		$ascii_report.= "\n-- \nEdit bug report at: http://bugs.php.net/?id=$cid&edit=1\n";
@@ -57,6 +39,25 @@ if ($cmd == "send") {
 			header("Location: report.php?cmd=thankyou&cid=$cid&mailto=".urlencode($mailto));
 
 		} else {
+		
+			commonHeader("Report - Error");
+			
+			echo "<pre>\n";
+
+			$report .= "From:             $email\n";
+			$report .= "Operating system: $php_os\n";
+			$report .= "PHP version:      $php_version\n";
+			$report .= "PHP Bug Type:     $bug_type\n";
+			$report .= "Bug description:  ";
+
+			echo $report;
+
+			echo htmlspecialchars($sdesc), "\n\n";
+
+			echo wordwrap(htmlspecialchars($ldesc));
+
+			echo "</pre>\n";
+
 			echo "<p><h2>Mail not sent!</h2>\n";
 			echo "Please send this page in a mail to " .
 			     "<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
@@ -64,6 +65,8 @@ if ($cmd == "send") {
 	}
 } elseif ($cmd == 'thankyou') {
 
+	commonHeader("Report - Thank you");
+			
 	echo "<p><h2>Mail sent to $mailto...</h2></p>\n";
 	echo "<p>Thank you for your help!</p>";
 	echo "If the status of the bug report you submitted\n";
@@ -72,6 +75,7 @@ if ($cmd == "send") {
 	echo "http://bugs.php.net/?id=$cid</a></p>\n";
 
 } elseif (!isset($cmd)) {
+	commonHeader("Report - New");
 ?>
 
 <p>Before you report a bug, make sure to search for similar bugs using the form
