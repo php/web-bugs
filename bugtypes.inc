@@ -3,7 +3,6 @@ $items = array (
 	"Any" => "Any (except Feature Requests)",
 
 	"*General Issues" => "General Issues",
-	"Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;Website problem",
 	"Feature/Change Request"   => "&nbsp;&nbsp;&nbsp;&nbsp;Feature/Change Request",
 	"Documentation problem"    => "&nbsp;&nbsp;&nbsp;&nbsp;Documentation problem",
 	"Output Control"           => "&nbsp;&nbsp;&nbsp;&nbsp;Output Control",
@@ -12,6 +11,7 @@ $items = array (
 	"Scripting Engine problem" => "&nbsp;&nbsp;&nbsp;&nbsp;Scripting Engine problem",
 	"Session related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Session related",
 	"PEAR related"             => "&nbsp;&nbsp;&nbsp;&nbsp;PEAR related",
+   "Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
 
 	"*Compile Issues" => "&nbsp;&nbsp;&nbsp;&nbsp;Compile Issues",
 	"Compile Failure" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compile Failure",
