@@ -92,7 +92,12 @@ if (!$res || !$bug) {
 
 /* update bug record */
 $status = $RESOLVE_REASONS[$r]['status'];
-$ncomment = $RESOLVE_REASONS[$r]['message'].(!empty($ncomment)?"\n\n".$ncomment:"");
+if (isset($FIX_VARIATIONS[$r][$res['bug_type']])) {
+  $qftext = $FIX_VARIATIONS[$r][$res['bug_type']];
+} else {
+  $qftext = $RESOLVE_REASONS[$r]['message'];
+}
+$ncomment = $qftext . (!empty($ncomment) ? "\n\n".$ncomment : "");
 
 /* if the already has the status of the resolution, bounce over to the
    main bug form. it will show the appropriate error message. */

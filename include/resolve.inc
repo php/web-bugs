@@ -33,15 +33,9 @@ For Windows:
     'message' =>
 'This bug has been fixed in CVS.
 
-In case this was a PHP problem, snapshots of the sources are packaged
-every three hours; this change will be in the next snapshot. You can
-grab the snapshot at http://snaps.php.net/.
- 
-In case this was a documentation problem, the fix will show up soon at
-http://www.php.net/manual/.
-
-In case this was a PHP.net website problem, the change will show
-up on the PHP.net site and on the mirror sites in short time.
+Snapshots of the sources are packaged every three hours; this change
+will be in the next snapshot. You can grab the snapshot at
+http://snaps.php.net/.
  
 Thank you for the report, and for helping us make PHP better.',
   ),
@@ -167,7 +161,7 @@ part of our efforts to make PHP scripting more secure and portable.',
 'We are sorry, but can not support PHP 3 related problems anymore.
 Momentum is gathering for PHP 5, and we think supporting PHP 3 will
 lead to a waste of resources which we want to put into getting PHP 5
-ready. Ofcourse PHP 4 will will continue to be supported for the
+ready. Ofcourse PHP 4 will continue to be supported for the
 forseeable future.',
   ),
   'dst' => array(
@@ -215,6 +209,25 @@ printing it without any mathematical operations.
 Thank you for your interest in PHP.',
   ),
 
+);
+
+$FIX_VARIATIONS = array(
+  'fixedcvs' => array(
+    
+    'Website problem' =>
+'This bug has been fixed in CVS. Since the websites are not directly
+updated from the CVS server, the fix might need some time to spread
+across the globe to all mirror sites, including PHP.net itself.
+
+Thank you for the report, and for helping us make PHP.net better.',
+    
+    'Documentation problem' =>
+'This bug has been fixed in the documentation\'s XML sources. Since the
+online and downloadable versions of the documentation need some time
+to get updated, we would like to ask you to be a bit patient.
+
+Thank you for the report, and for helping us make our documentation better.',
+  )
 );
 
 function show_reason_types($current="", $expanded=0)
