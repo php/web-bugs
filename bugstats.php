@@ -17,7 +17,7 @@ else {
 @mysql_select_db("php3")
     or die("unable to select database");
 
-$query = "SELECT *,UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) AS timetoclose FROM bugdb";
+$query = "SELECT status,dev_id,bug_type,email,php_version,php_os FROM bugdb";
 
 if ($phpver > 0) {
 	$query .= " WHERE SUBSTRING(php_version,1,1) = '$phpver'";
@@ -31,9 +31,6 @@ while($row=mysql_fetch_array($result)) {
 	$bug_type['all'][$row[bug_type]]++;
 	switch (strtolower($row[status])) {
 	case "closed":
-		if ($row[timetoclose] > 0) {
-			$time_to_close[] = $row[timetoclose];
-		}
                 /* falls through */
 	case "bogus":
 		$closed_by[$row[dev_id]]++;
@@ -143,20 +140,20 @@ foreach ($bug_type[$sort_by] as $type => $value) {
 
 echo "</table>\n";
 
-sort($time_to_close);
-$c=count($time_to_close);
-$sum=0;
-for($i=0;$i<$c;$i++) {
-	$sum+=$time_to_close[$i];
-}
-$median = $time_to_close[(int)($c/2)];
+$query = "SELECT COUNT(*) AS count,MAX(UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1)) AS slowest,MIN(UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1)) AS quickest,AVG(UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1)) AS average FROM bugdb WHERE ts2 > ts1";
+$res = mysql_query($query);
+$row = mysql_fetch_array($res);
+$half = $row['count']/2;
+$query = "SELECT UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) AS half FROM bugdb WHERE ts2 > ts1 ORDER BY UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) LIMIT $half,1";
+$res = mysql_query($query);
+$median = mysql_result($res,0);
 
 echo "<p><b>Bug Report Time to Close Stats</b>\n";
 echo "<table>\n";
-echo "<tr bgcolor=#aabbcc><th align=right>Average life of a report:</th><td bgcolor=#ccddee>".ShowTime((int)($sum/$c))."</td></tr>\n";
+echo "<tr bgcolor=#aabbcc><th align=right>Average life of a report:</th><td bgcolor=#ccddee>".ShowTime((int)$row[average])."</td></tr>\n";
 echo "<tr bgcolor=#aabbcc><th align=right>Median life of a report:</th><td bgcolor=#ccddee>".ShowTime($median)."</td></tr>\n";
-echo "<tr bgcolor=#aabbcc><th align=right>Slowest report closure:</th><td bgcolor=#ccddee>".ShowTime($time_to_close[$c-1])."</td></tr>\n";
-echo "<tr bgcolor=#aabbcc><th align=right>Quickest report closure:</th><td bgcolor=#ccddee>".ShowTime($time_to_close[0])."</td></tr>\n";
+echo "<tr bgcolor=#aabbcc><th align=right>Slowest report closure:</th><td bgcolor=#ccddee>".ShowTime($row[slowest])."</td></tr>\n";
+echo "<tr bgcolor=#aabbcc><th align=right>Quickest report closure:</th><td bgcolor=#ccddee>".ShowTime($row[quickest])."</td></tr>\n";
 echo "</table>\n";
 
 echo "<p><b>Who is closing the bug reports?</b>\n";
