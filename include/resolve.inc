@@ -119,7 +119,7 @@ Thank you for your interest in PHP.
 bug report already describes this very problem. Even if you feel
 that your issue is somewhat different, the resolution is likely
 to be the same. Because of this, we hope you add your comments
-to the original bug instead.
+to the existing bug instead.
 
 Thank you for your interest in PHP.',
   ),
