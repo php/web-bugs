@@ -1,0 +1,43 @@
+#!/usr/local/bin/php -q
+<?
+	mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server\n");
+	mysql_select_db("php3");
+	$result = mysql_query("select id,bug_type,status,sdesc,assign from bugdb where status not in ('Closed', 'Bogus', 'Duplicate') and php_version like '4%' order by bug_type,id");
+	if($num=mysql_num_rows($result)) {
+		$body = " PHP 4.0 Bug Database summary - http://bugs.php.net\n\n";
+		$body .= " Num Status     Summary ($num total including feature requests)\n";
+		$last_group = "";
+		while($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
+			if($row['status']=='Assigned') {
+				$ass[$row['assign']][$row['id']] = $row['sdesc'];
+			}
+			if($last_group!=$row['bug_type']) {
+				$last_group = $row['bug_type'];
+				$body .= "===============================================[".$row['bug_type']."]";
+				$len = 29-strlen($row['bug_type']);
+				for($i=0;$i<$len; $i++) $body .= "=";
+				$body .= "\n";
+			}
+			$body .= sprintf("%4d ",$row['id']);
+			$body .= sprintf("%-9s ",$row['status']);
+			$body .= " ".$row['sdesc']."\n";
+		}
+		mysql_free_result($result);
+		$body .= "\nAssigned bugs: (reminders sent)\n";
+		while(list($k,$v)=each($ass)) {
+			while(list($kk,$vv)=each($v)) {
+				$body .= "$k\t\t$kk: $vv\n";
+				$send[$k] .= "$kk:\t$vv\n";
+			}
+		}
+		while(list($k,$v)=each($send)) {
+			if(strstr($k,'@')) {
+				mail($k,"Assigned PHP bugs reminder",$v,"From: php-dev@lists.php.net");
+			} else {
+				mail("$k@php.net","Assigned PHP 4 bugs reminder",$v,"From: php-dev@lists.php.net");
+			}
+		}
+
+		mail("php-dev@lists.php.net","PHP 4.0 Bug Summary Report",$body,"From: php-dev@lists.php.net");
+	}	
+?>
