@@ -21,11 +21,19 @@ $sameos = (int)$sameos;
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("phpbugdb");
 
+$query = "SELECT id FROM bugdb WHERE id=" . $id . " LIMIT 1";
+$res = mysql_num_rows(mysql_query($query));
+
+if (!$res) {
+  commonHeader("No such bug.");
+  echo "<h1 class=\"error\">No such bug #$id!</h1>";
+  commonFooter();
+  exit;
+}
+
 $ip = ip2long(get_real_ip());
 // TODO: check if ip address has been banned. hopefully this will
 //       never need to be implemented.
-
-// verify the bug id is real (no voting on unreported bugs! :)
 
 // add the vote
 $query = "INSERT INTO bugdb_votes (bug,ip,score,reproduced,tried,sameos,samever)"
