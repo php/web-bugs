@@ -104,8 +104,8 @@ if ($modify && $success) {
 
 	$text.= get_old_comments($id);
 
-	$user_text = $text . "\n\nATTENTION! Do NOT reply to this email!\n";
-	$user_text.= "To reply, use the web interface found at http://bugs.php.net/?id=$id&edit=2\n";
+	$user_text = "\n\nATTENTION! Do NOT reply to this email!\n";
+	$user_text.= "To reply, use the web interface found at http://bugs.php.net/?id=$id&edit=2\n\n\n$text";
 
 	$dev_text .= $text . "\n\nEdit this bug report at http://bugs.php.net/?id=$id&edit=1\n";
 
