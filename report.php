@@ -167,6 +167,7 @@ you can scroll down and click the submit button to really enter the details into
 			$extra_headers.= "X-PHP-Bug: $cid\n";
 			$extra_headers.= "X-PHP-Version: "  . stripslashes($in['php_version']) . "\n";
 			$extra_headers.= "X-PHP-Category: " . stripslashes($in['bug_type'])    . "\n";
+			$extra_headers.= "X-PHP-OS: "       . stripslashes($in['php_os'])      . "\n";
 			$extra_headers.= "X-PHP-Status: Open\n";
 			$extra_headers.= "Message-ID: <bug-$cid@bugs.php.net>";
 			
