@@ -178,6 +178,20 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 {
     $text = array();
     $headers = array();
+
+	$tla = array(
+		'Open'        => 'Opn',
+		'Bogus'       => 'Bgs',
+		'Feedback'    => 'Fbk',
+		'No Feedback' => 'NoF',
+		'Won\'t fix'  => 'WFx',
+		'Duplicate'   => 'Dup',
+		'Critical'    => 'Ctl',
+		'Assigned'    => 'Ass',
+		'Analysed'    => 'Ana',
+		'Verified'    => 'Ver',
+		'Suspened'    => 'Sus'
+	);
     
     $headers[] = array(" ID", $bug['id']);
     
@@ -261,11 +275,11 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 	if ($in[status] != $bug[status] || $ncomment != "") {
 
 		if ($in[status] != $bug[status] && $edit != 3) {	/* status changed */
-			$subj = "#{$bug['id']} [{$bug['status']}->{$in['status']}]: ";
+			$subj = "#{$bug['id']} [{$tla[$bug['status']]}->{$tla[$in['status']]}]: ";
 		} elseif ($edit == 3) {				/* comment */
-			$subj = "#{$bug['id']} [Comment]: ";
+			$subj = "#{$bug['id']} [Com]: ";
 		} else {							/* status did not change and not comment */
-			$subj = "#{$bug['id']} [{$bug['status']}]: ";
+			$subj = "#{$bug['id']} [{$tla[$bug['status']]}]: ";
 		}
 		
 		@mail($bug[email],
