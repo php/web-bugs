@@ -519,6 +519,9 @@ function get_row_color($row)
 		case "Open":
 			return "#ffbbaa";
 			break;
+		case "Verified":
+			return "#ffff00";
+			break;
 		case "Critical":
 			return "#ff0000";
 			break;
