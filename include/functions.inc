@@ -183,7 +183,7 @@ function show_types($current,$show_any,$default="")
 			if ($key == $current) $use++;
 		}
 	}
-	if (!$use && $current) {
+	if (!$use && $current && !is_array ($current)) {
 		echo "<option selected>$current</option>\n";
 	}
 }
