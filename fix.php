@@ -52,7 +52,7 @@ if ($errors) {
   </td>
  </tr>
  <tr>
-  <th>Reason:</th>
+  <th><a href="quick-fix-desc.php">Reason:</a></th>
   <td colspan="5"><select name="r"><?php echo show_reason_types($r)?></select></td>
  </tr>
  <tr>

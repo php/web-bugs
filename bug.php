@@ -319,7 +319,7 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
 <table>
 <?php if ($edit == 1) {?>
  <tr>
-  <th>Quick Fix:</th>
+  <th><a href="quick-fix-desc.php">Quick Fix:</a></th>
   <td colspan="5"><select name="in[resolve]"><?php show_reason_types($in['resolve'],1);?></select><?php if ($in['resolve']) {?><input type="hidden" name="trytoforce" value="1" /><?php }?></td>
  </tr>
 <?php }?>
