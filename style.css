@@ -26,49 +26,6 @@ em {
         color: #cc0000;
 }
 
-div#votebox {
-        float: right;
-        width: 200px;
-        font-size: smaller;
-}
-div#votebox div#control {
-        border: 1px solid #000000;
-        background: #cccccc;
-        padding: 4px;
-        margin-bottom: 10px;
-}
-div#votebox #off {
-        float: right;
-}
-div#votebox #results {
-        margin-bottom: 10px;
-        border: 1px dashed #000000;
-        padding: 4px;
-        background: #99cc99;
-}
-div#votebox #voted {
-        margin: 0px;
-        border: 1px dashed #000000;
-        padding: 4px;
-        background: #cc9999;
-}
-div#votebox form {
-        margin: 0px;
-        border: 1px dashed #000000;
-        padding: 4px;
-        background: #9999cc;
-}
-div#votebox form div {
-        margin-bottom: 5px;
-}
-div#votebox span.score {
-        font-size: smaller;
-}
-div#votebox #submit {
-        margin-top: 10px;
-        text-align: center;
-}
-
 .newsDate {
 	font-size: 85%;
 	font-style: italic;
@@ -150,7 +107,6 @@ A.menuBlack {
 	color: #FFFFFF;
 }
 
-
 input {
 	font-family: arial,helvetica,sans-serif;
 }
@@ -167,4 +123,94 @@ input.small, select.small {
 textarea.small {
 	font-family: "andale mono", "monotype.com", "courier new", monospace;
 	font-size: 75%;
+}
+
+div.errors {
+        border: 1px dashed #660000;
+        color: #660000;
+        margin: 4px;
+        padding: 6px;
+}
+div.explain {
+        border: 1px dashed #000066;
+        color: #000066;
+        margin: 4px;
+        padding: 6px;
+}
+div.thanks {
+        border: 1px dashed #006600;
+        color: #006600;
+        margin: 4px;
+        padding: 6px;
+}
+
+/* these are redundant with things below, to try and make the
+ * bug forms look a smidge better on netscape 4 (ugh). */
+span.control {
+        font-weight: bold;
+}
+
+td#summary {
+        font-weight: bold;
+}
+th {
+        text-align: right;
+}
+
+div#bugheader {
+        border-bottom: 2px solid #666666;
+}
+
+div#bugheader {
+        border-bottom: 2px solid #666666;
+}
+
+div#bugheader table#details th {
+        text-align: right;
+        color: #666666;
+}
+div#bugheader table#details th#number {
+        color: #000066;
+        font-size: larger;
+}
+div#bugheader table#details td#summary {
+        font-weight: bold;
+}
+
+div#controls span {
+        float: left;
+        border: 1px solid #000000;
+        border-top: 0px;
+        font-weight: bold;
+        background: #ddddff;
+        padding: 4px 8px;
+        margin-right: 10px;
+        margin-left: 0px;
+}
+div#controls span.active {
+        position: relative;
+        top: -2px;
+        background: #ffffff;
+        padding-top: 6px;
+}
+div#controls a {
+        text-decoration: none;
+}
+div#controls a:hover {
+        text-decoration: underline;
+}
+
+form#vote {
+        font-size: smaller;
+}
+form#vote > div {
+        float: left;
+}
+form#vote fieldset {
+        border: 1px solid #000000;
+}
+form#vote div#submit {
+        margin-top: 24px;
+        margin-left: 10px;
+        text-align: center;
 }

@@ -1,5 +1,24 @@
 <?php /* vim: set noet ts=4 sw=4 ft=php3: : */
 
+/* scrub user input so it can be re-output */
+function clean($in)
+{
+	return htmlspecialchars(get_magic_quotes_gpc()?stripslashes($in):$in);
+}
+/* just rinse out any slashes. :) */
+function rinse($in)
+{
+	return get_magic_quotes_gpc()?stripslashes($in):$in;
+}
+
+/* handy function for when you're dealing with user input or a default. */
+function oneof()
+{
+	foreach (func_get_args() as $arg) {
+		if ($arg) return $arg;
+	}
+}
+
 function show_byage_options($current)
 {
 	$opts = array(
@@ -86,7 +105,7 @@ function show_types($current,$show_any,$default="")
 	include 'bugtypes.inc';
 
 	if (!$current && !$default && !$show_any) {
-		echo "<option value=\"Unknown/Other Function\">--Please Select--</option>\n";
+		echo "<option value=\"none\">--Please Select--</option>\n";
 	}
 	elseif (!$current && $show_any) {
 		$current = "Any";
@@ -151,42 +170,34 @@ function addlinks($text)
 }
 
 /* validate an incoming bug report */
-function incoming_details_are_valid($require_ldesc=0,$require_passwd=0) 
+function incoming_details_are_valid($in,$initial=0) 
 {
-    global $email,$bug_type,$php_version,$sdesc,$ldesc,$passwd;
-
-	$valid = 1;
-	if(!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$email)) {
-		echo "<h2 class=\"error\">Please provide a valid email address.</h2>";
-		$valid = 0;
+	$errors = array();
+	if(!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['email'])) {
+		$errors[] = "Please provide a valid email address.";
 	}
 
-	if ($bug_type=="none") {
-		echo "<h2 class=\"error\">Please select an appropriate bug type.</h2>";
-		$valid = 0;
+	if ($in['bug_type'] == "none") {
+		$errors[] = "Please select an appropriate bug type.";
 	}
 
-	if ($php_version=='earlier') {
-		echo "<h2 class=\"error\">Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.</h2>";
-		$valid = 0;
+	if ($in['php_version'] == 'earlier') {
+		$errors[] = "Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.";
 	}
 
-    if (!$sdesc) {
-		echo "<h2 class=\"error\">You must supply a short description of the bug you are reporting.</h2>";
-		$valid = 0;
+    if (!$in['sdesc']) {
+		$errors[] = "You must supply a short description of the bug you are reporting.";
 	}
 
-    if ($require_ldesc && !$ldesc) {
-		echo "<h2 class=\"error\">You must supply a long description of the bug you are reporting.</h2>";
-		$valid = 0;
+    if ($initial && !$in['ldesc']) {
+		$errors[] = "You must supply a long description of the bug you are reporting.";
 	}
 
-	if ($require_passwd && empty($passwd)) {
-		echo "<h2 class=\"error\">You must supply a password for this bug report.</h2>";
-		$valid = 0;
+	if ($initial && !$in['passwd']) {
+		$errors[] = "You must supply a password for this bug report.";
 	}
 
-	return $valid;
+	return $errors;
 }
 
 function get_bugtype_mail($bug_type) 

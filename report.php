@@ -17,31 +17,36 @@ $mail_bugs_to = "php-dev@lists.php.net";
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
-if ($cmd == "send") {
-	if (incoming_details_are_valid(1,1)) {
-		$ret = mysql_query("INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$bug_type','$email','$sdesc','$ldesc','$php_version','$php_os','Open',NOW(),'$passwd')");
+$errors = array();
+if ($in) {
+	if (!($errors = incoming_details_are_valid($in,1))) {
+		$query = "INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$in[bug_type]','$in[email]','$in[sdesc]','$in[ldesc]','$in[php_version]','$in[php_os]','Open',NOW(),'$in[passwd]')";
+		$ret = mysql_query($query);
     
 		$cid = mysql_insert_id();
 
 		$report = "";
-		$report .= "From:             $email\n";
-		$report .= "Operating system: $php_os\n";
-		$report .= "PHP version:      $php_version\n";
-		$report .= "PHP Bug Type:     $bug_type\n";
+		$report .= "From:             ".stripslashes($in['email'])."\n";
+		$report .= "Operating system: ".stripslashes($in['php_os'])."\n";
+		$report .= "PHP version:      ".stripslashes($in['php_version'])."\n";
+		$report .= "PHP Bug Type:     $in[bug_type]\n";
 		$report .= "Bug description:  ";
 
-		$ldesc = stripslashes($ldesc);
-		$sdesc = stripslashes($sdesc);
+		$ldesc = stripslashes($in['ldesc']);
+		$sdesc = stripslashes($in['sdesc']);
 
 		$ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
 		$ascii_report.= "\n-- \nEdit bug report at: http://bugs.php.net/?id=$cid&edit=";
 		
-		list($mailto,$mailfrom) = get_bugtype_mail($bug_type);
+		list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
+
+		$email = stripslashes($in['email']);
 
 		if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
 		    @mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 
-			header("Location: report.php?cmd=thankyou&cid=$cid&mailto=".urlencode($mailto));
+			header("Location: bug.php?id=$cid&thanks=4");
+			exit;
 
 		} else {
 		
@@ -62,18 +67,11 @@ if ($cmd == "send") {
 			     "<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
 	    }
 	}
-} elseif ($cmd == 'thankyou') {
 
-	commonHeader("Report - Thank you");
-			
-	echo "<p><h2>Mail sent to $mailto...</h2></p>\n";
-	echo "<p>Thank you for your help!</p>";
-	echo "If the status of the bug report you submitted\n";
-	echo "changes, you will be notified. You may return here and check on the status\n";
-	echo "or update your report at any time. The URL for your bug report is: <a href=\"http://bugs.php.net/?id=$cid\">";
-	echo "http://bugs.php.net/?id=$cid</a></p>\n";
+	commonHeader("Report - Problems");
+}
 
-} elseif (!isset($cmd)) {
+if (!isset($in)) {
 	commonHeader("Report - New");
 ?>
 
@@ -89,39 +87,53 @@ simply being marked as "bogus".</strong></p>
 
 <?php
 }
+
+if ($errors) {
+	echo '<div class="errors">';
+	if (count($errors) > 1) {
+		echo "You need to do the following before your submission will be accepted:<ul>";
+		foreach ($errors as $error) {
+			echo "<li>$error</li>\n";
+		}
+		echo "</ul>";
+	}
+	else {
+		echo $errors[0];
+	}
+	echo '</div>';
+}
 ?>
-<form method="POST" action="<?php echo $PHP_SELF;?>">
-<input type="hidden" name="cmd" value="send" />
+<form method="post" action="<?php echo $PHP_SELF;?>">
 <table>
  <tr>
   <th align="right">Your email address:</th>
   <td colspan="2">
-   <input type="text" size="20" maxlength="40" name="email" value="<?php echo htmlspecialchars(stripslashes($email));?>" />
+   <input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo clean($in['email']);?>" />
   </td>
  </tr><tr>
   <th align="right">PHP version:</th>
   <td>
-   <select name="php_version"><?php show_version_options($php_version);?></select>
+   <select name="in[php_version]"><?php show_version_options($in['php_version']);?></select>
   </td>
  </tr><tr>
   <th align="right">Type of bug:</th>
   <td colspan="2">
-    <select name="bug_type"><?php show_types($bug_type,0);?></select>
+    <select name="in[bug_type]"><?php show_types($in['bug_type'],0);?></select>
   </td>
  </tr><tr>
   <th align="right">Operating system:</th>
   <td colspan="2">
-   <input type="text" size="20" maxlength="32" name="php_os" value="<?php echo htmlspecialchars(stripslashes($php_os));?>" />
+   <input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo clean($in['php_os']);?>" />
   </td>
  </tr><tr>
   <th align="right">Summary:</th>
   <td colspan="2">
-   <input type="text" size="40" maxlength="79" name="sdesc" value="<?php echo htmlspecialchars(stripslashes($sdesc));?>" />
+   <input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo clean($in['sdesc']);?>" />
   </td></tr>
  </tr><tr>
   <th align="right">Password:</th>
   <td>
-   <input type="text" size="20" maxlength="20" name="passwd" value="<?php echo htmlspecialchars(stripslashes($passwd));?>" />
+   <input type="text" size="20" maxlength="20" name="in[passwd]" value="<?php echo clean($in['passwd']);?>" />
   </td>
   <td><font size="-2">
     You may enter any password here. This password allows you to come back and
@@ -146,7 +158,7 @@ simply being marked as "bogus".</strong></p>
    <div align="center"><input type="submit" value="Send bug report" /></div>
   </td>
   <td>
-   <textarea cols="60" rows="15" name="ldesc" wrap="physical"><?php echo htmlspecialchars(stripslashes($ldesc));?></textarea>
+   <textarea cols="60" rows="15" name="in[ldesc]" wrap="physical"><?php echo clean($in['ldesc']);?></textarea>
   </td>
  </tr>
 </table>

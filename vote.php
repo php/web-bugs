@@ -41,4 +41,4 @@ mysql_query($query)
 
 // redirect to the bug page (which will display the success message)
 
-header("Location: bug.php?id=$id&voted=1");
+header("Location: bug.php?id=$id&thanks=6");
