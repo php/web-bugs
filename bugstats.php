@@ -141,10 +141,18 @@ foreach ($bug_type[$sort_by] as $type => $value) {
 echo "</table>\n";
 
 $query = "SELECT COUNT(*) AS count,MAX(UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1)) AS slowest,MIN(UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1)) AS quickest,AVG(UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1)) AS average FROM bugdb WHERE ts2 > ts1";
+if ($phpver > 0) {
+	$query .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
+}
 $res = mysql_query($query);
 $row = mysql_fetch_array($res);
+
 $half = $row['count']/2;
-$query = "SELECT UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) AS half FROM bugdb WHERE ts2 > ts1 ORDER BY UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) LIMIT $half,1";
+$query = "SELECT UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) AS half FROM bugdb WHERE ts2 > ts1";
+if ($phpver > 0) {
+	$query .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
+}
+$query .= " ORDER BY UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) LIMIT $half,1";
 $res = mysql_query($query);
 $median = mysql_result($res,0);
 
