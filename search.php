@@ -33,7 +33,7 @@ if (isset($cmd) && $cmd == "display") {
 	else
 		$query = "SELECT ";
 
-	$query .= "*, TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
+	$query .= "DISTINCT bugdb.*, TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb, bugdb_comments ";
 
 	if ($bug_type == "Any") {
 		$where_clause = "WHERE bug_type != 'Feature/Change Request'";
@@ -92,7 +92,7 @@ if (isset($cmd) && $cmd == "display") {
 	}
     
 	if (!empty($author_email)) {
-	    $where_clause .= " AND email = '$author_email'";
+	    $where_clause .= " AND (bugdb.email = '$author_email' OR (bugdb_comments.email = '$author_email' AND bugdb.id = bugdb_comments.bug))";
 	}
 
     $query .= "$where_clause ";
