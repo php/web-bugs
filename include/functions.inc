@@ -578,4 +578,42 @@ function format_search_string($search)
 	return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . addslashes($search) . "')", $ignored);
 }
 
+/* Figure out which IP the user is coming from avoiding RFC 1918 space */
+function get_real_ip () {
+	global $HTTP_X_FORWARDED_FOR, $REMOTE_ADDR;
+
+	$ip = false;
+
+	/**
+	 * User is behind a proxy and check that we discard RFC1918 IP
+	 * addresses if they are behind a proxy then only figure out which
+	 * IP belongs to the user.  Might not  need any more hacking if
+	 * there is a squid reverse proxy infront of apache.
+	 */
+	if (!empty($HTTP_X_FORWARDED_FOR)) {
+		$ips = explode (", ", $HTTP_X_FORWARDED_FOR);
+		if ($ip) { array_unshift($ips, $ip); $ip = false; }
+		for ($i = 0; $i < count($ips); $i++) {
+			/**
+			 * Skip RFC 1918 IP's 10.0.0.0/8, 172.16.0.0/12 and
+			 * 192.168.0.0/16 -- jim kill me later with my regexp pattern
+			 * below.
+			 */
+			if (!eregi ("^(10|172\.16|192\.168)\.", $ips[$i])) {
+				if (version_compare(phpversion(), "5.0.0", ">=")) {
+					if (ip2long($ips[$i]) != false) {
+						$ip = $ips[$i];
+						break;
+					}
+				} else {
+					if (ip2long($ips[$i]) != -1) {
+						$ip = $ips[$i];
+						break;
+					}
+				}
+			}
+		}
+	}
+	return ($ip ? $ip : $REMOTE_ADDR);
+}
 ?>

@@ -21,7 +21,7 @@ $sameos = (int)$sameos;
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("phpbugdb");
 
-$ip = ip2long($HTTP_X_FORWARDED_FOR ? $HTTP_X_FORWARDED_FOR : $REMOTE_ADDR);
+$ip = ip2long(get_real_ip());
 // TODO: check if ip address has been banned. hopefully this will
 //       never need to be implemented.
 
