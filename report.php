@@ -55,7 +55,7 @@ if ($in) {
 				commonHeader("Report - Confirm");
 
 ?>
-<p>Are you sure that you searched before your submitted your bug report?
+<p>Are you sure that you searched before you submitted your bug report?
 We found the following bugs that seem to be similar to yours; please check them
 before sumitting the report as they might contain the solution you are looking for.
 </p>
