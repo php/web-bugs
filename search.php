@@ -30,8 +30,6 @@ if (isset($cmd) && $cmd == "display") {
 		$where_clause .= " AND status='Feedback' AND TO_DAYS(NOW())-TO_DAYS(ts2)>60";
 	} elseif ($status == "Stale") {
 		$where_clause .= " AND status != 'Closed' AND status != 'Duplicate' AND status != 'Bogus' AND TO_DAYS(NOW())-TO_DAYS(ts2) > 30";
-	} elseif ($status == "All" && !empty($assign)) {
-		$where_clause .= " AND status != 'Closed' AND status != 'Bogus'";
 	} elseif ($status && $status != "All") {
 		$where_clause .= " AND status='$status'";
 	}
