@@ -1,7 +1,7 @@
 #!/usr/local/bin/php -q
 <?php /* vim: set ft=php3 noet ts=4 sw=4 : */
 
-require '../include/functions.inc';
+require dirname(__FILE__).'/../include/functions.inc';
 
 # this script closes bugs due to lack of feedback.
 
