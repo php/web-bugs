@@ -237,7 +237,7 @@ if ($errors) display_errors($errors);
  <tr>
   <th align="right">Your email address:</th>
   <td colspan="2">
-   <input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo clean($in['email']);?>" />
+   <input type="text" size="20" maxlength="50" name="in[email]" value="<?php echo clean($in['email']);?>" />
   </td>
  </tr><tr>
   <th align="right">PHP version:</th>
