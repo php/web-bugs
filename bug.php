@@ -148,7 +148,12 @@ elseif ($in && $edit == 1) {
 			if ($in['status'] == $bug['status']) {
 				$in['status'] = $RESOLVE_REASONS[$in['resolve']]['status'];
 			}
-			$ncomment = addslashes($RESOLVE_REASONS[$in['resolve']]['message'])
+			if (isset($FIX_VARIATIONS[$in['resolve']][$bug['bug_type']])) {
+			  $resolve_message = $FIX_VARIATIONS[$in['resolve']][$bug['bug_type']];
+			} else {
+			  $resolve_message = $RESOLVE_REASONS[$in['resolve']]['message'];
+			}
+			$ncomment = addslashes($resolve_message)
 			          . "\n\n$ncomment";
 		}
 	}
