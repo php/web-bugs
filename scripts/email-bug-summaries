@@ -32,12 +32,12 @@
 		}
 		while(list($k,$v)=each($send)) {
 			if(strstr($k,'@')) {
-				mail($k,"Assigned PHP bugs reminder",$v,"From: php-dev@lists.php.net");
+				mail($k,"Assigned PHP bugs reminder",$v,"From: internals@lists.php.net");
 			} else {
-				mail("$k@php.net","Assigned PHP 4 bugs reminder",$v,"From: php-dev@lists.php.net");
+				mail("$k@php.net","Assigned PHP 4 bugs reminder",$v,"From: internals@lists.php.net");
 			}
 		}
 
-		mail("php-dev@lists.php.net","PHP 4 Bug Summary Report",$body,"From: php-dev@lists.php.net");
+		mail("internals@lists.php.net","PHP 4 Bug Summary Report",$body,"From: internals@lists.php.net");
 	}	
 ?>
