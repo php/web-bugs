@@ -42,7 +42,15 @@ if ($in) {
 
 		$email = stripslashes($in['email']);
 
-		if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+		$dev_extra = "";
+		foreach ($RESOLVE_REASONS as $k => $v) {
+			if (!$v['webonly'])
+				$dev_extra .= "$v[desc]: http://bugs.php.net/fix.php?id=$cid&r=$k\n";
+		}
+
+		# mail to appropriate mailing lists
+		if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+			# mail to reporter
 		    @mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 
 			header("Location: bug.php?id=$cid&thanks=4");
@@ -88,20 +96,7 @@ simply being marked as "bogus".</strong></p>
 <?php
 }
 
-if ($errors) {
-	echo '<div class="errors">';
-	if (count($errors) > 1) {
-		echo "You need to do the following before your submission will be accepted:<ul>";
-		foreach ($errors as $error) {
-			echo "<li>$error</li>\n";
-		}
-		echo "</ul>";
-	}
-	else {
-		echo $errors[0];
-	}
-	echo '</div>';
-}
+if ($errors) display_errors($errors);
 ?>
 <form method="post" action="<?php echo $PHP_SELF;?>">
 <table>

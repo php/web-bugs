@@ -161,10 +161,6 @@ div#bugheader {
         border-bottom: 2px solid #666666;
 }
 
-div#bugheader {
-        border-bottom: 2px solid #666666;
-}
-
 div#bugheader table#details th {
         text-align: right;
         color: #666666;
@@ -203,6 +199,18 @@ div#controls a {
 }
 div#controls a:hover {
         text-decoration: underline;
+}
+
+form#quickfix {
+        float: right;
+        border: 1px solid #990000;
+        font-size: smaller;
+        padding: 4px;
+        margin: 4px;
+        background: #fee;
+}
+form#quickfix input, form#quickfix select {
+        vertical-align: middle;
 }
 
 form#vote {

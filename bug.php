@@ -100,7 +100,7 @@ elseif ($in && $edit == 1) {
 }
 
 if ($in && !$errors && $success) {
-    mail_bug_updates($bug,$in,$from,$ncomment);
+	mail_bug_updates($bug,$in,$from,$ncomment);
 	header("Location: $PHP_SELF?id=$id&thanks=$edit");
 	exit;
 }
@@ -195,20 +195,7 @@ control(2,'Edit Submission');
 <br clear="all" />
 
 <?php
-if ($errors) {
-	echo '<div class="errors">';
-	if (count($errors) > 1) {
-		echo "You need to do the following before your submission will be accepted:<ul>";
-		foreach ($errors as $error) {
-			echo "<li>$error</li>\n";
-		}
-		echo "</ul>";
-	}
-	else {
-		echo $errors[0];
-	}
-	echo '</div>';
-}
+if ($errors) display_errors($errors);
 if (!$errors && !$success) {?>
 <div class="errors">
 Some sort of database error has happened. Maybe this will be illuminating:
@@ -216,9 +203,18 @@ Some sort of database error has happened. Maybe this will be illuminating:
 </div>
 <?php
 }
-?>
 
-<?php if ($edit == 1 || $edit == 2) {?>
+if ($edit == 1) {?>
+<form id="quickfix" method="post" action="fix.php">
+<b>Quick Fix:</b>
+<select name="r"><?php show_reason_types()?></select>
+<input type="hidden" name="id" value="<?php echo $id?>" />
+<input type="submit" value="Resolve" />
+</form>
+<?php
+}
+
+if ($edit == 1 || $edit == 2) {?>
 <form id="update" action="<?php echo $PHP_SELF?>" method="post">
 <?php
 if ($edit == 2) {
@@ -411,23 +407,6 @@ if ($res) {
 }
 
 commonFooter();
-
-function changed($n) {
-	return $GLOBALS['in'][$n]
-	    && trim($GLOBALS['in'][$n]) != trim($GLOBALS['bug'][$n]);
-}
-
-function field($n) {
-	return oneof(clean($GLOBALS['in'][$n]),
-	             htmlspecialchars($GLOBALS['bug'][$n]));
-}
-
-function format_date($date) {
-  if (date("Y") != date("Y", $date)) {
-    return date("j M Y g:ia", $date);
-  }
-  return date("j M g:ia", $date);
-}
 
 function output_note($ts,$email,$comment) {
 	echo "<div class=\"comment\">";

@@ -101,6 +101,22 @@ function show_version_options($current,$default="")
 	echo "<option value=\"earlier\">Earlier? Upgrade first!</option>\n";
 }
 
+function display_errors($errors)
+{ 
+	echo '<div class="errors">';
+	if (count($errors) > 1) {
+		echo "You need to do the following before your submission will be accepted:<ul>";
+		foreach ($errors as $error) {
+			echo "<li>$error</li>\n";
+		}
+		echo "</ul>";
+	}
+	else {
+		echo $errors[0];
+	}
+	echo '</div>';
+}
+
 function show_types($current,$show_any,$default="") 
 {
 	include 'bugtypes.inc';
@@ -182,7 +198,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 	$user_text = wordwrap($user_text, 72); /* use 72 to make piners happy */
 	$dev_text = wordwrap($dev_text, 72);
 
-	list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
+	list($mailto,$mailfrom) = get_bugtype_mail(oneof($in['bug_type'],$bug['bug_type']));
 
 	/* send mail if status was changed or there is a comment */
 	if ($status != $bug[status] || $ncomment != "") {
@@ -199,6 +215,23 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 		      "X-PHP-Bug: $bug[id]\n".
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
 	}
+}
+
+function changed($n) {
+	return $GLOBALS['in'][$n]
+	    && trim($GLOBALS['in'][$n]) != trim($GLOBALS['bug'][$n]);
+}
+
+function field($n) {
+	return oneof(clean($GLOBALS['in'][$n]),
+	             htmlspecialchars($GLOBALS['bug'][$n]));
+}
+
+function format_date($date) {
+  if (date("Y") != date("Y", $date)) {
+    return date("j M Y g:ia", $date);
+  }
+  return date("j M g:ia", $date);
 }
 
 function txfield($n)
