@@ -25,6 +25,8 @@ snapshots at <a href="http://snaps.php.net/">http://snaps.php.net</a></li>
 
 <li>Read our tips on <a href="how-to-report.php">how to report
 a bug that someone will want to help fix</a>.</li>
+<li>Make sure it isn't a support question. For support, see the
+<a href="http://www.php.net/support.php">support page</a>.</li>
 </ul>
 
 <p>Once you've double-checked that the bug you've found hasn't already been
