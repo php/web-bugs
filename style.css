@@ -112,6 +112,7 @@ textarea.small {
 
 div.errors {
         border: 1px dashed #660000;
+        background: #fee;
         color: #660000;
         margin: 4px;
         padding: 6px;
