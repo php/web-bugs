@@ -489,6 +489,14 @@ function incoming_details_are_valid ($in, $initial=0)
 	return $errors;
 }
 
+function is_phpversion_irrelevant($bugtype)
+{
+	if (in_array($bugtype, array('Documentation problem','Livedocs problem','Website problem','Systems problem'))) {
+		return true;
+	}
+	return false;
+}
+
 function get_bugtype_mail($bug_type) 
 {
 	global $mail_bugs_to;
