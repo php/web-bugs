@@ -1,6 +1,11 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 require_once 'prepend.inc';
 
+if ($search_for && !preg_match("/\\D/",trim($search_for))) {
+	header("Location: bug.php?id=$search_for");
+	exit;
+}
+
 commonHeader("Search");
 
 if (isset($cmd) && $cmd == "display") {
