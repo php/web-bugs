@@ -487,6 +487,7 @@ function output_note($com_id, $ts, $email, $comment)
 {
 	global $edit, $id, $trusted_developers, $user;
 
+	echo "<a name=\"c$com_id\"></a>";
 	echo "<div class=\"comment\">";
 	echo "<b>[",format_date($ts),"] ", htmlspecialchars(spam_protect($email)), "</b>\n";
 	echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href=\"$PHP_SELF?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
