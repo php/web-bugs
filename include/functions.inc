@@ -405,7 +405,7 @@ function get_bugtype_mail($bug_type)
 	global $mail_bugs_to;
 
 	if (eregi("documentation", $bug_type)) {
-		return array("$mail_bugs_to,phpdoc@lists.php.net",$mail_bugs_to);
+		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
 	}
 	elseif (eregi("website", $bug_type)) {
 		return array("php-mirrors@lists.php.net","php-mirrors@lists.php.net");
