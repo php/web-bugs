@@ -237,7 +237,7 @@ if ($warnings) display_warnings($warnings);
  <tr>
   <th>Status</th>
   <td nowrap="nowrap">Return only bugs with <b>status</b></td>
-  <td><select name="status"><?php show_state_options($status);?></select></td>
+  <td><select name="status"><?php show_state_options($status, 0, 'All');?></select></td>
  </tr>
 </table>
 <table>
