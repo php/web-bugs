@@ -61,6 +61,7 @@ $state_types = 	array (
 	"Assigned" => 1,
 	"Analyzed" => 1,
 	"Suspended" => 1,
+	"Won't fix" => 1,
 	"No Feedback" => 1,
 	"Feedback" => 1,
 	"Old Feedback" => 0,
