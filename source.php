@@ -9,7 +9,7 @@ if (!isset($url)) {
     exit;
 }
 ?>
-Source of: <? echo $url; ?><BR>
+Source of: <? echo htmlspecialchars($url); ?><BR>
 
 <?
 
