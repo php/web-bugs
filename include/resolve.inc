@@ -70,10 +70,10 @@ Again, thank you for your continued support of PHP.',
     'status' => 'Bogus',
     'desc' => 'Not developer issue',
     'message' =>
-'Sorry, but the bug system is not the appropriate forum for asking
-support questions. Your problem does not imply a bug in PHP itself.
-For a list of more appropriate places to ask for help using PHP,
-please visit http://www.php.net/support.php
+'Sorry, but your problem does not imply a bug in PHP itself.  For a
+list of more appropriate places to ask for help using PHP, please
+visit http://www.php.net/support.php as this bug system is not the
+appropriate forum for asking support questions. 
 
 Thank you for your interest in PHP.',
   ),

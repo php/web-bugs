@@ -57,10 +57,10 @@ commonHeader("Quick Fix Descriptions");
         <td>Not developer issue</td>  
         <td>Status: Bogus</td>         
         <td>
-            Sorry, but the bug system is not the appropriate forum for asking
-            support questions. Your problem does not imply a bug in PHP itself.
-            For a list of more appropriate places to ask for help using PHP,
-            please visit http://www.php.net/support.php
+			Sorry, but your problem does not imply a bug in PHP itself.  For a
+			list of more appropriate places to ask for help using PHP, please
+			visit http://www.php.net/support.php as this bug system is not the
+			appropriate forum for asking support questions. 
 
             Thank you for your interest in PHP.
         </td>    
@@ -114,13 +114,14 @@ commonHeader("Quick Fix Descriptions");
         </td>    
     </tr> 
     <tr>
-        <td>register_globals</td>  
-        <td>Status: Bogus</td>         
+        <td>We don't support PHP 3 anymore</td>  
+        <td>Status: Won't fix</td>
         <td>
-            In PHP 4.2.0, the 'register_globals' setting default changed to
-            be off. See http://www.php.net/release_4_2_0.php for more info.
-            We are sorry about the inconvenience, but this change was a necessary
-            part of our efforts to make PHP scripting more secure and portable.
+            We are sorry, but can not support PHP 3 related problems anymore.
+            Momentum is gathering for PHP 5, and we think supporting PHP 3 
+			will lead to a waste of resources which we want to put into getting
+			PHP 5 ready. Ofcourse PHP 4 will will continue to be supported for
+			the forseeable future.
         </td>    
     </tr>                                               
     <tr>
