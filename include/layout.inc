@@ -36,8 +36,9 @@ function make_image($file, $alt=false, $align=false, $extras=false, $dir=false, 
 	if (!$dir) {
 		$dir = 'gifs';
 	}
-	if ($size = @getimagesize($HTTP_SERVER_VARS['DOCUMENT_ROOT'].$dir.'/'.$file)) {
-		$image = sprintf('<img src="%s/%s" border="%d" %s ALT="%s" %s%s>',
+	$path = $HTTP_SERVER_VARS['DOCUMENT_ROOT']."/$dir/$file";
+	if ($size = @getimagesize($path)) {
+		$image = sprintf('<img src="%s/%s" border="%d" %s alt="%s" %s%s>',
 			$dir,
 			$file,
 			$border,
@@ -47,7 +48,7 @@ function make_image($file, $alt=false, $align=false, $extras=false, $dir=false, 
 			($extras ? ' '.$extras            : '')
 		);
 	} else {
-		$image = sprintf('<img src="%s/%s" border="%d" ALT="%s" %s%s>',
+		$image = sprintf('<img src="%s/%s" border="%d" alt="%s" %s%s>',
 			$dir,
 			$file,
 			$border,
