@@ -129,6 +129,11 @@ elseif ($in && $edit == 1) {
 			          . "\n\n$ncomment";
 		}
 	}
+
+	if ($in['status'] == 'Bogus' && $bug['status'] != 'Bogus' && strlen(trim($ncomment)) == 0) {
+		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
+	}
+
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		$query = "UPDATE bugdb SET sdesc='$in[sdesc]',status='$in[status]', bug_type='$in[bug_type]', assign='$in[assign]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW() WHERE id=$id";
 		$success = @mysql_query($query);
@@ -136,6 +141,7 @@ elseif ($in && $edit == 1) {
 			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'$ncomment')";
 			$success = @mysql_query($query);
 		}
+	
 	}
 	$from = "$user@php.net";
 }
