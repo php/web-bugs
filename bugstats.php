@@ -38,12 +38,11 @@ if ($total == 0) {
 }
 
 if ($phpver > 0) {
-	$other = ($phpver == 4 ? 3 : 4);
-	echo '<p>Currently displaying PHP '. $phpver . ' bugs only. Display <a href="bugstats.php">all bugs</a> or <a href="bugstats.php?phpver=' . $other . '">only PHP ' . $other . ' bugs</a>.</p>' . "\n";
+	echo "<p>Currently displaying PHP {$phpver} bugs only."; 
+} else {
+	echo "<p>Currently displaying all bugs."; 
 }
-else {
-	echo '<p>Currently displaying all bugs. Display <a href="bugstats.php?phpver=3">PHP 3 bugs only</a> or <a href="bugstats.php?phpver=4">PHP 4 bugs only</a>.</p>' . "\n";
-}
+echo "Display <a href=\"bugstats.php?phpver=4\">PHP 4 bugs only</a> or <a href=\"bugstats.php?phpver=5\">PHP 5 bugs only</a>.</p>\n";
 
 function bugstats($status, $type) {
 	global $bug_type, $phpver;
