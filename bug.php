@@ -344,7 +344,7 @@ the database with that &mdash; but make sure to <a href="<?php echo "$PHP_SELF?i
 <?php }?>
 <?php if (!$edit && $thanks != 6 && $bug['status'] != "Closed" && $bug['status'] != "Bogus" && $bug['status'] != 'Duplicate') {?>
   <form id="vote" method="post" action="vote.php">
-  <div>
+  <div class="sect">
    <fieldset>
     <legend>Have you experienced this issue?</legend>
     <div>
@@ -366,7 +366,7 @@ the database with that &mdash; but make sure to <a href="<?php echo "$PHP_SELF?i
     </div>
    </fieldset>
   </div>
-  <div id="canreproduce" style="display: none">
+  <div id="canreproduce" class="sect" style="display: none">
    <fieldset>
 	<legend>Are you using the same PHP version?</legend>
     <div>
@@ -382,7 +382,7 @@ the database with that &mdash; but make sure to <a href="<?php echo "$PHP_SELF?i
     </div>
    </fieldset>
   </div>
-  <div id="submit">
+  <div id="submit" class="sect">
    <input type="hidden" name="id" value="<?php echo $id?>" />
    <input type="submit" value="Vote" />
   </div>

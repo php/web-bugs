@@ -144,6 +144,7 @@ th {
 
 div#bugheader {
         border-bottom: 2px solid #666666;
+        width: 100%;
 }
 
 div#bugheader table#details th {
@@ -173,7 +174,7 @@ form#quickfix input, form#quickfix select {
 form#vote {
         font-size: smaller;
 }
-form#vote > div {
+form#vote div.sect {
         float: left;
 }
 form#vote fieldset {
