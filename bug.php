@@ -128,14 +128,12 @@ elseif ($modify && !$success) {
 
 /* DISPLAY BUG */
 ?>
-<?php
-if (!$edit) {?>
 <div id="votebox">
  <div id="control">
-  <div id="off"><a href="javascript:toggle_layer('votebody','votecontrol')"><img id="votecontrol" src="gifs/close.gif" border="0" width="13" height="13" alt="close" /></a></div>
+  <div id="off"><a href="javascript:toggle_layer('votebody','votecontrol')"><img id="votecontrol" src="gifs/<?php echo $edit ? "open" : "close"?>.gif" border="0" width="13" height="13" alt="close" /></a></div>
   <b>Voting</b>
  </div>
- <div id="votebody">
+ <div id="votebody"<?php if ($edit) echo ' style="display:none"';?>>
 <?php
     $query = "SELECT COUNT(*) AS votes,"
            . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
@@ -203,8 +201,7 @@ statistics above.</div>
  </div>
 </div>
 <?php
-}
-else { /* $edit is set */
+if ($edit) { /* $edit is set */
 	echo "<form method=\"POST\" action=\"$PHP_SELF\">\n";
 	echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
 	echo "<input type=\"hidden\" name=\"edit\" value=\"$edit\" />\n";
