@@ -130,6 +130,22 @@ function display_errors($errors)
 	echo '</div>';
 }
 
+function display_warnings($warnings)
+{ 
+	echo '<div class="warnings">';
+	if (count($warnings) > 1) {
+		echo "Please notice the following:<ul>\n";
+		foreach ($warnings as $warning) {
+			echo "<li>$warning</li>\n";
+		}
+		echo "</ul>";
+	}
+	else {
+		echo $warnings[0];
+	}
+	echo '</div>';
+}
+
 function show_types($current,$show_any,$default="") 
 {
 	include 'bugtypes.inc';
@@ -415,3 +431,25 @@ function get_row_color($row)
 			break;
 	}
 }
+
+function format_search_string($search)
+{
+	// Function will be updated to make results more relevant.
+	// Quick hack for indicating ignored words.
+	
+	$min_word_len=4;
+	
+	$ok = preg_match_all("/\w+/", $search, $matches);
+	$ignored = array();
+	foreach($matches[0] AS $match)
+	{
+		if(strlen($match) < $min_word_len)
+		{
+			array_push($ignored, $match);
+		}
+	}
+	
+	return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('$search')", $ignored);
+}
+
+?>

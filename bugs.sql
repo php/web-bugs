@@ -2,7 +2,7 @@
 #
 # Host: localhost    Database: php3
 #--------------------------------------------------------
-DROP table bugdb;
+DROP table IF EXISTS bugdb;
 
 CREATE TABLE bugdb (
   id int(8) NOT NULL AUTO_INCREMENT,
@@ -22,6 +22,8 @@ CREATE TABLE bugdb (
   FULLTEXT (email,sdesc,ldesc)
 );
 
+DROP TABLE IF EXISTS bugdb_comments;
+
 CREATE TABLE bugdb_comments (
   id int(8) NOT NULL AUTO_INCREMENT,
   bug int(8) NOT NULL,
@@ -31,6 +33,8 @@ CREATE TABLE bugdb_comments (
   PRIMARY KEY (id),
   FULLTEXT (comment)
 );
+
+DROP TABLE IF EXISTS bugdb_votes;
 
 CREATE TABLE bugdb_votes (
   bug int(8) NOT NULL,

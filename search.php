@@ -14,6 +14,7 @@ if ($search_for && !preg_match("/\\D/",trim($search_for))) {
 commonHeader("Search");
 
 $errors = array();
+$warnings = array();
 
 if (isset($cmd) && $cmd == "display") {
 	@mysql_pconnect("localhost","nobody","")
@@ -45,9 +46,14 @@ if (isset($cmd) && $cmd == "display") {
 	}
 
 	if (strlen($search_for)) {
-		$where_clause .= " AND MATCH (email,sdesc,ldesc) AGAINST ('$search_for')";
+		list($sql_search, $ignored) = format_search_string($search_for);
+		$where_clause .= $sql_search;
+		if (count($ignored) > 0 ) {
+			array_push($warnings, "The following words were ignored: " . implode(', ', htmlentities(stripslashes(array_unique($ignored)))));
+		}
 	}
 
+	$bug_age = (int)$bug_age;
 	if ($bug_age) {
 		$where_clause .= " AND ts1 >= DATE_SUB(NOW(), INTERVAL $bug_age DAY)";
 	}
@@ -73,10 +79,12 @@ if (isset($cmd) && $cmd == "display") {
 
     $query .= "$where_clause ";
 
+	$allowed_order = array("id", "bug_type", "status", "php_version", "php_os", "sdesc", "assign");
+
 	/* we avoid adding an order by clause if using the full text search */
     if ($order_by || $reorder_by || !strlen($search_for)) {
-		if (!$order_by) $order_by = "id";
-		if (!$direction) $direction = "ASC";
+		if (!in_array($order_by,$allowed_order)) $order_by = "id";
+		if ($direction != "DESC") $direction = "ASC";
 
 		if ($reorder_by) {
 			if ($order_by == $reorder_by) {
@@ -90,8 +98,8 @@ if (isset($cmd) && $cmd == "display") {
 		$query .= " ORDER BY $order_by $direction";
     }
 
-	if (!$begin) $begin = 0;
-	if (!isset($limit)) $limit = 30;
+	if (!(int)$begin) $begin = 0;
+	if ($limit != 'All' && !(int)$limit) $limit = 30;
 
 	if($limit!='All') $query .= " LIMIT $begin,$limit";
 
@@ -123,6 +131,7 @@ if (isset($cmd) && $cmd == "display") {
   <th><a href="<?php echo $link;?>&amp;reorder_by=assign">Assigned</a></th>
  </tr>
 <?php
+		if ($warnings) display_warnings($warnings);
 		while ($row = mysql_fetch_array($res)) {
 			echo '<tr bgcolor="', get_row_color($row), '">';
 
@@ -158,17 +167,22 @@ if (isset($cmd) && $cmd == "display") {
 }
 
 if ($errors) display_errors($errors);
+if ($warnings) display_warnings($warnings);
 ?>
 <form id="asearch" method="post" action="<?php echo $PHP_SELF?>">
 <table id="primary" width="95%">
  <tr>
   <th>Find bugs</th>
   <td nowrap="nowrap">with <b>any</b> of the words</td>
-  <td><input type="text" name="search_for" value="<?echo htmlspecialchars(stripslashes($search_for));?>" size="20" maxlength="255" /></td>
+  <td><input type="text" name="search_for" value="<?php echo htmlspecialchars(stripslashes($search_for));?>" size="20" maxlength="255" /></td>
   <td rowspan="2">
    <select name="limit"><?php show_limit_options($limit);?></select>
    <br />
    <select name="order_by"><?php show_order_options($limit);?></select>
+   <br />
+   <input type="radio" name="direction" value="ASC" <?php if($direction != "DESC") { echo('checked="checked"'); }?>/>Ascending
+   &nbsp;
+   <input type="radio" name="direction" value="DESC" <?php if($direction == "DESC") { echo('checked="checked"'); }?>/>Descending
    <br />
    <input type="hidden" name="cmd" value="display" />
    <input type="submit" value="Search" />
@@ -189,17 +203,17 @@ if ($errors) display_errors($errors);
  <tr>
   <th>OS</th>
   <td nowrap="nowrap">Return bugs with <b>operating system</b></td>
-  <td><input type="text" name="php_os" value="<?echo htmlspecialchars(stripslashes($php_os));?>" /></td>
+  <td><input type="text" name="php_os" value="<?php echo htmlspecialchars(stripslashes($php_os));?>" /></td>
  </tr>
  <tr>
   <th>Version</th>
   <td nowrap="nowrap">Return bugs reported with <b>PHP version</b></td>
-  <td><input type="text" name="phpver" value="<?echo htmlspecialchars(stripslashes($phpver));?>" /></td>
+  <td><input type="text" name="phpver" value="<?php echo htmlspecialchars(stripslashes($phpver));?>" /></td>
  </tr>
  <tr>
   <th>Assigned</th>
   <td nowrap="nowrap">Return only bugs <b>assigned</b> to</td>
-  <td><input type="text" name="assign" value="<?echo htmlspecialchars(stripslashes($assign));?>" />
+  <td><input type="text" name="assign" value="<?php echo htmlspecialchars(stripslashes($assign));?>" />
 <?php
     if (!empty($user)) {
 	$u = stripslashes($user);

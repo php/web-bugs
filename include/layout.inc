@@ -208,7 +208,7 @@ function commonHeader($title = false, $showsearch = true) {
     <input type="hidden" name="cmd" value="display" />
       <td align="right" valign="top" colspan="2" nowrap><font color="#ffffff">
         <small>go to bug id or search bugs for</small>
-<input class="small" type="text" name="search_for" value="<?php echo htmlspecialchars($prevsearch) ?>" size="30" />
+        <input class="small" type="text" name="search_for" value="" size="30" />
         <?php echo make_submit('small_submit_white.gif', 'search', 'bottom');?>&nbsp;<br>
      </font></td>
     </form>

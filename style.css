@@ -117,6 +117,13 @@ div.errors {
         margin: 4px;
         padding: 6px;
 }
+div.warnings {
+        border: 1px dashed #ff8c00;
+        background: #ffa;
+        color: #ff8c00;
+        margin: 4px;
+        padding: 6px;
+}
 div.explain {
         border: 1px dashed #000066;
         color: #000066;
