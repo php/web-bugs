@@ -349,6 +349,8 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		      "X-PHP-OS: "         . stripslashes((($edit != 3) ? $in['php_os']      : $bug['php_os']))      . "\n" .
 		      "X-PHP-Status: "     . stripslashes($new_status) . "\n" .
 		      "X-PHP-Old-Status: " . stripslashes($old_status) . "\n" .
+		      "X-PHP-Reported-By: " . stripslashes($bug['email']) . "\n" .
+		      "X-PHP-Updated-By: " . stripslashes($from) . "\n" .
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
 	}
 
