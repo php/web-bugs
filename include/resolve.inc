@@ -189,6 +189,17 @@ fails. Install GNU sed and it should be okay.
  
 Thank you for your interest in PHP.',
   ),
+    'float' => array(
+    'status' => 'Bogus',
+    'desc' => 'Floating point limitations'
+    'message' => 
+'Floating point values have a limited precision. Hence a value might 
+not have the same string representation after any processing. That also
+includes writing a floating point value in your script and directly 
+printing it without any mathematical operations.
+ 
+Thank you for your interest in PHP.',
+  ),
 
 );
 
