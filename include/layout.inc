@@ -180,12 +180,6 @@ function commonHeader($title = false, $showsearch = true) {
     <td align="left" rowspan="2">
 <?php print_link('/', make_image('logo-bug.gif', 'PHP Bugs', false, 'vspace="2" hspace="2"') ); ?><br>
     </td>
-    <td align="right" valign="top" nowrap>
-      <font color="#ffffff"><b>
-        <?php echo strftime("%A, %B %d, %Y"); ?>
-      </b>&nbsp;<br>
-      </font>
-    </td>
   </tr>
 
   <tr class="headertop">
