@@ -81,6 +81,13 @@ to this bug and change the status back to "Open".
     'message' =>
 'Please do not submit the same bug more than once.',
   ),
+  'globals' => array(
+    'status' => 'Bogus',
+    'desc' => 'register_globals',
+    'message' =>
+'In PHP 4.2.0, the \'register_globals\' setting default changed to
+be off. See http://www.php.net/release_4_2_0.php for more info.',
+  ),
 );
 
 function show_reason_types($current="", $expanded=0)
