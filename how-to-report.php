@@ -126,16 +126,18 @@ with the different bugs.</p>
 
 <ul>
  <li>
-  <a href="http://www.catb.org/~esr/faqs/smart-questions.html">Eric
-  Raymond's How To Ask Questions The Smart Way</a>
+  Eric Raymond's and Rick Moen's 
+  <a href="http://www.catb.org/~esr/faqs/smart-questions.html">How
+  To Ask Questions The Smart Way</a>
  </li>
  <li>
-  <a href="http://www.mozilla.org/quality/bug-writing-guidelines.html">mozilla.org's
-  bug writing guidelines</a>
+  mozilla.org's 
+  <a href="http://www.mozilla.org/quality/bug-writing-guidelines.html">bug
+  writing guidelines</a>
  </li>
  <li>
-  <a href="http://www.chiark.greenend.org.uk/~sgtatham/bugs.html">Simon
-  Tatham's How to Report Bugs Effectively</a>
+  Simon Tatham's <a href="http://www.chiark.greenend.org.uk/~sgtatham/bugs.html">How
+  to Report Bugs Effectively</a>
  </li>
 </ul>
 
