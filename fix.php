@@ -31,6 +31,9 @@ elseif (!verify_password($user,$pw)) {
 if (!isset($r) || !isset($RESOLVE_REASONS[$r])) {
   $errors[] = "You have to use a valid reason to resolve this bug.";
 }
+if ($RESOLVE_REASONS[$r]['status'] == 'Bogus' && strlen(trim($ncomment)) == 0) {
+	$errors[] = "You must provide a comment when marking a bug 'Bogus'";
+}
 
 if ($errors) {
   commonHeader("Resolve Bug");
