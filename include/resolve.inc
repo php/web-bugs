@@ -98,7 +98,7 @@ http://www.php.net/manual/ and the instructions on how to report
 a bug at http://bugs.php.net/how-to-report.php',
   ),
   'notenoughinfo' => array(
-    'status' => 'Bogus',
+    'status' => 'Feedback',
     'desc' => 'Not enough info',
     'message' =>
 'Not enough information was provided for us to be able
@@ -171,7 +171,7 @@ not suffer from DST.',
 
 function show_reason_types($current="", $expanded=0)
 {
-        if ($expanded) echo "<option value=\"\"></option>\n";
+	if ($expanded) echo "<option value=\"\"></option>\n";
 	while (list($k,$v) = each($GLOBALS['RESOLVE_REASONS'])) {
 		echo "<option value=\"$k\"", ($current==$k ? " selected" : ""),
 		     ">$v[desc]",($expanded?" ($v[status])":""),"</option>\n";
