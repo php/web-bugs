@@ -350,7 +350,7 @@ the database with that &mdash; but make sure to <a href="<?php echo "$PHP_SELF?i
 </div>
 </form>
 <?php }?>
-<?php if (!$edit && $thanks != 6 && $bug['status'] != "Closed" && $bug['status'] != "Bogus" && $bug['status'] != 'Duplicate') {?>
+<?php if (!$edit && $thanks != 4 && $thanks != 6 && $bug['status'] != "Closed" && $bug['status'] != "Bogus" && $bug['status'] != 'Duplicate') {?>
   <form id="vote" method="post" action="vote.php">
   <div class="sect">
    <fieldset>
