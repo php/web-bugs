@@ -11,7 +11,7 @@ if ($id) {
 		echo "<pre><h1>Bug $id</h1>\n";
 		echo "<b>From     : " . htmlspecialchars($row['email']) . "\n";
 		echo "Date     : " . $row['ts1'] . "\n";
-		echo "Status   : <a href=\"bugs.php?id=$id&edit=1\">" . htmlspecialchars($row['status']) . "</a>\n";
+		echo "Status   : <a href=\"index.php?id=$id&edit=1\">" . htmlspecialchars($row['status']) . "</a>\n";
 		echo "Type     : " . htmlspecialchars($row['bug_type']) . "\n";
 		echo "Version  : " . htmlspecialchars($row['php_version']) . "\n";
 		echo "OS       : " . htmlspecialchars($row['php_os']) . "\n";
