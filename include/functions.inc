@@ -147,43 +147,56 @@ function show_types($current,$show_any,$default="")
 function mail_bug_updates($bug, $in, $from, $ncomment)
 {
     $text = array();
-
-    $text[] = "ID: $bug[id]";
-
+    $headers = array();
+    
+    $headers[] = array("ID", $bug['id']);
+    
 	switch ($edit) {
 	case 3:
-		$text[] = "Comment by: ".rinse($in['email']);
+		$headers[] = array("Comment by", rinse($in['email']));
 		break;
 	case 2:
-		$text[] = "User updated by: ".txfield('email');
+		$headers[] = array("User updated by", txfield('email'));
 		break;
 	default:
-		$text[] = "Updated by: $from";
+		$headers[] = array("Updated by", $from);
 	}
 
 	if (changed('sdesc'))
-		$text[] = "Old Summary: $bug[sdesc]";
+		$headers[] = array("Old Summary", $bug['sdesc']);
 
 	$fields = array(
-		'email' => 'Reported By',
-		'status' => 'Status',
-		'bug_type' => 'Bug Type',
-		'php_os' => 'Operating System',
+		'email'       => 'Reported By',
+		'status'      => 'Status',
+		'bug_type'    => 'Bug Type',
+		'php_os'      => 'Operating System',
 		'php_version' => 'PHP Version',
-		'assign' => 'Assigned To',
+		'assign'      => 'Assigned To',
 	);
 
 	foreach ($fields as $name => $desc) {
 		if (changed($name)) {
-			$text[] = "Old $desc: $bug[$name]";
+			$headers[] = array("Old $desc", $bug[$name]);
 		}
 		/* only fields that are set get added. */
 		if ($f = txfield($name))
-			$text[] = "$desc: $f";
+			$headers[] = array($desc, $f);
 	}
+    
+    # make header output aligned
+    $maxlength = 0;
+    $actlength = 0;
+    foreach ($headers as $v) {
+        $actlength = strlen($v[0]) + 1;
+        $maxlength = (($maxlength < $actlength) ? $actlength : $maxlength);
+    }
+    
+    foreach ($headers as $v) {
+        $text[] = str_pad($v[0] . ":", $maxlength) . " " . $v[1];
+    }
 
 	if ($ncomment)
-		$text[] = "New Comment:\n\n".stripslashes($ncomment);
+		$text[] = "\nNew Comment:\n\n".stripslashes($ncomment);
 
 	$text[] = get_old_comments($bug['id']);
 
