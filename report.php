@@ -34,12 +34,12 @@ if ($cmd == "send") {
 		$sdesc = stripslashes($sdesc);
 
 		$ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
-		$ascii_report.= "\n-- \nEdit bug report at: http://bugs.php.net/?id=$cid&edit=1\n";
-
+		$ascii_report.= "\n-- \nEdit bug report at: http://bugs.php.net/?id=$cid&edit=";
+		
 		list($mailto,$mailfrom) = get_bugtype_mail($bug_type);
 
-		if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report, "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
-		    @mail($email, "Bug #$cid: $sdesc", $ascii_report, "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
+		if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+		    @mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 
 			header("Location: report.php?cmd=thankyou&cid=$cid&mailto=".urlencode($mailto));
 
