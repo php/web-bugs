@@ -56,6 +56,7 @@ foreach($bug_type['all'] as $type => $value) {
 	if(!isset($bug_type['open'][$type]))      $bug_type['open'][$type] = 0;
 	if(!isset($bug_type['critical'][$type]))  $bug_type['critical'][$type] = 0;
 	if(!isset($bug_type['analyzed'][$type]))  $bug_type['analyzed'][$type] = 0;
+    if(!isset($bug_type['verified'][$type]))  $bug_type['verified'][$type] = 0;
 	if(!isset($bug_type['suspended'][$type])) $bug_type['suspended'][$type] = 0;
 	if(!isset($bug_type['duplicate'][$type])) $bug_type['duplicate'][$type] = 0;
 	if(!isset($bug_type['assigned'][$type]))  $bug_type['assigned'][$type] = 0;
@@ -89,6 +90,7 @@ echo "<th>".sort_url('closed')."</th>";
 echo "<th>".sort_url('open')."</th>";
 echo "<th>".sort_url('critical')."</th>";
 echo "<th>".sort_url('analyzed')."</th>";
+echo "<th>".sort_url('verified')."</th>";
 echo "<th>".sort_url('suspended')."</th>";
 echo "<th>".sort_url('duplicate')."</th>";
 echo "<th>".sort_url('assigned')."</th>";
@@ -103,6 +105,7 @@ echo "<tr><th align=right bgcolor=#aabbcc>All:</th>",
      "<td align=center bgcolor=#ccddee>".bugstats('open', 'all')."&nbsp;</td>",
      "<td align=center bgcolor=#ddeeff>".bugstats('critical', 'all')."&nbsp;</td>",
      "<td align=center bgcolor=#ccddee>".bugstats('analyzed', 'all')."&nbsp;</td>",
+     "<td align=center bgcolor=#ccddee>".bugstats('verified', 'all')."&nbsp;</td>",     
      "<td align=center bgcolor=#ddeeff>".bugstats('suspended','all')."&nbsp;</td>",
      "<td align=center bgcolor=#ccddee>".bugstats('duplicate', 'all')."&nbsp;</td>",
      "<td align=center bgcolor=#ddeeff>".bugstats('assigned','all')."&nbsp;</td>",
@@ -115,6 +118,7 @@ foreach ($bug_type[$sort_by] as $type => $value) {
 	if(($bug_type['open'][$type] > 0 || 
 		$bug_type['critical'][$type] > 0 ||
 		$bug_type['analyzed'][$type] > 0 ||
+        $bug_type['verified'][$type] > 0 ||
 		$bug_type['suspended'][$type] > 0 ||
 		$bug_type['duplicate'][$type] > 0 ||
 		$bug_type['assigned'][$type] > 0 ||
@@ -126,6 +130,7 @@ foreach ($bug_type[$sort_by] as $type => $value) {
 		     "<td align=center bgcolor=#ccddee>".bugstats('open', $type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ddeeff>".bugstats('critical',$type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ccddee>".bugstats('analyzed', $type)."&nbsp;</td>",
+             "<td align=center bgcolor=#ccddee>".bugstats('verified', $type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ddeeff>".bugstats('suspended',$type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ccddee>".bugstats('duplicate', $type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ddeeff>".bugstats('assigned',$type)."&nbsp;</td>",
