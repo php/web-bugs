@@ -72,6 +72,11 @@ if ($in && $edit == 3) {
 		header("Location: $PHP_SELF?id=$id&edit=2");
 		exit();
 	}
+
+	# Temporary, da.ru is spamming the bugs system right now
+	if (false !== strpos($ncomment, 'da.ru')) {
+		$errors[] = "Go away.";
+	}
 	
 	# check that they aren't using a php.net mail address without
 	# being authenticated (oh, the horror!)
