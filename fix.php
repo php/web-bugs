@@ -87,6 +87,13 @@ if (!$res || !$bug) {
 $status = $RESOLVE_REASONS[$r]['status'];
 $ncomment = $RESOLVE_REASONS[$r]['message'];
 
+/* if the already has the status of the resolution, bounce over to the
+   main bug form. it will show the appropriate error message. */
+if ($status == $bug['status']) {
+  header("Location: bug.php?id=$id&edit=1&in[resolve]=$r");
+  exit;
+}
+
 $query = "UPDATE bugdb SET status='$status', ts2=NOW() WHERE id=$id";
 $success = @mysql_query($query);
 		

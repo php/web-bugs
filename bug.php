@@ -88,7 +88,19 @@ elseif ($in && $edit == 1) {
 	if (!verify_password($user,stripslashes($pw))) {
 		$errors[] = "The username or password you supplied was incorrect.";
 	}
-	elseif (!($errors = incoming_details_are_valid($in))) {
+	if ($in['resolve']) {
+		if (!$trytoforce && $RESOLVE_REASONS[$in['resolve']]['status'] == $bug['status']) {
+			$errors[] = "The bug is already marked '$bug[status]'. (Submit again to ignore this.)";
+		}
+		else {
+			if ($in['status'] == $bug['status']) {
+				$in['status'] = $RESOLVE_REASONS[$in['resolve']]['status'];
+			}
+			$ncomment = $RESOLVE_REASONS[$in['resolve']]['message']
+			          . "\n\n$ncomment";
+		}
+	}
+	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		$query = "UPDATE bugdb SET sdesc='$in[sdesc]',status='$in[status]', bug_type='$in[bug_type]', assign='$in[assign]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW() WHERE id=$id";
 		$success = @mysql_query($query);
 		if ($success && !empty($ncomment)) {
@@ -202,16 +214,6 @@ Some sort of database error has happened. Maybe this will be illuminating:
 <?php
 }
 
-if ($edit == 1) {?>
-<form id="quickfix" method="post" action="fix.php">
-<b>Quick Fix:</b>
-<select name="r"><?php show_reason_types()?></select>
-<input type="hidden" name="id" value="<?php echo $id?>" />
-<input type="submit" value="Resolve" />
-</form>
-<?php
-}
-
 if ($edit == 1 || $edit == 2) {?>
 <form id="update" action="<?php echo $PHP_SELF?>" method="post">
 <?php
@@ -286,6 +288,12 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
 }
 ?>
 <table>
+<?php if ($edit == 1) {?>
+ <tr>
+  <th>Quick Fix:</th>
+  <td colspan="5"><select name="in[resolve]"><?php show_reason_types($in['resolve'],1);?></select><?php if ($in['resolve']) {?><input type="hidden" name="trytoforce" value="1" /><?php }?></td>
+ </tr>
+<?php }?>
  <tr>
   <th>Status:</th>
   <td><select name="in[status]"><?php show_state_options($in['status'],$edit,$bug['status'])?></select></td>
@@ -315,7 +323,7 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
   <td colspan="3"><input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo field('php_os')?>" /></td>
  </tr>
 </table>
-<b>New Comment:</b><br />
+<b>New<?php if ($edit==1) echo "/Additional"?> Comment:</b><br />
 <textarea cols="60" rows="8" name="ncomment" wrap="physical"><?php echo clean($ncomment)?></textarea>
 <br /><input type="submit" value="Submit" />
 </form>

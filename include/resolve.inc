@@ -82,10 +82,11 @@ to this bug and change the status back to "Open".
   ),
 );
 
-function show_reason_types($current="")
+function show_reason_types($current="", $expanded=0)
 {
+        if ($expanded) echo "<option value=\"\"></option>\n";
 	while (list($k,$v) = each($GLOBALS['RESOLVE_REASONS'])) {
 		echo "<option value=\"$k\"", ($current==$k ? " selected" : ""),
-		     ">$v[desc]</option>\n";
+		     ">$v[desc]",($expanded?" ($v[status])":""),"</option>\n";
 	}
 }
