@@ -94,11 +94,12 @@ elseif ($in && $edit == 1) {
 	if (!verify_password($user,stripslashes($pw))) {
 		$errors[] = "The username or password you supplied was incorrect.";
 	}
+
 	if ($in['resolve']) {
 		if (!$trytoforce && $RESOLVE_REASONS[$in['resolve']]['status'] == $bug['status']) {
 			$errors[] = "The bug is already marked '$bug[status]'. (Submit again to ignore this.)";
 		}
-		else {
+		elseif (!$errors)  {
 			if ($in['status'] == $bug['status']) {
 				$in['status'] = $RESOLVE_REASONS[$in['resolve']]['status'];
 			}
