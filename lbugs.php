@@ -34,7 +34,7 @@ if ($id) {
 } else {
 	$result = mysql_query("SELECT id,bug_type,status,sdesc FROM bugdb WHERE status != 'Closed' AND status!='Suspended' AND status!='Duplicate' AND status!='Bogus' AND php_version LIKE '4%' ORDER BY bug_type,id");
 	if ($num = mysql_num_rows($result)) {
-		echo "<h1>PHP 4.x Bug Database summary</h1>";
+		echo "<h1>PHP 4.x Bug Database Summary</h1>";
 		echo "<pre> Num Status     Summary ($num total including feature requests)\n";
 		$last_group = "";
 		while ($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
