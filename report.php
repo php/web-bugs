@@ -14,82 +14,82 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
 $mail_bugs_to = "php-dev@lists.php.net";
 
 @mysql_connect("localhost","nobody","")
-	or die("Unable to connect to SQL server.");
+    or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
 $errors = array();
 if ($in) {
-	if (!($errors = incoming_details_are_valid($in,1))) {
-		$query = "INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$in[bug_type]','$in[email]','$in[sdesc]','$in[ldesc]','$in[php_version]','$in[php_os]','Open',NOW(),'$in[passwd]')";
-		$ret = mysql_query($query);
+    if (!($errors = incoming_details_are_valid($in,1))) {
+        $query = "INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$in[bug_type]','$in[email]','$in[sdesc]','$in[ldesc]','$in[php_version]','$in[php_os]','Open',NOW(),'$in[passwd]')";
+        $ret = mysql_query($query);
     
-		$cid = mysql_insert_id();
+        $cid = mysql_insert_id();
 
-		$report = "";
-		$report .= "From:             ".stripslashes($in['email'])."\n";
-		$report .= "Operating system: ".stripslashes($in['php_os'])."\n";
-		$report .= "PHP version:      ".stripslashes($in['php_version'])."\n";
-		$report .= "PHP Bug Type:     $in[bug_type]\n";
-		$report .= "Bug description:  ";
+        $report = "";
+        $report .= "From:             ".stripslashes($in['email'])."\n";
+        $report .= "Operating system: ".stripslashes($in['php_os'])."\n";
+        $report .= "PHP version:      ".stripslashes($in['php_version'])."\n";
+        $report .= "PHP Bug Type:     $in[bug_type]\n";
+        $report .= "Bug description:  ";
 
-		$ldesc = stripslashes($in['ldesc']);
-		$sdesc = stripslashes($in['sdesc']);
+        $ldesc = stripslashes($in['ldesc']);
+        $sdesc = stripslashes($in['sdesc']);
 
-		$ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
-		$ascii_report.= "\n-- \nEdit bug report at: http://bugs.php.net/?id=$cid&edit=";
-		
-		list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
+        $ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
+        $ascii_report.= "\n-- \nEdit bug report at: http://bugs.php.net/?id=$cid&edit=";
+        
+        list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
 
-		$email = stripslashes($in['email']);
+        $email = stripslashes($in['email']);
 
-		# provide shortcut URLS for "quick bug fixes"
+        # provide shortcut URLS for "quick bug fixes"
         $dev_extra = ""; 
-		$maxkeysize = 0;
-		foreach ($RESOLVE_REASONS as $v) {
-			if (!$v['webonly']) {
+        $maxkeysize = 0;
+        foreach ($RESOLVE_REASONS as $v) {
+            if (!$v['webonly']) {
                 $actkeysize = strlen($v['desc']);
                 $maxkeysize = (($maxkeysize < $actkeysize) ? $actkeysize : $maxkeysize);
             }
         }
         foreach ($RESOLVE_REASONS as $v) {
-			if (!$v['webonly'])
-				$dev_extra .= str_pad($v['desc'], $maxkeysize) .
+            if (!$v['webonly'])
+                $dev_extra .= str_pad($v['desc'], $maxkeysize) .
                               ": http://bugs.php.net/fix.php?id=$cid&r=$k\n";
-		}
+        }
 
-		# mail to appropriate mailing lists
-		if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
-			# mail to reporter
-		    @mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
+        # mail to appropriate mailing lists
+        if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+            # mail to reporter
+            @mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 
-			header("Location: bug.php?id=$cid&thanks=4");
-			exit;
+            header("Location: bug.php?id=$cid&thanks=4");
+            exit;
 
-		} else {
-		
-			commonHeader("Report - Error");
-			
-			echo "<pre>\n";
+        } else {
+        
+            commonHeader("Report - Error");
+            
+            echo "<pre>\n";
 
-			echo $report;
+            echo $report;
 
-			echo htmlspecialchars($sdesc), "\n\n";
+            echo htmlspecialchars($sdesc), "\n\n";
 
-			echo wordwrap(htmlspecialchars($ldesc));
+            echo wordwrap(htmlspecialchars($ldesc));
 
-			echo "</pre>\n";
+            echo "</pre>\n";
 
-			echo "<p><h2>Mail not sent!</h2>\n";
-			echo "Please send this page in a mail to " .
-			     "<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
-	    }
-	}
+            echo "<p><h2>Mail not sent!</h2>\n";
+            echo "Please send this page in a mail to " .
+                 "<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
+        }
+    }
 
-	commonHeader("Report - Problems");
+    commonHeader("Report - Problems");
 }
 
 if (!isset($in)) {
-	commonHeader("Report - New");
+    commonHeader("Report - New");
 ?>
 
 <p>Before you report a bug, make sure to search for similar bugs using the form
