@@ -171,7 +171,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 		'bug_type'    => 'Bug Type',
 		'php_os'      => 'Operating System',
 		'php_version' => 'PHP Version',
-		'assign'      => 'Assigned To',
+		'assign'      => 'Assigned To'
 	);
 
 	foreach ($fields as $name => $desc) {
