@@ -209,16 +209,21 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 
 	$text[] = get_old_comments($bug['id']);
 
-	$user_text  = "ATTENTION! Do NOT reply to this email!\n";
-	$user_text .= "To reply, use the web interface found at http://bugs.php.net/?id=$bug[id]&edit=2\n\n\n";
-    $user_text .= $header_text . join("\n",$text);
+	/* format mail so it looks nice, use 72 to make piners happy */
+	$wrapped_text = wordwrap(join("\n",$text), 72);
 
-	$dev_text = $header_text . join("\n",$text)
-               . "\n-- \nEdit this bug report at http://bugs.php.net/?id=$bug[id]&edit=1\n";
+	/* user text with attention, headers and previous messages */
+    $user_text  = "ATTENTION! Do NOT reply to this email!\n" .
+	              "To reply, use the web interface found at\n" .
+                  "http://bugs.php.net/?id=$bug[id]&edit=2\n\n\n" .
+                  $header_text .
+                  $wrapped_text;
 
-	/* format mail so it looks nice */
-	$user_text = wordwrap($user_text, 72); /* use 72 to make piners happy */
-	$dev_text = wordwrap($dev_text, 72);
+	/* developer text with headers, previous messages, and edit link */
+	$dev_text = $header_text . 
+                $wrapped_text .
+                "\n-- \nEdit this bug report at " .
+                "http://bugs.php.net/?id=$bug[id]&edit=1\n";
 
 	list($mailto,$mailfrom) = get_bugtype_mail(oneof($in['bug_type'],$bug['bug_type']));
 
