@@ -6,7 +6,6 @@ if (!$id) {
 }
 
 require_once 'prepend.inc';
-require_once 'config.php';
 require_once 'cvs-auth.inc';
 
 $mail_bugs_to = 'php-bugs@lists.php.net';
@@ -40,7 +39,7 @@ if ($errors) {
   commonHeader("Resolve Bug");
   display_errors($errors);
 ?>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form method="post" action="<?php echo $PHP_SELF?>">
 <input type="hidden" name="id" value="<?php echo $id?>" />
 <table>
  <tr>
@@ -71,9 +70,9 @@ if ($errors) {
   exit;
 }
 
-@mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
+@mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
-@mysql_select_db(BUG_DB_NAME);
+@mysql_select_db("php3");
 
 # fetch info about the bug into $bug
 $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
@@ -83,7 +82,7 @@ $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
 
 $res = mysql_query($query);
 
-if ($res) $bug = mysql_fetch_assoc($res);
+if ($res) $bug = mysql_fetch_array($res,MYSQL_ASSOC);
 if (!$res || !$bug) {
   commonHeader("No such bug.");
   echo "<h1 class=\"error\">No such bug #$id!</h1>";

@@ -10,11 +10,9 @@
 $id = (int)$_REQUEST['id'];
 $format = $_REQUEST['format'];
 
-include 'config.php';
-
-@mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
+@mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
-@mysql_select_db(BUG_DB_NAME);
+@mysql_select_db("php3");
 
 $query  = "SELECT id,bug_type,email,sdesc,ldesc,"
 		. "php_version,php_os,status,ts1 as ts_submitted,ts2 as ts_modified,assign,"
@@ -28,7 +26,7 @@ $query  = "SELECT id,bug_type,email,sdesc,ldesc,"
 
 $res = @mysql_query($query);
 
-if ($res) $bug = mysql_fetch_assoc($res);
+if ($res) $bug = mysql_fetch_array($res,MYSQL_ASSOC);
 if (!$res || !$bug) {
 	outputHeader(array(),$format);
 	outputFooter($format);
@@ -76,7 +74,7 @@ EOD;
 }
 
 function outputbug($bug, $res, $format) {
-	while ($row = mysql_fetch_assoc($res)) {
+	while ($row = mysql_fetch_array($res,MYSQL_ASSOC)) {
 		switch ($format) {
 			case 'xml':
 				echo "  <comment>\n";

@@ -2,7 +2,6 @@
 <?php /* vim: set ft=php3 noet ts=4 sw=4 : */
 
 require dirname(__FILE__).'/../include/functions.inc';
-require_once 'config.php';
 
 # this script closes bugs due to lack of feedback.
 
@@ -17,9 +16,9 @@ the status of the bug back to "Open".';
 
 $mail_bugs_to = 'php-bugs@lists.php.net';
 
-mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
+mysql_connect("localhost", "nobody", "")
   or die("unable to connect to database");
-mysql_select_db(BUG_DB_NAME)
+mysql_select_db("php3")
   or die("unable to select db");
 
 # fetch info about the bug into $bug
@@ -39,7 +38,7 @@ $result = mysql_query($query)
 
 $in = array('status' => 'No Feedback');
 
-while ($bug = mysql_fetch_assoc($result)) {
+while ($bug = mysql_fetch_array($result,MYSQL_ASSOC)) {
   list($mailto,$mailfrom) = get_bugtype_mail($bug['bug_type']);
 
   mysql_query("INSERT bugdb_comments SET bug=$bug[id],email='$mailfrom',ts=NOW(),comment='".addslashes($message)."'");

@@ -1,7 +1,6 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
 require_once 'prepend.inc';
-require_once 'config.php';
 require_once 'cvs-auth.inc';
 
 /* When user submits a report, do a search and display the results before allowing
@@ -18,18 +17,13 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
 
 $mail_bugs_to = "php-bugs@lists.php.net";
 
-@mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
+@mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
-@mysql_select_db(BUG_DB_NAME);
-
-if (isset($_POST['in'])) {
-	$in = $_POST['in'];
-}
-
+@mysql_select_db("php3");
 
 $errors = array();
-if (isset($in) && $in) {
-	if (!($errors = incoming_details_are_valid($in, 1))) {
+if ($in) {
+	if (!($errors = incoming_details_are_valid($_POST['in'], 1))) {
 
 		if (!$in['did_luser_search']) {
 
@@ -78,7 +72,7 @@ you can scroll down and click the submit button to really enter the details into
 </tr>
 <?php
 
-				while ($row = mysql_fetch_assoc($res)) {
+				while ($row = mysql_fetch_array($res)) {
 
 					$resolution = mysql_get_one("SELECT comment from bugdb_comments where bug = " . $row['id'] . " order by id desc limit 1");
 
@@ -237,25 +231,8 @@ simply being marked as "bogus".</strong></p>
 }
 
 if ($errors) display_errors($errors);
-
-if (!isset($in)) {
-	$in = array(
-		'email' => '',
-		'php_version' => '',
-		'bug_type' => '',
-		'php_os' => '',
-		'did_luser_search' => '',
-		'sdesc' => '',
-		'passwd' => '',
-		'ldesc' => '',
-		'repcode' => '',
-		'actres' => '',
-		'expres' => ''
-	);
-}
-
 ?>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+<form method="post" action="<?php echo $PHP_SELF;?>">
 <input type="hidden" name="in[did_luser_search]" value="<?php echo $in['did_luser_search'] ? 1 : 0; ?>" />
 <table>
  <tr>

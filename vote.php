@@ -1,5 +1,4 @@
 <?php /* vim: set noet ts=4 sw=4: : */
-require_once 'config.php';
 require_once 'prepend.inc';
 
 if (!($id = (int)$id)) {
@@ -18,9 +17,9 @@ $reproduced = (int)$reproduced;
 $samever = (int)$samever;
 $sameos = (int)$sameos;
 
-@mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
+@mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
-@mysql_select_db(BUG_DB_NAME);
+@mysql_select_db("php3");
 
 $ip = ip2long($HTTP_X_FORWARDED_FOR ? $HTTP_X_FORWARDED_FOR : $REMOTE_ADDR);
 // TODO: check if ip address has been banned. hopefully this will

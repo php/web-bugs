@@ -1,6 +1,5 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
-require_once 'config.php';
 function status_print ($status, $num, $width, $align='left') {
 	$str = ucfirst($status).":";
 	$str.= str_repeat(" ", $width - strlen($str) + (($align == 'right') ? (4 - strlen($num)) : 0));
@@ -12,7 +11,7 @@ function get_status_count ($status, $category='')
 {
 	global $phpver;
 	
-	$query = "SELECT count(id) AS total from bugdb WHERE";
+	$query = "SELECT count(id) from bugdb WHERE";
 
 	if ($phpver > 0) {
 		$query .= " php_version LIKE '" . $phpver . "%' AND";
@@ -29,9 +28,9 @@ function get_status_count ($status, $category='')
 	$query.= "AND bug_type NOT IN($excluded)";
 
 	$result=mysql_unbuffered_query($query);
-	$row=mysql_fetch_assoc($result);
+	$row=mysql_fetch_row($result);
 	mysql_freeresult($result);
-	return $row['total'];
+	return $row[0];
 }
 
 $statuses = array (	
@@ -53,8 +52,8 @@ if(!isset($phpver)) {
 	echo "<h3>Bug stats for PHP $phpver:</h3>\n<pre>\n";	
 }
 
-mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS);
-mysql_select_db(BUG_DB_NAME);
+mysql_connect("localhost","nobody","");
+mysql_select_db("php3");
 
 if (isset($per_category)) {
 	include ('bugtypes.inc');

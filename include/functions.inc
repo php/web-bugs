@@ -125,7 +125,7 @@ function show_version_options($current,$default="")
 		echo "<option", ($current == $v ? " selected" : ""), ">$v</option>\n";
 		if ($current == $v) $use++;
 	}
-	if (!isset($use) && $current) echo "<option selected>$current</option>\n";
+	if (!$use && $current) echo "<option selected>$current</option>\n";
 	echo "<option value=\"earlier\">Earlier? Upgrade first!</option>\n";
 }
 
@@ -183,7 +183,7 @@ function show_types($current,$show_any,$default="")
 			if ($key == $current) $use++;
 		}
 	}
-	if (!isset($use) && $current && !is_array ($current)) {
+	if (!$use && $current && !is_array ($current)) {
 		echo "<option selected>$current</option>\n";
 	}
 }
@@ -397,16 +397,14 @@ function txfield($n)
 
 function get_old_comments ($bug_id, $all = 0) 
 {
-    $divider = str_repeat("-", 72);
-    $max_message_length = 10 * 1024;
+	$divider = str_repeat("-", 72);
+	$max_message_length = 10 * 1024;
     $max_comments = 5;
     $output = ""; $count = 0;
 
-    $res = @mysql_query("SELECT ts, email, comment FROM bugdb_comments WHERE bug=$bug_id ORDER BY ts DESC");
+	$res = @mysql_query("SELECT ts, email, comment FROM bugdb_comments WHERE bug=$bug_id ORDER BY ts DESC");
 
-    if (!$res) {
-        return '';
-    }
+    if (!$res) return "";
     
     # skip the most recent unless the caller wanted all comments
     if (!$all) {
@@ -414,16 +412,16 @@ function get_old_comments ($bug_id, $all = 0)
         if (!$row) return "";
     }
 
-    while (($row = mysql_fetch_assoc($res)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
-		$output .= "[" . $row['ts'] . "] ". spam_protect($row['email']) ."\n\n" . $row['comment'] . "\n\n$divider\n\n";
+    while (($row = mysql_fetch_row($res)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
+		$output .= "[$row[0]] ". spam_protect($row[1]) ."\n\n$row[2]\n\n$divider\n\n";
     }
 
     if (strlen($output) < $max_message_length && $count < $max_comments) {
     	$res=@mysql_query("SELECT ts1,email,ldesc FROM bugdb WHERE id=$bug_id");
     	if (!$res) return $output;
-    	$row = mysql_fetch_assoc($res);
+    	$row = mysql_fetch_row($res);
     	if (!$row) return $output;
-		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "[" . $row['ts1'] . "] ". spam_protect($row['email']) ."\n\n" . $row['ldesc'] . "\n\n$divider\n\n");
+		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "[$row[0]] ". spam_protect($row[1]) ."\n\n$row[2]\n\n$divider\n\n");
     }
     else {
 		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n    http://bugs.php.net/$bug_id\n");
