@@ -51,7 +51,7 @@ if ($modify == "user") {
 	$from = $email;
 }
 elseif ($modify == "developer") {
-	if (!verify_password($user,$pw)) {
+	if (!verify_password($user,stripslashes($pw))) {
 		echo "<h2 class=\"error\">The username or password you supplied was incorrect.</h2>\n";
 	}
 	elseif (incoming_details_are_valid()) {
