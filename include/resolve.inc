@@ -20,8 +20,8 @@ For Windows:
 'This bug has been fixed in CVS.
 
  In case this was a PHP problem, snapshots of the sources are packaged
- every three hours; this change will be in the next snapshot. You can grab
- the snapshot at http://snaps.php.net/.
+ every three hours; this change will be in the next snapshot. You can
+ grab the snapshot at http://snaps.php.net/.
  
  In case this was a documentation problem, the fix will show up soon at
  http://www.php.net/manual/.
