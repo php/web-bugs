@@ -2,6 +2,7 @@
 <?php /* vim: set ft=php3 noet ts=4 sw=4 : */
 
 require dirname(__FILE__).'/../include/functions.inc';
+require_once 'config.php';
 
 # this script closes bugs due to lack of feedback.
 

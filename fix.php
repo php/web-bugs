@@ -6,6 +6,7 @@ if (!$id) {
 }
 
 require_once 'prepend.inc';
+require_once 'config.php';
 require_once 'cvs-auth.inc';
 
 $mail_bugs_to = 'php-bugs@lists.php.net';

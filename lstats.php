@@ -1,5 +1,6 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
+require_once 'config.php';
 function status_print ($status, $num, $width, $align='left') {
 	$str = ucfirst($status).":";
 	$str.= str_repeat(" ", $width - strlen($str) + (($align == 'right') ? (4 - strlen($num)) : 0));

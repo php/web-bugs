@@ -6,6 +6,7 @@ if (!$id) {
 }
 $edit = (int)$edit;
 
+require_once 'config.php';
 require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
 require_once 'trusted-devs.inc';
@@ -21,6 +22,7 @@ if (isset($save) && isset($pw)) { # non-developers don't have $user set
 if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
   list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
 }
+
 
 @mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
 	or die("Unable to connect to SQL server.");

@@ -1,4 +1,5 @@
 <?php /* vim: set noet ts=4 sw=4: : */
+require_once 'config.php';
 require_once 'prepend.inc';
 
 if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {

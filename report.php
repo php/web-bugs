@@ -1,6 +1,7 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
 require_once 'prepend.inc';
+require_once 'config.php';
 require_once 'cvs-auth.inc';
 
 /* When user submits a report, do a search and display the results before allowing

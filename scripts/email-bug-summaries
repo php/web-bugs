@@ -1,5 +1,7 @@
 #!/usr/local/bin/php -q
 <?php
+
+        require_once 'config.php';
 	mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS) or die("Unable to connect to SQL server\n");
 	mysql_select_db(BUG_DB_NAME);
 	$result = mysql_query("select id,bug_type,status,sdesc,assign from bugdb where status not in ('Closed', 'Bogus', 'Duplicate', 'No Feedback', 'Wont fix') and php_version like '4%' order by bug_type,id");

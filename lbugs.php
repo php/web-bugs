@@ -1,5 +1,6 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
+require_once 'config.php';
 mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
   or die("Unable to connect to SQL server\n");
 mysql_select_db(BUG_DB_NAME);

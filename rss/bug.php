@@ -10,6 +10,8 @@
 $id = (int)$_REQUEST['id'];
 $format = $_REQUEST['format'];
 
+include 'config.php';
+
 @mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)
 	or die("Unable to connect to SQL server.");
 @mysql_select_db(BUG_DB_NAME);

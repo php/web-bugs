@@ -1,5 +1,6 @@
 <?php
 require_once 'prepend.inc';
+require_once 'config.php';
 
 /* See bugs.php for the table layout of bugdb. */
 
