@@ -208,7 +208,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
     $user_text .= join("\n",$text);
 
 	$dev_text = join("\n",$text)
-               . "\n\nEdit this bug report at http://bugs.php.net/?id=$bug[id]&edit=1\n";
+               . "\n-- \nEdit this bug report at http://bugs.php.net/?id=$bug[id]&edit=1\n";
 
 	/* format mail so it looks nice */
 	$user_text = wordwrap($user_text, 72); /* use 72 to make piners happy */
