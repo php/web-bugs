@@ -157,7 +157,7 @@ if ($errors) display_errors($errors);
  <tr>
   <th>Find bugs</th>
   <td nowrap="nowrap">with <b>any</b> of the words</td>
-  <td><input type="text" name="search_for" value="<?echo htmlspecialchars($search_for);?>" size="20" maxlength="255" /></td>
+  <td><input type="text" name="search_for" value="<?echo htmlspecialchars(stripslashes($search_for));?>" size="20" maxlength="255" /></td>
   <td rowspan="2">
    <select name="limit"><?php show_limit_options($limit);?></select>
    <br />
@@ -182,17 +182,17 @@ if ($errors) display_errors($errors);
  <tr>
   <th>OS</th>
   <td nowrap="nowrap">Return bugs with <b>operating system</b></td>
-  <td><input type="text" name="php_os" value="<?echo htmlspecialchars($php_os);?>" /></td>
+  <td><input type="text" name="php_os" value="<?echo htmlspecialchars(stripslashes($php_os));?>" /></td>
  </tr>
  <tr>
   <th>Version</th>
   <td nowrap="nowrap">Return bugs reported with <b>PHP version</b></td>
-  <td><input type="text" name="phpver" value="<?echo htmlspecialchars($phpver);?>" /></td>
+  <td><input type="text" name="phpver" value="<?echo htmlspecialchars(stripslashes($phpver));?>" /></td>
  </tr>
  <tr>
   <th>Assigned</th>
   <td nowrap="nowrap">Return only bugs <b>assigned</b> to</td>
-  <td><input type="text" name="assign" value="<?echo htmlspecialchars($assign);?>" />
+  <td><input type="text" name="assign" value="<?echo htmlspecialchars(stripslashes($assign));?>" />
 <?php
     if (!empty($user)) {
 	$u = stripslashes($user);
