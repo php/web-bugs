@@ -148,7 +148,9 @@ forseeable future.',
     'message' =>
 'We are happy to tell you that you just discovered Daylight Savings
 Time. For more information see:
-http://webexhibits.org/daylightsaving/b.html',
+http://webexhibits.org/daylightsaving/b.html
+Instead of using mktime/date consider using gmmktime and gmdate which do
+not suffer from DST.',
   ),
     'isapi' => array(
     'status' => 'Bogus',
