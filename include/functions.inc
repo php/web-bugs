@@ -462,7 +462,7 @@ function format_search_string($search)
 	// Function will be updated to make results more relevant.
 	// Quick hack for indicating ignored words.
 	
-	$min_word_len=4;
+	$min_word_len=3;
 	
 	$words = preg_split("/\s+/", stripslashes($search));
 	$ignored = array();
