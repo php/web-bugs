@@ -103,7 +103,7 @@ elseif ($in && $edit == 1) {
 			if ($in['status'] == $bug['status']) {
 				$in['status'] = $RESOLVE_REASONS[$in['resolve']]['status'];
 			}
-			$ncomment = $RESOLVE_REASONS[$in['resolve']]['message']
+			$ncomment = addslashes($RESOLVE_REASONS[$in['resolve']]['message'])
 			          . "\n\n$ncomment";
 		}
 	}
