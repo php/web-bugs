@@ -68,8 +68,9 @@ if (isset($cmd) && $cmd == "display") {
 		$where_clause .= " AND php_os like '%$php_os%'";
 	}
 
-	if (empty($phpver)) $phpver = "4";
-	if ($phpver) {
+	if (empty($phpver)) {
+		$where_clause .= " AND (SUBSTRING(php_version,1,1) = '4' OR SUBSTRING(php_version,1,1) = '5')";
+	} else {
 		// there's an index on php_version(1) to speed this up.
 		if (strlen($phpver) == 1) {
 			$where_clause .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
