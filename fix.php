@@ -55,6 +55,10 @@ if ($errors) {
   <th>Reason:</th>
   <td colspan="5"><select name="r"><?php echo show_reason_types($r)?></select></td>
  </tr>
+ <tr>
+  <th>Note:</th>
+  <td colspan="5"><textarea cols="60" rows="8" name="ncomment" wrap="physical"></textarea></td>
+ </tr> 
 </table>
 <input type="submit" value="Resolve" />
 </form>
@@ -85,7 +89,7 @@ if (!$res || !$bug) {
 
 /* update bug record */
 $status = $RESOLVE_REASONS[$r]['status'];
-$ncomment = $RESOLVE_REASONS[$r]['message'];
+$ncomment = $RESOLVE_REASONS[$r]['message'].(!empty($ncomment)?"\n\n".$ncomment:"");
 
 /* if the already has the status of the resolution, bounce over to the
    main bug form. it will show the appropriate error message. */

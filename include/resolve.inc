@@ -6,7 +6,9 @@ $RESOLVE_REASONS = array(
     'desc' => 'Fixed in CVS',
     'message' =>
 'This bug has been fixed in CVS. You can grab a snapshot of the
-CVS version at http://snaps.php.net/',
+CVS version at http://snaps.php.net/. In case this was a documentation 
+problem, the fix will show up soon at http://www.php.net/manual/. 
+Thank you for the report.',
   ),
   'alreadyfixed' => array(
     'status' => 'Closed',
