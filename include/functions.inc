@@ -178,7 +178,7 @@ function show_types($current,$show_any,$default="")
 	while (list($key,$value) = each($items)) {
 		if ($show_any == 1 || $key != "Any") {
 			echo "<option value=\"$key\"",
-			((is_array($current) && in_array($key, $current)) || ($key == $current ? " selected" : "")),
+			((is_array($current) && in_array($key, $current)) || ($key == $current) ? " selected" : ""),
 			">$value</option>\n";
 			if ($key == $current) $use++;
 		}

@@ -238,7 +238,7 @@ if ($warnings) display_warnings($warnings);
  <tr>
   <th>&nbsp;</th>
   <td nowrap="nowrap">Return only bugs <b>NOT</b> in <b>categories</b></td>
-  <td><select name="bug_ntype[]" multiple size=5><?php show_types($bug_ntype,0);?></select></td>
+  <td><select name="bug_ntype[]" multiple size=5><?php show_types($bug_ntype,2);?></select></td>
  </tr>
  <tr>
   <th>OS</th>
