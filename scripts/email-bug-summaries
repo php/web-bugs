@@ -2,9 +2,9 @@
 <?
 	mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server\n");
 	mysql_select_db("php3");
-	$result = mysql_query("select id,bug_type,status,sdesc,assign from bugdb where status not in ('Closed', 'Bogus', 'Duplicate') and php_version like '4%' order by bug_type,id");
+	$result = mysql_query("select id,bug_type,status,sdesc,assign from bugdb where status not in ('Closed', 'Bogus', 'Duplicate', 'No Feedback') and php_version like '4%' order by bug_type,id");
 	if($num=mysql_num_rows($result)) {
-		$body = " PHP 4.0 Bug Database summary - http://bugs.php.net\n\n";
+		$body = " PHP 4 Bug Database summary - http://bugs.php.net\n\n";
 		$body .= " Num Status     Summary ($num total including feature requests)\n";
 		$last_group = "";
 		while($row = mysql_fetch_array($result,MYSQL_ASSOC)) {
@@ -38,6 +38,6 @@
 			}
 		}
 
-		mail("php-dev@lists.php.net","PHP 4.0 Bug Summary Report",$body,"From: php-dev@lists.php.net");
+		mail("php-dev@lists.php.net","PHP 4 Bug Summary Report",$body,"From: php-dev@lists.php.net");
 	}	
 ?>
