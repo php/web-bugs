@@ -8,6 +8,7 @@ $edit = (int)$edit;
 
 require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
+require_once 'trusted-devs.inc';
 
 $mail_bugs_to = 'php-bugs@lists.php.net';
 
@@ -49,7 +50,7 @@ if (!$res || !$bug) {
 # Delete comment
 if ($edit == 1 && isset($delete_comment)) {
 	$addon = '';
-	if (verify_password($user,stripslashes($pw))) {
+	if (in_array($user, $trusted_developers) && verify_password($user,stripslashes($pw))) {
 		delete_comment($id, $delete_comment);
 		$addon = '&thanks=1';
 	}
@@ -467,11 +468,11 @@ commonFooter();
 
 function output_note($com_id, $ts, $email, $comment)
 {
-	global $edit, $id;
+	global $edit, $id, $trusted_developers, $user;
 
 	echo "<div class=\"comment\">";
 	echo "<b>[",format_date($ts),"] ", htmlspecialchars($email), "</b>\n";
-	echo ($edit == 1 && $com_id !== 0) ? "<a href=\"$PHP_SELF?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
+	echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href=\"$PHP_SELF?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
 	echo "<pre class=\"note\">";
 	$note = addlinks(preg_replace("/(\r?\n){3,}/","\n\n",wordwrap($comment,72,"\n",1)));
 	echo preg_replace('/(bug\ *#([0-9]+))/i', "<a href=\"$PHP_SELF?id=\\2\">\\1</a>", $note);
