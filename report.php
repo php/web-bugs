@@ -239,8 +239,8 @@ if ($errors) display_errors($errors);
   </td>
   <td><font size="-2">
     You may enter any password here, which will be stored for this bug report.
-	This password allows you to come back and modify your submitted bug report
-	at a later date. [<a href="/bug-pwd-finder.php">Lost a bug password?</a>]
+    This password allows you to come back and modify your submitted bug report
+    at a later date. [<a href="/bug-pwd-finder.php">Lost a bug password?</a>]
   </font></td>
  </tr>
 </table>
