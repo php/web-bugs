@@ -25,7 +25,7 @@ if (isset($cmd) && $cmd == "display") {
 		$where_clause .= " AND status='Feedback' AND TO_DAYS(NOW())-TO_DAYS(ts2)>60";
 	} elseif ($status == "Stale") {
 		$where_clause .= " AND status != 'Closed' AND status != 'Duplicate' AND status != 'Bogus' AND TO_DAYS(NOW())-TO_DAYS(ts2) > 30";
-	} elseif (isset($status) && $status != "All") {
+	} elseif ($status && $status != "All") {
 		$where_clause .= " AND status='$status'";
 	}
 
@@ -50,38 +50,45 @@ if (isset($cmd) && $cmd == "display") {
  
     $query .= "$where_clause ";
 
-	if (!$order_by) $order_by = "id";
-	if (!$direction) $direction = "ASC";
+	/* we avoid adding an order by clause if using the full text search */
+    if ($order_by || $reorder_by || !strlen($search_for)) {
+		if (!$order_by) $order_by = "id";
+		if (!$direction) $direction = "ASC";
 
-	if ($reorder_by) {
-		if ($order_by == $reorder_by) {
-			$direction = $direction == "ASC" ? "DESC" : "ASC";
+		if ($reorder_by) {
+			if ($order_by == $reorder_by) {
+				$direction = $direction == "ASC" ? "DESC" : "ASC";
+			}
+			else {
+				$direction = "ASC";
+			}
+			$order_by = $reorder_by;
 		}
-		else {
-			$direction = "ASC";
-		}
-		$order_by = $reorder_by;
-	}
-
-	$query .= " ORDER BY $order_by $direction";
+		$query .= " ORDER BY $order_by $direction";
+    }
 
 	if (!$begin) $begin = 0;
 	if (!isset($limit)) $limit = 30;
 
 	if($limit!='All') $query .= " LIMIT $begin,$limit";
 
-	$res = @mysql_query($query);
+    $res = @mysql_query("SELECT COUNT(*) FROM bugdb $where_clause");
 	if (!$res) die(htmlspecialchars($query)."<br>".mysql_error());
+    $row = mysql_fetch_row($res);
 
-	$rows = mysql_numrows($res);
-	if (!$rows) {
+    $total_rows = $row[0];
+	if (!$total_rows) {
 		echo "<h2 class=\"error\">No bugs with the specified criteria were found.</h2>";
 	}
 	else {
+		$res = @mysql_query($query);
+		if (!$res) die(htmlspecialchars($query)."<br>".mysql_error());
+	    $rows = mysql_numrows($res);
+
 		$link = "$PHP_SELF?cmd=display&amp;bug_type=" . urlencode ($bug_type) . "&amp;status=$status&amp;search_for=".htmlspecialchars(stripslashes($search_for))."&amp;php_os=".htmlspecialchars(stripslashes($php_os))."&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit";
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
- <?php show_prev_next($begin,$rows,$link,$limit);?>
+ <?php show_prev_next($begin,$rows,$total_rows,$link,$limit);?>
  <tr bgcolor="#aaaaaa">
   <th><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
 <?php if ($bug_type == "Any") {?>
@@ -113,7 +120,7 @@ if (isset($cmd) && $cmd == "display") {
 			echo "</tr>\n";
 		}
 
-		show_prev_next($begin,$rows,$link,$limit);
+		show_prev_next($begin,$rows,$total_rows,$link,$limit);
 ?>
 </table>
 <?php
@@ -156,16 +163,23 @@ if (isset($cmd) && $cmd == "display") {
 }
 commonFooter();
 
-function show_prev_next($begin,$rows,$link,$limit) {
+function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
 	if($limit=='All') return;
 	if ($begin == 0 && $rows < $limit) return;
 	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"9\">";
     echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr>';
 	if ($begin > 0) {
-		echo "<td align=\"left\"><a href=\"$link&amp;begin=",max(0,$begin-$limit),"\">&laquo; Show Previous $limit Entries</a></td>";
+		echo "<td align=\"left\" width=\"33%\"><a href=\"$link&amp;begin=",max(0,$begin-$limit),"\">&laquo; Show Previous $limit Entries</a></td>";
 	}
-	if ($rows >= $limit) {
-		echo "<td align=\"right\"><a href=\"$link&amp;begin=",$begin+$limit,"\">Show Next $limit Entries &raquo;</a></td>";
+    else {
+        echo "<td width=\"33%\">&nbsp;</td>";
+    }
+    echo "<td align=\"center\" width=\"34%\">Showing ",$begin+1,"-", $begin+1+$rows, " of $total_rows</td>";
+	if ($begin+$rows < $total_rows) {
+		echo "<td align=\"right\" width=\"33%\"><a href=\"$link&amp;begin=",$begin+$limit,"\">Show Next $limit Entries &raquo;</a></td>";
 	}
+    else {
+        echo "<td width=\"33%\">&nbsp;</td>";
+    }
 	echo "</tr></table></td></tr>";
 }
