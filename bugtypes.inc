@@ -152,6 +152,8 @@ $items = array (
 	"cURL related"   => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cURL related",
 	"URL related"    => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URL related",
 
+	"*PHP-GTK" => "&nbsp;&nbsp;&nbsp;&nbsp;PHP-GTK",
+
 	"Unknown/Other Function" => "Unknown/Other Function",
 );
 ?>
