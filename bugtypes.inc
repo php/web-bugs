@@ -9,6 +9,7 @@ $items = array (
 	"Performance problem"      => "&nbsp;&nbsp;&nbsp;&nbsp;Performance problem",
 	"Reproducible crash"       => "&nbsp;&nbsp;&nbsp;&nbsp;Reproducible crash",
 	"Scripting Engine problem" => "&nbsp;&nbsp;&nbsp;&nbsp;Scripting Engine problem",
+	"Zend Engine 2 problem"    => "&nbsp;&nbsp;&nbsp;&nbsp;Zend Engine 2 problem",
 	"Session related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Session related",
 	"PEAR related"             => "&nbsp;&nbsp;&nbsp;&nbsp;PEAR related",
    "Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
