@@ -14,6 +14,7 @@ $items = array (
 	"PECL related"             => "&nbsp;&nbsp;&nbsp;&nbsp;PECL related",
 	"PHP-GTK related"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP-GTK related",
 	"Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
+	"Systems problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Systems Operation problem",
 
 	"*Compile Issues" => "&nbsp;&nbsp;&nbsp;&nbsp;Compile Issues",
 	"Compile Failure" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compile Failure",
