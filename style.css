@@ -32,16 +32,6 @@ em {
         color: #cc0000;
 }
 
-.newsDate {
-	font-size: 85%;
-	font-style: italic;
-	color: #6666cc;
-}
-
-.sidebar {
-	font-size: 85%;
-}
-
 code, pre {
 	font-family: "andale mono", "monotype.com", "courier new", monospace;
 	font-size: 90%;
@@ -102,17 +92,6 @@ A.menuBlack {
 }
 
 
-.tableTitle {
-	font-family: arial,helvetica,sans-serif;
-	font-weight: bold;
-}
-
-.tableExtras {
-	font-family: arial,helvetica,sans-serif;
-	font-size: 85%;
-	color: #FFFFFF;
-}
-
 input {
 	font-family: arial,helvetica,sans-serif;
 }
@@ -150,7 +129,7 @@ div.thanks {
         padding: 6px;
 }
 
-/* these are redundant with things below, to try and make the
+/* these are redundant with things in controls.css, to try and make the
  * bug forms look a smidge better on netscape 4 (ugh). */
 span.control {
         font-weight: bold;
