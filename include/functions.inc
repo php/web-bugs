@@ -60,6 +60,7 @@ $state_types = 	array (
 	"Critical" => 1, 
 	"Assigned" => 1,
 	"Analyzed" => 1,
+	"Verified (bughunt)" => 1,
 	"Suspended" => 1,
 	"Won't fix" => 1,
 	"No Feedback" => 1,
