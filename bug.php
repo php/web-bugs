@@ -87,7 +87,7 @@ elseif ($in && $edit == 2) {
 
 	# check that they aren't being bad and setting a status they
 	# aren't allowed to (oh, the horrors.)
-	if ($in['status'] != $bug['status'] || $state_type[$in['status']] != 2) {
+	if ($in['status'] != $bug['status'] && $state_types[$in['status']] != 2) {
 		$errors[] = "You aren't allowed to change a bug to that state.";
 	}
 
