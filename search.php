@@ -165,7 +165,6 @@ commonFooter();
 
 function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
 	if($limit=='All') return;
-	if ($begin == 0 && $rows < $limit) return;
 	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"9\">";
     echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr>';
 	if ($begin > 0) {
@@ -174,7 +173,7 @@ function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
     else {
         echo "<td width=\"33%\">&nbsp;</td>";
     }
-    echo "<td align=\"center\" width=\"34%\">Showing ",$begin+1,"-", $begin+1+$rows, " of $total_rows</td>";
+    echo "<td align=\"center\" width=\"34%\">Showing ",$begin+1,"-", $begin+$rows, " of $total_rows</td>";
 	if ($begin+$rows < $total_rows) {
 		echo "<td align=\"right\" width=\"33%\"><a href=\"$link&amp;begin=",$begin+$limit,"\">Show Next $limit Entries &raquo;</a></td>";
 	}
