@@ -61,6 +61,7 @@ function show_state_options($state, $user_mode=0, $default="")
 		"Assigned" => 1,
 		"Analyzed" => 1,
 		"Suspended" => 1,
+		"No Feedback" => 1,
 		"Feedback" => 1,
 		"Old Feedback" => 0,
 		"Stale" => 0,
@@ -232,6 +233,9 @@ function get_row_color($row)
 			break;
 		case "Closed":
 			return "#aaffbb";
+			break;
+		case "No Feedback":
+			return "#bbffcc";
 			break;
 		case "Suspended":
 			return "#ffccbb";
