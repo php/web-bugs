@@ -107,8 +107,8 @@ echo "<tr><th align=right bgcolor=#aabbcc>All:</th>",
      "<td align=center bgcolor=#ccddee>".bugstats('duplicate', 'all')."&nbsp;</td>",
      "<td align=center bgcolor=#ddeeff>".bugstats('assigned','all')."&nbsp;</td>",
      "<td align=center bgcolor=#ccddee>".bugstats('feedback','all')."&nbsp;</td>",
-     "<td align=center bgcolor=#ccddee>".bugstats('no feedback','all')."&nbsp;</td>",
-     "<td align=center bgcolor=#ddeeff>".bugstats('bogus', 'all')."&nbsp;</td>",
+     "<td align=center bgcolor=#ddeeff>".bugstats('no&nbsp;feedback','all')."&nbsp;</td>",
+     "<td align=center bgcolor=#ccddee>".bugstats('bogus', 'all')."&nbsp;</td>",
      "</tr>\n";
 
 foreach ($bug_type[$sort_by] as $type => $value) {
@@ -129,9 +129,9 @@ foreach ($bug_type[$sort_by] as $type => $value) {
 		     "<td align=center bgcolor=#ddeeff>".bugstats('suspended',$type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ccddee>".bugstats('duplicate', $type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ddeeff>".bugstats('assigned',$type)."&nbsp;</td>",
-		     "<td align=center bgcolor=#ccddee>".bugstats('no feedback',$type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ccddee>".bugstats('feedback',$type)."&nbsp;</td>",
-		     "<td align=center bgcolor=#ddeeff>".bugstats('bogus', $type)."&nbsp;</td>",
+		     "<td align=center bgcolor=#ddeeff>".bugstats('no&nbsp;feedback',$type)."&nbsp;</td>",
+		     "<td align=center bgcolor=#ccddee>".bugstats('bogus', $type)."&nbsp;</td>",
 		     "</tr>\n";
 	}
 }
