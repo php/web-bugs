@@ -26,7 +26,7 @@ commonHeader("Bug Reporting");
 # fetch info about the bug into $original
 $query = "SELECT id,bug_type,email,sdesc,ldesc,"
        . "php_version,php_os,status,ts1,ts2,dev_id,assign,"
-       . "COUNT(*) AS votes,"
+       . "COUNT(bug=id) AS votes,"
        . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
        . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
        . "AVG(score)+3 AS average,STD(score) AS deviation"
