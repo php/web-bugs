@@ -162,6 +162,7 @@ function commonHeader($title = false, $showsearch = true) {
 <head>
  <title>PHP Bugs<?php if ($title) { echo ': '.$title; } ?></title>
  <link rel="stylesheet" href="style.css" />
+ <script type="text/javascript" src="util.js"></script>
 </head>
 
 <body

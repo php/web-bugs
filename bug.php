@@ -127,18 +127,93 @@ elseif ($modify && !$success) {
 }
 
 /* DISPLAY BUG */
-if ($edit) {
-	echo "<form method=\"POST\" action=\"$PHP_SELF\">\n";
-	echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
-	echo "<input type=\"hidden\" name=\"edit\" value=\"$edit\">\n";
-}
-if ($edit==1)
-	echo '<input type="hidden" name="modify" value="developer">',"\n";
-if ($edit==2)
-	echo '<input type="hidden" name="modify" value="user">',"\n";
 ?>
-<br>
-<h1>Bug id #<?php echo $id?></h1>
+<?php
+if (!$edit) {?>
+<div id="votebox">
+ <div id="control">
+  <div id="off"><a href="javascript:toggle_layer('votebody','votecontrol')"><img id="votecontrol" src="gifs/close.gif" border="0" width="13" height="13" alt="close" /></a></div>
+  <b>Voting</b>
+ </div>
+ <div id="votebody">
+<?php
+    $query = "SELECT COUNT(*) AS votes,"
+           . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
+           . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
+           . "AVG(score) AS average,STD(score) AS deviation"
+           . " FROM bugdb_votes WHERE bug=$id";
+    $res = @mysql_query($query);
+    if ($res && ($row = mysql_fetch_array($res,MYSQL_ASSOC)) && $row[votes]) {
+?>
+  <div id="results">
+   <b>Total Votes</b>: <?php echo $row['votes'];?><br />
+   Reproduced: <?php printf("%d of %d (%.1f%%)",$row['reproduced'],$row['tried'],($row['reproduced']/$row['tried'])*100);?><br />
+   <?php if ($row['reproduced']) {?>
+   Same OS: <?php printf("%d (%.1f%%)",$row['sameos'],($row['sameos']/$row['reproduced'])*100);?><br />
+   Same Version: <?php printf("%d (%.1f%%)",$row['samever'],($row['samever']/$row['reproduced'])*100);?><br />
+   <?php }?>
+   <b>Average Score</b>: <?php printf("%.1f &plusmn; %.1f", $row['average'], $row['deviation'])?><br />
+  </div>
+<?php
+    }
+    if (!$voted) {
+?>
+  <form id="vote" method="POST" action="vote.php">
+  <div id="reproduce">
+   Have you experienced this issue?<br />
+   <input type="radio" id="rep-y" name="reproduced" value="1" onclick="show('canreproduce')" /> <label for="rep-y">yes</label>
+   <input type="radio" id="rep-n" name="reproduced" value="0" onclick="hide('canreproduce')" /> <label for="rep-n">no</label>
+   <input type="radio" id="rep-d" name="reproduced" value="2" onclick="hide('canreproduce')" checked="checked" /> <label for="rep-d">don't know</label>
+  </div>
+  <div id="canreproduce" style="display: none">
+   <div>
+	Are you using the same PHP version?<br />
+	<input type="radio" id="ver-y" name="samever" value="1" /> <label for="ver-y">yes</label>
+	<input type="radio" id="ver-n" name="samever" value="0" checked="checked" /> <label for="ver-n">no</label>
+   </div>
+   <div>
+	Are you using the same operating system?<br />
+	<input type="radio" id="os-y" name="sameos" value="1" /> <label for="os-y">yes</label>
+	<input type="radio" id="os-n" name="sameos" value="0" checked="checked" /> <label for="os-n">no</label>
+   </div>
+  </div>
+  <div id="score">
+   Rate the importance of this bug to you:<br />
+   &nbsp; <span class="score">high</span>
+   <input type="radio" id="score-5" name="score" value="5" />
+   <input type="radio" id="score-4" name="score" value="4" />
+   <input type="radio" id="score-3" name="score" value="3" checked="checked" />
+   <input type="radio" id="score-2" name="score" value="2" />
+   <input type="radio" id="score-1" name="score" value="1" />
+   <span class="score">low</span>
+  </div>
+  <div id="submit">
+   <input type="hidden" name="id" value="<?php echo $id?>" />
+   <input type="submit" value="Vote" />
+  </div>
+  </form>
+<?php
+    }
+    else {?>
+<div id="voted">Thanks for voting! Your vote should be reflected in the
+statistics above.</div>
+<?php
+    }
+?>
+ </div>
+</div>
+<?php
+}
+else { /* $edit is set */
+	echo "<form method=\"POST\" action=\"$PHP_SELF\">\n";
+	echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />\n";
+	echo "<input type=\"hidden\" name=\"edit\" value=\"$edit\" />\n";
+	if ($edit==1)
+		echo '<input type="hidden" name="modify" value="developer" />',"\n";
+	if ($edit==2)
+		echo '<input type="hidden" name="modify" value="user" />',"\n";
+}?>
+<h1>Bug #<?php echo $id?></h1>
 <table border="0">
 <tr>
 <th align="right">Status:</th>
@@ -253,18 +328,18 @@ echo hdelim();
 
 /* ORIGINAL REPORT */
 echo "<b><i>[$original[ts1]] $original[email]</i></b><br>\n";
-echo "<blockquote><blockquote><pre>";
+echo "<pre class=\"note\">";
 echo wordwrap(addlinks($original[ldesc]),90);
-echo "</pre></blockquote></blockquote>\n";
+echo "</pre>\n";
 
 /* COMMENTS */
 $query = "SELECT * FROM bugdb_comments WHERE bug=$id ORDER BY ts";
 if ($comresult = mysql_query($query)) {
 	while ($com = mysql_fetch_array($comresult)) {
 		echo "<b><i>[$com[ts]] $com[email]</i></b><br>\n";
-		echo "<blockquote><blockquote><pre>";
+		echo "<pre class=\"note\">";
 		echo wordwrap(addlinks($com[comment]),90);
-		echo "</pre></blockquote></blockquote>\n";
+		echo "</pre>\n";
 	}
 }
 

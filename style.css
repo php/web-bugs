@@ -26,6 +26,49 @@ em {
         color: #cc0000;
 }
 
+div#votebox {
+        float: right;
+        width: 200px;
+        font-size: smaller;
+}
+div#votebox div#control {
+        border: 1px solid #000000;
+        background: #cccccc;
+        padding: 4px;
+        margin-bottom: 10px;
+}
+div#votebox #off {
+        float: right;
+}
+div#votebox #results {
+        margin-bottom: 10px;
+        border: 1px dashed #000000;
+        padding: 4px;
+        background: #99cc99;
+}
+div#votebox #voted {
+        margin: 0px;
+        border: 1px dashed #000000;
+        padding: 4px;
+        background: #cc9999;
+}
+div#votebox form {
+        margin: 0px;
+        border: 1px dashed #000000;
+        padding: 4px;
+        background: #9999cc;
+}
+div#votebox form div {
+        margin-bottom: 5px;
+}
+div#votebox span.score {
+        font-size: smaller;
+}
+div#votebox #submit {
+        margin-top: 10px;
+        text-align: center;
+}
+
 .newsDate {
 	font-size: 85%;
 	font-style: italic;
@@ -39,6 +82,10 @@ em {
 code, pre {
 	font-family: "andale mono", "monotype.com", "courier new", monospace;
 	font-size: 90%;
+}
+
+pre.note {
+        margin-left: 20px;
 }
 
 h1 {

@@ -31,3 +31,14 @@ CREATE TABLE bugdb_comments (
   PRIMARY KEY (id),
   FULLTEXT (comment)
 );
+
+CREATE TABLE bugdb_votes (
+  bug int(8) NOT NULL,
+  ts timestamp NOT NULL,
+  ip int unsigned NOT NULL,
+  score int(3) NOT NULL, /* 1-5 */
+  reproduced int(1) NOT NULL,
+  tried int(1) NOT NULL,
+  sameos int(1),
+  samever int(1)
+);
