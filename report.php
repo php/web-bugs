@@ -42,17 +42,18 @@ if ($in) {
 
 		$email = stripslashes($in['email']);
 
-		$dev_extra = ""; 
+		# provide shortcut URLS for "quick bug fixes"
+        $dev_extra = ""; 
 		$maxkeysize = 0;
-		foreach (array_keys($RESOLVE_REASONS) as $k) {
+		foreach ($RESOLVE_REASONS as $v) {
 			if (!$v['webonly']) {
-                $actkeysize = strlen($k);
+                $actkeysize = strlen($v['desc']);
                 $maxkeysize = (($maxkeysize < $actkeysize) ? $actkeysize : $maxkeysize);
             }
         }
-        foreach ($RESOLVE_REASONS as $k => $v) {
+        foreach ($RESOLVE_REASONS as $v) {
 			if (!$v['webonly'])
-				$dev_extra .= str_pad($v[desc], $maxkeysize) .
+				$dev_extra .= str_pad($v['desc'], $maxkeysize) .
                               ": http://bugs.php.net/fix.php?id=$cid&r=$k\n";
 		}
 
