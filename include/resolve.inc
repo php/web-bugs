@@ -1,6 +1,18 @@
 <?php
 
 $RESOLVE_REASONS = array(
+  'trysnapshot' => array(
+    'status' => 'Feedback',
+    'desc' => 'Try a CVS snapshot',
+    'message' =>
+'Please try using this CVS snapshot:
+
+  http://snaps.php.net/php4-latest.tar.gz
+ 
+For Windows:
+ 
+  http://snaps.php.net/win32/php4-win32-latest.zip',
+  ),
   'fixedcvs' => array(
     'status' => 'Closed',
     'desc' => 'Fixed in CVS',
