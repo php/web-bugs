@@ -230,7 +230,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 	switch ($edit) {
 	case 3:
 		$from_addr = spam_protect(rinse($in['commentemail']));
-		$headers[] = array(" Comment by", $from);
+		$headers[] = array(" Comment by", $from_addr);
 		$from = "\"$from_addr\" <$mailfrom>";
 		break;
 	case 2:
