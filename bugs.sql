@@ -10,7 +10,7 @@ CREATE TABLE bugdb (
   email varchar(40) NOT NULL,
   sdesc varchar(80) NOT NULL,
   ldesc text NOT NULL,
-  php_version char(16),
+  php_version char(100),
   php_os varchar(32),
   status varchar(16),
   ts1 datetime, # bug created date
