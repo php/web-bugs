@@ -32,9 +32,9 @@ if (isset($cmd) && $cmd == "display") {
 		$where_clause = "WHERE bug_type = '$bug_type'";
 	}
 
-	/* Treat assigned, analyzed and critical bugs as open */
+	/* Treat assigned, analyzed, critical and verified bugs as open */
 	if ($status == "Open") {
-		$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical' OR 'Verified (bughunt)')";
+		$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical' OR 'Verified')";
 	} elseif ($status == "Old Feedback") {
 		$where_clause .= " AND status='Feedback' AND TO_DAYS(NOW())-TO_DAYS(ts2)>60";
 	} elseif ($status == "Fresh") {
