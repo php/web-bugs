@@ -93,7 +93,7 @@ Thank you for your interest in PHP.
 ',
   ),
   'submittedtwice' => array(
-    'status' => 'Duplicate',
+    'status' => 'Bogus',
     'desc' => 'Submitted twice',
     'message' =>
 'Please do not submit the same bug more than once. An existing
