@@ -229,16 +229,17 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
     
 	switch ($edit) {
 	case 3:
-		$from = spam_protect(rinse($in['commentemail']));
+		$from_addr = spam_protect(rinse($in['commentemail']));
 		$headers[] = array(" Comment by", $from);
-		$from = "\"$from\" <$mailfrom>";
+		$from = "\"$from_addr\" <$mailfrom>";
 		break;
 	case 2:
-		$from = spam_protect(txfield('email'));
+		$from_addr = spam_protect(txfield('email'));
 		$headers[] = array(" User updated by", $from);
-		$from = "\"$from\" <$mailfrom>";
+		$from = "\"$from_addr\" <$mailfrom>";
 		break;
 	default:
+		$from_addr = spam_protect($from);
 		$headers[] = array(" Updated by", $from);
 	}
 
@@ -349,8 +350,8 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		      "X-PHP-OS: "         . stripslashes((($edit != 3) ? $in['php_os']      : $bug['php_os']))      . "\n" .
 		      "X-PHP-Status: "     . stripslashes($new_status) . "\n" .
 		      "X-PHP-Old-Status: " . stripslashes($old_status) . "\n" .
-		      "X-PHP-Reported-By: " . stripslashes($bug['email']) . "\n" .
-		      "X-PHP-Updated-By: " . stripslashes($from) . "\n" .
+		      "X-PHP-Reported-By: " . stripslashes(spam_protect(rinse($bug['email']))) . "\n" .
+		      "X-PHP-Updated-By: " . stripslashes($from_addr) . "\n" .
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
 	}
 
