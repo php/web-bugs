@@ -224,24 +224,7 @@ function commonHeader($title = false, $showsearch = true) {
 
   <tr class="headersep"><td colspan="2"><?php spacer(1,1);?><br></td></tr>
 </table>
-
-
-<table cellpadding="0" cellspacing="0">
- <tr valign="top">
-<?php if (isset($SIDEBAR_DATA)):?>
-  <td bgcolor="#f0f0f0">
-   <table width="170" cellpadding="4" cellspacing="0">
-    <tr valign="top">
-     <td class="sidebar"><?php echo $SIDEBAR_DATA?></td>
-    </tr>
-   </table>
-  </td>
-  <td bgcolor="#cccccc" background="/gifs/checkerboard.gif"><?php spacer(1,1);?><br></td>
-<?php endif; ?>
-  <td>
-   <table width="600" cellpadding="10" cellspacing="0">
-    <tr>
-     <td valign="top">
+<div id="content">
 <?php
 }
 
@@ -253,17 +236,9 @@ function commonHeader($title = false, $showsearch = true) {
 #
 
 function commonFooter() {
-#	global $LAST_UPDATED, $MIRRORS, $MYSITE, $COUNTRIES;
 	global $HTTP_SERVER_VARS;
 ?>
-      <br>
-     </td>
-    </tr>
-   </table>
-  </td>
- </tr>
-</table>
-
+</div>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr class="headersep"><td><?php spacer(1,1);?><br></td></tr>
   <tr class="headerbottom">

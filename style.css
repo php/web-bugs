@@ -1,6 +1,12 @@
+@import url(controls.css);
+
 body, ul, td, th {
 	font-family: arial,helvetica,sans-serif;
 	font-size: 95%;
+}
+
+div#content {
+        margin: 4px;
 }
 
 p {
@@ -171,35 +177,6 @@ div#bugheader table#details th#number {
 }
 div#bugheader table#details td#summary {
         font-weight: bold;
-}
-
-div#controls {
-        clear: both;
-        width: 100%;
-}
-
-div#controls span {
-        float: left;
-        clear: none;
-        border: 1px solid #000000;
-        border-top: 0px;
-        font-weight: bold;
-        background: #ddddff;
-        padding: 4px 8px;
-        margin-right: 10px;
-        margin-left: 0px;
-}
-div#controls span.active {
-        position: relative;
-        top: -2px;
-        background: #ffffff;
-        padding-top: 6px;
-}
-div#controls a {
-        text-decoration: none;
-}
-div#controls a:hover {
-        text-decoration: underline;
 }
 
 form#quickfix {

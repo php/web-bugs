@@ -1,0 +1,30 @@
+/* this is in a separate file to work around ns4 bugs. bad ns4. */
+
+div#controls {
+        clear: both;
+        width: 100%;
+}
+
+div#controls span {
+        display: block;
+        float: left;
+        border: 1px solid #000000;
+        border-top: 0px;
+        font-weight: bold;
+        background: #ddddff;
+        padding: 4px 8px;
+        margin-left: 10px;
+}
+div#controls .active {
+        position: relative;
+        top: -2px;
+        background: #ffffff;
+        padding-top: 6px;
+}
+div#controls a {
+        text-decoration: none;
+}
+div#controls a:hover {
+        text-decoration: underline;
+}
+
