@@ -42,7 +42,7 @@
 			if(strstr($k,'@')) {
 				mail($k,"Assigned PHP bugs reminder",$v,"From: internals@lists.php.net");
 			} else {
-				mail("$k@php.net","Assigned PHP 4 bugs reminder",$v,"From: internals@lists.php.net");
+				mail("$k@php.net","Assigned PHP $version bugs reminder",$v,"From: internals@lists.php.net");
 			}
 		}
 
