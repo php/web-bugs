@@ -42,10 +42,16 @@ if ($in) {
 
 		$email = stripslashes($in['email']);
 
-		$dev_extra = "";
-		foreach ($RESOLVE_REASONS as $k => $v) {
+		$dev_extra = ""; $maxkeysize = 0;
+		foreach (array_keys($RESOLVE_REASONS) as $k) {
+			if (!$v['webonly']) {
+                $actkeysize = strlen($k);
+                if ($actkeysize > $maxkeysize) { $maxkeysize = $actkeysize; }
+            }
+        }
+        foreach ($RESOLVE_REASONS as $k => $v) {
 			if (!$v['webonly'])
-				$dev_extra .= "$v[desc]: http://bugs.php.net/fix.php?id=$cid&r=$k\n";
+				$dev_extra .= sprintf("%{$maxkeysize}s: http://bugs.php.net/fix.php?id=$cid&r=$k\n", $v[desc]);
 		}
 
 		# mail to appropriate mailing lists
