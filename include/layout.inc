@@ -160,7 +160,7 @@ function commonHeader($title = false, $showsearch = true) {
 
 ?><html>
 <head>
- <title>PHP Bugs<?php if ($title) { echo ':'.$title; } ?></title>
+ <title>PHP Bugs<?php if ($title) { echo ' :'.$title; } ?></title>
  <link rel="stylesheet" href="style.css" />
 </head>
 
