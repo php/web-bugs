@@ -340,9 +340,12 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		      $dev_text,
 		      "From: $from\n".
 		      "X-PHP-Bug: $bug[id]\n".
+		      "X-PHP-Version: "  . stripslashes($in['php_version']) . "\n" .
+		      "X-PHP-Category: " . stripslashes($in['bug_type'])    . "\n" .
+		      "X-PHP-Status: {$in['status']}\n" .
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
-
 	}
+
 	/* if a developer assigns someone else, let that other person know about it */
 	if ($edit == 1 && $in['assign'] && $in['assign'] != $bug['assign']
 		&& ($in['assign'] . "@php.net") != $from) {

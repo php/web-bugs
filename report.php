@@ -162,8 +162,16 @@ you can scroll down and click the submit button to really enter the details into
 						" http://bugs.php.net/fix.php?id=$cid&r=$k\n";
 			}
 
+			// Set extra-headers
+			$extra_headers = "From: $protected_email\n";
+			$extra_headers.= "X-PHP-Bug: $cid\n";
+			$extra_headers.= "X-PHP-Version: "  . stripslashes($in['php_version']) . "\n";
+			$extra_headers.= "X-PHP-Category: " . stripslashes($in['bug_type'])    . "\n";
+			$extra_headers.= "X-PHP-Status: Open\n";
+			$extra_headers.= "Message-ID: <bug-$cid@bugs.php.net>";
+			
 			// mail to appropriate mailing lists
-			if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", "From: $protected_email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+			if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", $extra_headers)) {
 				// mail to reporter
 				@mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 
