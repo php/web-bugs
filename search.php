@@ -150,6 +150,7 @@ if (isset($cmd) && $cmd == "display") {
 				"&amp;status="     . urlencode(stripslashes($status)) .
 				"&amp;search_for=" . urlencode(stripslashes($search_for)) .
 				"&amp;php_os="     . urlencode(stripslashes($php_os)) .
+				"&amp;boolean="    . BOOLEAN_SEARCH .
 				"&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
