@@ -96,6 +96,9 @@ if ($in && $edit == 3) {
 	if (!$ncomment) {
 		$errors[] = "You must provide a comment.";
 	}
+	if (is_spam($ncomment)) {
+		$errors[] = "Please do not SPAM our bug system.";
+	}
 
 	if (!$errors) {
 		$query = "INSERT INTO bugdb_comments (bug,email,ts,comment) VALUES"
@@ -112,6 +115,9 @@ elseif ($in && $edit == 2) {
 	$ncomment = trim($ncomment);
 	if (!$ncomment) {
 		$errors[] = "You must provide a comment.";
+	}
+	if (is_spam($ncomment)) {
+		$errors[] = "Please do not SPAM our bug system.";
 	}
 
 	# check that they aren't being bad and setting a status they

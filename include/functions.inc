@@ -13,6 +13,15 @@ function spam_protect($txt)
 	}
 }
 
+/* Primitive check for SPAM. Add more later. */
+function is_spam($string)
+{
+	if (substr_count(strtolower($string), 'http://') > 5) {
+		return true;
+	}
+	return false;
+}
+
 /* scrub user input so it can be re-output */
 function clean($in)
 {
