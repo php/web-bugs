@@ -188,6 +188,17 @@ function show_types($current,$show_any,$default="")
 	}
 }
 
+function show_boolean_options($current) {
+    $options = array('any', 'all', 'raw');
+	while (list($val, $type) = each($options)) {
+		echo '<input type="checkbox" name="boolean" value="', $val, '"';
+		if ($val === $current) {
+			echo ' CHECKED';
+		}
+		echo "> $type &nbsp;\n";
+	}
+}
+
 function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 {
     $text = array();
@@ -517,16 +528,35 @@ function format_search_string($search)
 	// Function will be updated to make results more relevant.
 	// Quick hack for indicating ignored words.
 	
+	global $mysql4;
+
 	$min_word_len=3;
 	
 	$words = preg_split("/\s+/", stripslashes($search));
-	$ignored = array();
+	$ignored = $used = array();
 	foreach($words AS $match) {
 		if(strlen($match) < $min_word_len) {
 			array_push($ignored, $match);
+		} else {
+		        array_push($used, $match);
 		}
 	}
+	
+	if ($mysql4 && BOOLEAN_SEARCH) {
+		// require all used words (all)
+		if (BOOLEAN_SEARCH === 1) {
+			$newsearch = '';
+			foreach ($used as $word) {
+				$newsearch .= "+$word ";
+			}
+			return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('" . addslashes($newsearch) . "' IN BOOLEAN MODE)", $ignored);
 
+		// allow custom boolean search (raw)
+		} elseif (BOOLEAN_SEARCH === 2) {
+			return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('" . addslashes($search) . "' IN BOOLEAN MODE)", $ignored);
+		}
+	}
+	// require any of the words (any)
 	return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('" . addslashes($search) . "')", $ignored);
 }
 

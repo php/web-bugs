@@ -16,6 +16,8 @@ commonHeader("Search");
 $errors = array();
 $warnings = array();
 
+define('BOOLEAN_SEARCH', @intval($boolean));
+
 if (isset($cmd) && $cmd == "display") {
 	@mysql_pconnect("localhost","nobody","")
 		or die("Unable to connect to SQL server.");
@@ -208,8 +210,9 @@ if ($warnings) display_warnings($warnings);
 <table id="primary" width="95%">
  <tr>
   <th>Find bugs</th>
-  <td nowrap="nowrap">with <b>any</b> of the words</td>
-  <td><input type="text" name="search_for" value="<?php echo htmlspecialchars(stripslashes($search_for));?>" size="20" maxlength="255" /></td>
+  <td nowrap="nowrap">with all or any of the words</td>
+  <td><input type="text" name="search_for" value="<?php echo htmlspecialchars(stripslashes($search_for));?>" size="20" maxlength="255" />
+      <br><?php show_boolean_options(BOOLEAN_SEARCH) ?> (<a href="index.php">?</a>)</td>
   <td rowspan="2">
    <select name="limit"><?php show_limit_options($limit);?></select>
    <br />
