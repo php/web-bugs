@@ -5,7 +5,7 @@ mysql_connect("localhost","nobody","")
 mysql_select_db("php3");
 
 if ($id) {
-	$result = mysql_query("SELECT id,bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,dev_id,assign FROM bugdb WHERE id=$id");
+	$result = mysql_query("SELECT id,bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,assign FROM bugdb WHERE id=$id");
 	if(!$result) { echo mysql_error(); exit; }
 	if ($num = mysql_num_rows($result)) {
 		$row = mysql_fetch_array($result);

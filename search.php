@@ -54,10 +54,6 @@ if (isset($cmd) && $cmd == "display") {
 	    $where_clause .= " AND assign = '$assign'";
 	}
 
-	/* not in the header, but someone can build a query manually with it. */
-	if(strlen($by) and $by!='Any')
-		$where_clause .= " AND dev_id = '$by' ";
- 
     $query .= "$where_clause ";
 
 	/* we avoid adding an order by clause if using the full text search */

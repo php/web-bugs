@@ -17,7 +17,7 @@ else {
 @mysql_select_db("php3")
     or die("unable to select database");
 
-$query = "SELECT status,dev_id,bug_type,email,php_version,php_os FROM bugdb";
+$query = "SELECT status,bug_type,email,php_version,php_os FROM bugdb";
 
 if ($phpver > 0) {
 	$query .= " WHERE SUBSTRING(php_version,1,1) = '$phpver'";
@@ -30,10 +30,6 @@ $result = mysql_unbuffered_query($query);
 while($row=mysql_fetch_array($result)) {
 	$bug_type['all'][$row[bug_type]]++;
 	$status_str = strtolower($row['status']);
-	if ($status_str == 'closed' || $status_str == 'bogus') {
-		$closed_by[$row['dev_id']]++;
-	}
-
 	$bug_type[$status_str][$row[bug_type]]++;
 	$bug_type[$status_str]['all']++;
 	$email[$row[email]]++;
@@ -160,20 +156,6 @@ echo "<tr bgcolor=#aabbcc><th align=right>Average life of a report:</th><td bgco
 echo "<tr bgcolor=#aabbcc><th align=right>Median life of a report:</th><td bgcolor=#ccddee>".ShowTime($median)."</td></tr>\n";
 echo "<tr bgcolor=#aabbcc><th align=right>Slowest report closure:</th><td bgcolor=#ccddee>".ShowTime($row[slowest])."</td></tr>\n";
 echo "<tr bgcolor=#aabbcc><th align=right>Quickest report closure:</th><td bgcolor=#ccddee>".ShowTime($row[quickest])."</td></tr>\n";
-echo "</table>\n";
-
-echo "<p><b>Who is closing the bug reports?</b>\n";
-echo "<table>\n";
-arsort($closed_by);
-$i=0;
-while($i < 20) {
-	list($who,$value)=each($closed_by);
-	if (trim($who) == '') {
-	    continue;
-	}
-	echo "<tr bgcolor=#aabbcc><th>$who</th><td bgcolor=#ccddee>$value</td></tr>\n";
-	$i++;			
-}
 echo "</table>\n";
 
 commonFooter();

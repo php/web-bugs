@@ -27,7 +27,7 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
 
 # fetch info about the bug into $bug
 $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
-       . "php_version,php_os,status,ts1,ts2,dev_id,assign,"
+       . "php_version,php_os,status,ts1,ts2,assign,"
        . "UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified,"
        . "COUNT(bug=id) AS votes,"
        . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
@@ -89,7 +89,7 @@ elseif ($in && $edit == 1) {
 		$errors[] = "The username or password you supplied was incorrect.";
 	}
 	elseif (!($errors = incoming_details_are_valid($in))) {
-		$query = "UPDATE bugdb SET sdesc='$in[sdesc]',status='$in[status]', bug_type='$in[bug_type]', assign='$in[assign]', dev_id='$in[user]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW() WHERE id=$id";
+		$query = "UPDATE bugdb SET sdesc='$in[sdesc]',status='$in[status]', bug_type='$in[bug_type]', assign='$in[assign]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW() WHERE id=$id";
 		$success = @mysql_query($query);
 		if ($success && !empty($ncomment)) {
 			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'$ncomment')";

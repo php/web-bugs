@@ -15,7 +15,6 @@ CREATE TABLE bugdb (
   status varchar(16),
   ts1 datetime, # bug created date
   ts2 datetime, # bug last updated date
-  dev_id varchar(16),# developer who last commented
   assign varchar(16),
   passwd varchar(20),# user password
   PRIMARY KEY (id),
