@@ -388,10 +388,10 @@ function addlinks($text)
 }
 
 /* validate an incoming bug report */
-function incoming_details_are_valid($in,$initial=0) 
+function incoming_details_are_valid ($in, $initial=0)
 {
 	$errors = array();
-	if(!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['email'])) {
+	if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['email'])) {
 		$errors[] = "Please provide a valid email address.";
 	}
 
@@ -399,23 +399,23 @@ function incoming_details_are_valid($in,$initial=0)
 		$errors[] = "Please select an appropriate bug type.";
 	}
 
-	if ($in['php_version'] == 'earlier') {
+	if (isset($in['php_version']) && $in['php_version'] == 'earlier') {
 		$errors[] = "Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.";
 	}
 
-	if (!$in['php_version']) {
+	if (empty($in['php_version'])) {
 		$errors[] = "Please select a valid PHP version.";
 	}
 
-    if (!$in['sdesc']) {
+	if (empty($in['sdesc'])) {
 		$errors[] = "You must supply a short description of the bug you are reporting.";
 	}
 
-    if ($initial && !$in['ldesc']) {
+	if ($initial && empty($in['ldesc'])) {
 		$errors[] = "You must supply a long description of the bug you are reporting.";
 	}
 
-	if ($initial && !$in['passwd']) {
+	if ($initial && empty($in['passwd'])) {
 		$errors[] = "You must supply a password for this bug report.";
 	}
 
