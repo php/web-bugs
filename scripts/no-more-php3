@@ -3,38 +3,27 @@
 
 require dirname(__FILE__).'/../include/functions.inc';
 
-# this script closes PHP 3 bugs
+# this script closes PHP 3 bugs (without emails)
 
-$message = 'We are sorry, but we can not support PHP 3 related problems anymore.';
-$mail_bugs_to = 'php-bugs@lists.php.net';
+$mailfrom = 'php-bugs@lists.php.net';
+$message = 'We are sorry, but we do not support PHP 3 related problems anymore.';
 
-mysql_connect("localhost", "nobody", "")
+$db = mysql_connect("localhost", "nobody", "")
   or die("unable to connect to database");
-mysql_select_db("phpbugdb")
+mysql_select_db("phpbugdb", $db)
   or die("unable to select db");
 
 # fetch info about the bug into $bug
-$query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
-       . "php_version,php_os,status,ts1,ts2,assign,"
-       . "UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified,"
-       . "COUNT(bug=id) AS votes,"
-       . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
-       . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
-       . "AVG(score)+3 AS average,STD(score) AS deviation"
-       . " FROM bugdb LEFT JOIN bugdb_votes ON id=bug"
-       . " WHERE (SUBSTRING(php_version,1,1) = '3'"
-       . " GROUP BY bug";
+$query = "
+  SELECT id 
+  FROM bugdb
+  WHERE SUBSTRING(php_version,1,1) = '3' AND status NOT IN ('Wont fix', 'Bogus', 'Closed')
+";
 
-$result = mysql_query($query)
-  or die("query failed: ".mysql_query()."\n$query");
-
-$in = array('status' => 'Wont Fix');
+$result = mysql_query($query, $db)
+  or die("query failed: ".mysql_error($db)."\n$query");
 
 while ($bug = mysql_fetch_assoc($result)) {
-  list($mailto,$mailfrom) = get_bugtype_mail($bug['bug_type']);
-
   mysql_query("INSERT bugdb_comments SET bug=$bug[id],email='$mailfrom',ts=NOW(),comment='".addslashes($message)."'");
-  mysql_query("UPDATE bugdb SET status='wont fix',ts2=NOW() WHERE id=$bug[id]");
-
-  mail_bug_updates($bug,$in,$mailfrom,$message);
+  mysql_query("UPDATE bugdb SET status='Wont fix',ts2=NOW() WHERE id=$bug[id]");
 }
