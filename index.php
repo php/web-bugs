@@ -13,10 +13,20 @@ commonHeader();
 
 <h1>Report a Bug</h1>
 
-<p>Before you report a bug, please use the form above or our <a
-href="search.php">advanced search page</a> to make sure nobody has reported the
-bug already and then read our tips on <a href="how-to-report.php">how to report
-a bug that someone will want to help fix</a>.</p>
+<p>Before you report a bug, please make sure you have completed the following steps:
+<ul>
+
+<li>Used the form above or our <a href="search.php">advanced search page</a> 
+to make sure nobody has reported the bug already.<br><br></li>
+
+<li>Made sure you are using the latest stable version (currently 4.1.1) or a 
+build from CVS, if similar bugs have recently been fixed and committed.<br><br></li>  
+
+<li>Read our tips on <a href="how-to-report.php">how to report
+a bug that someone will want to help fix</a>.</li>
+</ul>
+
+</p>
 
 <p>Once you've double-checked that the bug you've found hasn't already been
 reported, and that you have collected all the information you need to file an
