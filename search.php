@@ -33,11 +33,7 @@ if (isset($cmd) && $cmd == "display") {
 	else
 		$query = "SELECT ";
 
-	if (empty($author_email)) {
-		$query .= "*, TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
-	} else {
-		$query .= "DISTINCT bugdb.*, TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb, bugdb_comments ";
-	}
+	$query .= "*, TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
 
 	if ($bug_type == "Any") {
 		$where_clause = "WHERE bug_type != 'Feature/Change Request'";
@@ -96,7 +92,7 @@ if (isset($cmd) && $cmd == "display") {
 	}
     
 	if (!empty($author_email)) {
-	    $where_clause .= " AND (bugdb.email = '$author_email' OR (bugdb_comments.email = '$author_email' AND bugdb.id = bugdb_comments.bug))";
+	    $where_clause .= " AND bugdb.email = '$author_email' ";
 	}
 
     $query .= "$where_clause ";
@@ -276,8 +272,8 @@ if ($warnings) display_warnings($warnings);
   </td>
  </tr>
  <tr>
-  <th>Developer email</th>
-  <td nowrap="nowrap">Return only bugs with an email from</td>
+  <th>Author email</th>
+  <td nowrap="nowrap">Return only bugs with author email</td>
   <td><input type="text" name="author_email" value="<?php echo htmlspecialchars(stripslashes($author_email)); ?>" /></td>
  </tr>
  <tr>
