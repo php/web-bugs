@@ -2,6 +2,9 @@
 require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
 
+/* When user submits a report, do a search and display the results before allowing
+ * them to continue */
+
 if (isset($save) && isset($pw)) { # non-developers don't have $user set
   setcookie("MAGIC_COOKIE",base64_encode("$user:$pw"),time()+3600*24*12,'/','.php.net');
 }
@@ -20,72 +23,163 @@ $mail_bugs_to = "php-bugs@lists.php.net";
 $errors = array();
 if ($in) {
     if (!($errors = incoming_details_are_valid($in,1))) {
-        $query = "INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$in[bug_type]','$in[email]','$in[sdesc]','$in[ldesc]','$in[php_version]','$in[php_os]','Open',NOW(),'$in[passwd]')";
-        $ret = mysql_query($query);
-    
-        $cid = mysql_insert_id();
 
-        $report = "";
-        $report .= "From:             ".stripslashes($in['email'])."\n";
-        $report .= "Operating system: ".stripslashes($in['php_os'])."\n";
-        $report .= "PHP version:      ".stripslashes($in['php_version'])."\n";
-        $report .= "PHP Bug Type:     $in[bug_type]\n";
-        $report .= "Bug description:  ";
+		if (!$in['did_luser_search']) {
 
-        $ldesc = stripslashes($in['ldesc']);
-        $sdesc = stripslashes($in['sdesc']);
+			$in['did_luser_search'] = 1;
 
-        $ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
-        $ascii_report.= "\n-- \nEdit bug report at http://bugs.php.net/?id=$cid&edit=";
-        
-        list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
+			/* search for a match using keywords from the subject */
 
-        $email = stripslashes($in['email']);
+			$sdesc = stripslashes($in['sdesc']);
 
-        # provide shortcut URLS for "quick bug fixes"
-        $dev_extra = ""; 
-        $maxkeysize = 0;
-        foreach ($RESOLVE_REASONS as $v) {
-            if (!$v['webonly']) {
-                $actkeysize = strlen($v['desc']) + 1;
-                $maxkeysize = (($maxkeysize < $actkeysize) ? $actkeysize : $maxkeysize);
-            }
-        }
-        foreach ($RESOLVE_REASONS as $k => $v) {
-            if (!$v['webonly'])
-                $dev_extra .= str_pad($v['desc'] . ":", $maxkeysize) .
-                              " http://bugs.php.net/fix.php?id=$cid&r=$k\n";
-        }
+			/* if they are filing a feature request, only look for similar features */
+			$bug_type = $in['bug_type'];
+			if ($bug_type == 'Feature/Change Request') {
+				$where_clause = "WHERE bug_type = '$bug_type'";
+			} else {
+				$where_clause = "WHERE bug_type != 'Feature/Change Request'";
+			}
 
-        # mail to appropriate mailing lists
-        if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
-            # mail to reporter
-            @mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
+			list($sql_search, $ignored) = format_search_string($sdesc);
 
-            header("Location: bug.php?id=$cid&thanks=4");
-            exit;
+			$where_clause .= $sql_search;
 
-        } else {
-        
-            commonHeader("Report - Error");
-            
-            echo "<pre>\n";
+			$query = "SELECT * from bugdb $where_clause LIMIT 5";
 
-            echo $report;
+			$res = mysql_query($query) or die(htmlspecialchars($query) . "<br>" . mysql_error());
 
-            echo htmlspecialchars($sdesc), "\n\n";
+			if (mysql_num_rows($res) == 0) {
+				$ok_to_submit_report = 1;
+			} else {
+				commonHeader("Report - Confirm");
 
-            echo wordwrap(htmlspecialchars($ldesc));
+?>
+<p>Are you sure that you searched before your submitted your bug report?
+We found the following bugs that seem to be similar to yours; please check them
+before sumitting the report as they might contain the solution you are looking for.
+</p>
+<p>If you're sure that your report is a genuine bug that has not been reported before,
+you can scroll down and click the submit button to really enter the details into our database.
+</p>
 
-            echo "</pre>\n";
 
-            echo "<p><h2>Mail not sent!</h2>\n";
-            echo "Please send this page in a mail to " .
-                 "<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
-        }
-    }
+<div class="warnings">
+<table class="lusersearch">
+<tr>
+<td><b>Description</b></td>
+<td><b>Possible Solution</b></td>
+<td>&nbsp;</td>
+</tr>
+<?php
 
-    commonHeader("Report - Problems");
+				while ($row = mysql_fetch_array($res)) {
+
+					$resolution = mysql_get_one("SELECT comment from bugdb_comments where bug = " . $row['id'] . " order by id desc limit 1");
+
+					if ($resolution) {
+						$resolution = htmlspecialchars($resolution);
+					}
+
+					$summary = $row['ldesc'];
+					if (strlen($summary) > 256) {
+						$summary = htmlspecialchars(substr(trim($summary), 0, 256)) . " ...";
+					} else {
+						$summary = htmlspecialchars($summary);
+					}
+
+					$bug_url = "/bug.php?id=$row[id]&edit=2";
+
+					echo "<tr><td colspan=\"2\"><a href=\"$bug_url\">Bug #" . $row['id'] . ": " . $row['sdesc'] . "</a></td></tr>";
+					echo "<tr><td>" . $summary . "</td>";
+
+					echo "<td>" . nl2br($resolution) . "</td>";
+
+					echo "</tr>\n";
+
+				}
+
+?>
+</table>
+</div>
+<?php
+				
+			}
+		} else {
+			/* we displayed the luser search and they said it really
+			 * was not already submitted, so let's allow them to submit */
+			$ok_to_submit_report = true;
+		}
+
+		if ($ok_to_submit_report) {
+
+			$query = "INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$in[bug_type]','$in[email]','$in[sdesc]','$in[ldesc]','$in[php_version]','$in[php_os]','Open',NOW(),'$in[passwd]')";
+			$ret = mysql_query($query);
+
+			$cid = mysql_insert_id();
+
+			$report = "";
+			$report .= "From:             ".stripslashes($in['email'])."\n";
+			$report .= "Operating system: ".stripslashes($in['php_os'])."\n";
+			$report .= "PHP version:      ".stripslashes($in['php_version'])."\n";
+			$report .= "PHP Bug Type:     $in[bug_type]\n";
+			$report .= "Bug description:  ";
+
+			$ldesc = stripslashes($in['ldesc']);
+			$sdesc = stripslashes($in['sdesc']);
+
+			$ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
+			$ascii_report.= "\n-- \nEdit bug report at http://bugs.php.net/?id=$cid&edit=";
+
+			list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
+
+			$email = stripslashes($in['email']);
+
+			// provide shortcut URLS for "quick bug fixes"
+			$dev_extra = ""; 
+			$maxkeysize = 0;
+			foreach ($RESOLVE_REASONS as $v) {
+				if (!$v['webonly']) {
+					$actkeysize = strlen($v['desc']) + 1;
+					$maxkeysize = (($maxkeysize < $actkeysize) ? $actkeysize : $maxkeysize);
+				}
+			}
+			foreach ($RESOLVE_REASONS as $k => $v) {
+				if (!$v['webonly'])
+					$dev_extra .= str_pad($v['desc'] . ":", $maxkeysize) .
+						" http://bugs.php.net/fix.php?id=$cid&r=$k\n";
+			}
+
+			// mail to appropriate mailing lists
+			if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+				// mail to reporter
+				@mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
+
+				header("Location: bug.php?id=$cid&thanks=4");
+				exit;
+
+			} else {
+
+				commonHeader("Report - Error");
+
+				echo "<pre>\n";
+
+				echo $report;
+
+				echo htmlspecialchars($sdesc), "\n\n";
+
+				echo wordwrap(htmlspecialchars($ldesc));
+
+				echo "</pre>\n";
+
+				echo "<p><h2>Mail not sent!</h2>\n";
+				echo "Please send this page in a mail to " .
+					"<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
+			}
+		} else {
+		}
+    } else {
+	    commonHeader("Report - Problems");
+	}
 }
 
 if (!isset($in)) {
@@ -112,6 +206,7 @@ simply being marked as "bogus".</strong></p>
 if ($errors) display_errors($errors);
 ?>
 <form method="post" action="<?php echo $PHP_SELF;?>">
+<input type="hidden" name="in[did_luser_search]" value="<?php echo $in['did_luser_search'] ? 1 : 0; ?>" />
 <table>
  <tr>
   <th align="right">Your email address:</th>
