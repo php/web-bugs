@@ -137,6 +137,14 @@ div.thanks {
         padding: 6px;
 }
 
+table.lusersearch td {
+	font-size: 75%;
+}
+
+table.lusersearch tr {
+	vertical-align: top;
+}
+
 /* these are redundant with things in controls.css, to try and make the
  * bug forms look a smidge better on netscape 4 (ugh). */
 span.control {
