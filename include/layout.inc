@@ -177,9 +177,8 @@ function commonHeader($title = false, $showsearch = true) {
 ><a name="TOP"></a>
 <table border="0" cellspacing="0" cellpadding="0" height="48" width="100%">
   <tr class="headertop">
-    <td align="left" rowspan="2">
-<?php print_link('/', make_image('logo-bug.gif', 'PHP Bugs', false, 'vspace="2" hspace="2"') ); ?><br>
-    </td>
+    <td align="left" rowspan="2"><?php print_link('/', make_image('logo-bug.gif', 'PHP Bugs', false, 'vspace="2" hspace="2"') ); ?></td>
+    <td>&nbsp;</td>
   </tr>
 
   <tr class="headertop">
