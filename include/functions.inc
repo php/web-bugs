@@ -85,6 +85,8 @@ $state_types = 	array (
 	"Bogus" => 2,
 	"All" => 0
 );
+
+$no_comments_allowed = array('Closed', 'Duplicate', 'Wont fix', 'Bogus', 'Stale');
 	
 function show_state_options($state, $user_mode=0, $default="") 
 {

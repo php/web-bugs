@@ -58,11 +58,22 @@ if ($edit == 1 && isset($delete_comment)) {
 	exit();
 } 
 
+# comments allowed setting
+if (in_array($bug['status'], $no_comments_allowed)) {
+	$comments_allowed = false;
+} else {
+	$comments_allowed = true;
+}
+
 # handle any updates, displaying errors if there were any
 $success = !isset($in);
 $errors = array();
 
 if ($in && $edit == 3) {
+	if (!$comments_allowed) {
+		$errors[] = "You can not add comments for bugs with the statuses:" . join(', ', $no_comments_allowed);
+	}
+
 	if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['commentemail'])) {
 		$errors[] = "You must provide a valid email address.";
 	}
@@ -71,11 +82,6 @@ if ($in && $edit == 3) {
 	if (stripslashes($in['commentemail']) == $bug['email']) {
 		header("Location: $PHP_SELF?id=$id&edit=2");
 		exit();
-	}
-
-	# Temporary, da.ru is spamming the bugs system right now
-	if (false !== strpos($ncomment, 'da.ru')) {
-		$errors[] = "Go away.";
 	}
 	
 	# check that they aren't using a php.net mail address without
@@ -263,7 +269,7 @@ function control($num,$desc) {
 }
 
 control(0,'View/Vote');
-if ($edit != 2) {
+if ($edit != 2 && $comments_allowed) {
 	control(3,'Add Comment');
 }
 control(1,'Developer');
