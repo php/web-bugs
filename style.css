@@ -175,6 +175,7 @@ div#bugheader table#details td#summary {
 
 div#controls {
         clear: both;
+        width: 100%;
 }
 
 div#controls span {
