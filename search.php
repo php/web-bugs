@@ -144,7 +144,7 @@ if (isset($cmd) && $cmd == "display") {
 			echo "<br /><a href=\"bug.php?id=$row[id]&amp;edit=1\">(edit)</a></td>";
 
 			/* Date */
-			echo "<td align=\"center\">".date ("Y-m-d<br />\nH:i:s", strtotime ($row[ts1]))."</td>";
+			echo "<td align=\"center\">".date ("Y-m-d H:i:s", strtotime ($row[ts1]))."</td>";
 
 			if ($bug_type == "Any") {
 				echo "<td>", htmlspecialchars($row[bug_type]), "</td>";
