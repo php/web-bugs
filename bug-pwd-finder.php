@@ -30,7 +30,7 @@ if ($bug_id) {
 	} else {
 		list ($email, $passwd) = mysql_fetch_row ($result);
 
-		if (empty($password)) {
+		if (empty($passwd)) {
 			$msg = "No password found for #$bug_id bug report, sorry.";
 		} else {
 			$passwd = stripslashes ($passwd);
