@@ -13,25 +13,23 @@ commonHeader();
 
 <h1>Report a Bug</h1>
 
-<p>Before you report a bug, please make sure you have completed the following steps:
+<p>Before you report a bug, please make sure you have completed the following steps:</p>
+
 <ul>
-
 <li>Used the form above or our <a href="search.php">advanced search page</a> 
-to make sure nobody has reported the bug already.<br><br></li>
+to make sure nobody has reported the bug already.</li>
 
-<li>Made sure you are using the latest stable version (currently 4.1.1) or a 
-build from CVS, if similar bugs have recently been fixed and committed.<br><br></li>  
+<li>Made sure you are using the latest stable version or a build from CVS, if
+similar bugs have recently been fixed and committed.</li>  
 
 <li>Read our tips on <a href="how-to-report.php">how to report
 a bug that someone will want to help fix</a>.</li>
 </ul>
 
-</p>
-
 <p>Once you've double-checked that the bug you've found hasn't already been
 reported, and that you have collected all the information you need to file an
 excellent bug report, you can do so on our <a href="report.php">bug reporting
-page</a>.
+page</a>.</p>
 
 <h1>Search the Bug System</h1>
 
