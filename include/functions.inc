@@ -494,7 +494,7 @@ function format_search_string($search)
 		}
 	}
 
-	return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('$search')", $ignored);
+	return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('" . addslashes($search) . "')", $ignored);
 }
 
 ?>

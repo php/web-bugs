@@ -30,7 +30,7 @@ if ($in) {
 
 			/* search for a match using keywords from the subject */
 
-			$sdesc = stripslashes($in['sdesc']);
+			$sdesc = rinse($in['sdesc']);
 
 			/* if they are filing a feature request, only look for similar features */
 			$bug_type = $in['bug_type'];
