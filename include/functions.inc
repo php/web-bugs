@@ -149,21 +149,21 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
     $text = array();
     $headers = array();
     
-    $headers[] = array("ID", $bug['id']);
+    $headers[] = array(" ID", $bug['id']);
     
 	switch ($edit) {
 	case 3:
-		$headers[] = array("Comment by", rinse($in['email']));
+		$headers[] = array(" Comment by", rinse($in['email']));
 		break;
 	case 2:
-		$headers[] = array("User updated by", txfield('email'));
+		$headers[] = array(" User updated by", txfield('email'));
 		break;
 	default:
-		$headers[] = array("Updated by", $from);
+		$headers[] = array(" Updated by", $from);
 	}
 
 	if (changed('sdesc'))
-		$headers[] = array("Old Summary", $bug['sdesc']);
+		$headers[] = array("-Summary", $bug['sdesc']);
 
 	$fields = array(
 		'email'       => 'Reported By',
@@ -175,12 +175,15 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 	);
 
 	foreach ($fields as $name => $desc) {
-		if (changed($name)) {
-			$headers[] = array("Old $desc", $bug[$name]);
+		$prefix = " ";
+        if (changed($name)) {
+			$headers[] = array("-$desc", $bug[$name]);
+            $prefix = "+";
 		}
 		/* only fields that are set get added. */
-		if ($f = txfield($name))
-			$headers[] = array($desc, $f);
+		if ($f = txfield($name)) {
+			$headers[] = array($prefix.$desc, $f);
+        }
 	}
     
     # make header output aligned
@@ -196,7 +199,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
     }
 
 	if ($ncomment)
-		$text[] = "New Comment:\n\n".stripslashes($ncomment);
+		$text[] = " New Comment:\n\n".stripslashes($ncomment);
 
 	$text[] = get_old_comments($bug['id']);
 
@@ -280,7 +283,7 @@ function get_old_comments ($bug_id)
 		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "[$row[0]] $row[1]\n\n$row[2]\n\n$divider\n\n");
     }
     else {
-		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n    http://bugs.php.net/?id=$bug_id\n");
+		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n    http://bugs.php.net/$bug_id\n");
     }
 
     return "";
