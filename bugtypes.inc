@@ -99,6 +99,7 @@ $items = array (
 	"Verisign Payflow Pro related" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Verisign Payflow Pro related",
 
 	"*Graphics related"    => "&nbsp;&nbsp;&nbsp;&nbsp;Graphics related",
+	"EXIF related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; EXIF related",
 	"GD related"           => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GD related",
 	"GetImageSize related" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetImageSize related",
 	"Ming related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ming related",
