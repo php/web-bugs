@@ -269,13 +269,13 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		}
 		
 		@mail($bug[email],
-		      "Bug $subj" . txfield('sdesc'),
+		      "Bug " . rinse($subj) . txfield('sdesc'),
 		      $user_text,
 		      "From: PHP Bug Database <$mailfrom>\n".
 		      "X-PHP-Bug: $bug[id]\n".
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
 		@mail($mailto,
-		      $subj . txfield('sdesc'),
+		      rinse($subj) . txfield('sdesc'),
 		      $dev_text,
 		      "From: $from\n".
 		      "X-PHP-Bug: $bug[id]\n".
