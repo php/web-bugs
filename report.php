@@ -97,10 +97,14 @@ at the top of the page or our <a href="search.php">advanced search page</a>.
 Also, read the instructions for <a href="how-to-report.php">how to report a bug
 that someone will want to help fix</a>.</p>
 
-<p>If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support <a href="http://www.php.net/support.php">listed here</a>.</p>
+<p>If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support 
+<a href="http://www.php.net/support.php">listed here</a>.</p>
 
 <p><strong>Failure to follow these instructions may result in your bug
 simply being marked as "bogus".</strong></p>
+
+<p><strong>If you feel this bug concerns a security issue, eg a buffer overflow, weak encryption, etc, then email
+<a href="mailto:security@php.net?subject=possible new bug!">security@php.net</a> who will assess the situation. </strong></p>
 
 <?php
 }
