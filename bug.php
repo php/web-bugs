@@ -173,8 +173,6 @@ statistics below.
 <?php }?>
 <?php }?>
 </table>
-
- </div>
 </div>
 
 <div id="controls">
