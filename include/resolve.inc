@@ -39,7 +39,7 @@ to the version you tested and change the status back to "Open".',
   ),
   'support' => array(
     'status' => 'Bogus',
-    'desc' => 'Not for support',
+    'desc' => 'Not developer issue',
     'message' =>
 'The bug system is not the appropriate forum for asking support
 questions. For a list of a range of more appropriate places to ask
@@ -56,7 +56,7 @@ please do so and change the status of the bug back to "Open".',
   ),
   'notwrong' => array(
     'status' => 'Bogus',
-    'desc' => 'Not wrong behavior',
+    'desc' => 'expected behavior',
     'message' =>
 'This is not a bug. Please double-check the documentation available
 at http://www.php.net/manual/ and the instructions on how to report
