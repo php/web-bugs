@@ -22,7 +22,7 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
   list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
 }
 
-@mysql_pconnect("localhost","nobody","")
+@mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
