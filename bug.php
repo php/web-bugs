@@ -228,7 +228,8 @@ if ($edit) { /* $edit is set */
 <?php }?>
 <?php } else { ?>
 <td><?php echo $original[status]?></td>
-<td><td><small><a href="<?php echo "$PHP_SELF?id=$id";?>&amp;edit=2"><tt>User Modify</tt></a> &nbsp; <a href="<?php echo "$PHP_SELF?id=$id";?>&amp;edit=1"><tt>Dev Modify</tt></a></small></td>
+<td><td><small><a href="<?php echo "$PHP_SELF?id=$id";?>&amp;edit=2"><tt>User Modify</tt></a><br />
+ <a href="<?php echo "$PHP_SELF?id=$id";?>&amp;edit=1"><tt>Dev Modify</tt></a></small></td>
 <?php }?>
 </tr>
 <tr>
