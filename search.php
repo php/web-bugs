@@ -98,10 +98,10 @@ if (isset($cmd) && $cmd == "display") {
 		$query .= " ORDER BY $order_by $direction";
     }
 
-	if (!(int)$begin) $begin = 0;
+	$begin = (int)$begin;
 	if ($limit != 'All' && !(int)$limit) $limit = 30;
 
-	if($limit!='All') $query .= " LIMIT $begin,$limit";
+	if($limit!='All') $query .= " LIMIT $begin,".(int)$limit;
 
 	if(stristr($query, ";")) {
 		$errors[] = "<b>BAD HACKER!!</b> No database cracking for you today!";
