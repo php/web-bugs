@@ -53,19 +53,24 @@ if ($cmd == "send") {
 
 		if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report, "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
 		    @mail($email, "Bug #$cid: $sdesc", $ascii_report, "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
-			echo "<p><h2>Mail sent to $mailto...</h2></p>\n";
-			echo "<p>Thank you for your help!</p>";
-			echo "<p><i>The password for this report is</i>: <b>".htmlentities($passwd)."</b><br>";
-			echo "If the status of the bug report you submitted\n";
-			echo "changes, you will be notified. You may return here and check on the status\n";
-			echo "or update your report at any time. The URL for your bug report is: <a href=\"http://bugs.php.net/?id=$cid\">";
-			echo "http://bugs.php.net/?id=$cid</a></p>\n";
+
+			header("Location: report.php?cmd=thankyou&cid=$cid&mailto=".urlencode($mailto));
+
 		} else {
 			echo "<p><h2>Mail not sent!</h2>\n";
 			echo "Please send this page in a mail to " .
 			     "<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
 	    }
 	}
+} elseif ($cmd == 'thankyou') {
+
+	echo "<p><h2>Mail sent to $mailto...</h2></p>\n";
+	echo "<p>Thank you for your help!</p>";
+	echo "If the status of the bug report you submitted\n";
+	echo "changes, you will be notified. You may return here and check on the status\n";
+	echo "or update your report at any time. The URL for your bug report is: <a href=\"http://bugs.php.net/?id=$cid\">";
+	echo "http://bugs.php.net/?id=$cid</a></p>\n";
+
 } elseif (!isset($cmd)) {
 ?>
 
