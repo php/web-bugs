@@ -170,8 +170,8 @@ Thanks for your interest in PHP.',
     'status' => 'Bogus',
     'desc' => 'Install GNU Sed',
     'message' =>
-'Due to a bug in the installed sed it is unable to work together with PHP\'s
-advanced buildsystem. Install GNU sed and it should be okay.
+'Due to a bug in the installed sed on your system the build
+fails. Install GNU sed and it should be okay.
  
 Thank you for your interest in PHP.',
   ),
