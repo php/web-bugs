@@ -109,11 +109,10 @@ Again, thank you for your continued support of PHP.',
 'Sorry, but your problem does not imply a bug in PHP itself.  For a
 list of more appropriate places to ask for help using PHP, please
 visit http://www.php.net/support.php as this bug system is not the
-appropriate forum for asking support questions. 
-
-Even if you think it is not a bug, we often know better than you,
-please consult the support channels first before even considering
-to reopen this report.
+appropriate forum for asking support questions.  Due to the volume
+of reports we can not explain in detail here why your report is not
+a bug.  The support channels will be able to provide an explanation
+for you.
 
 Thank you for your interest in PHP.',
   ),
@@ -175,10 +174,10 @@ part of our efforts to make PHP scripting more secure and portable.',
     'status' => 'Wont Fix',
     'desc' => 'PHP 3 support discontinued',
     'message' =>
-'We are sorry, but can not support PHP 3 related problems anymore.
+'We are sorry, but we can not support PHP 3 related problems anymore.
 Momentum is gathering for PHP 5, and we think supporting PHP 3 will
 lead to a waste of resources which we want to put into getting PHP 5
-ready. Ofcourse PHP 4 will continue to be supported for the
+ready. Of course PHP 4 will continue to be supported for the
 forseeable future.',
   ),
   'dst' => array(
