@@ -150,7 +150,7 @@ if (isset($cmd) && $cmd == "display") {
  <tr>
   <td bgcolor="#000000" colspan="6"><?echo spacer(1,1);?></td>
  </tr>
- <form method="GET" action="<?php echo $PHP_SELF;?>">
+ <form method="GET" action="bug.php">
   <tr>
    <td align="right"><input type="submit" value="Edit" /></td>
    <td align="right">bug number:</td>
