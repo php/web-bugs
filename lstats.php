@@ -23,7 +23,7 @@ function get_status_count ($status, $category='')
 	if ($category != '') {
 		$query.= " $status AND bug_type='$category'";
 	} else {
-		$query.= " status='$status' AND bug_type NOT IN($exclude)";
+		$query.= " status='$status' AND bug_type NOT IN($excluded)";
 	}
 
 	$result=mysql_unbuffered_query($query);
