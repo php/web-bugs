@@ -280,7 +280,7 @@ function commonFooter() {
   <tr valign="top" bgcolor="#cccccc">
     <td><small>
       <?php print_link('http://www.php.net/', make_image('php-logo.gif', 'PHP', 'left') ); ?>
-      <?php print_link('http://www.php.net/copyright.php', 'Copyright &copy; 2001 The PHP Group'); ?><BR>
+      <?php print_link('http://www.php.net/copyright.php', 'Copyright &copy; 2001, 2002 The PHP Group'); ?><BR>
       All rights reserved.<BR>
       </small>
     </td>
