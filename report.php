@@ -103,7 +103,7 @@ simply being marked as "bogus".</strong></p>
  </tr><tr>
   <th align="right">Operating system:</th>
   <td colspan="2">
-   <input type="text" size="20" maxlength="32" name="php_os" value="<?php echo htmlspecialchars(stripslashes($operating_system));?>" />
+   <input type="text" size="20" maxlength="32" name="php_os" value="<?php echo htmlspecialchars(stripslashes($php_os));?>" />
   </td>
  </tr><tr>
   <th align="right">Summary:</th>
