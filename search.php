@@ -19,7 +19,7 @@ $warnings = array();
 define('BOOLEAN_SEARCH', @intval($boolean));
 
 if (isset($cmd) && $cmd == "display") {
-	@mysql_pconnect("localhost","nobody","")
+	@mysql_connect("localhost","nobody","")
 		or die("Unable to connect to SQL server.");
 	@mysql_select_db("php3");
 

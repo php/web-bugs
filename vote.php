@@ -17,7 +17,7 @@ $reproduced = (int)$reproduced;
 $samever = (int)$samever;
 $sameos = (int)$sameos;
 
-@mysql_pconnect("localhost","nobody","")
+@mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 

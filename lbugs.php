@@ -1,6 +1,6 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
-mysql_pconnect("localhost","nobody","")
+mysql_connect("localhost","nobody","")
   or die("Unable to connect to SQL server\n");
 mysql_select_db("php3");
 

@@ -4,7 +4,7 @@ require_once 'prepend.inc';
 
 commonHeader("Statistics");
 
-@mysql_pconnect("localhost","nobody","")
+@mysql_connect("localhost","nobody","")
 	or die("unable to connect to database");
 @mysql_select_db("php3")
 	or die("unable to select database");

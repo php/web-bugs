@@ -10,7 +10,7 @@
 $id = (int)$_REQUEST['id'];
 $format = $_REQUEST['format'];
 
-@mysql_pconnect("localhost","nobody","")
+@mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
