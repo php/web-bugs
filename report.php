@@ -223,6 +223,9 @@ It is NOT a bug, but a configuration issue. php4_module have changed name to php
 <p><strong>Failure to follow these instructions may result in your bug
 simply being marked as "bogus".</strong></p>
 
+<p>Report <img src="http://pear.php.net/gifs/pear_item.gif"><b>PEAR</b> related bugs <a href="http://pear.php.net/bugs/">here</a></p>
+<p>Report <img src="http://pecl.php.net/gifs/pecl_item.gif"><b>PECL</b> related bugs <a href="http://pecl.php.net/bugs/">here</a></p>
+
 <p><strong>If you feel this bug concerns a security issue, eg a buffer overflow, weak encryption, etc, then email
 <a href="mailto:security@php.net?subject=possible new bug!">security@php.net</a> who will assess the situation. </strong></p>
 
