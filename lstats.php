@@ -18,7 +18,7 @@ function get_status_count ($status, $category='')
 	}
 
 	/* Categories which are excluded from bug count */
-	$excluded = "'Feature/Change Request', 'Website Problem', 'PEAR related'";
+	$excluded = "'Feature/Change Request', 'Website Problem', 'PEAR related', 'Documentation problem'";
 
 	if ($category != '') {
 		$query.= " $status AND bug_type='$category'";
