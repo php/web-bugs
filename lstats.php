@@ -21,10 +21,11 @@ function get_status_count ($status, $category='')
 	$excluded = "'Feature/Change Request', 'Website Problem', 'PEAR related', 'Documentation problem'";
 
 	if ($category != '') {
-		$query.= " $status AND bug_type='$category'";
+		$query.= " $status AND bug_type='$category' ";
 	} else {
-		$query.= " status='$status' AND bug_type NOT IN($excluded)";
+		$query.= " status='$status' ";
 	}
+	$query.= "AND bug_type NOT IN($excluded)";
 
 	$result=mysql_unbuffered_query($query);
 	$row=mysql_fetch_row($result);
