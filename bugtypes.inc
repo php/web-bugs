@@ -34,7 +34,6 @@ $items = array (
 	"*Calendar problems" => "&nbsp;&nbsp;&nbsp;&nbsp;Calendar problems",
 	"Date/time related"  => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date/time related",
 	"Calendar related"   => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Calendar related",
-	"ICAP related"       => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ICAP related",
 	"MCAL related"       => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MCAL related",
 
 	"*Compression related" => "&nbsp;&nbsp;&nbsp;&nbsp;Compression related",
