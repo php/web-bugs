@@ -22,7 +22,8 @@ if (isset($cmd) && $cmd == "display") {
 
 	if (!$bug_type) $bug_type = "Any";
 
-    $query  = "SELECT *,TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
+    $query = "SELECT SQL_CALC_FOUND_ROWS *,"
+           . "TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
 
 	if($bug_type=="Any") {
 		$where_clause = "WHERE bug_type != 'Feature/Change Request'";
@@ -94,17 +95,15 @@ if (isset($cmd) && $cmd == "display") {
 
 	if($limit!='All') $query .= " LIMIT $begin,$limit";
 
-    $res = @mysql_query("SELECT COUNT(*) FROM bugdb $where_clause");
+	$res = @mysql_query($query);
 	if (!$res) die(htmlspecialchars($query)."<br>".mysql_error());
-    $row = mysql_fetch_row($res);
 
-    $total_rows = $row[0];
+    $total_rows = mysql_get_one("SELECT FOUND_ROWS()");
+
 	if (!$total_rows) {
 		$errors[] = "No bugs with the specified criteria were found.";
 	}
 	else {
-		$res = @mysql_query($query);
-		if (!$res) die(htmlspecialchars($query)."<br>".mysql_error());
 	    $rows = mysql_numrows($res);
 
 		$link = "$PHP_SELF?cmd=display&amp;bug_type=" . urlencode ($bug_type) . "&amp;status=$status&amp;search_for=".urlencode(htmlspecialchars(stripslashes($search_for)))."&amp;php_os=".htmlspecialchars(stripslashes($php_os))."&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
