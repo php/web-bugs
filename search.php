@@ -34,7 +34,7 @@ if (isset($cmd) && $cmd == "display") {
 
 	/* Treat assigned, analyzed and critical bugs as open */
 	if ($status == "Open") {
-		$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical')";
+		$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical' OR 'Verified (bughunt)')";
 	} elseif ($status == "Old Feedback") {
 		$where_clause .= " AND status='Feedback' AND TO_DAYS(NOW())-TO_DAYS(ts2)>60";
 	} elseif ($status == "Fresh") {
