@@ -174,3 +174,12 @@ form#vote div#submit {
         margin-left: 10px;
         text-align: center;
 }
+
+form#asearch th {
+        text-align: left;
+        font-weight: bold;
+}
+
+form#asearch table#primary {
+        background: #eee;
+}

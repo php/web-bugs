@@ -1,12 +1,19 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 require_once 'prepend.inc';
 
+if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
+  list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
+}
+
 if ($search_for && !preg_match("/\\D/",trim($search_for))) {
-	header("Location: bug.php?id=$search_for");
+	$x = $pw ? ($user ? "&edit=1" : "&edit=2") : "";
+	header("Location: bug.php?id=$search_for$x");
 	exit;
 }
 
-commonHeader("Search", false);
+commonHeader("Search");
+
+$errors = array();
 
 if (isset($cmd) && $cmd == "display") {
 	@mysql_connect("localhost","nobody","")
@@ -49,7 +56,16 @@ if (isset($cmd) && $cmd == "display") {
 	}
 
 	if (empty($phpver)) $phpver = "4";
-	if ($phpver) $where_clause .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
+	if ($phpver) {
+		// there's an index on php_version(1) to speed this up.
+		if (strlen($phpver) == 1) {
+			$where_clause .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
+		}
+		else {
+			$where_clause .= " AND php_version LIKE '$phpver%'";
+		}
+	}
+
 	if (!empty($assign)) {
 	    $where_clause .= " AND assign = '$assign'";
 	}
@@ -84,7 +100,7 @@ if (isset($cmd) && $cmd == "display") {
 
     $total_rows = $row[0];
 	if (!$total_rows) {
-		echo "<h2 class=\"error\">No bugs with the specified criteria were found.</h2>";
+		$errors[] = "No bugs with the specified critera were found.";
 	}
 	else {
 		$res = @mysql_query($query);
@@ -103,7 +119,7 @@ if (isset($cmd) && $cmd == "display") {
   <th><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=php_version">Version</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
-  <th><a href="<?php echo $link;?>&amp;reorder_by=sdesc">Description</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=sdesc">Summary</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=assign">Assigned</a></th>
  </tr>
 <?php
@@ -130,56 +146,71 @@ if (isset($cmd) && $cmd == "display") {
 ?>
 </table>
 <?php
+		commonFooter();
+		exit;
 	}
-} else {?>
-<table bgcolor="#ccccff" border="0" cellspacing="1">
- <form method="POST" action="<?php echo $PHP_SELF?>">
- <input type="hidden" name="cmd" value="display" />
-  <tr>
-   <td rowspan="5" valign="top"><input type="submit" value="Display" /></td>
-   <td align="right">bugs&nbsp;with&nbsp;status:</td>
-   <td><select name="status"><?php show_state_options($status);?></select></td>
-   <td align="right">reported&nbsp;since:</td>
-   <td><select name="bug_age"><?php show_byage_options($bug_age);?></select></td>
-  </tr>
-  <tr>
-   <td align="right">of type:</td>
-   <td colspan="3"><select name="bug_type"><?php show_types($bug_type,1);?></select></td>
-  </tr>
-  <tr>
-   <td align="right">OS (substring):</td>
-   <td><input type="text" name="php_os" value="<?echo htmlspecialchars($php_os);?>" /></td>
-   <td align="right">assigned to:</td>
-   <td><input size="10" type="text" name="assign" value="<?echo htmlspecialchars($assign);?>" />&nbsp;<?php
+}
+
+if ($errors) display_errors($errors);
+?>
+<form id="asearch" method="post" action="<?php echo $PHP_SELF?>">
+<table id="primary" width="95%">
+ <tr>
+  <th>Find bugs</th>
+  <td nowrap="nowrap">with <b>any</b> of the words</td>
+  <td><input type="text" name="search_for" value="<?echo htmlspecialchars($search_for);?>" size="20" maxlength="255" /></td>
+  <td rowspan="2">
+   <select name="limit"><?php show_limit_options($limit);?></select>
+   <br />
+   <select name="order_by"><?php show_order_options($limit);?></select>
+   <br />
+   <input type="hidden" name="cmd" value="display" />
+   <input type="submit" value="Search" />
+  </td>
+ </tr>
+ <tr>
+  <th>Status</th>
+  <td nowrap="nowrap">Return only bugs with <b>status</b></td>
+  <td><select name="status"><?php show_state_options($status);?></select></td>
+ </tr>
+</table>
+<table>
+ <tr>
+  <th>Category</th>
+  <td nowrap="nowrap">Return only bugs in <b>category</b></td>
+  <td><select name="bug_type"><?php show_types($bug_type,1);?></select></td>
+ </tr>
+ <tr>
+  <th>OS</th>
+  <td nowrap="nowrap">Return bugs with <b>operating system</b></td>
+  <td><input type="text" name="php_os" value="<?echo htmlspecialchars($php_os);?>" /></td>
+ </tr>
+ <tr>
+  <th>Version</th>
+  <td nowrap="nowrap">Return bugs reported with <b>PHP version</b></td>
+  <td><input type="text" name="phpver" value="<?echo htmlspecialchars($php_version);?>" /></td>
+ </tr>
+ <tr>
+  <th>Assigned</th>
+  <td nowrap="nowrap">Return only bugs <b>assigned</b> to</td>
+  <td><input type="text" name="assign" value="<?echo htmlspecialchars($php_version);?>" />
+<?php
     if (!empty($user)) {
 	$u = stripslashes($user);
         print "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\" />";
     }
-?></td>
-  </tr>
-  <tr>
-   <td align="right">with text:</td>
-   <td colspan="3"><input type="text" name="search_for" value="<?echo htmlspecialchars($search_for);?>" /> in the report or email address</td>
-  </tr>
-  <tr>
-   <td align="right">max:</td>
-   <td colspan="3"><select name="limit"><?php show_limit_options($limit);?></select> entries / page.</td>
-  </tr>
- </form>
- <tr>
-  <td bgcolor="#000000" colspan="5"><?echo spacer(1,1);?></td>
+?>
+  </td>
  </tr>
- <form method="GET" action="bug.php">
-  <tr>
-   <td align="right"><input type="submit" value="Edit" /></td>
-   <td align="right">bug number:</td>
-   <td colspan="3"><input type="text" name="id" value="<?echo $id?>"></td>
-   <input type="hidden" name="edit" value="<?php echo isset($MAGIC_COOKIE) ? 1 : 2;?>">
-  </tr>
- </form>
+ <tr>
+  <th>Date</th>
+  <td nowrap="nowrap">Return bugs submitted</td>
+  <td><select name="bug_age"><?php show_byage_options($bug_age);?></select></td>
+ </tr>
 </table>
+</form>
+
 <?php
-}
 commonFooter();
 
 function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
@@ -200,4 +231,22 @@ function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
         echo "<td width=\"33%\">&nbsp;</td>";
     }
 	echo "</tr></table></td></tr>";
+}
+
+function show_order_options ($current) {
+	$opts = array(
+		'' => "relevance",
+		'id' => "ID",
+		'bug_type' => "type",
+		'status' => "status",
+		'php_version' => "version",
+		'php_os' => "os",
+		'sdesc' => "summary",
+		'assign' => "assignment",
+	);
+	foreach ($opts as $k => $v) {
+		echo '<option value="', $k, '"',
+		     ($v == $current ? ' selected="selected"' : ''),
+		     '>Sort by ', $v, "</option>\n";
+	}
 }

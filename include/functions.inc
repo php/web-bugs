@@ -38,7 +38,7 @@ function show_byage_options($current)
 function show_limit_options($limit=30)
 {
 	for($i=10;$i<100;) {
-		echo "<option value=\"$i\"", ($limit==$i ? " selected" : ""),">$i</option>\n";
+		echo "<option value=\"$i\"", ($limit==$i ? " selected" : ""),">$i bugs</option>\n";
 		$i=$i+10;
 	}
 	echo '<option value="All"', ($limit=='All' ? " selected": ""),">All</option>\n";

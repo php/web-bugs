@@ -18,6 +18,7 @@ CREATE TABLE bugdb (
   assign varchar(16),
   passwd varchar(20),# user password
   PRIMARY KEY (id),
+  INDEX (php_version(1)),
   FULLTEXT (email,sdesc,ldesc)
 );
 
