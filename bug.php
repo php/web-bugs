@@ -152,7 +152,7 @@ if ($in && !$errors && $success) {
 	$user_text = wordwrap($user_text, 72); /* use 72 to make piners happy */
 	$dev_text = wordwrap($dev_text, 72);
 
-	list($mailto,$mailfrom) = get_bugtype_mail($bug_type);
+	list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
 
 	/* send mail if status was changed or there is a comment */
 	if ($status != $bug[status] || $ncomment != "") {
