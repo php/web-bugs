@@ -86,8 +86,6 @@ $items = array (
 	"Semaphore related"        => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Semaphore related",
 
 	"*E-commerce functions"        => "&nbsp;&nbsp;&nbsp;&nbsp;E-commerce functions",
-	"CCVS related"                 => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CCVS related",
-	"Cybercash related"            => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cybercash related",
 	"Verisign Payflow Pro related" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Verisign Payflow Pro related",
 
 	"*Graphics related"    => "&nbsp;&nbsp;&nbsp;&nbsp;Graphics related",
@@ -139,7 +137,6 @@ $items = array (
 	"Regexps related"      => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Regexps related",
 
 	"*Spelling functions" => "&nbsp;&nbsp;&nbsp;&nbsp;Spelling functions",
-	"Aspell related"      => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aspell related",
 	"Pspell related"      => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Pspell related",
 
 	"*Search functions"   => "&nbsp;&nbsp;&nbsp;&nbsp;Search functions",
