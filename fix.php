@@ -92,8 +92,8 @@ if (!$res || !$bug) {
 
 /* update bug record */
 $status = $RESOLVE_REASONS[$r]['status'];
-if (isset($FIX_VARIATIONS[$r][$res['bug_type']])) {
-  $qftext = $FIX_VARIATIONS[$r][$res['bug_type']];
+if (isset($FIX_VARIATIONS[$r][$bug['bug_type']])) {
+  $qftext = $FIX_VARIATIONS[$r][$bug['bug_type']];
 } else {
   $qftext = $RESOLVE_REASONS[$r]['message'];
 }
