@@ -51,7 +51,7 @@ $success = !isset($in);
 $errors = array();
 
 if ($in && $edit == 3) {
-	if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['email'])) {
+	if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['commentemail'])) {
 		$errors[] = "You must provide a valid email address.";
 	}
 
@@ -62,10 +62,10 @@ if ($in && $edit == 3) {
 
 	if (!$errors) {
 		$query = "INSERT INTO bugdb_comments (bug,email,ts,comment) VALUES"
-		       . " ('$id','$in[email]',NOW(),'$ncomment')";
+		       . " ('$id','$in[commentemail]',NOW(),'$ncomment')";
 		$success = @mysql_query($query);
 	}
-	$from = stripslashes($in['email']);
+	$from = stripslashes($in['commentemail']);
 }
 elseif ($in && $edit == 2) {
 	if (!$bug[passwd] || $bug[passwd] != stripslashes($pw)) {
@@ -340,7 +340,7 @@ the database with that &mdash; but make sure to <a href="<?php echo "$PHP_SELF?i
 <table>
  <tr>
   <th>Your email address:</th>
-  <td><input type="text" size="40" maxlength="40" name="in[email]" value="<?php echo clean($in['email'])?>" /></td>
+  <td><input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo clean($in['commentemail'])?>" /></td>
   <td><input type="hidden" name="id" value="<?php echo $id?>" /><input type="hidden" name="edit" value="<?php echo $edit?>" /><input type="submit" value="Submit" /></td>
  </tr>
 </table>
