@@ -25,7 +25,7 @@ if (isset($cmd) && $cmd == "display") {
 
 	$mysql4 = version_compare(mysql_get_server_info(), "4.0.0", "ge");
 
-	if (!$bug_type)  $bug_type  = array();
+	if (!$bug_type || !is_array($bug_type)) $bug_type  = array();
 	if (!$bug_ntype) $bug_ntype = array();
 
 	if ($mysql4)
