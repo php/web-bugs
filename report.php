@@ -42,11 +42,14 @@ if ($in) {
 
 		$email = stripslashes($in['email']);
 
-		$dev_extra = ""; $maxkeysize = 0;
+		$dev_extra = ""; 
+		$maxkeysize = 0;
 		foreach (array_keys($RESOLVE_REASONS) as $k) {
 			if (!$v['webonly']) {
                 $actkeysize = strlen($k);
-                if ($actkeysize > $maxkeysize) { $maxkeysize = $actkeysize; }
+                if ($actkeysize > $maxkeysize) { 
+			$maxkeysize = $actkeysize; 
+		}
             }
         }
         foreach ($RESOLVE_REASONS as $k => $v) {
