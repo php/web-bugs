@@ -136,7 +136,8 @@ elseif ($in && $edit == 1) {
 		$errors[] = "The username or password you supplied was incorrect.";
 	}
 
-	if ((($in['status'] == 'Bogus' && $bug['status'] != 'Bogus') || $RESOLVE_REASONS[$in['resolve']]['status'] == 'Bogus')
+	/* Require comment for open bugs only */
+	if ($in['status'] == 'Bogus' && !in_array($bug['status'], array ('Bogus', 'Closed', 'Duplicate', 'No feedback', 'Wont fix'))
 			&& strlen(trim($ncomment)) == 0) {
 		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
 	} elseif ($in['resolve']) {
