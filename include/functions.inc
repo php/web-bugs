@@ -439,12 +439,10 @@ function format_search_string($search)
 	
 	$min_word_len=4;
 	
-	$ok = preg_match_all("/\w+/", $search, $matches);
+	$words = preg_split("/\s+/", stripslashes($search));
 	$ignored = array();
-	foreach($matches[0] AS $match)
-	{
-		if(strlen($match) < $min_word_len)
-		{
+	foreach($words AS $match) {
+		if(strlen($match) < $min_word_len) {
 			array_push($ignored, $match);
 		}
 	}
