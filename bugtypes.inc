@@ -27,6 +27,7 @@ $items = array (
 	"IIS related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IIS related",
 	"iPlanet related"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iPlanet related",
 	"PWS related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PWS related",
+	"Servlet related"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Servlet related",
 	"Other web server"    => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Other web server",
 
 	"*Calendar problems" => "&nbsp;&nbsp;&nbsp;&nbsp;Calendar problems",
