@@ -3,15 +3,6 @@ require_once 'prepend.inc';
 
 commonHeader("Statistics");
 
-if ($phpver > 0) {
-	$other = ($phpver == 4 ? 3 : 4);
-	echo '<p>Currently displaying PHP'. $phpver . ' bugs only. Display <a href="bugstats.php">all bugs</a> or <a href="bugstats.php?phpver=' . $other . '">only PHP' . $other . ' bugs</a>.</p>' . "\n";
-}
-else {
-	echo '<p>Currently displaying all bugs. Display <a href="bugstats.php?phpver=3">only PHP3 bugs</a> or <a href="bugstats.php?phpver=4">only PHP4 bugs</a>.</p>' . "\n";
-
-}
-
 @mysql_pconnect("localhost","nobody","")
 	or die("unable to connect to database");
 @mysql_select_db("php3")
@@ -37,6 +28,21 @@ while($row=mysql_fetch_array($result)) {
 	$php_os[$row[php_os]]++;
 	$status[$row['status']]++;
 	$total++;
+}
+
+// Exit if there are no bugs for this version
+if ($total == 0) {
+ echo '<p>No bugs found for this PHP version</p>';
+ commonFooter();
+ exit;
+}
+
+if ($phpver > 0) {
+	$other = ($phpver == 4 ? 3 : 4);
+	echo '<p>Currently displaying PHP '. $phpver . ' bugs only. Display <a href="bugstats.php">all bugs</a> or <a href="bugstats.php?phpver=' . $other . '">only PHP ' . $other . ' bugs</a>.</p>' . "\n";
+}
+else {
+	echo '<p>Currently displaying all bugs. Display <a href="bugstats.php?phpver=3">PHP 3 bugs only</a> or <a href="bugstats.php?phpver=4">PHP 4 bugs only</a>.</p>' . "\n";
 }
 
 function bugstats($status, $type) {
