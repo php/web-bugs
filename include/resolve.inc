@@ -7,7 +7,9 @@ $RESOLVE_REASONS = array(
     'message' =>
 'This bug has been fixed in CVS. You can grab a snapshot of the
 CVS version at http://snaps.php.net/. In case this was a documentation 
-problem, the fix will show up soon at http://www.php.net/manual/. 
+problem, the fix will show up soon at http://www.php.net/manual/.
+In case this was a PHP.net website problem, the change will show
+up on the PHP.net site and on the mirror sites.
 Thank you for the report, and for helping us make PHP better.',
   ),
   'alreadyfixed' => array(
@@ -91,10 +93,14 @@ Thank you for your interest in PHP.
 ',
   ),
   'submittedtwice' => array(
-    'status' => 'Bogus',
+    'status' => 'Duplicate',
     'desc' => 'Submitted twice',
     'message' =>
-'Please do not submit the same bug more than once.',
+'Please do not submit the same bug more than once. There is a bug report
+in the system with the same, or nearly the same contect. Please search for
+similar bugs before submitting a report.
+
+Thank you for your interest in PHP.',
   ),
   'globals' => array(
     'status' => 'Bogus',
