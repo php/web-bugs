@@ -552,15 +552,15 @@ function format_search_string($search)
 			foreach ($used as $word) {
 				$newsearch .= "+$word ";
 			}
-			return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('" . addslashes($newsearch) . "' IN BOOLEAN MODE)", $ignored);
+			return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . addslashes($newsearch) . "' IN BOOLEAN MODE)", $ignored);
 
 		// allow custom boolean search (raw)
 		} elseif (BOOLEAN_SEARCH === 2) {
-			return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('" . addslashes($search) . "' IN BOOLEAN MODE)", $ignored);
+			return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . addslashes($search) . "' IN BOOLEAN MODE)", $ignored);
 		}
 	}
 	// require any of the words (any)
-	return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('" . addslashes($search) . "')", $ignored);
+	return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . addslashes($search) . "')", $ignored);
 }
 
 ?>
