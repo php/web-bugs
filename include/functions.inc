@@ -44,7 +44,8 @@ function show_state_options($state, $user_mode=0, $default="")
 		"Suspended" => 1,
 		"Feedback" => 1,
 		"Old Feedback" => 0,
-		"Recent" => 0,
+		"Stale" => 0,
+		"Fresh" => 0,
 		"Bogus" => 1,
 		"All" => 0
 	);
