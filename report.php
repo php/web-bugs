@@ -47,7 +47,7 @@ if ($in) {
 		foreach (array_keys($RESOLVE_REASONS) as $k) {
 			if (!$v['webonly']) {
                 $actkeysize = strlen($k);
-                if ($actkeysize > $maxkeysize) { 
+                if ($actkeysize > $maxkeysize) {
 			$maxkeysize = $actkeysize; 
 		}
             }

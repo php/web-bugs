@@ -56,7 +56,7 @@ please do so and change the status of the bug back to "Open".',
   ),
   'notwrong' => array(
     'status' => 'Bogus',
-    'desc' => 'expected behavior',
+    'desc' => 'Expected behavior',
     'message' =>
 'This is not a bug. Please double-check the documentation available
 at http://www.php.net/manual/ and the instructions on how to report
