@@ -96,9 +96,11 @@ Thank you for your interest in PHP.
     'status' => 'Duplicate',
     'desc' => 'Submitted twice',
     'message' =>
-'Please do not submit the same bug more than once. There is a bug report
-in the system with the same, or nearly the same contect. Please search for
-similar bugs before submitting a report.
+'Please do not submit the same bug more than once. An existing
+bug report already describes this very problem. Even if you feel
+that your issue is somewhat different, the resolution is likely
+to be the same. Because of this, we hope you add your comments
+to the original bug instead.
 
 Thank you for your interest in PHP.',
   ),
