@@ -93,6 +93,7 @@ function show_state_options($state, $user_mode=0, $default="")
 function show_version_options($current,$default="") 
 {
 	$versions = array("4.2.0", "4.1.2", "4.0CVS-".date("Y-m-d"));
+	echo "<option value=\"\">--Please Select--</option>\n";
 	while (list(,$v) = each($versions)) {
 		echo "<option", ($current == $v ? " selected" : ""), ">$v</option>\n";
 		if ($current == $v) $use++;
@@ -325,6 +326,10 @@ function incoming_details_are_valid($in,$initial=0)
 
 	if ($in['php_version'] == 'earlier') {
 		$errors[] = "Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.";
+	}
+
+	if (!$in['php_version']) {
+		$errors[] = "Please select a valid PHP version.";
 	}
 
     if (!$in['sdesc']) {
