@@ -1,7 +1,7 @@
 @import url(controls.css);
 
 body, ul, td, th {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 	font-size: 95%;
 }
 
@@ -10,7 +10,7 @@ div#content {
 }
 
 p {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 }
 
 em {
@@ -42,58 +42,58 @@ pre.note {
 }
 
 h1 {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 	font-size: 140%;
 	font-weight: bold;
 	color: #000066;
 }
 
 h2 {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 	font-size: 125%;
 	font-weight: bold;
 	color: #000066;
 }
 
 h3 {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 	font-size: 110%;
 	font-weight: bold;
 	color: #000066;
 }
 
 h4 {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 	font-size: 100%;
 	font-weight: bold;
 	color: #000066;
 }
 
 small {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 	font-size: 75%;
 }
 
 a.small {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 	font-size: 75%;
 	text-decoration: none;
 }
 
 A.menuWhite {
-        font-family: arial,helvetica,sans-serif;
+        font-family: verdana, arial,helvetica,sans-serif;
         font-size: 75%;
         color: #ffffff;
 }
 A.menuBlack {
-        font-family: arial,helvetica,sans-serif;
+        font-family: verdana, arial,helvetica,sans-serif;
         font-size: 75%;
         color: #000000;
 }
 
 
 input {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 }
 
 textarea {
@@ -101,7 +101,7 @@ textarea {
 }
 
 input.small, select.small {
-	font-family: arial,helvetica,sans-serif;
+	font-family: verdana, arial,helvetica,sans-serif;
 	font-size: 75%;
 }
 
