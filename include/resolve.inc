@@ -150,6 +150,21 @@ forseeable future.',
 Time. For more information see:
 http://webexhibits.org/daylightsaving/b.html',
   ),
+    'isapi' => array(
+    'status' => 'Bogus',
+    'desc' => 'IIS Stability',
+    'message' =>
+'We are aware of PHP\'s problems with stability under IIS and are working 
+ to rectify the problem. Unfortunatly your bug report does not contain any
+ extra useful information and we already have enough bug reports open about
+ this issue. If you can provide more detailed information such as a 
+ reproducable crash or a backtrace please do so and reopen this bug. 
+ Otherwise please keep trying new releases as we are working to resolve 
+ the problems on this platform
+ 
+ Thanks for your interest in PHP.',
+  ),
+
 );
 
 function show_reason_types($current="", $expanded=0)
