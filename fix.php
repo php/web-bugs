@@ -99,7 +99,7 @@ $success = @mysql_query($query);
 		
 /* add comment */
 if ($success && !empty($ncomment)) {
-  $query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'$ncomment')";
+  $query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'".addslashes($ncomment)."')";
   $success = @mysql_query($query);
 }
 
