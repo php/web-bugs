@@ -22,7 +22,7 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
   list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
 }
 
-@mysql_connect("localhost","nobody","")
+@mysql_pconnect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
@@ -485,10 +485,10 @@ function output_note($com_id, $ts, $email, $comment)
 	echo "<div class=\"comment\">";
 	echo "<b>[",format_date($ts),"] ", htmlspecialchars(spam_protect($email)), "</b>\n";
 	echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href=\"$PHP_SELF?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
-	echo "<div class=\"note\">";
+	echo "<pre class=\"note\">";
 	$note = addlinks(preg_replace("/(\r?\n){3,}/","\n\n",wordwrap($comment,72,"\n",1)));
 	echo preg_replace('/(bug\ *#([0-9]+))/i', "<a href=\"$PHP_SELF?id=\\2\">\\1</a>", $note);
-	echo "</div>\n";
+	echo "</pre>\n";
 	echo "</div>";
 }
 
