@@ -1,4 +1,4 @@
-<?php /* vim: set noet ts=4 sw=4 ft=php3: : */
+<?php /* vim: set noet ts=4 sw=4 ft=php : */
 
 /* scrub user input so it can be re-output */
 function clean($in)
@@ -285,7 +285,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		} else {							/* status did not change and not comment */
 			$subj = "#{$bug['id']} [{$tla[$bug['status']]}]: ";
 		}
-		
+	
 		# the user gets sent mail with an envelope sender that ignores bounces
 		@mail($bug[email],
 		      "Bug " . rinse($subj) . txfield('sdesc'),
@@ -301,7 +301,23 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		      "From: $from\n".
 		      "X-PHP-Bug: $bug[id]\n".
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
+
 	}
+	/* if a developer assigns someone else, let that other person know about it */
+	if ($edit == 1 && $in['assign'] && $in['assign'] != $bug['assign']
+		&& ($in['assign'] . "@php.net") != $from) {
+
+		$unknowing_victim = $in['assign'] . '@php.net';
+
+		@mail($unknowing_victim,
+		      rinse($subj) . txfield('sdesc'),
+		      wordwrap($unknowing_victim . ' you have just been assigned to this bug by ' . $from . "\n\n") .
+			  $dev_text,
+		      "From: $from\n".
+		      "X-PHP-Bug: $bug[id]\n".
+		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
+	}
+
 }
 
 function changed($n) {
@@ -477,7 +493,7 @@ function format_search_string($search)
 			array_push($ignored, $match);
 		}
 	}
-	
+
 	return array(" AND MATCH (email,sdesc,ldesc) AGAINST ('$search')", $ignored);
 }
 
