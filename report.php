@@ -1,4 +1,5 @@
 <?php /* vim: set noet ts=4 sw=4: : */
+
 require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
 
@@ -6,10 +7,10 @@ require_once 'cvs-auth.inc';
  * them to continue */
 
 if (isset($save) && isset($pw)) { # non-developers don't have $user set
-  setcookie("MAGIC_COOKIE",base64_encode("$user:$pw"),time()+3600*24*12,'/','.php.net');
+	setcookie("MAGIC_COOKIE",base64_encode("$user:$pw"),time()+3600*24*12,'/','.php.net');
 }
 if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
-  list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
+	list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
 }
 
 /* See bugs.sql for the table layout. */
@@ -17,12 +18,12 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
 $mail_bugs_to = "php-bugs@lists.php.net";
 
 @mysql_pconnect("localhost","nobody","")
-    or die("Unable to connect to SQL server.");
+	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
 $errors = array();
 if ($in) {
-    if (!($errors = incoming_details_are_valid($in,1))) {
+	if (!($errors = incoming_details_are_valid($_POST['in'], 1))) {
 
 		if (!$in['did_luser_search']) {
 
@@ -117,7 +118,7 @@ you can scroll down and click the submit button to really enter the details into
 			$cid = mysql_insert_id();
 
 			$report = "";
-			$report .= "From:             ".stripslashes($in['email'])."\n";
+			$report .= "From:             ".spam_protect(stripslashes($in['email']))."\n";
 			$report .= "Operating system: ".stripslashes($in['php_os'])."\n";
 			$report .= "PHP version:      ".stripslashes($in['php_version'])."\n";
 			$report .= "PHP Bug Type:     $in[bug_type]\n";
@@ -132,6 +133,7 @@ you can scroll down and click the submit button to really enter the details into
 			list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
 
 			$email = stripslashes($in['email']);
+			$protected_email = '"'.spam_protect($email)."\" <$mailfrom>";
 
 			// provide shortcut URLS for "quick bug fixes"
 			$dev_extra = ""; 
@@ -149,7 +151,7 @@ you can scroll down and click the submit button to really enter the details into
 			}
 
 			// mail to appropriate mailing lists
-			if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+			if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", "From: $protected_email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
 				// mail to reporter
 				@mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 

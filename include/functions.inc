@@ -1,10 +1,24 @@
 <?php /* vim: set noet ts=4 sw=4 ft=php : */
 
+/* Email spam protection */
+function spam_protect($txt)
+{
+	$translate = array('@' => ' at ', '.' => ' dot ');
+
+	/* php.net addresses are not protected! */
+	if (preg_match('/^(.+)@php\.net/i', $txt)) {
+		return $txt;
+	} else {
+		return strtr($txt, $translate);
+	}
+}
+
 /* scrub user input so it can be re-output */
 function clean($in)
 {
 	return htmlspecialchars(get_magic_quotes_gpc()?stripslashes($in):$in);
 }
+
 /* just rinse out any slashes. :) */
 function rinse($in)
 {
@@ -105,7 +119,7 @@ function show_state_options($state, $user_mode=0, $default="")
 
 function show_version_options($current,$default="") 
 {
-	$versions = array("4.3.0", "4.2.3", "4.2.2", "4.2.1", "4.2.0", "4CVS-".date("Y-m-d")." (stable)", "5CVS-".date("Y-m-d")." (dev)");
+	$versions = array("4.3.1", "4.3.0", "4.2.3", "4CVS-".date("Y-m-d")." (stable)", "5CVS-".date("Y-m-d")." (dev)");
 	echo "<option value=\"\">--Please Select--</option>\n";
 	while (list(,$v) = each($versions)) {
 		echo "<option", ($current == $v ? " selected" : ""), ">$v</option>\n";
@@ -179,6 +193,9 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
     $text = array();
     $headers = array();
 
+	/* Default addresses */
+	list($mailto,$mailfrom) = get_bugtype_mail(oneof($in['bug_type'],$bug['bug_type']));
+
 	/* Get rid of slashes in bug status */
 	$bug['status'] = stripslashes($bug['status']);
 
@@ -201,20 +218,33 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
     
 	switch ($edit) {
 	case 3:
-		$headers[] = array(" Comment by", rinse($in['commentemail']));
+		$from = spam_protect(rinse($in['commentemail']));
+		$headers[] = array(" Comment by", $from);
+		$from = "\"$from\" <$mailfrom>";
 		break;
 	case 2:
-		$headers[] = array(" User updated by", txfield('email'));
+		$from = spam_protect(txfield('email'));
+		$headers[] = array(" User updated by", $from);
+		$from = "\"$from\" <$mailfrom>";
 		break;
 	default:
 		$headers[] = array(" Updated by", $from);
 	}
 
-	if (changed('sdesc'))
+	if (changed('sdesc')) {
 		$headers[] = array("-Summary", $bug['sdesc']);
+	}
+	
+	$prefix = " ";
+	if (changed('email')) {
+		$headers[] = array("-Reported By", spam_protect($bug['email']));
+		$prefix = "+";
+	}
+	if ($f = spam_protect(txfield('email'))) {
+		$headers[] = array($prefix.'Reported By', $f);
+	}
 
 	$fields = array(
-		'email'       => 'Reported By',
 		'status'      => 'Status',
 		'bug_type'    => 'Bug Type',
 		'php_os'      => 'Operating System',
@@ -252,9 +282,10 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
         $header_text .= str_pad($v[0] . ":", $maxlength) . " " . $hcontent . "\n";
     }
 
-	if ($ncomment)
+	if ($ncomment) {
 		$text[] = " New Comment:\n\n".stripslashes($ncomment);
-
+	}
+	
 	$text[] = get_old_comments($bug['id'], empty($ncomment));
 
 	/* format mail so it looks nice, use 72 to make piners happy */
@@ -272,8 +303,6 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
                 $wrapped_text .
                 "\n-- \nEdit this bug report at " .
                 "http://bugs.php.net/?id=$bug[id]&edit=1\n";
-
-	list($mailto,$mailfrom) = get_bugtype_mail(oneof($in['bug_type'],$bug['bug_type']));
 
 	/* send mail if status was changed or there is a comment */
 	if ($in[status] != $bug[status] || $ncomment != "") {
@@ -361,7 +390,7 @@ function get_old_comments ($bug_id, $all = 0)
     }
 
     while (($row = mysql_fetch_row($res)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
-		$output .= "[$row[0]] $row[1]\n\n$row[2]\n\n$divider\n\n";
+		$output .= "[$row[0]] ". spam_protect($row[1]) ."\n\n$row[2]\n\n$divider\n\n";
     }
 
     if (strlen($output) < $max_message_length && $count < $max_comments) {
@@ -369,7 +398,7 @@ function get_old_comments ($bug_id, $all = 0)
     	if (!$res) return $output;
     	$row = mysql_fetch_row($res);
     	if (!$row) return $output;
-		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "[$row[0]] $row[1]\n\n$row[2]\n\n$divider\n\n");
+		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "[$row[0]] ". spam_protect($row[1]) ."\n\n$row[2]\n\n$divider\n\n");
     }
     else {
 		return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n    http://bugs.php.net/$bug_id\n");
@@ -390,9 +419,13 @@ function addlinks($text)
 /* validate an incoming bug report */
 function incoming_details_are_valid ($in, $initial=0)
 {
+	global $bug;
+
 	$errors = array();
-	if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['email'])) {
-		$errors[] = "Please provide a valid email address.";
+	if ($initial || (!empty($in[email]) && $bug[email] != $in[email])) {
+		if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['email'])) {
+			$errors[] = "Please provide a valid email address.";
+		}
 	}
 
 	if ($in['bug_type'] == "none") {

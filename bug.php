@@ -67,9 +67,15 @@ if ($in && $edit == 3) {
 		$errors[] = "You must provide a valid email address.";
 	}
 
+	# Don't allow comments by the original report submitter
+	if (stripslashes($in['commentemail']) == $bug['email']) {
+		header("Location: $PHP_SELF?id=$id&edit=2");
+		exit();
+	}
+	
 	# check that they aren't using a php.net mail address without
 	# being authenticated (oh, the horror!)
-	if (preg_match('/^(.+)@php\.net/i', $in['commentemail'], $m)) {
+	if (preg_match('/^(.+)@php\.net/i', stripslashes($in['commentemail']), $m)) {
 		if ($user != stripslashes($m[1]) || !verify_password($user,$pass)) {
 			$errors[] = "You have to be logged in as a developer to use your php.net email address.";
 		}
@@ -111,18 +117,19 @@ elseif ($in && $edit == 2) {
 		}
 	}
 
+	$from = ($bug[email] != $in[email] && !empty($in[email])) ? $in[email] : $bug[email];
+
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		/* update bug record */
-		$query = "UPDATE bugdb SET sdesc='$in[sdesc]',status='$in[status]', bug_type='$in[bug_type]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW(), email='$in[email]' WHERE id=$id";
+		$query = "UPDATE bugdb SET sdesc='$in[sdesc]',status='$in[status]', bug_type='$in[bug_type]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW(), email='$from' WHERE id=$id";
 		$success = @mysql_query($query);
 		
 		/* add comment */
 		if ($success && !empty($ncomment)) {
-			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$in[email]',NOW(),'$ncomment')";
+			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment')";
 			$success = @mysql_query($query);
 		}
 	}
-	$from = stripslashes($in['email']);
 }
 elseif ($in && $edit == 1) {
 	if (!verify_password($user,stripslashes($pw))) {
@@ -206,7 +213,7 @@ statistics below.
 <?php }?>
   </tr>
   <tr id="submitter">
-   <th>From:</th><td><?php echo htmlspecialchars($bug['email'])?></td>
+   <th>From:</th><td><?php echo htmlspecialchars(spam_protect($bug['email']))?></td>
   </tr>
   <tr id="categorization">
    <th>Status:</th><td><?php echo htmlspecialchars($bug['status'])?></td>
@@ -347,7 +354,7 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
  <tr>
   <th>Status:</th>
   <td><select name="in[status]"><?php show_state_options($in['status'],$edit,$bug['status'])?></select></td>
-<?php if ($edit ==1) {?>
+<?php if ($edit == 1) {?>
   <th>Assign to:</th>
   <td><input type="text" size="10" maxlength="16" name="in[assign]" value="<?php echo field('assign')?>" /></td>
 <?php }?>
@@ -364,7 +371,11 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
  </tr>
  <tr>
   <th>From:</th>
-  <td colspan="5"><input type="text" size="40" maxlength="40" name="in[email]" value="<?php echo field('email')?>" /></td>
+  <td colspan="5"><?php echo spam_protect(field('email')); ?></td>
+ </tr>
+ <tr>
+  <th>New email:</th>
+  <td colspan="5"><input type="text" size="40" maxlength="40" name="in[email]" value="" /></td>
  </tr>
  <tr>
   <th>Version:</th>
@@ -471,7 +482,7 @@ function output_note($com_id, $ts, $email, $comment)
 	global $edit, $id, $trusted_developers, $user;
 
 	echo "<div class=\"comment\">";
-	echo "<b>[",format_date($ts),"] ", htmlspecialchars($email), "</b>\n";
+	echo "<b>[",format_date($ts),"] ", htmlspecialchars(spam_protect($email)), "</b>\n";
 	echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href=\"$PHP_SELF?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
 	echo "<pre class=\"note\">";
 	$note = addlinks(preg_replace("/(\r?\n){3,}/","\n\n",wordwrap($comment,72,"\n",1)));
