@@ -368,7 +368,8 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
 <div class="explain">
 Anyone can comment on a bug. Have a simpler test case? Does it work for you on
 a different platform? Let us know! Just going to say 'Me too!'? Don't clutter
-the database with that &mdash; but make sure to <a href="<?php echo "$PHP_SELF?id=$id"?>">vote on the bug</a>!
+the database with that please
+<?php if (canvote()) { echo " &mdash; but make sure to <a href=\"$PHP_SELF?id=$id"\">vote on the bug</a>"; } ?>!
 </div>
 <?php }?>
 <table>
@@ -384,7 +385,7 @@ the database with that &mdash; but make sure to <a href="<?php echo "$PHP_SELF?i
 </div>
 </form>
 <?php }?>
-<?php if (!$edit && $thanks != 4 && $thanks != 6 && $bug['status'] != "Closed" && $bug['status'] != "Bogus" && $bug['status'] != 'Duplicate') {?>
+<?php if (!$edit && canvote()) {?>
   <form id="vote" method="post" action="vote.php">
   <div class="sect">
    <fieldset>
@@ -457,4 +458,9 @@ function output_note($ts,$email,$comment) {
 	echo preg_replace('/(bug\ *#([0-9]+))/i', "<a href=\"$PHP_SELF?id=\\2\">\\1</a>", $note);
 	echo "</pre>\n";
 	echo "</div>";
+}
+
+function canvote() {
+	global $thanks, $bug;
+	return ($thanks != 4 && $thanks != 6 && $bug['status'] != "Closed" && $bug['status'] != "Bogus" && $bug['status'] != 'Duplicate');
 }
