@@ -105,12 +105,6 @@ you are experiencing still exists.</p>
 new bug report for each one. This makes it easier for different people to help
 with the different bugs.</p>
 
-<h2>Don't report missing functions in the documentation.</h2>
-
-<p>We already know about it. We have tools that tell us when there are
-functions that haven't been documented. There are <a
-href="http://www.php.net/support.php">lots of places you can get help</a>.</p>
-
 <h2>Check out these other resources.</h2>
 
 <ul>
