@@ -95,19 +95,27 @@ function sort_url ($type)
 	return '<A href="./bugstats.php?'.$ver.'sort_by='.urlencode($type).'&amp;rev='.$reve.'">'.ucfirst($type).'</a>';
 }
 
-echo "<tr bgcolor=#aabbcc><th align=right>Total bug entries in system:</th><td>$total</td>";
-echo "<th>",sort_url('closed'),"</th>";
-echo "<th>",sort_url('open'),"</th>";
-echo "<th>",sort_url('critical'),"</th>";
-echo "<th>",sort_url('verified'),"</th>";
-echo "<th>",sort_url('analyzed'),"</th>";
-echo "<th>",sort_url('assigned'),"</th>";
-echo "<th>",sort_url('suspended'),"</th>";
-echo "<th>",sort_url('duplicate'),"</th>";
-echo "<th>",sort_url('feedback'),"</th>";
-echo "<th nowrap>",sort_url('no feedback'),"</th>";
-echo "<th>",sort_url('bogus'),"</th>";
-echo "</tr>\n";
+function display_stat_header($total, $grandtotal = true) {
+	if ($grandtotal) {
+		echo "<tr bgcolor=#aabbcc><th align=right>Total bug entries in system:</th><td>$total</td>";
+	} else {
+		echo "<tr bgcolor=#aabbcc><th align=right>&nbsp;</th><td>&nbsp;</td>";
+	}
+	echo "<th>",sort_url('closed'),"</th>";
+	echo "<th>",sort_url('open'),"</th>";
+	echo "<th>",sort_url('critical'),"</th>";
+	echo "<th>",sort_url('verified'),"</th>";
+	echo "<th>",sort_url('analyzed'),"</th>";
+	echo "<th>",sort_url('assigned'),"</th>";
+	echo "<th>",sort_url('suspended'),"</th>";
+	echo "<th>",sort_url('duplicate'),"</th>";
+	echo "<th>",sort_url('feedback'),"</th>";
+	echo "<th nowrap>",sort_url('no feedback'),"</th>";
+	echo "<th>",sort_url('bogus'),"</th>";
+	echo "</tr>\n";
+}
+
+display_stat_header($total, true);
 
 echo "<tr><th align=right bgcolor=#aabbcc>All:</th>",
      "<td align=center bgcolor=#ccddee>$total</td>",
@@ -124,6 +132,7 @@ echo "<tr><th align=right bgcolor=#aabbcc>All:</th>",
      "<td align=center bgcolor=#ccddee>".bugstats('bogus', 'all')."&nbsp;</td>",
      "</tr>\n";
 
+$stat_row = 1;
 foreach ($bug_type[$sort_by] as $type => $value) {
 	if(($bug_type['open'][$type] > 0 || 
 		$bug_type['critical'][$type] > 0 ||
@@ -134,6 +143,9 @@ foreach ($bug_type[$sort_by] as $type => $value) {
 		$bug_type['assigned'][$type] > 0 ||
 		$bug_type['feedback'][$type] > 0 ) && $type != 'all') 
 	{ 
+		/* Output a new header row every 40 lines */
+		if (($stat_row++ % 40) == 0) display_stat_header($total, false);
+
 		echo "<tr><th align=right bgcolor=#aabbcc>$type:</th>",
 		     "<td align=center bgcolor=#ccddee>".$bug_type['all'][$type]."</td>",
 		     "<td align=center bgcolor=#ddeeff>".bugstats('closed', $type)."&nbsp;</td>",
