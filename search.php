@@ -103,6 +103,10 @@ if (isset($cmd) && $cmd == "display") {
 
 	if($limit!='All') $query .= " LIMIT $begin,$limit";
 
+	if(stristr($query, ";")) {
+		$errors[] = "<b>BAD HACKER!!</b> No database cracking for you today!";
+	} else {
+
 	$res = @mysql_query($query);
 	if (!$res) die(htmlspecialchars($query)."<br>".mysql_error());
 
@@ -164,6 +168,7 @@ if (isset($cmd) && $cmd == "display") {
 		commonFooter();
 		exit;
 	}
+ }
 }
 
 if ($errors) display_errors($errors);
