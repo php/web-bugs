@@ -188,12 +188,12 @@ if ($errors) display_errors($errors);
  <tr>
   <th>Version</th>
   <td nowrap="nowrap">Return bugs reported with <b>PHP version</b></td>
-  <td><input type="text" name="phpver" value="<?echo htmlspecialchars($php_version);?>" /></td>
+  <td><input type="text" name="phpver" value="<?echo htmlspecialchars($phpver);?>" /></td>
  </tr>
  <tr>
   <th>Assigned</th>
   <td nowrap="nowrap">Return only bugs <b>assigned</b> to</td>
-  <td><input type="text" name="assign" value="<?echo htmlspecialchars($php_version);?>" />
+  <td><input type="text" name="assign" value="<?echo htmlspecialchars($assign);?>" />
 <?php
     if (!empty($user)) {
 	$u = stripslashes($user);
