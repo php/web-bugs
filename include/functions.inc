@@ -318,8 +318,12 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 	/* send mail if status was changed or there is a comment */
 	if ($in[status] != $bug[status] || $ncomment != "") {
 
+		$old_status = $bug['status'];
+		$new_status = $bug['status'];
+
 		if ($in[status] != $bug[status] && $edit != 3) {	/* status changed */
-			$subj = "#{$bug['id']} [{$tla[$bug['status']]}->{$tla[$in['status']]}]: ";
+			$new_status = $in['status'];
+			$subj = "#{$bug['id']} [{$tla[$old_status]}->{$tla[$new_status]}]: ";
 		} elseif ($edit == 3) {				/* comment */
 			$subj = "#{$bug['id']} [Com]: ";
 		} else {							/* status did not change and not comment */
@@ -340,10 +344,11 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		      $dev_text,
 		      "From: $from\n".
 		      "X-PHP-Bug: $bug[id]\n".
-		      "X-PHP-Version: "  . stripslashes((($edit != 3) ? $in['php_version'] : $bug['php_version'])) . "\n" .
-		      "X-PHP-Category: " . stripslashes((($edit != 3) ? $in['bug_type']    : $bug['bug_type']))    . "\n" .
-		      "X-PHP-OS: "       . stripslashes((($edit != 3) ? $in['php_os']      : $bug['php_os']))      . "\n" .
-		      "X-PHP-Status: "   . stripslashes((($edit != 3) ? $in['status']      : $bug['status']))      . "\n" .
+		      "X-PHP-Version: "    . stripslashes((($edit != 3) ? $in['php_version'] : $bug['php_version'])) . "\n" .
+		      "X-PHP-Category: "   . stripslashes((($edit != 3) ? $in['bug_type']    : $bug['bug_type']))    . "\n" .
+		      "X-PHP-OS: "         . stripslashes((($edit != 3) ? $in['php_os']      : $bug['php_os']))      . "\n" .
+		      "X-PHP-Status: "     . stripslashes($new_status) . "\n" .
+		      "X-PHP-Old-Status: " . stripslashes($old_status) . "\n" .
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
 	}
 
