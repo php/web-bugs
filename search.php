@@ -100,7 +100,7 @@ if (isset($cmd) && $cmd == "display") {
 
     $total_rows = $row[0];
 	if (!$total_rows) {
-		$errors[] = "No bugs with the specified critera were found.";
+		$errors[] = "No bugs with the specified criteria were found.";
 	}
 	else {
 		$res = @mysql_query($query);
