@@ -310,9 +310,9 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
  </tr>
  <tr>
   <th>Version:</th>
-  <td><input type="text" size="20" maxlength="32" name="in[php_version]" value="<?php echo field('php_version')?>" /></td>
+  <td><input type="text" size="20" maxlength="16" name="in[php_version]" value="<?php echo field('php_version')?>" /></td>
   <th>OS:</th>
-  <td colspan="3"><input type="text" size="20" maxlength="100" name="in[php_os]" value="<?php echo field('php_os')?>" /></td>
+  <td colspan="3"><input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo field('php_os')?>" /></td>
  </tr>
 </table>
 <b>New Comment:</b><br />
