@@ -187,10 +187,11 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		'Won\'t fix'  => 'WFx',
 		'Duplicate'   => 'Dup',
 		'Critical'    => 'Ctl',
-		'Assigned'    => 'Ass',
+		'Assigned'    => 'Asn',
 		'Analysed'    => 'Ana',
 		'Verified'    => 'Ver',
 		'Suspened'    => 'Sus'
+		'Closed'      => 'Csd'
 	);
     
     $headers[] = array(" ID", $bug['id']);
