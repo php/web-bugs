@@ -222,6 +222,21 @@ printing it without any mathematical operations.
 Thank you for your interest in PHP.',
   ),
 
+	'mysqlcfg' => array(
+	'status' => 'Bogus',
+	'desc' => 'MySQL Configuration Error',
+	'message' =>
+'When using the mysqli extension together with the mysql extension
+you have to use the same libraries and include files. mysqli
+extension requires the location of mysql_config file, mysql
+extension requires the path of your mysql installation.
+
+If you installed MySQL 4.1 for example with prefix /usr/local/mysql-4.1
+your configure settings should be
+--with-mysql=/usr/local/mysql-4.1
+--with-mysqli=/usr/local/mysql-4.1/bin/mysql_config',
+  ),
+
 );
 
 $FIX_VARIATIONS = array(
