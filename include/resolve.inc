@@ -38,9 +38,9 @@ us make PHP better.',
     'desc' => 'Try newer version',
     'message' =>
 'Thank you for taking the time to report a problem with PHP.
-Unfortunately your version of PHP is too old -- the problem
-might already be fixed. Please download a new PHP
-version from http://www.php.net/downloads.php
+Unfortunately your are not using a current version of PHP -- 
+the problem might already be fixed. Please download a new
+PHP version from http://www.php.net/downloads.php
 
 If you are able to reproduce the bug with one of the latest
 versions of PHP, please change the PHP version on this bug report
