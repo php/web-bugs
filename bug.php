@@ -23,8 +23,18 @@ commonHeader("Bug Reporting");
 	or die("Unable to connect to SQL server.");
 @mysql_select_db("php3");
 
-# fetch the original bug into $original
-$res = mysql_query("SELECT * FROM bugdb WHERE id=$id");
+# fetch info about the bug into $original
+$query = "SELECT id,bug_type,email,sdesc,ldesc,"
+       . "php_version,php_os,status,ts1,ts2,dev_id,assign,"
+       . "COUNT(*) AS votes,"
+       . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
+       . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
+       . "AVG(score)+3 AS average,STD(score) AS deviation"
+       . " FROM bugdb LEFT JOIN bugdb_votes ON id=bug WHERE id=$id"
+       . " GROUP BY bug";
+
+$res = mysql_query($query);
+
 if ($res) $original = mysql_fetch_array($res);
 if (!$res || !$original) {
   echo "<h1 class=\"error\">No such bug #$id!</h1>";
@@ -135,22 +145,16 @@ elseif ($modify && !$success) {
  </div>
  <div id="votebody"<?php if ($edit) echo ' style="display:none"';?>>
 <?php
-    $query = "SELECT COUNT(*) AS votes,"
-           . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
-           . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
-           . "AVG(score)+3 AS average,STD(score) AS deviation"
-           . " FROM bugdb_votes WHERE bug=$id";
-    $res = @mysql_query($query);
-    if ($res && ($row = mysql_fetch_array($res,MYSQL_ASSOC)) && $row[votes]) {
+    if ($original['votes']) {
 ?>
   <div id="results">
-   <b>Total Votes</b>: <?php echo $row['votes'];?><br />
-   Reproduced: <?php printf("%d of %d (%.1f%%)",$row['reproduced'],$row['tried'],($row['reproduced']/$row['tried'])*100);?><br />
-   <?php if ($row['reproduced']) {?>
-   Same OS: <?php printf("%d (%.1f%%)",$row['sameos'],($row['sameos']/$row['reproduced'])*100);?><br />
-   Same Version: <?php printf("%d (%.1f%%)",$row['samever'],($row['samever']/$row['reproduced'])*100);?><br />
+   <b>Total Votes</b>: <?php echo $original['votes'];?><br />
+   Reproduced: <?php printf("%d of %d (%.1f%%)",$original['reproduced'],$original['tried'],($original['reproduced']/$original['tried'])*100);?><br />
+   <?php if ($original['reproduced']) {?>
+   Same OS: <?php printf("%d (%.1f%%)",$original['sameos'],($original['sameos']/$original['reproduced'])*100);?><br />
+   Same Version: <?php printf("%d (%.1f%%)",$original['samever'],($original['samever']/$original['reproduced'])*100);?><br />
    <?php }?>
-   <b>Average Score</b>: <?php printf("%.1f &plusmn; %.1f", $row['average'], $row['deviation'])?><br />
+   <b>Average Score</b>: <?php printf("%.1f &plusmn; %.1f", $original['average'], $original['deviation'])?><br />
   </div>
 <?php
     }
