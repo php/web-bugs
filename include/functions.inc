@@ -343,7 +343,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		      "X-PHP-Version: "  . stripslashes((($edit != 3) ? $in['php_version'] : $bug['php_version'])) . "\n" .
 		      "X-PHP-Category: " . stripslashes((($edit != 3) ? $in['bug_type']    : $bug['bug_type']))    . "\n" .
 		      "X-PHP-OS: "       . stripslashes((($edit != 3) ? $in['php_os']      : $bug['php_os']))      . "\n" .
-		      "X-PHP-Status: {$in['status']}\n" .
+		      "X-PHP-Status: "   . stripslashes((($edit != 3) ? $in['status']      : $bug['status']))      . "\n" .
 		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
 	}
 
