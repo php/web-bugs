@@ -49,7 +49,7 @@ if (isset($cmd) && $cmd == "display") {
 		list($sql_search, $ignored) = format_search_string($search_for);
 		$where_clause .= $sql_search;
 		if (count($ignored) > 0 ) {
-			array_push($warnings, "The following words were ignored: " . implode(', ', htmlentities(stripslashes(array_unique($ignored)))));
+			array_push($warnings, "The following words were ignored: " . htmlentities(stripslashes(implode(', ', array_unique($ignored)))));
 		}
 	}
 
