@@ -111,7 +111,7 @@ if ($success && !empty($ncomment)) {
 }
 
 if ($success) {
-  $in = array('status' => $status);
+  $in = array('status' => $status, 'bug_type' => $bug['bug_type'], 'php_version' => $bug['php_version'], 'php_os' => $bug['php_os']);
   mail_bug_updates($bug,$in,"$user@php.net",$ncomment);
   header("Location: bug.php?id=$id&thanks=1");
   exit;
