@@ -137,7 +137,7 @@ if ($errors) display_errors($errors);
  </tr><tr>
   <th align="right">Password:</th>
   <td>
-   <input type="text" size="20" maxlength="20" name="in[passwd]" value="<?php echo clean($in['passwd']);?>" />
+   <input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo clean($in['passwd']);?>" />
   </td>
   <td><font size="-2">
     You may enter any password here. This password allows you to come back and
