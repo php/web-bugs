@@ -277,15 +277,11 @@ if ($edit) { /* $edit is set */
 <td><?php echo $original[sdesc]?></td>
 <?php }?>
 </tr>
+</table>
 <?php if ($edit) {?>
-<tr>
-<th align="right">New Comment:</th>
-</tr>
-<tr>
-<td colspan="2">
+<b>New Comment:</b>
 <textarea name="ncomment" wrap="physical" cols="60" rows="15"><?php echo htmlspecialchars(stripslashes($ncomment));?></textarea>
-</td>
-</tr>
+<table>
 <?php   if ($edit == 1) { /* developer */?>
 <tr>
 <th align="right">CVS Username:</th>
@@ -316,8 +312,8 @@ if ($edit) { /* $edit is set */
 <input type="submit" value="Submit Changes">
 </td>
 </tr>
-<?php }?>
 </table>
+<?php }?>
 <?php
 if ($edit) echo "</form>\n";
 
