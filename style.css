@@ -1,7 +1,7 @@
 @import url(controls.css);
 
 body, ul, td, th {
-	font-family: verdana, arial,helvetica,sans-serif;
+	font-family: verdana,arial,helvetica,sans-serif;
 	font-size: 95%;
 }
 
@@ -10,7 +10,7 @@ div#content {
 }
 
 p {
-	font-family: verdana, arial,helvetica,sans-serif;
+	font-family: verdana,arial,helvetica,sans-serif;
 }
 
 em {
@@ -42,7 +42,7 @@ pre.note {
 }
 
 h1 {
-	font-family: verdana, arial,helvetica,sans-serif;
+	font-family: verdana,arial,helvetica,sans-serif;
 	font-size: 140%;
 	font-weight: bold;
 	color: #000066;
