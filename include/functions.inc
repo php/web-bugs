@@ -246,7 +246,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 
 function changed($n) {
 	return $GLOBALS['in'][$n]
-	    && trim($GLOBALS['in'][$n]) != trim($GLOBALS['bug'][$n]);
+	    && stripslashes(trim($GLOBALS['in'][$n])) != trim($GLOBALS['bug'][$n]);
 }
 
 function field($n) {
