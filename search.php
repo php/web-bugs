@@ -21,10 +21,16 @@ if (isset($cmd) && $cmd == "display") {
 		or die("Unable to connect to SQL server.");
 	@mysql_select_db("php3");
 
+	$mysql4 = version_compare(mysql_get_server_info(), "4.0.0", "ge");
+
 	if (!$bug_type) $bug_type = "Any";
 
-    $query = "SELECT SQL_CALC_FOUND_ROWS *,"
-           . "TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
+	if ($mysql4)
+		$query = "SELECT SQL_CALC_FOUND_ROWS ";
+	else
+		$query = "SELECT ";
+
+	$query .= "*, TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
 
 	if($bug_type=="Any") {
 		$where_clause = "WHERE bug_type != 'Feature/Change Request'";
@@ -110,9 +116,13 @@ if (isset($cmd) && $cmd == "display") {
 	$res = @mysql_query($query);
 	if (!$res) die(htmlspecialchars($query)."<br>".mysql_error());
 
-	$total_rows = mysql_get_one("SELECT FOUND_ROWS()");
-
 	$rows = mysql_num_rows($res);
+
+	if ($mysql4)
+		$total_rows = mysql_get_one("SELECT FOUND_ROWS()");
+	else /* lame mysql 3 compatible attempt to allow browsing the search */
+		$total_rows = $rows < 10 ? $rows : $begin + $rows + 10;
+
 	if (!$rows) {
 		$errors[] = "No bugs with the specified criteria were found.";
 	}
@@ -173,7 +183,7 @@ if (isset($cmd) && $cmd == "display") {
 if ($errors) display_errors($errors);
 if ($warnings) display_warnings($warnings);
 ?>
-<form id="asearch" method="post" action="<?php echo $PHP_SELF?>">
+<form id="asearch" method="get" action="<?php echo $PHP_SELF?>">
 <table id="primary" width="95%">
  <tr>
   <th>Find bugs</th>
