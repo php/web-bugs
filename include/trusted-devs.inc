@@ -4,7 +4,7 @@
 
 $trusted_developers = array(
 	'derick',
-	'ilia',
+	'iliaa',
 	'sniper',
 	'wez',
 );
