@@ -121,6 +121,10 @@ if ($modify && $success) {
 
 	list($mailto,$mailfrom) = get_bugtype_mail($bug_type);
 
+	/* format mail so it looks nice */
+	$user_text = wordwrap($user_text, 72); /* use 72 to make piners happy */
+	$dev_text = wordwrap($dev_text, 72); 
+
 	/* send mail if status was changed or there is a comment */
 	if ($status != $original[status] || $ncomment != "") {
 		@mail($original[email], "Bug #$id Updated: ".stripslashes($sdesc), $user_text, "From: Bug Database <$mailfrom>\nX-PHP-Bug: $id\nIn-Reply-To: <bug-$id@bugs.php.net>");
