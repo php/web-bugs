@@ -231,7 +231,9 @@ function control($num,$desc) {
 }
 
 control(0,'View/Vote');
-control(3,'Add Comment');
+if ($edit != 2) {
+	control(3,'Add Comment');
+}
 control(1,'Developer');
 control(2,'Edit Submission');
 ?>
