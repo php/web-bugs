@@ -142,11 +142,12 @@ $items = array (
 	"*Search functions"   => "&nbsp;&nbsp;&nbsp;&nbsp;Search functions",
 	"mnoGoSearch related" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mnoGoSearch related",
 
-	"*XML functions"  => "&nbsp;&nbsp;&nbsp;&nbsp;XML functions",
-	"DOM XML related" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DOM XML related",
-	"XML related"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XML related",
-	"Sablotron XSL"   => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sablotron XSL",
-	"XSLT related"    => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XSLT related",
+	"*XML functions"      => "&nbsp;&nbsp;&nbsp;&nbsp;XML functions",
+	"DOM XML related"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DOM XML related",
+	"XML related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XML related",
+	"XMLRPC-EPI related"  => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XMLRPC-EPI related",
+	"Sablotron XSL"       => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sablotron XSL",
+	"XSLT related"        => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XSLT related",
 
 	"*URL Functions" => "&nbsp;&nbsp;&nbsp;&nbsp;URL Functions",
 	"cURL related"   => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cURL related",
