@@ -280,7 +280,7 @@ if ($warnings) display_warnings($warnings);
  </tr>
  <tr>
   <th>Date</th>
-  <td nowrap="nowrap">Return bugs submitted</td>
+  <td nowrap="nowrap">Return bugs submitted since</td>
   <td><select name="bug_age"><?php show_byage_options($bug_age);?></select></td>
  </tr>
 </table>
