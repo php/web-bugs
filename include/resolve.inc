@@ -132,6 +132,15 @@ Thank you for your interest in PHP.',
 We are sorry about the inconvenience, but this change was a necessary
 part of our efforts to make PHP scripting more secure and portable.',
   ),
+  'php3' => array(
+    'status' => 'Won\'t Fix',
+    'desc' => 'PHP 3 support discontinued',
+    'message' =>
+'We are sorry, but can not support PHP 3 related problems anymore.  Momentum is
+gathering for PHP 5, and we think supporting PHP 3 will lead to a waste of
+resources which we want to put into getting PHP 5 ready. Ofcourse PHP 4 will
+will continue to be supported for the forseeable future.',
+  ),
 );
 
 function show_reason_types($current="", $expanded=0)
