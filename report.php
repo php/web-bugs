@@ -102,10 +102,6 @@ that someone will want to help fix</a>.</p>
 <p><strong>Failure to follow these instructions may result in your bug
 simply being marked as "bogus".</strong></p>
 
-<p><strong>PLEASE DO <blink>NOT</blink> REPORT BUGS ABOUT PHP NOT WORKING WITH APACHE
-2.0.40!!! THIS IS FIXED IN CVS AND YOU CAN TRY THE LATEST SNAPSHOT FROM <a
-href="http://snaps.php.net/php4-latest.tar.bz2">HERE (Unix)</a> OR <a
-href="http://snaps.php.net/win32/php4-win32-latest.zip">HERE (Windows)</a></strong></p>
 <?php
 }
 
