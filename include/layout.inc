@@ -194,6 +194,8 @@ function commonHeader($title = false, $showsearch = true) {
 	echo delim();
 	print_link('search.php', 'advanced search', false, 'class="menuWhite"');
 	echo delim();
+	print_link('search-howto.php', 'search howto', false, 'class="menuWhite"');
+	echo delim();
 	print_link('bugstats.php', 'statistics', false, 'class="menuWhite"');
       ?>
       <?php spacer(2,2); ?><br>

@@ -218,7 +218,7 @@ if ($warnings) display_warnings($warnings);
   <th>Find bugs</th>
   <td nowrap="nowrap">with all or any of the words</td>
   <td><input type="text" name="search_for" value="<?php echo htmlspecialchars(stripslashes($search_for));?>" size="20" maxlength="255" />
-      <br><?php show_boolean_options(BOOLEAN_SEARCH) ?> (<a href="index.php">?</a>)</td>
+      <br><?php show_boolean_options(BOOLEAN_SEARCH) ?> (<?php print_link('search-howto.php', '?', true);?>)</td>
   <td rowspan="2">
    <select name="limit"><?php show_limit_options($limit);?></select>
    <br />

@@ -38,11 +38,9 @@ page</a>.</p>
 
 <p>You can search all of the bugs that have been reported on our
 <a href="search.php">advanced search page</a>, or use the form
-at the top of the page.  Choosing the <i>any</i> checkbox (default) will yield 
-results with any of the search terms, <i>all</i> will require all search terms 
-while <i>raw</i> allows full use of MySQL's
-<a href="http://www.mysql.com/doc/en/Fulltext_Search.html">FULLTEXT</a> boolean
-search operators.</p>
+at the top of the page for a basic default search.  Read the 
+<a href="search-howto.php">search howto</a> for instructions on 
+how search works.</p>
 
 <h1>Bug System Statistics</h1>
 
