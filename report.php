@@ -52,7 +52,8 @@ if ($in) {
         }
         foreach ($RESOLVE_REASONS as $k => $v) {
 			if (!$v['webonly'])
-				$dev_extra .= sprintf("%{$maxkeysize}s: http://bugs.php.net/fix.php?id=$cid&r=$k\n", $v[desc]);
+				$dev_extra .= str_pad($v[desc], $maxkeysize) .
+                              ": http://bugs.php.net/fix.php?id=$cid&r=$k\n";
 		}
 
 		# mail to appropriate mailing lists
