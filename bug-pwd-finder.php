@@ -21,26 +21,28 @@ if ($bug_id) {
 		// Run the query
 		$result = mysql_query ($query)
 			or die ("Sorry. No information could be found for bug report #$bug_id");
+
+		if (mysql_num_rows($result) != 1) {
+			$msg = "No password found for #$bug_id bug report, sorry.";
+		} else {
+			list ($email, $passwd) = mysql_fetch_row ($result);
+
+			if (empty($passwd)) {
+				$msg = "No password found for #$bug_id bug report, sorry.";
+			} else {
+				$passwd = stripslashes ($passwd);
+
+				mail ($email, "Password for bug report #$bug_id", "The password for bug report #$bug_id is $passwd.", "From: noreply@php.net")
+					or die ("Sorry. Mail could not be sent at this time. Please try again later.");
+
+				$msg = "The password for bug report #$bug_id has been sent to $email.";
+			}
+		}
+
 	} else { 
 		$msg = "The provided #$bug_id bug id is invalid.";
 	}
 
-	if (mysql_num_rows($result) != 1) {
-		$msg = "No password found for #$bug_id bug report, sorry.";
-	} else {
-		list ($email, $passwd) = mysql_fetch_row ($result);
-
-		if (empty($passwd)) {
-			$msg = "No password found for #$bug_id bug report, sorry.";
-		} else {
-			$passwd = stripslashes ($passwd);
-
-			mail ($email, "Password for bug report #$bug_id", "The password for bug report #$bug_id is $passwd.", "From: noreply@php.net")
-				or die ("Sorry. Mail could not be sent at this time. Please try again later.");
-
-			$msg = "The password for bug report #$bug_id has been sent to $email.";
-		}
-	}
 }
 
 commonHeader("Bug Report Password Finder");
