@@ -361,9 +361,9 @@ function field($n) {
 
 function format_date($date) {
   if (date("Y") != date("Y", $date)) {
-    return date("j M Y g:ia", $date);
+    return date("j M Y g:ia T", $date);
   }
-  return date("j M g:ia", $date);
+  return date("j M g:ia T", $date);
 }
 
 function txfield($n)
