@@ -36,7 +36,7 @@ if ($in) {
         $sdesc = stripslashes($in['sdesc']);
 
         $ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
-        $ascii_report.= "\n-- \nEdit bug report at: http://bugs.php.net/?id=$cid&edit=";
+        $ascii_report.= "\n-- \nEdit bug report at http://bugs.php.net/?id=$cid&edit=";
         
         list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
 
@@ -47,18 +47,18 @@ if ($in) {
         $maxkeysize = 0;
         foreach ($RESOLVE_REASONS as $v) {
             if (!$v['webonly']) {
-                $actkeysize = strlen($v['desc']);
+                $actkeysize = strlen($v['desc']) + 1;
                 $maxkeysize = (($maxkeysize < $actkeysize) ? $actkeysize : $maxkeysize);
             }
         }
-        foreach ($RESOLVE_REASONS as $v) {
+        foreach ($RESOLVE_REASONS as $k => $v) {
             if (!$v['webonly'])
-                $dev_extra .= str_pad($v['desc'], $maxkeysize) .
-                              ": http://bugs.php.net/fix.php?id=$cid&r=$k\n";
+                $dev_extra .= str_pad($v['desc'] . ":", $maxkeysize) .
+                              " http://bugs.php.net/fix.php?id=$cid&r=$k\n";
         }
 
         # mail to appropriate mailing lists
-        if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
+        if (mail($mailto, "Bug #$cid: $sdesc", $ascii_report."1\n-- \n$dev_extra", "From: $email\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>")) {
             # mail to reporter
             @mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 
