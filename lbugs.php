@@ -5,7 +5,8 @@ mysql_connect("localhost","nobody","")
 mysql_select_db("php3");
 
 if ($id) {
-	$result = mysql_query("SELECT id,bug_type,email,sdesc,ldesc,php_version,php_os,status,comments,ts1,dev_id,assign FROM bugdb WHERE id=$id");
+	$result = mysql_query("SELECT id,bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,dev_id,assign FROM bugdb WHERE id=$id");
+	if(!$result) { echo mysql_error(); exit; }
 	if ($num = mysql_num_rows($result)) {
 		$row = mysql_fetch_array($result);
 		echo "<pre><h1>Bug $id</h1>\n";
@@ -17,10 +18,6 @@ if ($id) {
 		echo "OS       : " . htmlspecialchars($row['php_os']) . "\n";
 		echo "Subject  : " . htmlspecialchars($row['sdesc']) . "</b>\n";
 		echo "\n" . htmlspecialchars($row['ldesc']) . "\n\n";
-		if(strlen($row['comments'])) {
-			echo "<b>From: " . $row['dev_id'] . "</b>\n";
-			echo '<blockquote>' . htmlspecialchars($row['comments']) . "</blockquote>\n";
-		}
 		$query = "SELECT * FROM bugdb_comments WHERE bug=$id ORDER BY ts";
 		if ($comresult = mysql_query($query)) {
 			while ($com = mysql_fetch_array($comresult)) {
