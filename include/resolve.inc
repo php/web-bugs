@@ -5,8 +5,9 @@ $RESOLVE_REASONS = array(
     'status' => 'Closed',
     'desc' => 'Fixed in CVS',
     'message' =>
-'This bug has been fixed in CVS. You can grab a snapshot of the
-CVS version at http://snaps.php.net/. In case this was a documentation 
+'This bug has been fixed in CVS. Snapshots of the CVS tree are packaged
+every three hours; this change will be in the next snapshot. You can grab
+the snapshot at http://snaps.php.net/. In case this was a documentation 
 problem, the fix will show up soon at http://www.php.net/manual/.
 In case this was a PHP.net website problem, the change will show
 up on the PHP.net site and on the mirror sites.
@@ -109,7 +110,7 @@ Thank you for your interest in PHP.',
     'desc' => 'register_globals',
     'message' =>
 'In PHP 4.2.0, the \'register_globals\' setting default changed to
-be off. See http://www.php.net/release_4_2_0.php for more info.
+\'off\'. See http://www.php.net/release_4_2_0.php for more info.
 We are sorry about the inconvenience, but this change was a necessary
 part of our efforts to make PHP scripting more secure and portable.',
   ),
