@@ -6,7 +6,7 @@ require dirname(__FILE__).'/../include/functions.inc';
 # this script closes bugs due to lack of feedback.
 
 # date interval to close after
-$after = "1 MONTH";
+$after = "15 DAY";
 
 $message =
 'No feedback was provided for this bug for over a month, so it is
@@ -30,7 +30,7 @@ $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
        . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
        . "AVG(score)+3 AS average,STD(score) AS deviation"
        . " FROM bugdb LEFT JOIN bugdb_votes ON id=bug"
-       . " WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(),INTERVAL 1 MONTH)"
+       . " WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(),INTERVAL $after)"
        . " GROUP BY bug";
 
 $result = mysql_query($query)
