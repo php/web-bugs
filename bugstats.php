@@ -170,6 +170,9 @@ arsort($closed_by);
 $i=0;
 while($i < 20) {
 	list($who,$value)=each($closed_by);
+	if (trim($who) == '') {
+	    continue;
+	}
 	echo "<tr bgcolor=#aabbcc><th>$who</th><td bgcolor=#ccddee>$value</td></tr>\n";
 	$i++;			
 }
