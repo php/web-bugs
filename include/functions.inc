@@ -66,7 +66,7 @@ function show_state_options($state, $user_mode=0, $default="")
 		"Old Feedback" => 0,
 		"Stale" => 0,
 		"Fresh" => 0,
-		"Bogus" => 1,
+		"Bogus" => 2,
 		"All" => 0
 	);
 	
