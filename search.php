@@ -21,7 +21,7 @@ define('BOOLEAN_SEARCH', @intval($boolean));
 if (isset($cmd) && $cmd == "display") {
 	@mysql_connect("localhost","nobody","")
 		or die("Unable to connect to SQL server.");
-	@mysql_select_db("php3");
+	@mysql_select_db("phpbugdb");
 
 	$mysql4 = version_compare(mysql_get_server_info(), "4.0.0", "ge");
 

@@ -53,7 +53,7 @@ if(!isset($phpver)) {
 }
 
 mysql_connect("localhost","nobody","");
-mysql_select_db("php3");
+mysql_select_db("phpbugdb");
 
 if (isset($per_category)) {
 	include ('bugtypes.inc');

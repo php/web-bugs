@@ -6,7 +6,7 @@ commonHeader("Statistics");
 
 @mysql_connect("localhost","nobody","")
 	or die("unable to connect to database");
-@mysql_select_db("php3")
+@mysql_select_db("phpbugdb")
 	or die("unable to select database");
 
 $query = "SELECT status,bug_type,email,php_version,php_os FROM bugdb";

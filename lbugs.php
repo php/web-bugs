@@ -2,7 +2,7 @@
 
 mysql_connect("localhost","nobody","")
   or die("Unable to connect to SQL server\n");
-mysql_select_db("php3");
+mysql_select_db("phpbugdb");
 
 if ($id) {
 	$result = mysql_query("SELECT id,bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,assign FROM bugdb WHERE id=$id");

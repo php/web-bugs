@@ -19,7 +19,7 @@ $mail_bugs_to = "php-bugs@lists.php.net";
 
 @mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
-@mysql_select_db("php3");
+@mysql_select_db("phpbugdb");
 
 $errors = array();
 if ($in) {
