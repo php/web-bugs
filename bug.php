@@ -149,7 +149,7 @@ elseif ($modify && !$success) {
 ?>
   <div id="results">
    <b>Total Votes</b>: <?php echo $original['votes'];?><br />
-   Reproduced: <?php printf("%d of %d (%.1f%%)",$original['reproduced'],$original['tried'],($original['reproduced']/$original['tried'])*100);?><br />
+   Reproduced: <?php printf("%d of %d (%.1f%%)",$original['reproduced'],$original['tried'],$original['$tried']?(($original['reproduced']/$original['tried'])*100):0);?><br />
    <?php if ($original['reproduced']) {?>
    Same OS: <?php printf("%d (%.1f%%)",$original['sameos'],($original['sameos']/$original['reproduced'])*100);?><br />
    Same Version: <?php printf("%d (%.1f%%)",$original['samever'],($original['samever']/$original['reproduced'])*100);?><br />
