@@ -409,6 +409,10 @@ a different platform? Let us know! Just going to say 'Me too!'? Don't clutter
 the database with that please
 <?php if (canvote()) { echo " &mdash; but make sure to <a href=\"$PHP_SELF?id=$id\">vote on the bug</a>"; } ?>!
 </div>
+<div class="warnings">
+Do <b>NOT</b> use the comment systems to ask questions related to bug reports.
+They will be removed without warning.
+</div>
 <?php }?>
 <table>
  <tr>
