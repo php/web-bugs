@@ -132,8 +132,7 @@ Thank you for your interest in PHP.
 'Please do not submit the same bug more than once. An existing
 bug report already describes this very problem. Even if you feel
 that your issue is somewhat different, the resolution is likely
-to be the same. Because of this, we hope you add your comments
-to the existing bug instead.
+to be the same. 
 
 Thank you for your interest in PHP.',
   ),
