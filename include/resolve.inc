@@ -7,11 +7,11 @@ $RESOLVE_REASONS = array(
     'message' =>
 'Please try using this CVS snapshot:
 
-  http://snaps.php.net/php4-latest.tar.gz
+  http://snaps.php.net/php4-STABLE-latest.tar.gz
  
 For Windows:
  
-  http://snaps.php.net/win32/php4-win32-latest.zip',
+  http://snaps.php.net/win32/php4-win32-STABLE-latest.zip',
   ),
   'fixedcvs' => array(
     'status' => 'Closed',
