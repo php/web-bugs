@@ -191,7 +191,7 @@ Thank you for your interest in PHP.',
   ),
     'float' => array(
     'status' => 'Bogus',
-    'desc' => 'Floating point limitations'
+    'desc' => 'Floating point limitations',
     'message' => 
 'Floating point values have a limited precision. Hence a value might 
 not have the same string representation after any processing. That also
