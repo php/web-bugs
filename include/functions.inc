@@ -198,6 +198,9 @@ function get_bugtype_mail($bug_type)
 	elseif (eregi("website", $bug_type)) {
 		return array("php-mirrors@lists.php.net","php-mirrors@lists.php.net");
 	}
+	elseif (eregi("pear", $bug_type)) {
+		return array("pear-dev@lists.php.net","pear-dev@lists.php.net");
+	}
 	else {
 		return array($mail_bugs_to,$mail_bugs_to);
 	}

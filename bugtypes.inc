@@ -11,6 +11,7 @@ $items = array (
 	"Reproducible crash"       => "&nbsp;&nbsp;&nbsp;&nbsp;Reproducible crash",
 	"Scripting Engine problem" => "&nbsp;&nbsp;&nbsp;&nbsp;Scripting Engine problem",
 	"Session related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Session related",
+	"PEAR related"             => "&nbsp;&nbsp;&nbsp;&nbsp;PEAR related",
 
 	"*Compile Issues" => "&nbsp;&nbsp;&nbsp;&nbsp;Compile Issues",
 	"Compile Failure" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compile Failure",
