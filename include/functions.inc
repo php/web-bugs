@@ -207,7 +207,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 	if ($ncomment)
 		$text[] = " New Comment:\n\n".stripslashes($ncomment);
 
-	$text[] = get_old_comments($bug['id']);
+	$text[] = get_old_comments($bug['id'], empty($ncomment));
 
 	/* format mail so it looks nice, use 72 to make piners happy */
 	$wrapped_text = wordwrap(join("\n",$text), 72);
@@ -267,7 +267,7 @@ function txfield($n)
 	             $GLOBALS['bug'][$n]);
 }
 
-function get_old_comments ($bug_id) 
+function get_old_comments ($bug_id, $all = 0) 
 {
 	$divider = str_repeat("-", 72);
 	$max_message_length = 10 * 1024;
@@ -278,9 +278,11 @@ function get_old_comments ($bug_id)
 
     if (!$res) return "";
     
-    # skip the most recent (this is get_old_comments, not get_all_comments!)
-    $row = mysql_fetch_row($res);
-    if (!$row) return "";
+    # skip the most recent unless the caller wanted all comments
+    if (!$all) {
+        $row = mysql_fetch_row($res);
+        if (!$row) return "";
+    }
 
     while (($row = mysql_fetch_row($res)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
 		$output .= "[$row[0]] $row[1]\n\n$row[2]\n\n$divider\n\n";
