@@ -17,10 +17,13 @@ function get_status_count ($status, $category='')
 		$query .= " php_version LIKE '" . $phpver . "%' AND";
 	}
 
+	/* Categories which are excluded from bug count */
+	$excluded = "'Feature/Change Request', 'Website Problem', 'PEAR related'";
+
 	if ($category != '') {
-		$query.= " $status AND bug_type='$category' AND bug_type != 'Feature/Change Request'";
+		$query.= " $status AND bug_type='$category'";
 	} else {
-		$query.= " status='$status' AND bug_type != 'Feature/Change Request'";
+		$query.= " status='$status' AND bug_type NOT IN($exclude)";
 	}
 
 	$result=mysql_unbuffered_query($query);
