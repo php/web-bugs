@@ -6,6 +6,7 @@ if (isset($cmd) && $cmd == "display") {
     exit;
 } elseif (isset($id)) {
     header("Location: bug.php?$QUERY_STRING");
+	exit;
 }
 
 commonHeader();
