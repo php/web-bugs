@@ -55,6 +55,14 @@ if ($in && $edit == 3) {
 		$errors[] = "You must provide a valid email address.";
 	}
 
+	# check that they aren't using a php.net mail address without
+	# being authenticated (oh, the horror!)
+	if (preg_match('/^(.+)@php\.net/i', $in['commentemail'], $m)) {
+		if ($user != stripslashes($m[1]) || !verify_password($user,$pass)) {
+			$errors[] = "You have to be logged in as a developer to use your php.net email address.";
+		}
+	}
+
 	$ncomment = trim($ncomment);
 	if (!$ncomment) {
 		$errors[] = "You must provide a comment.";
@@ -75,6 +83,20 @@ elseif ($in && $edit == 2) {
 	$ncomment = trim($ncomment);
 	if (!$ncomment) {
 		$errors[] = "You must provide a comment.";
+	}
+
+	# check that they aren't being bad and setting a status they
+	# aren't allowed to (oh, the horrors.)
+	if ($in['status'] != $bug['status'] || $state_type[$in['status']] != 2) {
+		$errors[] = "You aren't allowed to change a bug to that state.";
+	}
+
+	# check that they aren't changing the mail to a php.net address
+	# (gosh, somebody might be fooled!)
+	if (preg_match('/^(.+)@php\.net/i', $in['email'], $m)) {
+		if ($user != $m[1] || !verify_password($user,$pass)) {
+			$errors[] = "You have to be logged in as a developer to use your php.net email address.";
+		}
 	}
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {

@@ -53,8 +53,27 @@ function show_limit_options($limit=30)
 	echo '<option value="All"', ($limit=='All' ? " selected": ""),">All</option>\n";
 }
 
+$state_types = 	array (
+	"Open" => 2, 
+	"Closed" => 2,
+	"Duplicate" => 2,
+	"Critical" => 1, 
+	"Assigned" => 1,
+	"Analyzed" => 1,
+	"Suspended" => 1,
+	"No Feedback" => 1,
+	"Feedback" => 1,
+	"Old Feedback" => 0,
+	"Stale" => 0,
+	"Fresh" => 0,
+	"Bogus" => 2,
+	"All" => 0
+);
+	
 function show_state_options($state, $user_mode=0, $default="") 
 {
+	global $state_types;
+
 	if (!$state && !$default) {
 		$state = "Open";
 	}
@@ -62,23 +81,6 @@ function show_state_options($state, $user_mode=0, $default="")
 		$state = $default;
 	}
 
-	$state_types = 	array (
-		"Open" => 2, 
-		"Closed" => 2,
-		"Duplicate" => 2,
-		"Critical" => 1, 
-		"Assigned" => 1,
-		"Analyzed" => 1,
-		"Suspended" => 1,
-		"No Feedback" => 1,
-		"Feedback" => 1,
-		"Old Feedback" => 0,
-		"Stale" => 0,
-		"Fresh" => 0,
-		"Bogus" => 2,
-		"All" => 0
-	);
-	
 	/* regular users can only pick states with type 2 for unclosed bugs */
 	if($state != "All" && $state_types[$state] == 1 && $user_mode == 2) {
 		/* If state was 'Feedback', set state to 'Open' automatically. */
