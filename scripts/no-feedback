@@ -6,7 +6,7 @@ require dirname(__FILE__).'/../include/functions.inc';
 # this script closes bugs due to lack of feedback.
 
 # date interval to close after
-$after = "15 DAY";
+$after = "7 DAY";
 
 $message =
 'No feedback was provided for this bug for over 2 weeks, so it is
