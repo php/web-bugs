@@ -5,12 +5,18 @@ $RESOLVE_REASONS = array(
     'status' => 'Closed',
     'desc' => 'Fixed in CVS',
     'message' =>
-'This bug has been fixed in CVS. Snapshots of the CVS tree are packaged
-every three hours; this change will be in the next snapshot. You can grab
-the snapshot at http://snaps.php.net/. In case this was a documentation 
-problem, the fix will show up soon at http://www.php.net/manual/.
-In case this was a PHP.net website problem, the change will show
-up on the PHP.net site and on the mirror sites.
+'This bug has been fixed in CVS.
+
+ In case this was a PHP problem, snapshots of the sources are packaged
+ every three hours; this change will be in the next snapshot. You can grab
+ the snapshot at http://snaps.php.net/.
+ 
+ In case this was a documentation problem, the fix will show up soon at
+ http://www.php.net/manual/.
+
+ In case this was a PHP.net website problem, the change will show
+ up on the PHP.net site and on the mirror sites in short time.
+ 
 Thank you for the report, and for helping us make PHP better.',
   ),
   'alreadyfixed' => array(
