@@ -235,7 +235,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		break;
 	case 2:
 		$from_addr = spam_protect(txfield('email'));
-		$headers[] = array(" User updated by", $from);
+		$headers[] = array(" User updated by", $from_addr);
 		$from = "\"$from_addr\" <$mailfrom>";
 		break;
 	default:
