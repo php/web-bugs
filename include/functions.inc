@@ -194,8 +194,14 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
         $maxlength = (($maxlength < $actlength) ? $actlength : $maxlength);
     }
     
+    # align header content with headers (if a header contains
+    # more than one line, wrap it intelligently)
+    $header_text = "";
+    $spaces = str_repeat(" ", $maxlength + 1);
     foreach ($headers as $v) {
-        $text[] = str_pad($v[0] . ":", $maxlength) . " " . $v[1];
+        $hcontent = wordwrap($v[1], 72-$maxlength, "\n$spaces"); # wrap and indent
+        $hcontent = rtrim($hcontent); # wordwrap may add spacer to last line
+        $header_text .= str_pad($v[0] . ":", $maxlength) . " " . $hcontent . "\n";
     }
 
 	if ($ncomment)
@@ -205,9 +211,9 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
 
 	$user_text  = "ATTENTION! Do NOT reply to this email!\n";
 	$user_text .= "To reply, use the web interface found at http://bugs.php.net/?id=$bug[id]&edit=2\n\n\n";
-    $user_text .= join("\n",$text);
+    $user_text .= $header_text . join("\n",$text);
 
-	$dev_text = join("\n",$text)
+	$dev_text = $header_text . join("\n",$text)
                . "\n-- \nEdit this bug report at http://bugs.php.net/?id=$bug[id]&edit=1\n";
 
 	/* format mail so it looks nice */
