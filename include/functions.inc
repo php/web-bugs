@@ -286,12 +286,15 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 			$subj = "#{$bug['id']} [{$tla[$bug['status']]}]: ";
 		}
 		
+		# the user gets sent mail with an envelope sender that ignores bounces
 		@mail($bug[email],
 		      "Bug " . rinse($subj) . txfield('sdesc'),
 		      $user_text,
 		      "From: PHP Bug Database <$mailfrom>\n".
 		      "X-PHP-Bug: $bug[id]\n".
-		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
+		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>"
+		      "-fbounces-ignored@php.net");
+		# but we go ahead and let the default sender get used for the list
 		@mail($mailto,
 		      rinse($subj) . txfield('sdesc'),
 		      $dev_text,
