@@ -123,6 +123,26 @@ commonHeader("Quick Fix Descriptions");
             part of our efforts to make PHP scripting more secure and portable.
         </td>    
     </tr>                                               
+    <tr>
+        <td>php3</td>  
+        <td>Status: Bogus</td>         
+        <td>
+            We are sorry, but can not support PHP 3 related problems anymore.
+            Momentum is gathering for PHP 5, and we think supporting PHP 3 will
+            lead to a waste of resources which we want to put into getting PHP 5
+            ready. Ofcourse PHP 4 will will continue to be supported for the
+            forseeable future.
+        </td>    
+    </tr>                                               
+    <tr>
+        <td>dst</td>  
+        <td>Status: Bogus</td>         
+        <td>
+            We are happy to tell you that you just discovered Daylight Savings
+            Time. For more information see:
+            http://webexhibits.org/daylightsaving/b.html
+        </td>    
+    </tr>                                               
 </table>    
 <?php 
 commonFooter();

@@ -179,6 +179,9 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
     $text = array();
     $headers = array();
 
+	/* Get rid of slashes in bug status */
+	$bug['status'] = stripslashes($bug['status']);
+
 	$tla = array(
 		'Open'        => 'Opn',
 		'Bogus'       => 'Bgs',

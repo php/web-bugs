@@ -136,10 +136,19 @@ part of our efforts to make PHP scripting more secure and portable.',
     'status' => 'Won\'t Fix',
     'desc' => 'PHP 3 support discontinued',
     'message' =>
-'We are sorry, but can not support PHP 3 related problems anymore.  Momentum is
-gathering for PHP 5, and we think supporting PHP 3 will lead to a waste of
-resources which we want to put into getting PHP 5 ready. Ofcourse PHP 4 will
-will continue to be supported for the forseeable future.',
+'We are sorry, but can not support PHP 3 related problems anymore.
+Momentum is gathering for PHP 5, and we think supporting PHP 3 will
+lead to a waste of resources which we want to put into getting PHP 5
+ready. Ofcourse PHP 4 will will continue to be supported for the
+forseeable future.',
+  ),
+  'dst' => array(
+    'status' => 'Bogus',
+    'desc' => 'Daylight Savings',
+    'message' =>
+'We are happy to tell you that you just discovered Daylight Savings
+Time. For more information see:
+http://webexhibits.org/daylightsaving/b.html',
   ),
 );
 
