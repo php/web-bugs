@@ -110,7 +110,7 @@ if (isset($cmd) && $cmd == "display") {
 	$res = @mysql_query($query);
 	if (!$res) die(htmlspecialchars($query)."<br>".mysql_error());
 
-    // $total_rows = mysql_get_one("SELECT FOUND_ROWS()");
+	$total_rows = mysql_get_one("SELECT FOUND_ROWS()");
 
 	$rows = mysql_num_rows($res);
 	if (!$rows) {
