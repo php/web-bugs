@@ -71,7 +71,13 @@ elseif ($in && $edit == 2) {
 	if (!$bug[passwd] || $bug[passwd] != stripslashes($pw)) {
 		$errors[] = "The password you supplied was incorrect.";
 	}
-	elseif (!($errors = incoming_details_are_valid($in))) {
+
+	$ncomment = trim($ncomment);
+	if (!$ncomment) {
+		$errors[] = "You must provide a comment.";
+	}
+
+	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		/* update bug record */
 		$query = "UPDATE bugdb SET status='$in[status]', bug_type='$in[bug_type]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW(), email='$in[email]' WHERE id=$id";
 		$success = @mysql_query($query);
