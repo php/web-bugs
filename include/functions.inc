@@ -71,7 +71,7 @@ function show_state_options($state, $user_mode=0, $default="")
 
 function show_version_options($current,$default="") 
 {
-	$versions = array("4.0.6","4.0.5","4.0.4pl1","4.0.4","4.0CVS-".date("Y-m-d"));
+	$versions = array("4.0.6","4.0.5","4.0.4pl1","4.0.4","4.1.0RC1","4.0CVS-".date("Y-m-d"));
 	while (list(,$v) = each($versions)) {
 		echo "<option", ($current == $v ? " selected" : ""), ">$v</option>\n";
 		if ($current == $v) $use++;
