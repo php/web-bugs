@@ -86,7 +86,7 @@ is max. 10-20 lines long and does not require any external
 resources such as databases, etc.
 
 If possible, make the script source available online and provide
-an URL to it here. Try avoid embedding huge scripts into the report.',
+an URL to it here. Try to avoid embedding huge scripts into the report.',
   ),
   'oldversion' => array(
     'status' => 'Bogus',
