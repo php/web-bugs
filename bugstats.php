@@ -20,13 +20,13 @@ $query .= " ORDER BY bug_type";
 $result = mysql_unbuffered_query($query);
 
 while ($row = mysql_fetch_array($result)) {
-	$bug_type['all'][$row[bug_type]]++;
+	$bug_type['all'][$row['bug_type']]++;
 	$status_str = strtolower($row['status']);
-	$bug_type[$status_str][$row[bug_type]]++;
+	$bug_type[$status_str][$row['bug_type']]++;
 	$bug_type[$status_str]['all']++;
-	$email[$row[email]]++;
-	$php_version[$row[php_version]]++;
-	$php_os[$row[php_os]]++;
+	$email[$row['email']]++;
+	$php_version[$row['php_version']]++;
+	$php_os[$row['php_os']]++;
 	$status[$row['status']]++;
 	$total++;
 }
@@ -171,10 +171,10 @@ $median = mysql_result($res,0);
 
 echo "<p><b>Bug Report Time to Close Stats</b>\n";
 echo "<table>\n";
-echo "<tr bgcolor=#aabbcc><th align=right>Average life of a report:</th><td bgcolor=#ccddee>",ShowTime((int)$row[average]),"</td></tr>\n";
+echo "<tr bgcolor=#aabbcc><th align=right>Average life of a report:</th><td bgcolor=#ccddee>",ShowTime((int)$row['average']),"</td></tr>\n";
 echo "<tr bgcolor=#aabbcc><th align=right>Median life of a report:</th><td bgcolor=#ccddee>",ShowTime($median),"</td></tr>\n";
-echo "<tr bgcolor=#aabbcc><th align=right>Slowest report closure:</th><td bgcolor=#ccddee>",ShowTime($row[slowest]),"</td></tr>\n";
-echo "<tr bgcolor=#aabbcc><th align=right>Quickest report closure:</th><td bgcolor=#ccddee>",ShowTime($row[quickest]),"</td></tr>\n";
+echo "<tr bgcolor=#aabbcc><th align=right>Slowest report closure:</th><td bgcolor=#ccddee>",ShowTime($row['slowest']),"</td></tr>\n";
+echo "<tr bgcolor=#aabbcc><th align=right>Quickest report closure:</th><td bgcolor=#ccddee>",ShowTime($row['quickest']),"</td></tr>\n";
 echo "</table>\n";
 
 commonFooter();

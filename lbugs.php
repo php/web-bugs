@@ -38,17 +38,17 @@ if ($id) {
 		echo "<pre> Num Status     Summary ($num total including feature requests)\n";
 		$last_group = "";
 		while ($row = mysql_fetch_assoc($result)) {
-			if ($last_group != $row[bug_type]) {
-				$last_group = $row[bug_type];
-				echo "===============================================[<b>".$row[bug_type]."]";
-				$len = 29-strlen($row[bug_type]);
+			if ($last_group != $row['bug_type']) {
+				$last_group = $row['bug_type'];
+				echo "===============================================[<b>".$row['bug_type']."]";
+				$len = 29-strlen($row['bug_type']);
 				$s='';
 				for($i=0;$i<$len; $i++) $s.= "=";
 				echo "$s</b>\n";
 			}
-			printf("<a href=\"%s?id=%d\">%4d</a>",$PHP_SELF,$row[id],$row[id]);
-			printf(" %-9s ",$row[status]);
-			echo " ".htmlspecialchars($row[sdesc])."\n";
+			printf("<a href=\"%s?id=%d\">%4d</a>",$PHP_SELF,$row['id'],$row['id']);
+			printf(" %-9s ",$row['status']);
+			echo " ".htmlspecialchars($row['sdesc'])."\n";
 		}
 		mysql_free_result($result);
 		echo "</pre>";

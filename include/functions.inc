@@ -317,7 +317,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
                 "http://bugs.php.net/?id=$bug[id]&edit=1\n";
 
 	/* send mail if status was changed or there is a comment */
-	if ($in[status] != $bug[status] || $ncomment != "") {
+	if ($in['status'] != $bug['status'] || $ncomment != "") {
 
 		$old_status = $bug['status'];
 		$new_status = $bug['status'];
@@ -332,7 +332,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		}
 	
 		# the user gets sent mail with an envelope sender that ignores bounces
-		@mail($bug[email],
+		@mail($bug['email'],
 		      "Bug " . rinse($subj) . txfield('sdesc'),
 		      $user_text,
 		      "From: PHP Bug Database <$mailfrom>\n".
@@ -445,7 +445,7 @@ function incoming_details_are_valid ($in, $initial=0)
 	global $bug;
 
 	$errors = array();
-	if ($initial || (!empty($in[email]) && $bug[email] != $in[email])) {
+	if ($initial || (!empty($in['email']) && $bug['email'] != $in['email'])) {
 		if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['email'])) {
 			$errors[] = "Please provide a valid email address.";
 		}

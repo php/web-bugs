@@ -187,17 +187,17 @@ if (isset($cmd) && $cmd == "display") {
 			echo "<br /><a href=\"bug.php?id=$row[id]&amp;edit=1\">(edit)</a></td>";
 
 			/* Date */
-			echo "<td align=\"center\">".date ("Y-m-d H:i:s", strtotime ($row[ts1]))."</td>";
-			echo "<td>", htmlspecialchars($row[bug_type]), "</td>";
-			echo "<td>", htmlspecialchars($row[status]);
-			if ($row[status] == "Feedback" && $row[unchanged] > 0) {
-				printf ("<br>%d day%s", $row[unchanged], $row[unchanged] > 1 ? "s" : "");
+			echo "<td align=\"center\">".date ("Y-m-d H:i:s", strtotime($row['ts1']))."</td>";
+			echo "<td>", htmlspecialchars($row['bug_type']), "</td>";
+			echo "<td>", htmlspecialchars($row['status']);
+			if ($row[status] == "Feedback" && $row['unchanged'] > 0) {
+				printf ("<br>%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? "s" : "");
 			}
 			echo "</td>";
-			echo "<td>", htmlspecialchars($row[php_version]), "</td>";
-			echo "<td>", $row[php_os] ? htmlspecialchars($row[php_os]) : "&nbsp;", "</td>";
-			echo "<td>", $row[sdesc]  ? htmlspecialchars($row[sdesc]) : "&nbsp;",  "</td>";
-			echo "<td>", $row[assign] ? htmlspecialchars($row[assign]) : "&nbsp;", "</td>";
+			echo "<td>", htmlspecialchars($row['php_version']), "</td>";
+			echo "<td>", $row['php_os'] ? htmlspecialchars($row['php_os']) : "&nbsp;", "</td>";
+			echo "<td>", $row['sdesc']  ? htmlspecialchars($row['sdesc']) : "&nbsp;",  "</td>";
+			echo "<td>", $row['assign'] ? htmlspecialchars($row['assign']) : "&nbsp;", "</td>";
 			echo "</tr>\n";
 		}
 

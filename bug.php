@@ -88,13 +88,13 @@ if ($in && $edit == 3) {
 
 	if (!$errors) {
 		$query = "INSERT INTO bugdb_comments (bug,email,ts,comment) VALUES"
-		       . " ('$id','$in[commentemail]',NOW(),'$ncomment')";
+		       . " ('$id','" . $in['commentemail'] . "',NOW(),'$ncomment')";
 		$success = @mysql_query($query);
 	}
 	$from = stripslashes($in['commentemail']);
 }
 elseif ($in && $edit == 2) {
-	if (!$bug[passwd] || $bug[passwd] != stripslashes($pw)) {
+	if (!$bug['passwd'] || $bug['passwd'] != stripslashes($pw)) {
 		$errors[] = "The password you supplied was incorrect.";
 	}
 
@@ -117,11 +117,11 @@ elseif ($in && $edit == 2) {
 		}
 	}
 
-	$from = ($bug[email] != $in[email] && !empty($in[email])) ? $in[email] : $bug[email];
+	$from = ($bug['email'] != $in['email'] && !empty($in['email'])) ? $in['email'] : $bug['email'];
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		/* update bug record */
-		$query = "UPDATE bugdb SET sdesc='$in[sdesc]',status='$in[status]', bug_type='$in[bug_type]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW(), email='$from' WHERE id=$id";
+		$query = "UPDATE bugdb SET sdesc='" . $in['sdesc'] . "',status='" . $in['status'] . "', bug_type='" . $in['bug_type'] . "', php_version='" . $in['php_version'] . "', php_os='" . $in['php_os'] . "', ts2=NOW(), email='$from' WHERE id=$id";
 		$success = @mysql_query($query);
 		
 		/* add comment */
@@ -142,7 +142,7 @@ elseif ($in && $edit == 1) {
 		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
 	} elseif ($in['resolve']) {
 		if (!$trytoforce && $RESOLVE_REASONS[$in['resolve']]['status'] == $bug['status']) {
-			$errors[] = "The bug is already marked '$bug[status]'. (Submit again to ignore this.)";
+			$errors[] = "The bug is already marked '" . $bug['status'] . "'. (Submit again to ignore this.)";
 		}
 		elseif (!$errors)  {
 			if ($in['status'] == $bug['status']) {
@@ -160,7 +160,7 @@ elseif ($in && $edit == 1) {
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		$query = 'UPDATE bugdb SET ';
-		$query.= ($bug[email] != $in[email] && !empty($in[email])) ? "email='$in[email]', " : '';
+		$query.= ($bug['email'] != $in['email'] && !empty($in['email'])) ? "email='" . $in['email'] . "', " : '';
 		$query.= "sdesc='$in[sdesc]', status='$in[status]', bug_type='$in[bug_type]', assign='$in[assign]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW() WHERE id=$id";
 		$success = @mysql_query($query);
 		if ($success && !empty($ncomment)) {
