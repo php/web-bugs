@@ -485,6 +485,7 @@ elseif ($cmd == "display") {
 <br />
 <strong>Please</strong> read the <a href="bugs-dos-and-donts.php">Dos &
 Don'ts</a> before submitting a bug report!<br />
+You should also read <a href="http://www.tuxedo.org/~esr/faqs/smart-questions.html">Eric Raymond's How To Ask Questions The Smart Way</a> for some tips on how to ask for help in a way that increases the odds that someone will help you.<br />
 If you are not sure if the problem you're experiencing is a bug at all
 it most likely isn't. Please ask support questions on the 
 <a href="support.php">mailing lists</a>.
