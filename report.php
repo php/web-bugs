@@ -112,7 +112,19 @@ you can scroll down and click the submit button to really enter the details into
 
 		if ($ok_to_submit_report) {
 
-			$query = "INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$in[bug_type]','$in[email]','$in[sdesc]','$in[ldesc]','$in[php_version]','$in[php_os]','Open',NOW(),'$in[passwd]')";
+			/* Put all text areas together. */
+			$fdesc = "Description:\n------------\n". $in['ldesc'] ."\n\n";
+			if (!empty($in['repcode'])) {
+				$fdesc .= "Reproduce code:\n---------------\n". $in['repcode'] ."\n\n";
+			}
+			if (!empty($in['expres'])) {
+				$fdesc .= "Expected result:\n----------------\n". $in['expres'] ."\n\n";
+			}
+			if (!empty($in['actres'])) {
+				$fdesc .= "Actual result:\n--------------\n". $in['actres'] ."\n";
+			}
+
+			$query = "INSERT INTO bugdb (bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,passwd) VALUES ('$in[bug_type]','$in[email]','$in[sdesc]','$fdesc','$in[php_version]','$in[php_os]','Open',NOW(),'$in[passwd]')";
 			$ret = mysql_query($query);
 
 			$cid = mysql_insert_id();
@@ -124,10 +136,10 @@ you can scroll down and click the submit button to really enter the details into
 			$report .= "PHP Bug Type:     $in[bug_type]\n";
 			$report .= "Bug description:  ";
 
-			$ldesc = stripslashes($in['ldesc']);
+			$fdesc = stripslashes($fdesc);
 			$sdesc = stripslashes($in['sdesc']);
 
-			$ascii_report = "$report$sdesc\n\n".wordwrap($ldesc);
+			$ascii_report = "$report$sdesc\n\n".wordwrap($fdesc);
 			$ascii_report.= "\n-- \nEdit bug report at http://bugs.php.net/?id=$cid&edit=";
 
 			list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
@@ -168,7 +180,7 @@ you can scroll down and click the submit button to really enter the details into
 
 				echo htmlspecialchars($sdesc), "\n\n";
 
-				echo wordwrap(htmlspecialchars($ldesc));
+				echo wordwrap(htmlspecialchars($fdesc));
 
 				echo "</pre>\n";
 
@@ -188,7 +200,7 @@ if (!isset($in)) {
 ?>
 
 <p>Before you report a bug, make sure to search for similar bugs using the form
-at the top of the page or our <a href="search.php">advanced search page</a>.
+at the top of the page or our <a href="search.php">advanced search page</a>.<br />
 Also, read the instructions for <a href="how-to-report.php">how to report a bug
 that someone will want to help fix</a>.</p>
 
@@ -249,20 +261,68 @@ if ($errors) display_errors($errors);
 
 <table>
  <tr>
-  <td valign="top">
-   <b>Description:</b><br /><font size="-1">
+  <td valign="top" colspan="2">
+   <font size="-1">
    Please supply any information that may be helpful in fixing the bug:
    <ul>
     <li>A short script that reproduces the problem.</li>
     <li>The list of modules you compiled PHP with (your configure line).</li>
     <li>Any other information unique or specific to your setup.</li>
+    <li>Any changes made in your php.ini compared to php.ini-dist (<b>not</b> your whole php.ini!)</li>
     <li>A <a href="bugs-generating-backtrace.php">gdb backtrace</a>.</li>
    </ul>
    </font>
-   <div align="center"><input type="submit" value="Send bug report" /></div>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+   <b>Description:</b><br />
+   <font size="-1">
+   </font>
   </td>
   <td>
    <textarea cols="60" rows="15" name="in[ldesc]" wrap="physical"><?php echo clean($in['ldesc']);?></textarea>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+   <b>Reproduce code:</b><br />
+   <font size="-1">
+    Please <b>do not</b> post more than 20 lines of source code.<br />
+    If the code is longer then 20 lines, provide an URL to the source<br />
+    code that will reproduce the bug.
+   </font>
+  </td>
+  <td valign="top">
+   <textarea cols="60" rows="15" name="in[repcode]" wrap="no"><?php echo clean($in['repcode']);?></textarea>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+   <b>Expected result:</b><br />
+   <font size="-1">
+    What do you expect to happen or see when you run the code above ?<br />
+   </font>
+  </td>
+  <td valign="top">
+   <textarea cols="60" rows="15" name="in[expres]" wrap="physical"><?php echo clean($in['expres']);?></textarea>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+   <b>Actual result:</b><br />
+   <font size="-1">
+    This could be a <a href="bugs-generating-backtrace.php">backtrace</a> for example.<br />
+    Try to keep it as short as possible without leaving anything relevant out.
+   </font>
+  </td>
+  <td valign="top">
+   <textarea cols="60" rows="15" name="in[actres]" wrap="physical"><?php echo clean($in['actres']);?></textarea>
+  </td>
+ </tr>
+ <tr>
+  <td colspan="2">
+   <div align="center"><input type="submit" value="Send bug report" /></div>
   </td>
  </tr>
 </table>
