@@ -222,6 +222,16 @@ printing it without any mathematical operations.
 Thank you for your interest in PHP.',
   ),
 
+	'nozend' => array(
+	'status' => 'Bogus',
+	'desc' => 'No Zend Extensions',
+	'message' =>
+'Do not file bugs when you have Zend extensions (zend_extension=)
+loaded. Examples are Zend Optimizer, Zend Debugger, Turck MM Cache,
+APC, Xdebug and ionCube loader.  These extensions often modify engine
+behavior which is not related to PHP itself.',
+  ),
+
 	'mysqlcfg' => array(
 	'status' => 'Bogus',
 	'desc' => 'MySQL Configuration Error',
