@@ -183,7 +183,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
     
 	switch ($edit) {
 	case 3:
-		$headers[] = array(" Comment by", rinse($in['email']));
+		$headers[] = array(" Comment by", rinse($in['commentemail']));
 		break;
 	case 2:
 		$headers[] = array(" User updated by", txfield('email'));
@@ -260,7 +260,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 	/* send mail if status was changed or there is a comment */
 	if ($in[status] != $bug[status] || $ncomment != "") {
 
-		if ($in[status] != $bug[status]) {	/* status changed */
+		if ($in[status] != $bug[status] && $edit != 3) {	/* status changed */
 			$subj = "#{$bug['id']} [{$bug['status']}->{$in['status']}]: ";
 		} elseif ($edit == 3) {				/* comment */
 			$subj = "#{$bug['id']} [Comment]: ";
