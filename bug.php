@@ -129,7 +129,7 @@ elseif ($modify && !$success) {
 /* DISPLAY BUG */
 if ($edit) {
 	echo "<form method=\"POST\" action=\"$PHP_SELF\">\n";
-    echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
+	echo "<input type=\"hidden\" name=\"id\" value=\"$id\">\n";
 	echo "<input type=\"hidden\" name=\"edit\" value=\"$edit\">\n";
 }
 if ($edit==1)
