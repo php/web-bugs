@@ -89,10 +89,10 @@ you can scroll down and click the submit button to really enter the details into
 
 					$bug_url = "/bug.php?id=$row[id]&edit=2";
 
-					echo "<tr><td colspan=\"2\"><a href=\"$bug_url\">Bug #" . $row['id'] . ": " . $row['sdesc'] . "</a></td></tr>";
-					echo "<tr><td>" . $summary . "</td>";
+					echo "<tr><td colspan=\"2\"><a href=\"$bug_url\">Bug #{$row['id']}: " , htmlspecialchars($row['sdesc']) , "</a></td></tr>";
+					echo "<tr><td>{$summary}</td>";
 
-					echo "<td>" . nl2br($resolution) . "</td>";
+					echo "<td>", nl2br($resolution), "</td>";
 
 					echo "</tr>\n";
 
