@@ -100,76 +100,7 @@ elseif ($in && $edit == 1) {
 }
 
 if ($in && !$errors && $success) {
-    $text = array();
-
-    $text[] = "ID: $id";
-
-	switch ($edit) {
-	case 3:
-		$text[] = "Comment by: ".rinse($in['email']);
-		break;
-	case 2:
-		$text[] = "User updated by: ".txfield('email');
-		break;
-	default:
-		$text[] = "Updated by: $user";
-	}
-
-	if (changed('sdesc'))
-		$text[] = "Old Summary: $bug[sdesc]";
-
-	$fields = array(
-		'email' => 'Reported By',
-		'status' => 'Status',
-		'bug_type' => 'Bug Type',
-		'php_os' => 'Operating System',
-		'php_version' => 'PHP Version',
-		'assign' => 'Assigned To',
-	);
-
-	foreach ($fields as $name => $desc) {
-		if (changed($name)) {
-			$text[] = "Old $desc: $bug[$name]";
-		}
-		/* only fields that are set get added. */
-		if ($f = txfield($name))
-			$text[] = "$desc: $f";
-	}
-
-	if ($ncomment)
-		$text[] = "New Comment:\n\n".stripslashes($ncomment);
-
-	$text[] = get_old_comments($id);
-
-	$user_text  = "ATTENTION! Do NOT reply to this email!\n";
-	$user_text .= "To reply, use the web interface found at http://bugs.php.net/?id=$id&edit=2\n\n\n";
-    $user_text .= join("\n",$text);
-
-	$dev_text = join("\n",$text)
-               . "\n\nEdit this bug report at http://bugs.php.net/?id=$id&edit=1\n";
-
-	/* format mail so it looks nice */
-	$user_text = wordwrap($user_text, 72); /* use 72 to make piners happy */
-	$dev_text = wordwrap($dev_text, 72);
-
-	list($mailto,$mailfrom) = get_bugtype_mail($in['bug_type']);
-
-	/* send mail if status was changed or there is a comment */
-	if ($status != $bug[status] || $ncomment != "") {
-		@mail($bug[email],
-		      "Bug #$id Updated: ".txfield('sdesc'),
-		      $user_text,
-		      "From: Bug Database <$mailfrom>\n".
-		      "X-PHP-Bug: $id\n".
-		      "In-Reply-To: <bug-$id@bugs.php.net>");
-		@mail($mailto,
-		      "Bug #$id Updated: ".txfield('sdesc'),
-		      $dev_text,
-		      "From: $from\n".
-		      "X-PHP-Bug: $id\n".
-		      "In-Reply-To: <bug-$id@bugs.php.net>");
-	}
-
+    mail_bug_updates($bug,$in,$from,$ncomment);
 	header("Location: $PHP_SELF?id=$id&thanks=$edit");
 	exit;
 }
@@ -489,11 +420,6 @@ function changed($n) {
 function field($n) {
 	return oneof(clean($GLOBALS['in'][$n]),
 	             htmlspecialchars($GLOBALS['bug'][$n]));
-}
-
-function txfield($n) {
-	return oneof(rinse($GLOBALS['in'][$n]),
-	             $GLOBALS['bug'][$n]);
 }
 
 function format_date($date) {
