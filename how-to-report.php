@@ -126,7 +126,7 @@ with the different bugs.</p>
 
 <ul>
  <li>
-  <a href="http://www.tuxedo.org/~esr/faqs/smart-questions.html">Eric
+  <a href="http://www.catb.org/~esr/faqs/smart-questions.html">Eric
   Raymond's How To Ask Questions The Smart Way</a>
  </li>
  <li>
