@@ -7,7 +7,7 @@ if (!($id = (int)$id)) {
 }
 
 $score = (int)$score;
-if ($score < 1 || $score > 5) {
+if ($score < -2 || $score > 2) {
   die("invalid score: $score");
 }
 

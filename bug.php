@@ -138,7 +138,7 @@ elseif ($modify && !$success) {
     $query = "SELECT COUNT(*) AS votes,"
            . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
            . "SUM(sameos) AS sameos, SUM(samever) AS samever,"
-           . "AVG(score) AS average,STD(score) AS deviation"
+           . "AVG(score)+3 AS average,STD(score) AS deviation"
            . " FROM bugdb_votes WHERE bug=$id";
     $res = @mysql_query($query);
     if ($res && ($row = mysql_fetch_array($res,MYSQL_ASSOC)) && $row[votes]) {
@@ -178,11 +178,11 @@ elseif ($modify && !$success) {
   <div id="score">
    Rate the importance of this bug to you:<br />
    &nbsp; <span class="score">high</span>
-   <input type="radio" id="score-5" name="score" value="5" />
-   <input type="radio" id="score-4" name="score" value="4" />
-   <input type="radio" id="score-3" name="score" value="3" checked="checked" />
-   <input type="radio" id="score-2" name="score" value="2" />
-   <input type="radio" id="score-1" name="score" value="1" />
+   <input type="radio" id="score-5" name="score" value="2" />
+   <input type="radio" id="score-4" name="score" value="1" />
+   <input type="radio" id="score-3" name="score" value="0" checked="checked" />
+   <input type="radio" id="score-2" name="score" value="-1" />
+   <input type="radio" id="score-1" name="score" value="-2" />
    <span class="score">low</span>
   </div>
   <div id="submit">
