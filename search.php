@@ -112,6 +112,7 @@ if (isset($cmd) && $cmd == "display") {
  <?php show_prev_next($begin,$rows,$total_rows,$link,$limit);?>
  <tr bgcolor="#aaaaaa">
   <th><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=id">Date</a></th>
 <?php if ($bug_type == "Any") {?>
   <th><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
 <?php }?>
@@ -124,8 +125,14 @@ if (isset($cmd) && $cmd == "display") {
 <?php
 		while ($row = mysql_fetch_array($res)) {
 			echo '<tr bgcolor="', get_row_color($row), '">';
+
+			/* Bug ID */
 			echo "<td align=\"center\"><a href=\"bug.php?id=$row[id]\">$row[id]</a>";
 			echo "<br /><a href=\"bug.php?id=$row[id]&amp;edit=1\">(edit)</a></td>";
+
+			/* Date */
+			echo "<td align=\"center\">".date ("Y-m-s<br />\nH:i:s", strtotime ($row[ts1]))."</td>";
+
 			if ($bug_type == "Any") {
 				echo "<td>", htmlspecialchars($row[bug_type]), "</td>";
 			}
@@ -214,7 +221,7 @@ commonFooter();
 
 function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
 	if($limit=='All') return;
-	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"7\">";
+	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"8\">";
     echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr>';
 	if ($begin > 0) {
 		echo "<td align=\"left\" width=\"33%\"><a href=\"$link&amp;begin=",max(0,$begin-$limit),"\">&laquo; Show Previous $limit Entries</a></td>";
