@@ -133,7 +133,7 @@ We are sorry about the inconvenience, but this change was a necessary
 part of our efforts to make PHP scripting more secure and portable.',
   ),
   'php3' => array(
-    'status' => 'Won\'t Fix',
+    'status' => 'Wont Fix',
     'desc' => 'PHP 3 support discontinued',
     'message' =>
 'We are sorry, but can not support PHP 3 related problems anymore.

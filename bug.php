@@ -50,11 +50,6 @@ if (!$res || !$bug) {
 $success = !isset($in);
 $errors = array();
 
-if ($in) {
-	/* Escape the status (needed for Won't fix) */
-	$in['status'] = addslashes($in['status']);
-}
-
 if ($in && $edit == 3) {
 	if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['commentemail'])) {
 		$errors[] = "You must provide a valid email address.";
