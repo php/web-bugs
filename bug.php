@@ -220,7 +220,7 @@ statistics below.
 <div id="bugheader">
  <table id="details">
   <tr id="title">
-   <th id="number"><a href="http://bugs.php.net/<?php echo $id; ?>">Bug&nbsp;#<?php echo $id; ?></a></th>
+   <th id="number"><a href="http://bugs.php.net/<?php echo $id; ?>">Bug</a>&nbsp;#<?php echo $id; ?></th>
    <td id="summary" colspan="5"><?php echo htmlspecialchars($bug['sdesc'])?></td>
   </tr>
   <tr id="submission">
