@@ -1,5 +1,5 @@
 #!/usr/local/bin/php -q
-<?php /* vim: set ft=php3 noet ts=4 sw=4 : */
+<?php /* vim: set ft=phpbugdb noet ts=4 sw=4 : */
 
 require dirname(__FILE__).'/../include/functions.inc';
 
@@ -18,7 +18,7 @@ $mail_bugs_to = 'php-bugs@lists.php.net';
 
 mysql_connect("localhost", "nobody", "")
   or die("unable to connect to database");
-mysql_select_db("php3")
+mysql_select_db("phpbugdb")
   or die("unable to select db");
 
 # fetch info about the bug into $bug

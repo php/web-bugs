@@ -1,7 +1,7 @@
 #!/usr/local/bin/php -q
 <?
 	mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server\n");
-	mysql_select_db("php3");
+	mysql_select_db("phpbugdb");
 	$result = mysql_query("select id,bug_type,status,sdesc,assign from bugdb where status not in ('Closed', 'Bogus', 'Duplicate', 'No Feedback', 'Wont fix') and php_version like '4%' order by bug_type,id");
 	if($num=mysql_num_rows($result)) {
 		$body = " PHP Bug Database summary - http://bugs.php.net\n\n";

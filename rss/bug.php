@@ -12,7 +12,7 @@ $format = $_REQUEST['format'];
 
 @mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
-@mysql_select_db("php3");
+@mysql_select_db("phpbugdb");
 
 $query  = "SELECT id,bug_type,email,sdesc,ldesc,"
 		. "php_version,php_os,status,ts1 as ts_submitted,ts2 as ts_modified,assign,"
