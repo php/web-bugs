@@ -454,7 +454,7 @@ function output_note($ts,$email,$comment) {
          "</b>\n";
 	echo "<pre class=\"note\">";
 	$note = addlinks(preg_replace("/(\r?\n){3,}/","\n\n",wordwrap($comment,72,"\n",1)));
-	echo preg_replace('/#([0-9]+)/', "<a href=\"$PHP_SELF?id=\\1\">#\\1</a>", $note);
+	echo preg_replace('/(bug\ *#([0-9]+))/i', "<a href=\"$PHP_SELF?id=\\2\">\\1</a>", $note);
 	echo "</pre>\n";
 	echo "</div>";
 }
