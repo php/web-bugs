@@ -196,7 +196,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment)
     }
 
 	if ($ncomment)
-		$text[] = "\nNew Comment:\n\n".stripslashes($ncomment);
+		$text[] = "New Comment:\n\n".stripslashes($ncomment);
 
 	$text[] = get_old_comments($bug['id']);
 
