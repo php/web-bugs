@@ -66,6 +66,21 @@ Once you have generated a backtrace, please submit it to this bug
 report and change the status back to "Open". Thank you for helping
 us make PHP better.',
   ),
+  'needscript' => array(
+    'status' => 'Feedback',
+    'desc' => 'Need Reproduce Script',
+    'message' =>
+'Thank you for this bug report. To properly diagnose the problem, we
+need a short but complete example script to be able to reproduce
+this bug ourselves. 
+
+A proper reproducing script starts with <?php and ends with ?>,
+is max. 10-20 lines long and does not require any external 
+resources such as databases, etc.
+
+If possible, make the script source available online and provide
+an URL to it here. Try avoid embedding huge scripts into the report.',
+  ),
   'oldversion' => array(
     'status' => 'Bogus',
     'desc' => 'Try newer version',
