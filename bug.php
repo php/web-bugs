@@ -24,7 +24,7 @@ commonHeader("Bug Reporting");
 @mysql_select_db("php3");
 
 # fetch info about the bug into $original
-$query = "SELECT id,bug_type,email,sdesc,ldesc,"
+$query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
        . "php_version,php_os,status,ts1,ts2,dev_id,assign,"
        . "COUNT(bug=id) AS votes,"
        . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
