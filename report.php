@@ -182,20 +182,18 @@ you can scroll down and click the submit button to really enter the details into
 			} else {
 
 				commonHeader("Report - Error");
-
 				echo "<pre>\n";
-
 				echo $report;
-
 				echo htmlspecialchars($sdesc), "\n\n";
-
 				echo wordwrap(htmlspecialchars($fdesc));
-
 				echo "</pre>\n";
-
-				echo "<p><h2>Mail not sent!</h2>\n";
-				echo "Please send this page in a mail to " .
-					"<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
+				echo "<h2>Mail not sent!</h2><p>\n";
+				if ($mailto == 'php-bugs@lists.php.net') {
+				    echo "Please save your bug report, come back later, and try to report the bug again.</p>";
+				} else {
+  				    echo "Please send this page in a mail to " .
+					     "<a href=\"mailto:$mailto\">$mailto</a> manually.</p>\n";
+				}
 			}
 		} else {
 		}
