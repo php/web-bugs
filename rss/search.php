@@ -128,7 +128,7 @@ EOD;
 if (mysql_num_rows($res) > 0) {
 	$i = 0;
 	while (($row = mysql_fetch_assoc($res)) && ($i++ < 100)) {
-		echo "      <rdf:li rdf:resource=\"http://bugs.php.net/{$bug[id]}\" />\n";
+		echo "      <rdf:li rdf:resource=\"http://bugs.php.net/{$row['id']}\" />\n";
 	}
 	mysql_data_seek($res, 0);
 } else {
@@ -153,7 +153,7 @@ while ($row = mysql_fetch_assoc($res)) {
 	$i++;
 	echo "    <item>\n";
 	echo '      <title>' . utf8_encode(htmlspecialchars('[' . $row['status'] . '] ' . $row['sdesc'])) . "</title>\n";
-	echo "      <link>http://bugs.php.net/{$bug['id']}</link>\n";
+	echo "      <link>http://bugs.php.net/{$row['id']}</link>\n";
 	echo '      <description>' . utf8_encode(htmlspecialchars($row['ldesc'])) . "</description>\n";
 	echo '      <dc:date>' . date('Y-m-d',$row['modified']) . "</dc:date>\n";
 	echo '      <dc:time>' . date('H:i:s',$row['modified']) . "</dc:time>\n";
