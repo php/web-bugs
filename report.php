@@ -99,7 +99,7 @@ that someone will want to help fix</a>.</p>
 
 <p>If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support <a href="http://www.php.net/support.php">listed here</a>.</p>
 
-<p><strong>Failure to follow these instructions may result in your bug being
+<p><strong>Failure to follow these instructions may result in your bug
 simply being marked as "bogus".</strong></p>
 
 <?php
