@@ -43,7 +43,7 @@ commonHeader("Quick Fix Descriptions");
         <td>Status: Bogus</td>         
         <td>
             Thank you for taking the time to report a problem with PHP.
-            Unfortunately your are not using a current version of PHP -- 
+            Unfortunately you are not using a current version of PHP -- 
             the problem might already be fixed. Please download a new
             PHP version from http://www.php.net/downloads.php
 
