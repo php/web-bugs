@@ -24,6 +24,7 @@ if (isset($cmd) && $cmd == "display") {
 	$mysql4 = version_compare(mysql_get_server_info(), "4.0.0", "ge");
 
 	if (!$bug_type) $bug_type = "Any";
+	if (!$bug_ntype) $bug_ntype = array();
 
 	if ($mysql4)
 		$query = "SELECT SQL_CALC_FOUND_ROWS ";
@@ -32,12 +33,16 @@ if (isset($cmd) && $cmd == "display") {
 
 	$query .= "*, TO_DAYS(NOW())-TO_DAYS(ts2) AS unchanged FROM bugdb ";
 
-	if($bug_type=="Any") {
+	if ($bug_type == "Any") {
 		$where_clause = "WHERE bug_type != 'Feature/Change Request'";
 	} else {
 		$where_clause = "WHERE bug_type = '$bug_type'";
 	}
 
+	if (count($bug_ntype) > 0) {
+		$where_clause.= " AND bug_type NOT IN ('" . join("','", $bug_ntype) . "')";
+	}
+	
 	/* Treat assigned, analyzed, critical and verified bugs as open */
 	if ($status == "Open") {
 		$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical' OR status='Verified')";
@@ -128,7 +133,22 @@ if (isset($cmd) && $cmd == "display") {
 		$errors[] = "No bugs with the specified criteria were found.";
 	}
 	else {
-		$link = "$PHP_SELF?cmd=display&amp;bug_type=" . urlencode ($bug_type) . "&amp;status=".urlencode(stripslashes($status))."&amp;search_for=".urlencode(stripslashes($search_for))."&amp;php_os=".urlencode(stripslashes($php_os))."&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
+
+		$bug_ntype_string = '';
+
+		if (count($bug_ntype) > 0) {
+			foreach ($bug_ntype as $type_str) {
+				$bug_ntype_string.= '&amp;bug_ntype[]=' . urlencode($type_str);
+			}
+		}
+		
+		$link = "$PHP_SELF?cmd=display" . 
+				$bug_ntype_string  .
+				"&amp;bug_type="   . urlencode($bug_type) .
+				"&amp;status="     . urlencode(stripslashes($status)) .
+				"&amp;search_for=" . urlencode(stripslashes($search_for)) .
+				"&amp;php_os="     . urlencode(stripslashes($php_os)) .
+				"&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
  <?php show_prev_next($begin,$rows,$total_rows,$link,$limit);?>
@@ -214,6 +234,11 @@ if ($warnings) display_warnings($warnings);
   <th>Category</th>
   <td nowrap="nowrap">Return only bugs in <b>category</b></td>
   <td><select name="bug_type"><?php show_types($bug_type,1);?></select></td>
+ </tr>
+ <tr>
+  <th>&nbsp;</th>
+  <td nowrap="nowrap">Return only bugs <b>NOT</b> in <b>categories</b></td>
+  <td><select name="bug_ntype[]" multiple size=5><?php show_types($bug_ntype,0);?></select></td>
  </tr>
  <tr>
   <th>OS</th>

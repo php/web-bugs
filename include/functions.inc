@@ -168,7 +168,7 @@ function show_types($current,$show_any,$default="")
 	if (!$current && !$default && !$show_any) {
 		echo "<option value=\"none\">--Please Select--</option>\n";
 	}
-	elseif (!$current && $show_any) {
+	elseif (!$current && $show_any == 1) {
 		$current = "Any";
 	}
 	elseif (!$current) {
@@ -176,10 +176,10 @@ function show_types($current,$show_any,$default="")
 	}
 
 	while (list($key,$value) = each($items)) {
-		if ($show_any || $key != "Any") {
+		if ($show_any == 1 || $key != "Any") {
 			echo "<option value=\"$key\"",
-				 ($key == $current? " selected" : ""),
-				 ">$value</option>\n";
+			((is_array($current) && in_array($key, $current)) || ($key == $current ? " selected" : "")),
+			">$value</option>\n";
 			if ($key == $current) $use++;
 		}
 	}
