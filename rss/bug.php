@@ -43,6 +43,7 @@ if ($res) outputbug($bug, $res, $format);
 outputFooter($format);
 
 function outputHeader($bug,$format) {
+	header('Content-type: text/xml');
 	switch ($format) {
 		case 'xml':
 			echo "<phpbug>\n";  
