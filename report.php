@@ -68,7 +68,6 @@ you can scroll down and click the submit button to really enter the details into
 <tr>
 <td><b>Description</b></td>
 <td><b>Possible Solution</b></td>
-<td>&nbsp;</td>
 </tr>
 <?php
 
