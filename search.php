@@ -28,7 +28,7 @@ if (isset($cmd) && $cmd == "display") {
 		$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical')";
 	} elseif ($status == "Old Feedback") {
 		$where_clause .= " AND status='Feedback' AND TO_DAYS(NOW())-TO_DAYS(ts2)>60";
-	} elseif ($status == "Stale") {
+	} elseif ($status == "Recent") {
 		$where_clause .= " AND status != 'Closed' AND status != 'Duplicate' AND status != 'Bogus' AND TO_DAYS(NOW())-TO_DAYS(ts2) > 30";
 	} elseif ($status && $status != "All") {
 		$where_clause .= " AND status='$status'";
