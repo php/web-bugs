@@ -6,7 +6,7 @@ if ($search_for && !preg_match("/\\D/",trim($search_for))) {
 	exit;
 }
 
-commonHeader("Search");
+commonHeader("Search", false);
 
 if (isset($cmd) && $cmd == "display") {
 	@mysql_connect("localhost","nobody","")
@@ -46,8 +46,11 @@ if (isset($cmd) && $cmd == "display") {
 		$where_clause .= " AND php_os like '%$php_os%'";
 	}
 
-	if (!isset($phpver)) $phpver = "4";
+	if (empty($phpver)) $phpver = "4";
 	if ($phpver) $where_clause .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
+	if (!empty($assign)) {
+	    $where_clause .= " AND assign = '$assign'";
+	}
 
 	/* not in the header, but someone can build a query manually with it. */
 	if(strlen($by) and $by!='Any')
@@ -135,31 +138,44 @@ if (isset($cmd) && $cmd == "display") {
  <form method="POST" action="<?php echo $PHP_SELF?>">
  <input type="hidden" name="cmd" value="display" />
   <tr>
-   <td><input type="submit" value="Display" /></td>
+   <td rowspan="5" valign="top"><input type="submit" value="Display" /></td>
+   <td align="right">bugs&nbsp;with&nbsp;status:</td>
    <td><select name="status"><?php show_state_options($status);?></select></td>
-   <td align="right">bugs of type: </td>
-   <td><select name="bug_type"><?php show_types($bug_type,1);?></select></td>
-   <td align="right">reported since:</td>
+   <td align="right">reported&nbsp;since:</td>
    <td><select name="bug_age"><?php show_byage_options($bug_age);?></select></td>
   </tr>
   <tr>
-   <td colspan=2 align=right>OS (substr search):</td>
-   <td colspan="4"><input type="text" name="php_os" value="<?echo htmlspecialchars($php_os);?>">
+   <td align="right">of type:</td>
+   <td colspan="3"><select name="bug_type"><?php show_types($bug_type,1);?></select></td>
+  </tr>
+  <tr>
+   <td align="right">OS (substring):</td>
+   <td><input type="text" name="php_os" value="<?echo htmlspecialchars($php_os);?>" /></td>
+   <td align="right">assigned to:</td>
+   <td><input size="10" type="text" name="assign" value="<?echo htmlspecialchars($assign);?>" />&nbsp;<?php
+    if (!empty($user)) {
+	$u = stripslashes($user);
+        print "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\" />";
+    }
+?></td>
   </tr>
   <tr>
    <td align="right">with text:</td>
-   <td colspan="3"><input type="text" name="search_for" value="<?echo htmlspecialchars($search_for);?>"> in the report or email address</td>
-   <td colspan="2">max. <select name="limit"><?php show_limit_options($limit);?></select> entries / page.</td>
+   <td colspan="3"><input type="text" name="search_for" value="<?echo htmlspecialchars($search_for);?>" /> in the report or email address</td>
+  </tr>
+  <tr>
+   <td align="right">max:</td>
+   <td colspan="3"><select name="limit"><?php show_limit_options($limit);?></select> entries / page.</td>
   </tr>
  </form>
  <tr>
-  <td bgcolor="#000000" colspan="6"><?echo spacer(1,1);?></td>
+  <td bgcolor="#000000" colspan="5"><?echo spacer(1,1);?></td>
  </tr>
  <form method="GET" action="bug.php">
   <tr>
    <td align="right"><input type="submit" value="Edit" /></td>
    <td align="right">bug number:</td>
-   <td colspan="4"><input type="text" name="id" value="<?echo $id?>"></td>
+   <td colspan="3"><input type="text" name="id" value="<?echo $id?>"></td>
    <input type="hidden" name="edit" value="<?php echo isset($MAGIC_COOKIE) ? 1 : 2;?>">
   </tr>
  </form>
@@ -170,7 +186,7 @@ commonFooter();
 
 function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
 	if($limit=='All') return;
-	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"9\">";
+	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"7\">";
     echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr>';
 	if ($begin > 0) {
 		echo "<td align=\"left\" width=\"33%\"><a href=\"$link&amp;begin=",max(0,$begin-$limit),"\">&laquo; Show Previous $limit Entries</a></td>";

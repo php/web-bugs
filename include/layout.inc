@@ -155,7 +155,7 @@ function print_email($email, $linktext=false) {
 #
 #
 
-function commonHeader($title=false) {
+function commonHeader($title = false, $showsearch = true) {
 	global $SIDEBAR_DATA;
 
 ?><html>
@@ -205,6 +205,7 @@ function commonHeader($title=false) {
     </td>
   </tr>
 
+<?php if ($showsearch) { ?>
   <tr class="headersep"><td colspan="2"><?php spacer(1,1);?><br></td></tr>
 
   <tr class="headerbottom">
@@ -217,6 +218,7 @@ function commonHeader($title=false) {
      </font></td>
     </form>
   </tr>
+<?php } ?>
 
   <tr class="headersep"><td colspan="2"><?php spacer(1,1);?><br></td></tr>
 </table>
