@@ -496,8 +496,11 @@ function get_bugtype_mail($bug_type)
 	elseif (eregi("website", $bug_type)) {
 		return array("php-mirrors@lists.php.net","php-mirrors@lists.php.net");
 	}
-	elseif (eregi("(pear)|(pecl)", $bug_type)) {
+	elseif (eregi("pear", $bug_type)) {
 		return array("pear-dev@lists.php.net","pear-dev@lists.php.net");
+	}
+	elseif (eregi("pecl", $bug_type)) {
+		return array("pecl-dev@lists.php.net","pecl-dev@lists.php.net");
 	}
 	elseif (eregi("gtk", $bug_type)) {
 		return array("php-gtk-dev@lists.php.net","php-gtk-dev@lists.php.net");
