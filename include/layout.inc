@@ -166,7 +166,7 @@ function commonHeader($title = false, $showsearch = true) {
 <head>
  <title>PHP Bugs<?php if ($title) { echo ': '.$title; } ?></title>
  <link rel="stylesheet" href="/style.css" />
- <link rel="shortcut icon" href="/favico.ico" />
+ <link rel="shortcut icon" href="/favicon.ico" />
  <script type="text/javascript" src="util.js"></script>
 </head>
 
