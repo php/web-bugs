@@ -62,6 +62,7 @@ snapshots for version 4 of PHP:
  <li>
   <a href="http://snaps.php.net/php4-STABLE-latest.tar.gz">Source code</a>
  </li>
+</ul>
 </p>
 
 <h2>If you don't understand an error message, ask for help.</h2>
