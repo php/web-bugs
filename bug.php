@@ -117,7 +117,10 @@ elseif ($in && $edit == 1) {
 		$errors[] = "The username or password you supplied was incorrect.";
 	}
 
-	if ($in['resolve']) {
+	if ((($in['status'] == 'Bogus' && $bug['status'] != 'Bogus') || $RESOLVE_REASONS[$in['resolve']]['status'] == 'Bogus')
+			&& strlen(trim($ncomment)) == 0) {
+		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
+	} elseif ($in['resolve']) {
 		if (!$trytoforce && $RESOLVE_REASONS[$in['resolve']]['status'] == $bug['status']) {
 			$errors[] = "The bug is already marked '$bug[status]'. (Submit again to ignore this.)";
 		}
@@ -128,10 +131,6 @@ elseif ($in && $edit == 1) {
 			$ncomment = addslashes($RESOLVE_REASONS[$in['resolve']]['message'])
 			          . "\n\n$ncomment";
 		}
-	}
-
-	if ($in['status'] == 'Bogus' && $bug['status'] != 'Bogus' && strlen(trim($ncomment)) == 0) {
-		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
 	}
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
