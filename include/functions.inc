@@ -485,6 +485,9 @@ function get_bugtype_mail($bug_type)
 	if (eregi("documentation", $bug_type)) {
 		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
 	}
+	elseif (eregi("livedocs", $bug_type)) {
+		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
+	}
 	elseif (eregi("systems", $bug_type)) {
 		return array("systems@php.net","systems@php.net");
 	}
