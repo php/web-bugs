@@ -583,7 +583,7 @@ function show_version_options($current,$default="")
 
 function show_types($current,$show_any,$default="") 
 {
-	require_once 'bugtypes.inc';
+	include 'bugtypes.inc';
 
 	if (!$current && !$default && !$show_any) {
 		echo "<option value=\"Unknown/Other Function\">--Please Select--</option>\n";
