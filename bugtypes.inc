@@ -145,7 +145,6 @@ $items = array (
 	"DOM XML related"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DOM XML related",
 	"XML related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XML related",
 	"XMLRPC-EPI related"  => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XMLRPC-EPI related",
-	"Sablotron XSL"       => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sablotron XSL",
 	"XSLT related"        => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; XSLT related",
 
 	"*URL Functions" => "&nbsp;&nbsp;&nbsp;&nbsp;URL Functions",

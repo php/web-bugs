@@ -117,7 +117,7 @@ if (isset($cmd) && $cmd == "display") {
 		$errors[] = "No bugs with the specified criteria were found.";
 	}
 	else {
-		$link = "$PHP_SELF?cmd=display&amp;bug_type=" . urlencode ($bug_type) . "&amp;status=".urlencode(stripslashes($status))."&amp;search_for=".urlencode(htmlspecialchars(stripslashes($search_for)))."&amp;php_os=".htmlspecialchars(stripslashes($php_os))."&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
+		$link = "$PHP_SELF?cmd=display&amp;bug_type=" . urlencode ($bug_type) . "&amp;status=".urlencode(stripslashes($status))."&amp;search_for=".urlencode(stripslashes($search_for))."&amp;php_os=".urlencode(stripslashes($php_os))."&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
  <?php show_prev_next($begin,$rows,$total_rows,$link,$limit);?>
