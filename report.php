@@ -216,7 +216,8 @@ that someone will want to help fix</a>.</p>
 
 <p style="color: red"><strong>If you get an error like this: <code>Syntax error on line 176 of C:/Apache2/conf/httpd.conf<br />
 Cannot load C:/Apache2/PHP5/sapi/php4apache2.dll into server. The specified module could not be found</code><br />
-It is NOT a bug, but a configuration issue. php4_module have changed name to php5_module.</strong></p>
+It is NOT a bug, but a configuration issue. php4_module has changed name to php5_module. See the manual for more information.
+</strong></p>
 
 <p><strong>Failure to follow these instructions may result in your bug
 simply being marked as "bogus".</strong></p>
