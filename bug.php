@@ -1,4 +1,10 @@
 <?php /* vim: set noet ts=4 sw=4: : */
+$id = (int)$id;
+if (!$id) {
+  header("Location: /");
+  exit;
+}
+
 require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
 
@@ -12,12 +18,6 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
 $mail_bugs_to = "php-dev@lists.php.net";
 
 commonHeader("Bug Reporting");
-
-$id = (int)$id;
-if (!$id) {
-  header("Location: /");
-  exit;
-}
 
 @mysql_connect("localhost","nobody","")
 	or die("Unable to connect to SQL server.");
