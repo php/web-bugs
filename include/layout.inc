@@ -238,8 +238,6 @@ function commonFooter() {
   <tr class="headerbottom">
     <td align="right" valign="bottom"><?
       print_link('/source.php?url='.$HTTP_SERVER_VARS['SCRIPT_NAME'], 'show source', false, 'class="menuWhite"');
-      echo delim();
-      print_link('/credits.php', 'credits', false, 'class="menuWhite"');
       ?>&nbsp;<br>
     </td>
   </tr>
