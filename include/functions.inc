@@ -191,7 +191,7 @@ function show_types($current,$show_any,$default="")
 function show_boolean_options($current) {
     $options = array('any', 'all', 'raw');
 	while (list($val, $type) = each($options)) {
-		echo '<input type="checkbox" name="boolean" value="', $val, '"';
+		echo '<input type="radio" name="boolean" value="', $val, '"';
 		if ($val === $current) {
 			echo ' CHECKED';
 		}
