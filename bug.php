@@ -46,6 +46,17 @@ if (!$res || !$bug) {
   exit;
 }
 
+# Delete comment
+if ($edit == 1 && isset($delete_comment)) {
+	$addon = '';
+	if (verify_password($user,stripslashes($pw))) {
+		delete_comment($id, $delete_comment);
+		$addon = '&thanks=1';
+	}
+	header("Location: $PHP_SELF?id=$id&edit=1$addon");
+	exit();
+} 
+
 # handle any updates, displaying errors if there were any
 $success = !isset($in);
 $errors = array();
@@ -438,25 +449,29 @@ the database with that please
 <?php }
 
 /* ORIGINAL REPORT */
-if ($bug['ldesc'])
-  output_note($bug['submitted'], $bug['email'], $bug['ldesc']);
+if ($bug['ldesc']) {
+  output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc']);
+}
 
 /* COMMENTS */
-$query = "SELECT email,comment,UNIX_TIMESTAMP(ts) AS added"
+$query = "SELECT id,email,comment,UNIX_TIMESTAMP(ts) AS added"
        . " FROM bugdb_comments WHERE bug=$id ORDER BY ts";
 $res = @mysql_query($query);
 if ($res) {
 	while ($row = mysql_fetch_array($res,MYSQL_ASSOC)) {
-		output_note($row['added'], $row['email'], $row['comment']);
+		output_note($row['id'], $row['added'], $row['email'], $row['comment']);
 	}
 }
 
 commonFooter();
 
-function output_note($ts,$email,$comment) {
+function output_note($com_id, $ts, $email, $comment)
+{
+	global $edit, $id;
+
 	echo "<div class=\"comment\">";
-	echo "<b>[",format_date($ts),"] ",htmlspecialchars($email),
-         "</b>\n";
+	echo "<b>[",format_date($ts),"] ", htmlspecialchars($email), "</b>\n";
+	echo ($edit == 1 && $com_id !== 0) ? "<a href=\"$PHP_SELF?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
 	echo "<pre class=\"note\">";
 	$note = addlinks(preg_replace("/(\r?\n){3,}/","\n\n",wordwrap($comment,72,"\n",1)));
 	echo preg_replace('/(bug\ *#([0-9]+))/i', "<a href=\"$PHP_SELF?id=\\2\">\\1</a>", $note);
@@ -464,7 +479,14 @@ function output_note($ts,$email,$comment) {
 	echo "</div>";
 }
 
-function canvote() {
+function delete_comment($id, $com_id)
+{
+	$query = "DELETE FROM bugdb_comments WHERE bug=$id AND id=$com_id";
+	$res = @mysql_query($query);
+}
+
+function canvote()
+{
 	global $thanks, $bug;
 	return ($thanks != 4 && $thanks != 6 && $bug['status'] != "Closed" && $bug['status'] != "Bogus" && $bug['status'] != 'Duplicate');
 }
