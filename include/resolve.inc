@@ -74,6 +74,12 @@ If you can provide more information, feel free to add it
 to this bug and change the status back to "Open".
 ',
   ),
+  'submittedtwice' => array(
+    'status' => 'Bogus',
+    'desc' => 'Submitted twice',
+    'message' =>
+'Please do not submit the same bug more than once.',
+  ),
 );
 
 function show_reason_types($current="")
