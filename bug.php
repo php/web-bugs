@@ -9,7 +9,7 @@ $edit = (int)$edit;
 require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
 
-$mail_bugs_to = 'php-dev@lists.php.net';
+$mail_bugs_to = 'php-bugs@lists.php.net';
 
 if (isset($save) && isset($pw)) { # non-developers don't have $user set
 	setcookie("MAGIC_COOKIE",
