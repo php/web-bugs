@@ -34,9 +34,12 @@ function resize_image($img, $width=1, $height=1) {
 function make_image($file, $alt=false, $align=false, $extras=false, $dir=false, $border=0) {
 	global $HTTP_SERVER_VARS;
 	if (!$dir) {
-		$dir = 'gifs';
+		$dir = '/gifs';
 	}
-	$path = $HTTP_SERVER_VARS['DOCUMENT_ROOT']."/$dir/$file";
+      if (is_string($dir) && $dir{0} != "/") {
+          $dir = "/$dir";
+      }
+	$path = $HTTP_SERVER_VARS['DOCUMENT_ROOT']."$dir/$file";
 	if ($size = @getimagesize($path)) {
 		$image = sprintf('<img src="%s/%s" border="%d" %s alt="%s" %s%s>',
 			$dir,
