@@ -117,10 +117,10 @@ you can scroll down and click the submit button to really enter the details into
 			if (!empty($in['repcode'])) {
 				$fdesc .= "Reproduce code:\n---------------\n". $in['repcode'] ."\n\n";
 			}
-			if (!empty($in['expres'])) {
+			if (!empty($in['expres']) || $in['expres'] === '0') {
 				$fdesc .= "Expected result:\n----------------\n". $in['expres'] ."\n\n";
 			}
-			if (!empty($in['actres'])) {
+			if (!empty($in['actres']) || $in['actres'] === '0') {
 				$fdesc .= "Actual result:\n--------------\n". $in['actres'] ."\n";
 			}
 
