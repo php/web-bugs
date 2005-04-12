@@ -19,6 +19,9 @@ function is_spam($string)
 	if (substr_count(strtolower($string), 'http://') > 5) {
 		return true;
 	}
+	if (preg_match("/(massage)|(mortage)/i", $string)) {
+		return true;
+	}
 	return false;
 }
 
