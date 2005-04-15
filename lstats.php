@@ -47,7 +47,7 @@ $statuses = array (
 			);
 
 if(!isset($phpver)) {
-	echo "<h3>Bug stats for both <a href='lstats.php?phpver=3'>PHP 3</a> and <a href='lstats.php?phpver=4'>PHP 4</a>:</h3>\n<pre>\n";	
+	echo "<h3>Bug stats for both <a href='lstats.php?phpver=4'>PHP 4</a> and <a href='lstats.php?phpver=5'>PHP 5</a>:</h3>\n<pre>\n";	
 } else {
 	echo "<h3>Bug stats for PHP $phpver:</h3>\n<pre>\n";	
 }
