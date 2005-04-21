@@ -489,6 +489,10 @@ function incoming_details_are_valid ($in, $initial=0)
 		$errors[] = "You must supply a password for this bug report.";
 	}
 
+    if (!validate_captcha()) {
+        $errors[] = 'Incorrect CAPTCHA';
+    }
+
 	return $errors;
 }
 
@@ -638,5 +642,115 @@ function get_real_ip () {
 		}
 	}
 	return ($ip ? $ip : $REMOTE_ADDR);
+}
+
+/**
+ * Sets <var>$_SESSION['captcha']</var> and
+ * <var>$_SESSION['captcha_time']</var> then prints the XHTML that
+ * displays a CAPTCHA image and a form input element
+ *
+ * Only generate a new <var>$_SESSION['captcha']</var> if it doesn't exist
+ * yet.  This avoids the problem of the CAPTCHA value being changed but the
+ * old image remaining in the browser's cache.  This is necessary because
+ * caching can not be reliably disabled.
+ *
+ * Use upper case letters to reduce confusion with some of these fonts.
+ * Input is passed through strtoupper() before comparison.
+ *
+ * Don't use "I" or "O" to avoid confusion with numbers.  Don't use digits
+ * because some of the fonts don't handle them.
+ *
+ * @return string  the CAPTCHA image and form intut
+ *
+ * @see validate_captcha(), captcha-image.php
+ */
+function generate_captcha()
+{
+    if (!isset($_SESSION['captcha'])) {
+        $_SESSION['captcha'] = '';
+        $useable = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+        for ($i = 0; $i < 4; $i++) {
+            $_SESSION['captcha'] .= substr($useable, mt_rand(0, 23), 1);
+        }
+        $_SESSION['captcha_time'] = time();
+    }
+    return 'Type <img src="/captcha-image.php?x=' . time()
+           . '" alt="If you are unable to'
+           . ' read this image, click the help link to the right of'
+           . ' the input box" align="top" /> into this box...'
+           . ' <input type="text" size="4" maxlength="4" name="captcha" />'
+           . ' (<a href="/captcha-help.php" target="_blank">help</a>)'
+           . ' <br />If this image is hard to read, reload the page.';
+
+}
+
+/**
+ * Check if the CAPTCHA value submitted by the user in
+ * <var>$_POST['captcha']</var> matches <var>$_SESSION['captcha']</var>
+ * and that the submission was made within the allowed time frame
+ * of the CAPTCHA being generated
+ *
+ * If the two values aen't the same or the length of time between CAPTCHA
+ * generation and form submission is too long, this function will unset()
+ * <var>$_SESSION['captcha']</var>.  Unsetting it will cause
+ * generate_captcha() to come up with a new CAPTCHA value and image.
+ * This prevents brute force attacks.
+ *
+ * Similarly, if the submission is correct <var>$_SESSION['captcha']</var>
+ * is unset() in order to keep robots from making multiple requests with
+ * a correctly guessed CAPTCHA value.
+ *
+ * @param int $max_age  the length of time in seconds since the CAPTCHA was
+ *                      generated during which a submission should be
+ *                      considered valid.  Default is 300 seconds
+ *                      (aka 5 minutes).
+ *
+ * @return bool  true if input matches captcha, false if not
+ *
+ * @see generate_captcha(), captcha-image.php
+ */
+function validate_captcha($max_age = 300)
+{
+    if (!isset($_POST['captcha']) ||
+        !isset($_SESSION['captcha']) ||
+        (time() - $_SESSION['captcha_time']) > $max_age ||
+        $_SESSION['captcha'] != strtoupper($_POST['captcha']))
+    {
+        unset($_SESSION['captcha']);
+        unset($_SESSION['captcha_time']);
+        return false;
+    } else {
+        unset($_SESSION['captcha']);
+        unset($_SESSION['captcha_time']);
+        return true;
+    }
+}
+
+/**
+ * Turns the provided email address into a "mailto:" hyperlink.
+ *
+ * The link and link text are obfuscated by alternating Ord and Hex
+ * entities.
+ *
+ * @param string $email     the email address to make the link for
+ * @param string $linktext  a string for the visible part of the link.
+ *                           If not provided, the email address is used.
+ * @param string $extras    a string of extra attributes for the <a> element
+ *
+ * @return string  the HTML hyperlink of an email address
+ */
+function make_mailto_link($email, $linktext = '', $extras = '')
+{
+    $tmp = '';
+    for ($i = 0, $l = strlen($email); $i<$l; $i++) {
+        if ($i % 2) {
+            $tmp .= '&#' . ord($email[$i]) . ';';
+        } else {
+            $tmp .= '&#x' . dechex(ord($email[$i])) . ';';
+        }
+    }
+
+    return '<a ' . $extras . ' href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;'
+           . $tmp . '">' . ($linktext != '' ? $linktext : $tmp) . '</a>';
 }
 ?>
