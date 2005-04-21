@@ -489,9 +489,9 @@ function incoming_details_are_valid ($in, $initial=0)
 		$errors[] = "You must supply a password for this bug report.";
 	}
 
-    if (!validate_captcha()) {
+    /*if (!validate_captcha()) {
         $errors[] = 'Incorrect CAPTCHA';
-    }
+    }*/
 
 	return $errors;
 }
