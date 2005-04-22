@@ -1,5 +1,8 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
+// This is for the CAPTCHA image
+session_start();
+
 require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
 
@@ -271,6 +274,12 @@ if ($errors) display_errors($errors);
     You <b>must</b> enter any password here, which will be stored for this bug report.
     This password allows you to come back and modify your submitted bug report
     at a later date. [<a href="/bug-pwd-finder.php">Lost a bug password?</a>]
+  </font></td>
+ </tr>
+ <tr>
+  <th align="right">CAPTCHA:</th>
+  <td colspan="2"><font size="-1">
+   <?php echo generate_captcha(); ?>
   </font></td>
  </tr>
 </table>

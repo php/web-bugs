@@ -6,6 +6,9 @@ if (!$id) {
 }
 $edit = (int)$edit;
 
+// This is for the CAPTCHA image
+session_start();
+
 require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
 require_once 'trusted-devs.inc';
@@ -22,8 +25,7 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
   list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
 }
 
-@mysql_connect("localhost","nobody","")
-	or die("Unable to connect to SQL server.");
+@mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server.");
 @mysql_select_db("phpbugdb");
 
 # fetch info about the bug into $bug
@@ -39,7 +41,10 @@ $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
 
 $res = mysql_query($query);
 
-if ($res) $bug = mysql_fetch_assoc($res);
+if ($res) {
+    $bug = mysql_fetch_assoc($res);
+}
+
 if (!$res || !$bug) {
   commonHeader("No such bug.");
   echo "<h1 class=\"error\">No such bug #$id!</h1>";
@@ -73,6 +78,10 @@ if ($in && $edit == 3) {
 	if (!$comments_allowed) {
 		$errors[] = "You can not add comments for bugs with the statuses:" . join(', ', $no_comments_allowed);
 	}
+
+    if (!validate_captcha()) {
+        $errors[] = 'Incorrect CAPTCHA';
+    }
 
 	if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i",$in['commentemail'])) {
 		$errors[] = "You must provide a valid email address.";
@@ -432,6 +441,12 @@ that are not open. They will be removed without warning.
   <th>Your email address:</th>
   <td><input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo clean($in['commentemail'])?>" /></td>
   <td><input type="hidden" name="id" value="<?php echo $id?>" /><input type="hidden" name="edit" value="<?php echo $edit?>" /><input type="submit" value="Submit" /></td>
+ </tr>
+ <tr>
+  <th align="right">CAPTCHA:</th>
+  <td colspan="2"><font size="-1">
+   <?php echo generate_captcha(); ?>
+  </font></td>
  </tr>
 </table>
 <div>

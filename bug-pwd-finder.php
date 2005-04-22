@@ -1,4 +1,7 @@
 <?php
+// This is for the CAPTCHA image
+session_start();
+
 require_once 'prepend.inc';
 
 /* See bugs.php for the table layout of bugdb. */
@@ -39,7 +42,9 @@ if ($bug_id) {
 			}
 		}
 
-	} else { 
+	} elseif (isset($_POST) && !validate_captcha()) {
+        $msg = 'Incorrect CAPTCHA';
+    } else { 
 		$msg = "The provided #$bug_id bug id is invalid.";
 	}
 
@@ -64,8 +69,14 @@ in the bug report.
 <?php if ($msg) { echo "<p><font color=\"#cc0000\">$msg</font></p>"; } ?>
 
 <form method="post" action="<?php echo $PHP_SELF;?>">
-<p><b>Bug Report ID:</b> #<input type="text" size="20" name="bug_id">
-<input type="submit" value="Send"></p>
+<p>
+ <b>Bug Report ID:</b> #<input type="text" size="20" name="bug_id"><br><br>
+ <b>CAPTCHA:</b>
+ <font size="-1">
+   <?php echo generate_captcha(); ?>
+ </font>
+</p>
+<input type="submit" value="Send">
 </form>
 
 <?php commonFooter(); ?>
