@@ -344,29 +344,31 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		} else {							/* status did not change and not comment */
 			$subj = "#{$bug['id']} [{$tla[$bug['status']]}]: ";
 		}
-	
-		# the user gets sent mail with an envelope sender that ignores bounces
-		@mail($bug['email'],
-		      "Bug " . rinse($subj) . txfield('sdesc'),
-		      $user_text,
-		      "From: PHP Bug Database <$mailfrom>\n".
-		      "X-PHP-Bug: $bug[id]\n".
-		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>",
-		      "-fbounces-ignored@php.net");
-		# but we go ahead and let the default sender get used for the list
-		@mail($mailto,
-		      rinse($subj) . txfield('sdesc'),
-		      $dev_text,
-		      "From: $from\n".
-		      "X-PHP-Bug: $bug[id]\n".
-		      "X-PHP-Version: "    . stripslashes((($edit != 3) ? $in['php_version'] : $bug['php_version'])) . "\n" .
-		      "X-PHP-Category: "   . stripslashes((($edit != 3) ? $in['bug_type']    : $bug['bug_type']))    . "\n" .
-		      "X-PHP-OS: "         . stripslashes((($edit != 3) ? $in['php_os']      : $bug['php_os']))      . "\n" .
-		      "X-PHP-Status: "     . stripslashes($new_status) . "\n" .
-		      "X-PHP-Old-Status: " . stripslashes($old_status) . "\n" .
-		      "X-PHP-Reported-By: " . stripslashes(spam_protect(rinse($bug['email']))) . "\n" .
-		      "X-PHP-Updated-By: " . stripslashes($from_addr) . "\n" .
-		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
+
+		if (!DEVBOX) {
+			# the user gets sent mail with an envelope sender that ignores bounces
+			@mail($bug['email'],
+		    	  "Bug " . rinse($subj) . txfield('sdesc'),
+		    	  $user_text,
+		    	  "From: PHP Bug Database <$mailfrom>\n".
+		    	  "X-PHP-Bug: $bug[id]\n".
+		    	  "In-Reply-To: <bug-$bug[id]@bugs.php.net>",
+		    	  "-fbounces-ignored@php.net");
+			# but we go ahead and let the default sender get used for the list
+			@mail($mailto,
+		      	rinse($subj) . txfield('sdesc'),
+		      	$dev_text,
+		      	"From: $from\n".
+		      	"X-PHP-Bug: $bug[id]\n".
+		      	"X-PHP-Version: "    . stripslashes((($edit != 3) ? $in['php_version'] : $bug['php_version'])) . "\n" .
+		      	"X-PHP-Category: "   . stripslashes((($edit != 3) ? $in['bug_type']    : $bug['bug_type']))    . "\n" .
+		      	"X-PHP-OS: "         . stripslashes((($edit != 3) ? $in['php_os']      : $bug['php_os']))      . "\n" .
+		      	"X-PHP-Status: "     . stripslashes($new_status) . "\n" .
+		      	"X-PHP-Old-Status: " . stripslashes($old_status) . "\n" .
+		      	"X-PHP-Reported-By: " . stripslashes(spam_protect(rinse($bug['email']))) . "\n" .
+		      	"X-PHP-Updated-By: " . stripslashes($from_addr) . "\n" .
+		      	"In-Reply-To: <bug-$bug[id]@bugs.php.net>");
+		}
 	}
 
 	/* if a developer assigns someone else, let that other person know about it */
@@ -375,13 +377,15 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 
 		$unknowing_victim = $in['assign'] . '@php.net';
 
-		@mail($unknowing_victim,
-		      rinse($subj) . txfield('sdesc'),
-		      wordwrap($unknowing_victim . ' you have just been assigned to this bug by ' . $from . "\n\n") .
-			  $dev_text,
-		      "From: $from\n".
-		      "X-PHP-Bug: $bug[id]\n".
-		      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
+		if (!DEVBOX) {
+			@mail($unknowing_victim,
+			      rinse($subj) . txfield('sdesc'),
+			      wordwrap($unknowing_victim . ' you have just been assigned to this bug by ' . $from . "\n\n") .
+				  $dev_text,
+			      "From: $from\n".
+			      "X-PHP-Bug: $bug[id]\n".
+			      "In-Reply-To: <bug-$bug[id]@bugs.php.net>");
+		}
 	}
 
 }
@@ -488,6 +492,10 @@ function incoming_details_are_valid ($in, $initial=0)
 	if ($initial && empty($in['passwd'])) {
 		$errors[] = "You must supply a password for this bug report.";
 	}
+
+    if ($initial && !validate_captcha()) {
+        $errors[] = 'Incorrect CAPTCHA';
+    }
 
 	return $errors;
 }
