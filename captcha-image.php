@@ -45,10 +45,9 @@
  * @version   $Id$
  * @see       generate_captcha(), validate_captcha()
  */
- 
-require_once 'prepend.inc';
- 
-generate_captcha();
+
+session_start();
+
 if (!isset($_SESSION['captcha'])) {
     exit;
 }
