@@ -178,7 +178,7 @@ you can scroll down and click the submit button to really enter the details into
 			$extra_headers.= "Message-ID: <bug-$cid@bugs.php.net>";
 			
 			// mail to appropriate mailing lists
-			if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", $extra_headers)) {
+			if (!DEVBOX && mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", $extra_headers)) {
 				// mail to reporter
 				@mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 
@@ -278,9 +278,9 @@ if ($errors) display_errors($errors);
  </tr>
  <tr>
   <th align="right">CAPTCHA:</th>
-  <td colspan="2"><font size="-1">
-   <?php echo generate_captcha(); ?>
-  </font></td>
+   <td colspan="2"><font size="-1">
+    <?php echo generate_captcha(); ?>
+   </font></td>
  </tr>
 </table>
 
