@@ -155,7 +155,7 @@ if (isset($cmd) && $cmd == "display") {
 			}
 		}
 		
-		$link = "$PHP_SELF?cmd=display" . 
+		$link = $_SERVER['SCRIPT_NAME'] . '?cmd=display' . 
 				$bug_type_string   .
 				$bug_ntype_string  .
 				"&amp;status="     . urlencode(stripslashes($status)) .
@@ -214,7 +214,7 @@ if (isset($cmd) && $cmd == "display") {
 if ($errors) display_errors($errors);
 if ($warnings) display_warnings($warnings);
 ?>
-<form id="asearch" method="get" action="<?php echo $PHP_SELF?>">
+<form id="asearch" method="get" action="<?php echo $_SERVER['SCRIPT_NAME'];?>">
 <table id="primary" width="95%">
  <tr>
   <th>Find bugs</th>
