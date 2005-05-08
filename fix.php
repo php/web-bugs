@@ -39,7 +39,7 @@ if ($errors) {
   commonHeader("Resolve Bug");
   display_errors($errors);
 ?>
-<form method="post" action="<?php echo $PHP_SELF?>">
+<form method="post" action="<?php echo strip_tags($PHP_SELF)?>">
 <input type="hidden" name="id" value="<?php echo $id?>" />
 <table>
  <tr>

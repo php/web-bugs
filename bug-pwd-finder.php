@@ -68,7 +68,7 @@ in the bug report.
 
 <?php if ($msg) { echo "<p><font color=\"#cc0000\">$msg</font></p>"; } ?>
 
-<form method="post" action="<?php echo $PHP_SELF;?>">
+<form method="post" action="<?php echo strip_tags($PHP_SELF);?>">
 <p>
  <b>Bug Report ID:</b> #<input type="text" size="20" name="bug_id"><br><br>
  <b>CAPTCHA:</b>

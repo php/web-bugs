@@ -237,7 +237,7 @@ simply being marked as "bogus".</strong></p>
 
 if ($errors) display_errors($errors);
 ?>
-<form method="post" action="<?php echo $PHP_SELF;?>">
+<form method="post" action="<?php echo strip_tags($PHP_SELF);?>">
 <input type="hidden" name="in[did_luser_search]" value="<?php echo $in['did_luser_search'] ? 1 : 0; ?>" />
 <table>
  <tr>
