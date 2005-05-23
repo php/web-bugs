@@ -16,6 +16,7 @@ $items = array (
 	"SPL related"              => "&nbsp;&nbsp;&nbsp;&nbsp;SPL related",
 	"Session related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Session related",
 	"PHP-GTK related"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP-GTK related",
+	"PDO related"              => "&nbsp;&nbsp;&nbsp;&nbsp;PDO related",
 
 	"*Compile Issues" => "&nbsp;&nbsp;&nbsp;&nbsp;Compile Issues",
 	"Compile Failure" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compile Failure",
