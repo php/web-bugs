@@ -133,7 +133,16 @@ function show_state_options($state, $user_mode=0, $default="")
 
 function show_version_options($current,$default="") 
 {
-	$versions = array("4.3.11", "4.3.10", "4.3.9", "4CVS-".date("Y-m-d")." (stable)", "5.0.4", "5.0.3", "5CVS-".date("Y-m-d")." (dev)");
+	$versions = array(
+		"4.3.11",
+		"4.3.10",
+		"4.3.9",
+		"4CVS-".date("Y-m-d")." (stable)",
+		"5.0.4",
+		"5.0.3",
+		"5CVS-".date("Y-m-d")." (dev)",
+		"Irrelevant",
+	);
 	echo "<option value=\"\">--Please Select--</option>\n";
 	while (list(,$v) = each($versions)) {
 		echo "<option", ($current == $v ? " selected" : ""), ">$v</option>\n";
@@ -477,8 +486,12 @@ function incoming_details_are_valid ($in, $initial=0)
 		$errors[] = "Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.";
 	}
 
-	if (empty($in['php_version'])) {
+	if (empty($in['php_version']) && !is_phpversion_irrelevant($in['bug_type'])) {
 		$errors[] = "Please select a valid PHP version.";
+	}
+
+	if ($in['php_version'] == 'Irrelevant' && !is_phpversion_irrelevant($in['bug_type'])) {
+		$errors[] = "This category requires you to pick a PHP version.";
 	}
 
 	if (empty($in['sdesc'])) {
