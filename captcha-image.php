@@ -57,7 +57,7 @@ if (!isset($_SESSION['captcha'])) {
 /*
  * SETTINGS  ===========================
  */
-$arc_count        = 8;
+$arc_count        = 6;
 $arc_deg_vary     = 30;
 $arc_pad_max      = 20;
 $arc_pad_min      = 5;
