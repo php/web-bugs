@@ -138,6 +138,7 @@ function show_version_options($current,$default="")
 		"4.3.10",
 		"4.3.9",
 		"4CVS-".date("Y-m-d")." (stable)",
+		"5.1.0b1",
 		"5.0.4",
 		"5.0.3",
 		"5CVS-".date("Y-m-d")." (dev)",
