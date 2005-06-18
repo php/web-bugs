@@ -32,7 +32,7 @@ commonHeader('CAPTCHA :: Help');
 <h1>CAPTCHA Help</h1>
 
 <p>Some forms on the PHP Bugs website use
-<a href="http://www.parc.xerox.com/research/istl/projects/captcha/"><acronym
+<a href="http://www2.parc.com/istl/projects/captcha/"><acronym
  title="Completely Automated Public Turing test to tell Computers and Humans Apart"
  >CAPTCHA</acronym></a>s in order to avoid our getting spammed.</p>
 
