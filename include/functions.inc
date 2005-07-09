@@ -134,7 +134,7 @@ function show_state_options($state, $user_mode=0, $default="")
 function show_version_options($current,$default="") 
 {
 	$versions = array(
-		"4.4.0RC1",
+		"4.4.0RC2",
 		"4.3.11",
 		"4.3.10",
 		"4CVS-".date("Y-m-d")." (stable)",
@@ -206,9 +206,6 @@ function show_types($current,$show_any,$default="")
 			">$value</option>\n";
 			if ($key == $current) $use++;
 		}
-	}
-	if (!$use && $current && !is_array ($current)) {
-		echo "<option selected>$current</option>\n";
 	}
 }
 
