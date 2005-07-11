@@ -134,9 +134,8 @@ function show_state_options($state, $user_mode=0, $default="")
 function show_version_options($current,$default="") 
 {
 	$versions = array(
-		"4.4.0RC2",
+		"4.4.0",
 		"4.3.11",
-		"4.3.10",
 		"4CVS-".date("Y-m-d")." (stable)",
 		"5.1.0b2",
 		"5.0.4",
