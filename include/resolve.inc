@@ -272,6 +272,13 @@ online and downloadable versions of the documentation need some time
 to get updated, we would like to ask you to be a bit patient.
 
 Thank you for the report, and for helping us make our documentation better.',
+
+    'DocWeb problem' =>
+'This bug has been fixed in CVS. Since the PHP Documentation Tools website
+is updated from the CVS repository at a regular interval, the fix might need
+some time to take effect.
+
+Thank you for the report, and for helping us make DocWeb better.',
   )
 );
 
