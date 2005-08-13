@@ -133,14 +133,18 @@ function show_state_options($state, $user_mode=0, $default="")
 
 function show_version_options($current,$default="") 
 {
+	$date = date("Y-m-d");
 	$versions = array(
 		"4.4.0",
 		"4.3.11",
-		"4CVS-".date("Y-m-d")." (stable)",
+		"4CVS-{$date} (snap)",
+		"4CVS-{$date} (CVS)",
 		"5.1.0b3",
 		"5.0.4",
-		"5.0.3",
-		"5CVS-".date("Y-m-d")." (dev)",
+		"5CVS-{$date} (snap)",
+		"5CVS-{$date} (CVS)",
+		"6CVS-{$date} (snap)",
+		"6CVS-{$date} (CVS)",
 		"Irrelevant",
 	);
 	echo "<option value=\"\">--Please Select--</option>\n";
