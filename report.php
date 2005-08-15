@@ -303,6 +303,9 @@ if ($errors) display_errors($errors);
   <td valign="top">
    <b>Description:</b><br />
    <font size="-1">
+    Please <b>do not</b> insert any huge text
+    here. Keep the description as short as possible.
+    If we want to get a strace, we will ask for it separately.
    </font>
   </td>
   <td>
