@@ -495,7 +495,7 @@ function incoming_details_are_valid ($in, $initial=0)
 	}
 
 	if (empty($in['sdesc'])) {
-		$errors[] = "You must supply a short description of the bug you are reporting.";
+		$errors[] = "You must supply a summary of the bug you are reporting.";
 	}
 
 	if ($initial && empty($in['ldesc'])) {
