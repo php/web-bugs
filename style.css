@@ -198,3 +198,11 @@ form#asearch th {
 form#asearch table#primary {
         background: #eee;
 }
+
+table.milestone th {
+	text-align: center;
+}
+
+table.milestone td {
+	background: #ccc;
+}

@@ -13,6 +13,22 @@ require_once 'prepend.inc';
 require_once 'cvs-auth.inc';
 require_once 'trusted-devs.inc';
 
+function show_milestones($current, $default="")
+{
+	$q = mysql_query("select id, name from bugdb_milestones order by name");
+	if (!$current && !$default) {
+		echo "<option value=\"NULL\">--Please Select--</option>\n";
+	} elseif (!$current) {
+		$current = $default;
+	}
+	while (($row = mysql_fetch_assoc($q))) {
+		echo "<option value=\"$row[id]\"" .
+			($current == $row['id'] ? " selected" : "") . ">"
+			. htmlspecialchars($row['name']) . "</option>";
+	}
+}
+
+
 $mail_bugs_to = 'php-bugs@lists.php.net';
 
 if (isset($save) && isset($pw)) { # non-developers don't have $user set
@@ -30,7 +46,7 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
 
 # fetch info about the bug into $bug
 $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"
-       . "php_version,php_os,status,ts1,ts2,assign,"
+       . "php_version,php_os,status,ts1,ts2,assign,milestone_id,"
        . "UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified,"
        . "COUNT(bug=id) AS votes,"
        . "SUM(reproduced) AS reproduced,SUM(tried) AS tried,"
@@ -189,7 +205,7 @@ elseif ($in && $edit == 1) {
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		$query = 'UPDATE bugdb SET ';
 		$query.= ($bug['email'] != $in['email'] && !empty($in['email'])) ? "email='" . $in['email'] . "', " : '';
-		$query.= "sdesc='$in[sdesc]', status='$in[status]', bug_type='$in[bug_type]', assign='$in[assign]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW() WHERE id=$id";
+		$query.= "sdesc='$in[sdesc]', status='$in[status]', bug_type='$in[bug_type]', assign='$in[assign]', php_version='$in[php_version]', php_os='$in[php_os]', milestone_id=$in[milestone_id], ts2=NOW() WHERE id=$id";
 		$success = @mysql_query($query);
 		if ($success && !empty($ncomment)) {
 			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'$ncomment')";
@@ -400,6 +416,10 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
   <th>Category:</th>
   <td colspan="3"><select name="in[bug_type]"><?php show_types($in['bug_type'],0,$bug['bug_type'])?></select></td>
 <?php /* severity goes here. */ ?>
+ </tr>
+ <tr>
+  <th>Milestone:</th>
+  <td colspan="3"><select name="in[milestone_id]"><?php show_milestones($in['milestone_id'],$bug['milestone_id'])?></select></td>
  </tr>
  <tr>
   <th>Summary:</th>
