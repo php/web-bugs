@@ -198,22 +198,3 @@ form#asearch th {
 form#asearch table#primary {
         background: #eee;
 }
-
-table.milestone {
-	border-spacing: 0px;
-	border-left: 0px;
-}
-
-table.milestone th {
-	text-align: center;
-}
-
-table.milestone td.color1 {
-	background: #abc;
-	border-left: 2px solid #fff;
-}
-
-table.milestone td.color2 {
-	background: #cde;
-	border-left: 2px solid #fff;
-}
