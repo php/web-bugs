@@ -1,9 +1,9 @@
 <?php
 
 $RESOLVE_REASONS = array(
-  'trysnapshot4' => array(
+  'trysnapshot44' => array(
     'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (php4)',
+    'desc' => 'Try a CVS snapshot (PHP 4.4)',
     'message' =>
 'Please try using this CVS snapshot:
 
@@ -14,30 +14,30 @@ For Windows:
   http://snaps.php.net/win32/php4-win32-STABLE-latest.zip',
   ),
 
-  'trysnapshot50' => array(
-    'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (php5.0)',
-    'message' =>
-'Please try using this CVS snapshot:
-
-  http://snaps.php.net/php5-STABLE-latest.tar.gz
- 
-For Windows:
- 
-  http://snaps.php.net/win32/php5.0-win32-latest.zip',
-  ),
-
   'trysnapshot51' => array(
     'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (php5.1)',
+    'desc' => 'Try a CVS snapshot (PHP 5.1)',
     'message' =>
 'Please try using this CVS snapshot:
 
-  http://snaps.php.net/php5-latest.tar.gz
+  http://snaps.php.net/php5.1-latest.tar.gz
  
 For Windows:
  
-  http://snaps.php.net/win32/php5-win32-latest.zip',
+  http://snaps.php.net/win32/php5.1-win32-latest.zip',
+  ),
+
+  'trysnapshot60' => array(
+    'status' => 'Feedback',
+    'desc' => 'Try a CVS snapshot (PHP 6.0)',
+    'message' =>
+'Please try using this CVS snapshot:
+
+  http://snaps.php.net/php6.0-latest.tar.gz
+ 
+For Windows:
+ 
+  http://snaps.php.net/win32/php6.0-win32-latest.zip',
   ),
 
   'fixedcvs' => array(

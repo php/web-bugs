@@ -53,14 +53,14 @@ reports.</p>
 <p>We will most likely ask you to try a CVS snapshot to verify whether the problem
 has been fixed in our CVS repository or not. You can save yourself and us some
 time if you first try to reproduce the bug with the latest stable snapshot. If
-the bug still exists, select 4CVS.. as your version. Note that the format is
-4CVS-YYYY-MM-DD. Here are the latest CVS snapshots for version 4 of PHP:
+the bug still exists, select 5CVS.. as your version. Note that the format is
+5CVS-YYYY-MM-DD. Here are the latest CVS snapshots for version 5 of PHP:
 <ul>
  <li>
-  <a href="http://snaps.php.net/win32/php4-win32-STABLE-latest.zip">Windows</a>
+  <a href="http://snaps.php.net/win32/php5.1-win32-latest.zip">Windows</a>
  </li>
  <li>
-  <a href="http://snaps.php.net/php4-STABLE-latest.tar.gz">Source code</a>
+  <a href="http://snaps.php.net/php5.1-latest.tar.gz">Source code</a>
  </li>
 </ul>
 </p>
