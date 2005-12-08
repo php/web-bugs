@@ -95,7 +95,8 @@ as a feature request.)</p>
  </li>
  <li>
   If PHP is crashing, include a backtrace. Instructions for doing this
-  can be found <a href="bugs-generating-backtrace.php">here</a>.
+  can be found <a href="bugs-generating-backtrace.php">here for *NIX users</a> and
+   <a href="bugs-generating-backtrace-win32.php">here for Windows users</a>.
  </li>
 </ul>
 
