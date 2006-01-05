@@ -135,7 +135,7 @@ function show_version_options($current,$default="")
 {
 	$date = date("Y-m-d");
 	$versions = array(
-		"4.4.2RC1",
+		"4.4.2RC2",
 		"4.4.1",
 		"5.1.2RC1",
 		"5.1.1",
