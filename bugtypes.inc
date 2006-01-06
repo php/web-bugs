@@ -14,6 +14,7 @@ $items = array (
 	"Scripting Engine problem" => "&nbsp;&nbsp;&nbsp;&nbsp;Scripting Engine problem",
 	"SPL related"              => "&nbsp;&nbsp;&nbsp;&nbsp;SPL related",
 	"Session related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Session related",
+	"Streams related"          => "&nbsp;&nbsp;&nbsp;&nbsp;Streams related",
 	"PHP-GTK related"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP-GTK related",
 	"PDO related"              => "&nbsp;&nbsp;&nbsp;&nbsp;PDO related",
 
