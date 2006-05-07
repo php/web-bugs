@@ -27,6 +27,19 @@ For Windows:
   http://snaps.php.net/win32/php5.1-win32-latest.zip',
   ),
 
+  'trysnapshot52' => array(
+    'status' => 'Feedback',
+    'desc' => 'Try a CVS snapshot (PHP 5.2)',
+    'message' =>
+'Please try using this CVS snapshot:
+
+  http://snaps.php.net/php5.2-latest.tar.gz
+ 
+For Windows:
+ 
+  http://snaps.php.net/win32/php5.2-win32-latest.zip',
+  ),
+
   'trysnapshot60' => array(
     'status' => 'Feedback',
     'desc' => 'Try a CVS snapshot (PHP 6.0)',
