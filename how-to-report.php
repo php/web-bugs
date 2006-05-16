@@ -57,10 +57,10 @@ the bug still exists, select 5CVS.. as your version. Note that the format is
 5CVS-YYYY-MM-DD. Here are the latest CVS snapshots for version 5 of PHP:
 <ul>
  <li>
-  <a href="http://snaps.php.net/win32/php5.1-win32-latest.zip">Windows</a>
+  <a href="http://snaps.php.net/win32/php5.2-win32-latest.zip">Windows</a>
  </li>
  <li>
-  <a href="http://snaps.php.net/php5.1-latest.tar.gz">Source code</a>
+  <a href="http://snaps.php.net/php5.2-latest.tar.gz">Source code</a>
  </li>
 </ul>
 </p>
