@@ -166,6 +166,11 @@ $items = array (
 	"cURL related"   => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cURL related",
 	"URL related"    => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URL related",
 
+	"*Unicode Issues"           => "Unicode Issues",
+	"Function Upgrades related" => "&nbsp;&nbsp;&nbsp;&nbsp;Function Upgrades related",
+	"I18N and L10N related"     => "&nbsp;&nbsp;&nbsp;&nbsp;I18N and L10N related",
+	"Scripting Engine related"  => "&nbsp;&nbsp;&nbsp;&nbsp;Scripting Engine related",
+
 	"Unknown/Other Function" => "Unknown/Other Function",
 );
 ?>
