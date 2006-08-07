@@ -84,10 +84,11 @@ this bug ourselves.
 
 A proper reproducing script starts with <?php and ends with ?>,
 is max. 10-20 lines long and does not require any external 
-resources such as databases, etc.
+resources such as databases, etc. If the script requires a 
+database to demonstrate the issue, please make sure it creates 
+all necessary tables, stored procedures etc.
 
-If possible, make the script source available online and provide
-an URL to it here. Try to avoid embedding huge scripts into the report.',
+Please avoid embedding huge scripts into the report.',
   ),
   'oldversion' => array(
     'status' => 'Bogus',
