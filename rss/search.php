@@ -12,6 +12,9 @@
  * Sara Golemon <pollita@php.net>
  */
 
+/* Maximum number of bugs to return */
+define ('MAX_BUGS_RETURN', 150);
+
 /* For format_search_string() */
 require_once('functions.inc');
 
@@ -129,7 +132,7 @@ EOD;
 
 if (mysql_num_rows($res) > 0) {
 	$i = 0;
-	while (($row = mysql_fetch_assoc($res)) && ($i++ < 100)) {
+	while (($row = mysql_fetch_assoc($res)) && ($i++ < MAX_BUGS_RETURN)) {
 		echo "      <rdf:li rdf:resource=\"http://bugs.php.net/{$row['id']}\" />\n";
 	}
 	mysql_data_seek($res, 0);
@@ -162,8 +165,8 @@ while ($row = mysql_fetch_assoc($res)) {
 	echo '      <dc:creator>' . utf8_encode(htmlspecialchars($row['email'])) . "</dc:creator>\n";
 	echo '      <dc:subject>' . utf8_encode(htmlspecialchars($row['bug_type'])) . "</dc:subject>\n";
 	echo "    </item>\n";
-	if ($i >= 100) {
-		$warnings[] = "Your query was too general, only the first 100 results were returned.";
+	if ($i >= MAX_BUGS_RETURN) {
+		$warnings[] = 'Your query was too general, only the first '. MAX_BUGS_RETURN .' results were returned.';
 		break;
 	}
 }
