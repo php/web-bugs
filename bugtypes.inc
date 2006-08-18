@@ -45,6 +45,7 @@ $items = array (
 
 	"*Compression related" => "&nbsp;&nbsp;&nbsp;&nbsp;Compression related",
 	"Bzip2 Related"        => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bzip2 Related",
+	"Zip Related"          => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zip Related",
 	"ZZiplib Related"      => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ZZiplib Related",
 	"Zlib Related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zlib Related",
 
