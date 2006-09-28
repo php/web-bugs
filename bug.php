@@ -206,7 +206,7 @@ if ($in && !$errors && $success) {
 	exit;
 }
 
-commonHeader("#$id: ".htmlspecialchars($bug['sdesc']), true, "http://bugs.php.net/rss/bug.php?id=$id&format=rss");
+commonHeader("#$id: ".htmlspecialchars($bug['sdesc']), true, "http://bugs.php.net/rss/bug.php?id=$id&amp;format=rss");
 
 /* DISPLAY BUG */
 if ($thanks == 1 || $thanks == 2) {
@@ -522,7 +522,7 @@ if ($res) {
 	}
 }
 
-commonFooter();
+commonFooter("http://bugs.php.net/rss/bug.php?id=$id&format=rss");
 
 function output_note($com_id, $ts, $email, $comment)
 {

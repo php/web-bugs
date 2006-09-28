@@ -161,7 +161,7 @@ if (isset($cmd) && $cmd == "display") {
 				"&amp;author_email=". urlencode(stripslashes($author_email)) .
 				"&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
 
-		commonHeader("Search", true, "http://bugs.php.net/rss/".$link);
+		commonHeader("Search", true, "http://bugs.php.net/rss".$link);
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
  <?php show_prev_next($begin,$rows,$total_rows,$link,$limit);?>
@@ -203,7 +203,7 @@ if (isset($cmd) && $cmd == "display") {
 ?>
 </table>
 <?php
-		commonFooter();
+		commonFooter("http://bugs.php.net/rss".$link);
 		exit;
 	}
  }

@@ -238,7 +238,7 @@ function commonHeader($title = false, $showsearch = true, $rss = false) {
 #
 #
 
-function commonFooter() {
+function commonFooter($rss = false) {
 	global $HTTP_SERVER_VARS;
 ?>
 </div>
@@ -246,6 +246,7 @@ function commonFooter() {
   <tr class="headersep"><td><?php spacer(1,1);?><br></td></tr>
   <tr class="headerbottom">
     <td align="right" valign="bottom"><?
+      if($rss) { print_link($rss, "RSS feed", false, 'class="menuWhite"'); echo delim(); }
       print_link('/source.php?url='.$HTTP_SERVER_VARS['SCRIPT_NAME'], 'show source', false, 'class="menuWhite"');
       ?>&nbsp;<br>
     </td>
