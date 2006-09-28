@@ -159,7 +159,7 @@ function print_email($email, $linktext=false) {
 #
 #
 
-function commonHeader($title = false, $showsearch = true) {
+function commonHeader($title = false, $showsearch = true, $rss = false) {
 	global $SIDEBAR_DATA;
 
 ?><html>
@@ -168,6 +168,10 @@ function commonHeader($title = false, $showsearch = true) {
  <link rel="stylesheet" href="/style.css" />
  <link rel="shortcut icon" href="/favicon.ico" />
  <script type="text/javascript" src="util.js"></script>
+ <?php if($rss) {
+    printf('<link rel="alternate" type="application/rss+xml" title="PHP bugs%s" href="%s" />'."\n", $title ? ': '.$title : '', $rss);
+}
+?>
 </head>
 
 <body

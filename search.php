@@ -11,8 +11,6 @@ if ($search_for && !preg_match("/\\D/",trim($search_for))) {
 	exit;
 }
 
-commonHeader("Search");
-
 $errors = array();
 $warnings = array();
 
@@ -162,6 +160,8 @@ if (isset($cmd) && $cmd == "display") {
 				"&amp;boolean="    . BOOLEAN_SEARCH .
 				"&amp;author_email=". urlencode(stripslashes($author_email)) .
 				"&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
+
+		commonHeader("Search", true, "http://bugs.php.net/rss/".$link);
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
  <?php show_prev_next($begin,$rows,$total_rows,$link,$limit);?>
@@ -208,7 +208,7 @@ if (isset($cmd) && $cmd == "display") {
 	}
  }
 }
-
+commonHeader("Search");
 if ($errors) display_errors($errors);
 if ($warnings) display_warnings($warnings);
 ?>

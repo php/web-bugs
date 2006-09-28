@@ -206,7 +206,7 @@ if ($in && !$errors && $success) {
 	exit;
 }
 
-commonHeader("#$id: ".htmlspecialchars($bug['sdesc']));
+commonHeader("#$id: ".htmlspecialchars($bug['sdesc']), true, "http://bugs.php.net/rss/bug.php?id=$id&format=rss");
 
 /* DISPLAY BUG */
 if ($thanks == 1 || $thanks == 2) {
