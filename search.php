@@ -116,7 +116,7 @@ if (isset($cmd) && $cmd == "display") {
 	$begin = (int)$begin;
 	if ($limit != 'All' && !(int)$limit) $limit = 30;
 
-	if($limit!='All') $query .= " LIMIT $begin,".(int)$limit;
+	if($limit!='All' && $limit > 0) $query .= " LIMIT $begin,".(int)$limit;
 
 	if(stristr($query, ";")) {
 		$errors[] = "<b>BAD HACKER!!</b> No database cracking for you today!";
