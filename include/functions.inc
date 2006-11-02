@@ -136,8 +136,7 @@ function show_version_options($current,$default="")
 	$date = date("Y-m-d");
 	$versions = array(
 		"4.4.4",
-		"5.1.6",
-		"5.2.0RC5",
+		"5.2.0",
 		"4CVS-{$date} (snap)",
 		"4CVS-{$date} (CVS)",
 		"5CVS-{$date} (snap)",
