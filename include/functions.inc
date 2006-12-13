@@ -262,7 +262,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		break;
 	default:
 		$from_addr = spam_protect($from);
-		$headers[] = array(" Updated by", $from);
+		$headers[] = array(" Updated by", $from_addr);
 	}
 
 	if (changed('sdesc')) {
