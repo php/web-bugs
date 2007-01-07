@@ -190,8 +190,10 @@ our <a href="http://www.php.net/mailing-lists.php">internals</a> list.</p>
 				header("Location: bug.php?id=$cid&thanks=4");
 				exit;
 
+			} elseif(DEVBOX) {
+				header("Location: bug.php?id=$cid&thanks=4");
+				exit;
 			} else {
-
 				commonHeader("Report - Error");
 				echo "<pre>\n";
 				echo $report;
