@@ -195,15 +195,3 @@ function force_magic_quotes_gpc(&$array) {
   }
 }
 
-/* Email spam protection */
-function spam_protect($txt) {
-	$translate = array('@' => ' at ', '.' => ' dot ');
-
-	/* php.net addresses are not protected! */
-	if (preg_match('/^(.+)@php\.net/i', $txt)) {
-		return $txt;
-	} else {
-		return strtr($txt, $translate);
-	}
-}
-
