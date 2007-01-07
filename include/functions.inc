@@ -150,10 +150,8 @@ function show_version_options($current,$default="")
 	echo "<option value=\"\">--Please Select--</option>\n";
 	while (list(,$v) = each($versions)) {
 		echo "<option", ($current == $v ? " selected" : ""), ">$v</option>\n";
-		if ($current == $v) $use++;
 	}
-	if (!$use && $current) echo "<option selected>$current</option>\n";
-	echo "<option value=\"earlier\">Earlier? Upgrade first!</option>\n";
+	echo "<option value=\"earlier\"", ($current == "earlier" ? " selected" : ""),  ">Earlier? Upgrade first!</option>\n";
 }
 
 function display_errors($errors)
