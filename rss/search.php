@@ -162,7 +162,7 @@ while ($row = mysql_fetch_assoc($res)) {
 	echo '      <description>' . utf8_encode(htmlspecialchars($row['ldesc'])) . "</description>\n";
 	echo '      <dc:date>' . date('Y-m-d',$row['modified']) . "</dc:date>\n";
 	echo '      <dc:time>' . date('H:i:s',$row['modified']) . "</dc:time>\n";
-	echo '      <dc:creator>' . utf8_encode(htmlspecialchars($row['email'])) . "</dc:creator>\n";
+	echo '      <dc:creator>' . utf8_encode(htmlspecialchars(spam_protect($row['email']))) . "</dc:creator>\n";
 	echo '      <dc:subject>' . utf8_encode(htmlspecialchars($row['bug_type'])) . "</dc:subject>\n";
 	echo "    </item>\n";
 	if ($i >= MAX_BUGS_RETURN) {
@@ -193,5 +193,17 @@ function force_magic_quotes_gpc(&$array) {
       $array[$key] = addslashes($value);
     }
   }
+}
+
+/* Email spam protection */
+function spam_protect($txt) {
+	$translate = array('@' => ' at ', '.' => ' dot ');
+
+	/* php.net addresses are not protected! */
+	if (preg_match('/^(.+)@php\.net/i', $txt)) {
+		return $txt;
+	} else {
+		return strtr($txt, $translate);
+	}
 }
 
