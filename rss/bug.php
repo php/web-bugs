@@ -66,7 +66,7 @@ EOD;
 			echo '    <link>http://bugs.php.net/' . intval($bug['id']) . "</link>\n";
 			echo '    <description>';
 			echo utf8_encode(htmlspecialchars("{$bug['bug_type']}\n"));
-			echo utf8_encode(htmlspecialchars("{$bug['email']}\n"));
+			echo utf8_encode(htmlspecialchars(spam_protect($bug['email']))) . "\n";
 			echo date('n/j/Y g:i A',$bug['submitted'] . "\n");
 			echo utf8_encode(htmlspecialchars("PHP: {$bug['php_version']} OS: {$bug['php_os']}\n\n"));
 			echo utf8_encode(htmlspecialchars($bug['ldesc']));
@@ -86,7 +86,7 @@ function outputbug($bug, $res, $format) {
 			case 'rss':
 			default:
 				echo "    <item>\n";
-				echo '      <title>' . utf8_encode(htmlspecialchars($row['email'])) . "</title>\n";
+				echo '      <title>' . utf8_encode(htmlspecialchars(spam_protect($row['email']))) . "</title>\n";
 				echo "      <link>http://bugs.php.net/{$bug['id']}</link>\n";
 				echo '      <description>' . utf8_encode(htmlspecialchars($row['comment'])) . "</description>\n";
 				echo '      <dc:date>' . date('Y-m-d',$row['added']) . "</dc:date>\n";
@@ -106,6 +106,17 @@ function outputFooter($format) {
 		default:
 			echo "  </channel>\n";
 			echo "</rdf:RDF>\n";
+	}
+}
+/* Email spam protection */
+function spam_protect($txt){
+	$translate = array('@' => ' at ', '.' => ' dot ');
+
+	/* php.net addresses are not protected! */
+	if (preg_match('/^(.+)@php\.net/i', $txt)) {
+		return $txt;
+	} else {
+		return strtr($txt, $translate);
 	}
 }
 
