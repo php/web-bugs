@@ -15,7 +15,7 @@ commonHeader("Generating a backtrace on Win32");
 your PHP directory and be sure to put the PDB files that belong to the
 extensions into your extension directory.</p>
 
-<p>If you compile PHP by your own, you can also use a newer version of MSVS.</p>
+<p>If you compile PHP by your own, you can also use a newer version of MSVC.</p>
 
 <p>When PHP crashes, click <em>Cancel</em> to debug the process.  Now MSVC starts 
 up in <em>Debug View</em>.  If you don't already see the call stack, go into the 
