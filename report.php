@@ -52,7 +52,7 @@ if ($in) {
 
 			$query = "SELECT * from bugdb $where_clause LIMIT 5";
 
-			$res = mysql_query($query) or die(htmlspecialchars($query) . "<br>" . mysql_error());
+			$res = mysql_query($query) or die(htmlspecialchars($query, ENT_QUOTES) . "<br>" . mysql_error());
 
 			if (mysql_num_rows($res) == 0) {
 				$ok_to_submit_report = 1;
@@ -247,7 +247,7 @@ simply being marked as "bogus".</strong></p>
 
 if ($errors) display_errors($errors);
 ?>
-<form method="post" action="<?php echo strip_tags($PHP_SELF);?>">
+<form method="post" action="<?php echo htmlspecialchars($PHP_SELF, ENT_QUOTES);?>">
 <input type="hidden" name="in[did_luser_search]" value="<?php echo $in['did_luser_search'] ? 1 : 0; ?>" />
 <table>
  <tr>

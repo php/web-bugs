@@ -11,6 +11,8 @@ commonHeader("Statistics");
 
 $query = "SELECT status,bug_type,email,php_version,php_os FROM bugdb";
 
+$phpver = (int)$phpver;
+
 if ($phpver > 0) {
 	$query .= " WHERE SUBSTRING(php_version,1,1) = '$phpver'";
 }

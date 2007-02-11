@@ -9,7 +9,7 @@ if (!isset($url)) {
     exit;
 }
 ?>
-Source of: <? echo htmlspecialchars($url); ?><BR>
+Source of: <? echo htmlspecialchars($url, ENT_QUOTES); ?><BR>
 
 <?
 
@@ -22,9 +22,9 @@ $legal_dirs = array(
 
 $dir = dirname($url);
 if ($dir && $legal_dirs[$dir]) {
-    $page_name = $DOCUMENT_ROOT . $url;
+    $page_name = $DOCUMENT_ROOT . htmlspecialchars($url, ENT_QUOTES);
 } else {
-    $page_name = basename($url);
+    $page_name = basename(htmlspecialchars($url, ENT_QUOTES));
 }
 
 echo("<!-- $page_name -->\n");
