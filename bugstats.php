@@ -9,9 +9,11 @@ commonHeader("Statistics");
 @mysql_select_db("phpbugdb")
 	or die("unable to select database");
 
-$query = "SELECT status,bug_type,email,php_version,php_os FROM bugdb";
+$sort_by = isset($_GET['sort_by']) ? htmlspecialchars($_GET['sort_by'], ENT_QUOTES) : 'open';
+$rev     = isset($_GET['rev'])     ? (int) $_GET['rev']    : 1;
+$phpver  = isset($_GET['phpver'])  ? (int) $_GET['phpver'] : 0;
 
-$phpver = (int)$phpver;
+$query = "SELECT status,bug_type,email,php_version,php_os FROM bugdb";
 
 if ($phpver > 0) {
 	$query .= " WHERE SUBSTRING(php_version,1,1) = '$phpver'";
@@ -21,7 +23,7 @@ $query .= " ORDER BY bug_type";
 
 $result = mysql_unbuffered_query($query);
 
-while ($row = mysql_fetch_array($result)) {
+while ($row = mysql_fetch_assoc($result)) {
 	$bug_type['all'][$row['bug_type']]++;
 	$status_str = strtolower($row['status']);
 	$bug_type[$status_str][$row['bug_type']]++;
@@ -41,11 +43,14 @@ if ($total == 0) {
 }
 
 if ($phpver > 0) {
-	echo "<p>Currently displaying PHP {$phpver} bugs only."; 
+	echo "<p>Currently displaying <strong>PHP {$phpver}</strong> bugs only."; 
 } else {
-	echo "<p>Currently displaying all bugs."; 
+	echo "<p>Currently displaying <strong>all</strong> bugs."; 
 }
-echo "Display <a href=\"bugstats.php?phpver=4\">PHP 4 bugs only</a> or <a href=\"bugstats.php?phpver=5\">PHP 5 bugs only</a>.</p>\n";
+echo '<p>Display either <a href="bugstats.php?phpver=0">all</a> bugs or optionally choose a specific PHP Version: ';
+echo '<a href="bugstats.php?phpver=4">4</a> or <a href="bugstats.php?phpver=5">5</a> or <a href="bugstats.php?phpver=6">6</a></p>';
+
+echo '<p>See also bug statistics for <a href="http://pecl.php.net/bugs/stats.php">PECL</a> or <a href="http://pear.php.net/bugs/stats.php">PEAR</a></p>';
 
 function bugstats ($status, $type)
 {
@@ -56,7 +61,7 @@ function bugstats ($status, $type)
 	}
 }
 
-mysql_freeresult($result);
+mysql_free_result($result);
 echo "<table>\n";
 
 /* prepare for sorting by bug report count */
@@ -74,8 +79,9 @@ foreach($bug_type['all'] as $type => $value) {
 	if (!isset($bug_type['feedback'][$type]))    $bug_type['feedback'][$type] = 0;
 }
 
-if (!isset($sort_by)) $sort_by = 'open';	
-if (!isset($rev)) $rev = 1;
+if (!isset($bug_type[$sort_by])) {
+	$sort_by = 'open';
+}
 
 if ($rev == 1) {
 	arsort($bug_type[$sort_by]);
@@ -174,7 +180,7 @@ if ($phpver > 0) {
 $res = mysql_query($query);
 $row = mysql_fetch_assoc($res);
 
-$half = $row['count']/2;
+$half = (int) $row['count']/2;
 $query = "SELECT UNIX_TIMESTAMP(ts2)-UNIX_TIMESTAMP(ts1) AS half FROM bugdb WHERE ts2 > ts1";
 if ($phpver > 0) {
 	$query .= " AND SUBSTRING(php_version,1,1) = '$phpver'";
