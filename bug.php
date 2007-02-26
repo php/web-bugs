@@ -427,7 +427,7 @@ this link</a> or if you reported this bug, you can <a href="<?php echo
  </tr>
 </table>
 <b>New<?php if ($edit==1) echo "/Additional"?> Comment:</b><br />
-<textarea cols="60" rows="8" name="ncomment" wrap="physical"><?php echo clean($ncomment)?></textarea>
+<textarea cols="60" rows="15" name="ncomment" wrap="physical"><?php echo clean($ncomment)?></textarea>
 <br /><input type="submit" value="Submit" />
 </form>
 <?php }?>
@@ -460,7 +460,7 @@ that are not open. They will be removed without warning.
  </tr>
 </table>
 <div>
- <textarea cols="60" rows="10" name="ncomment" wrap="physical"><?php echo clean($ncomment);?></textarea>
+ <textarea cols="60" rows="15" name="ncomment" wrap="physical"><?php echo clean($ncomment);?></textarea>
  <br /><input type="submit" value="Submit" />
 </div>
 </form>
