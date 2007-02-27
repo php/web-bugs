@@ -319,7 +319,7 @@ if ($errors) display_errors($errors);
    </font>
   </td>
   <td>
-   <textarea cols="60" rows="15" name="in[ldesc]" wrap="physical"><?php echo clean($in['ldesc']);?></textarea>
+   <textarea cols="70" rows="15" name="in[ldesc]" wrap="physical"><?php echo clean($in['ldesc']);?></textarea>
   </td>
  </tr>
  <tr>
@@ -332,7 +332,7 @@ if ($errors) display_errors($errors);
    </font>
   </td>
   <td valign="top">
-   <textarea cols="60" rows="15" name="in[repcode]" wrap="no"><?php echo clean($in['repcode']);?></textarea>
+   <textarea cols="70" rows="15" name="in[repcode]" wrap="no"><?php echo clean($in['repcode']);?></textarea>
   </td>
  </tr>
  <tr>
@@ -343,7 +343,7 @@ if ($errors) display_errors($errors);
    </font>
   </td>
   <td valign="top">
-   <textarea cols="60" rows="15" name="in[expres]" wrap="physical"><?php echo clean($in['expres']);?></textarea>
+   <textarea cols="70" rows="15" name="in[expres]" wrap="physical"><?php echo clean($in['expres']);?></textarea>
   </td>
  </tr>
  <tr>
@@ -355,7 +355,7 @@ if ($errors) display_errors($errors);
    </font>
   </td>
   <td valign="top">
-   <textarea cols="60" rows="15" name="in[actres]" wrap="physical"><?php echo clean($in['actres']);?></textarea>
+   <textarea cols="70" rows="15" name="in[actres]" wrap="physical"><?php echo clean($in['actres']);?></textarea>
   </td>
  </tr>
  <tr>

@@ -60,7 +60,7 @@ if ($errors) {
  </tr>
  <tr>
   <th>Note:</th>
-  <td colspan="5"><textarea cols="60" rows="8" name="ncomment" wrap="physical"></textarea></td>
+  <td colspan="5"><textarea cols="70" rows="8" name="ncomment" wrap="physical"></textarea></td>
  </tr> 
 </table>
 <input type="submit" value="Resolve" />
