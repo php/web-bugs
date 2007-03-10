@@ -76,6 +76,7 @@ foreach($bug_type['all'] as $type => $value) {
 	if (!isset($bug_type['duplicate'][$type]))   $bug_type['duplicate'][$type] = 0;
 	if (!isset($bug_type['assigned'][$type]))    $bug_type['assigned'][$type] = 0;
 	if (!isset($bug_type['no feedback'][$type])) $bug_type['no feedback'][$type] = 0;
+	if (!isset($bug_type['wont fix'][$type]))    $bug_type['wont fix'][$type] = 0;
 	if (!isset($bug_type['feedback'][$type]))    $bug_type['feedback'][$type] = 0;
 }
 
@@ -119,6 +120,7 @@ function display_stat_header($total, $grandtotal = true) {
 	echo "<th>",sort_url('duplicate'),"</th>";
 	echo "<th>",sort_url('feedback'),"</th>";
 	echo "<th nowrap>",sort_url('no feedback'),"</th>";
+	echo "<th nowrap>",sort_url('wont fix'),"</th>";
 	echo "<th>",sort_url('bogus'),"</th>";
 	echo "</tr>\n";
 }
@@ -137,6 +139,7 @@ echo "<tr><th align=right bgcolor=#aabbcc>All:</th>",
      "<td align=center bgcolor=#ccddee>".bugstats('duplicate', 'all')."&nbsp;</td>",
      "<td align=center bgcolor=#ccddee>".bugstats('feedback','all')."&nbsp;</td>",
      "<td align=center bgcolor=#ddeeff>".bugstats('no feedback','all')."&nbsp;</td>",
+     "<td align=center bgcolor=#ddeeff>".bugstats('wont fix','all')."&nbsp;</td>",
      "<td align=center bgcolor=#ccddee>".bugstats('bogus', 'all')."&nbsp;</td>",
      "</tr>\n";
 
@@ -166,6 +169,7 @@ foreach ($bug_type[$sort_by] as $type => $value) {
 		     "<td align=center bgcolor=#ccddee>".bugstats('duplicate', $type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ccddee>".bugstats('feedback',$type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ddeeff>".bugstats('no feedback',$type)."&nbsp;</td>",
+		     "<td align=center bgcolor=#ddeeff>".bugstats('wont fix',$type)."&nbsp;</td>",
 		     "<td align=center bgcolor=#ccddee>".bugstats('bogus', $type)."&nbsp;</td>",
 		     "</tr>\n";
 	}
