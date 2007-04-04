@@ -31,6 +31,9 @@ $query  = 'SELECT id,status,sdesc,ldesc,ts2 as ts_modified,UNIX_TIMESTAMP(ts2) a
 $warnings = array();
 
 /* Criteria */
+$boolean = isset($_REQUEST['boolean']) ? (int) $_REQUEST['boolean'] : 1;
+define('BOOLEAN_SEARCH', $boolean);
+
 if (isset($_REQUEST['bug_type']) && 
 	is_array($_REQUEST['bug_type']) &&
 	count($_REQUEST['bug_type']) > 0) {

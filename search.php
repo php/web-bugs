@@ -14,7 +14,8 @@ if ($search_for && !preg_match("/\\D/",trim($search_for))) {
 $errors = array();
 $warnings = array();
 
-define('BOOLEAN_SEARCH', @intval($boolean));
+$boolean = isset($_REQUEST['boolean']) ? (int) $_REQUEST['boolean'] : 1;
+define('BOOLEAN_SEARCH', $boolean);
 
 if (isset($cmd) && $cmd == "display") {
 	@mysql_connect("localhost","nobody","")
