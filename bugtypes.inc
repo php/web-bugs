@@ -113,7 +113,6 @@ $items = array (
 
 	"*Mail Related"      => "&nbsp;&nbsp;&nbsp;&nbsp;Mail Related",
 	"IMAP related"       => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IMAP related",
-	"Mailparse related"  => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Mailparse related",
 	"Mail related"       => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mail function related",
 
 	"*Math Functions" => "&nbsp;&nbsp;&nbsp;&nbsp;Math Functions",
