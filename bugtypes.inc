@@ -41,7 +41,6 @@ $items = array (
 	"*Calendar problems" => "&nbsp;&nbsp;&nbsp;&nbsp;Calendar problems",
 	"Date/time related"  => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date/time related",
 	"Calendar related"   => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Calendar related",
-	"MCAL related"       => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MCAL related",
 
 	"*Compression related" => "&nbsp;&nbsp;&nbsp;&nbsp;Compression related",
 	"Bzip2 Related"        => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bzip2 Related",
@@ -54,7 +53,6 @@ $items = array (
 	"Filesystem function related"     => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Filesystem function related",
 
 	"*Directory Services problems" => "&nbsp;&nbsp;&nbsp;&nbsp;Directory Services problems",
-	"YP/NIS related"               => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; YP/NIS related",
 	"LDAP related"                 => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LDAP related",
 
 	"*Database Functions"       => "&nbsp;&nbsp;&nbsp;&nbsp;Database Functions",
@@ -63,7 +61,6 @@ $items = array (
 	"DBM/DBA related"           => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBM/DBA related",
 	"DBX related"               => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DBX related",
 	"FrontBase related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FrontBase related",
-	"Hyperwave related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hyperwave related",
 	"Informix related"          => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Informix related",
 	"Ingres II related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ingres II related",
 	"InterBase related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; InterBase related",
@@ -82,7 +79,6 @@ $items = array (
 
 	"*Data Exchange functions" => "&nbsp;&nbsp;&nbsp;&nbsp;Data Exchange functions",
 	"WDDX related"             => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WDDX related",
-	"YAZ related"              => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; YAZ related",
 
 	"*Extensibility Functions" => "&nbsp;&nbsp;&nbsp;&nbsp;Extensibility Functions",
 	"COM related"              => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COM related",
@@ -103,7 +99,6 @@ $items = array (
 	"GD related"           => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GD related",
 	"GetImageSize related" => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GetImageSize related",
 	"Ming related"         => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ming related",
-	"SWF related"          => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SWF related",
 
 	"*Languages/Translation" => "&nbsp;&nbsp;&nbsp;&nbsp;Languages/Translation",
 	"Gettext related"        => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Gettext related",
