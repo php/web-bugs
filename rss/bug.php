@@ -8,6 +8,7 @@
  */
 
 $id = (int)$_REQUEST['id'];
+if(!$id) exit;
 $format = $_REQUEST['format'];
 
 @mysql_connect("localhost","nobody","")
