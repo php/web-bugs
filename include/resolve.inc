@@ -22,9 +22,13 @@ For Windows:
 
   http://snaps.php.net/php5.2-latest.tar.gz
  
-For Windows:
+For Windows (zip):
  
-  http://snaps.php.net/win32/php5.2-win32-latest.zip',
+  http://snaps.php.net/win32/php5.2-win32-latest.zip
+
+For Windows (installer):
+
+  http://snaps.php.net/win32/php5.2-win32-installer-latest.msi',
   ),
 
   'trysnapshot60' => array(
