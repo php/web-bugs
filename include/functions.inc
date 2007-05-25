@@ -513,7 +513,7 @@ function incoming_details_are_valid ($in, $initial=0)
 
 function is_phpversion_irrelevant($bugtype)
 {
-	if (in_array($bugtype, array('Documentation problem','Livedocs problem','DocWeb problem','Website problem','Systems problem'))) {
+	if (in_array($bugtype, array('Documentation problem','Documentation translation problem','Livedocs problem','DocWeb problem','Website problem','Systems problem'))) {
 		return true;
 	}
 	return false;

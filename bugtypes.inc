@@ -5,6 +5,7 @@ $items = array (
 	"*General Issues" => "General Issues",
 	"Feature/Change Request"   => "&nbsp;&nbsp;&nbsp;&nbsp;Feature/Change Request",
 	"Documentation problem"    => "&nbsp;&nbsp;&nbsp;&nbsp;Documentation problem",
+	"Documentation translation problem"      => "&nbsp;&nbsp;&nbsp;&nbsp;Documentation translation problem",
 	"Livedocs problem"         => "&nbsp;&nbsp;&nbsp;&nbsp;Livedocs problem",
 	"Website problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem",
 	"Systems problem"          => "&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Systems Operation problem",
