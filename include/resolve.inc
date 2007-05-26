@@ -279,7 +279,7 @@ to get updated, we would like to ask you to be a bit patient.
 
 Thank you for the report, and for helping us make our documentation better.',
 
-	'Documentation translation problem' => 
+	'Translation problem' => 
 'This bug has been fixed in the documentation\'s XML sources. Since the
 online and downloadable versions of the documentation need some time
 to get updated, we would like to ask you to be a bit patient.
