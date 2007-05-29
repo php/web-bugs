@@ -526,6 +526,9 @@ function get_bugtype_mail($bug_type)
 	if (eregi("documentation", $bug_type)) {
 		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
 	}
+	elseif (eregi("translation", $bug_type)) {
+		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
+	}
 	elseif (eregi("livedocs", $bug_type)) {
 		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
 	}
