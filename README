@@ -1,0 +1,6 @@
+This is a collaboration between PEAR, PECL and PHP core to create a unified bug tracker,
+and is not part of the PEAR project officially, although this has not been precluded.
+
+If the project will be proposed as a PEAR package, it will go through official channels.
+
+On initial import, this is just the files from pearweb/bugs, and is non-working.
