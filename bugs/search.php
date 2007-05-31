@@ -69,7 +69,7 @@ $order_options = array(
     'assign'       => 'assignment',
 );
 
-$boolean_search = isset($_GET['boolean']) ? (int)$_GET['boolean'] : 1;
+$boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
 
 // Setup input variables..
 $status = !empty($_GET['status']) ? $_GET['status'] : 'Open';
@@ -118,24 +118,23 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
     $query .= ' bugdb.*, TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) AS unchanged
                 FROM bugdb';
 
-    if ($site != '' || $maintain != '' || $handle != '') {
-        $query .= ' LEFT JOIN packages ON packages.name = bugdb.package_name';
-    }
-
-    if ($maintain != '' || $handle != '') {
-        $query .= ' LEFT JOIN maintains ON packages.id = maintains.package
-                    AND maintains.handle = ';
-        if ($maintain != '') {
-            $query .= $dbh->quoteSmart($maintain);
-        } else {
-            $query .= $dbh->quoteSmart($handle);
+    if (($site != '' && $site != 'php') || $maintain != '' || $handle != '') {
+        $query .= " LEFT JOIN packages ON packages.name = bugdb.package_name";
+        if ($maintain != '' || $handle != '') {
+            $query .= ' LEFT JOIN maintains ON packages.id = maintains.package
+                        AND maintains.handle = ';
+            if ($maintain != '') {
+                $query .= $dbh->quoteSmart($maintain);
+            } else {
+                $query .= $dbh->quoteSmart($handle);
+            }
         }
     }
 
-    if (empty($package_name)) {
-        $where_clause = ' WHERE bugdb.registered=1';
-    } else {
-        $where_clause = ' WHERE bugdb.registered=1 AND bugdb.package_name';
+    $where_clause = ' WHERE ' . (($site != '' && $site == 'php') ? '1=1' : 'bugdb.registered=1');
+
+    if (!empty($package_name)) {
+        $where_clause .= ' AND bugdb.package_name';
         if (count($package_name) > 1) {
             $where_clause .= " IN ('"
                            . join("', '", escapeSQL($package_name))
@@ -222,8 +221,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         list($sql_search, $ignored) = format_search_string($search_for, $boolean_search);
         $where_clause .= $sql_search;
         if (count($ignored) > 0 ) {
-            $warnings[] = 'The following words were ignored: ' .
-                    rinse(implode(', ', array_unique($ignored)));
+            $warnings[] = 'The following words were ignored: ' . rinse(implode(', ', array_unique($ignored)));
         }
     }
 
@@ -252,8 +250,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
     }
 
     if ($packagever != '') {
-        $where_clause .= " AND bugdb.package_version LIKE '"
-                       . $dbh->escapeSimple($packagever) . "%'";
+        $where_clause .= " AND bugdb.package_version LIKE '" . $dbh->escapeSimple($packagever) . "%'";
     }
 
     if ($handle == '') {
@@ -261,8 +258,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
             $where_clause .= ' AND bugdb.assign = ' . $dbh->quoteSmart($assign);
         }
         if ($maintain != '') {
-            $where_clause .= ' AND maintains.handle = '
-                           . $dbh->quoteSmart($maintain);
+            $where_clause .= ' AND maintains.handle = ' . $dbh->quoteSmart($maintain);
         }
     } else {
         $where_clause .= ' AND (maintains.handle = ' . $dbh->quoteSmart($handle)
@@ -274,7 +270,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         $where_clause .= " AND (bugdb.email = $qae OR bugdb.handle = $qae)";
     }
 
-    $where_clause .= ' AND (packages.package_type = ' . $dbh->quoteSmart($site);
+    $where_clause .= ($site != 'php') ? ' AND (packages.package_type = ' . $dbh->quoteSmart($site) : ' AND (1=1';
 
     if ($pseudo = array_intersect(array_keys($pseudo_pkgs), $package_name)) {
         $where_clause .= " OR bugdb.package_name";
@@ -314,8 +310,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
     if (stristr($query, ';')) {
         $errors[] = 'BAD HACKER!! No database cracking for you today!';
     } else {
-        $res  =& $dbh->query($query);
-        $rows =  $res->numRows();
+        $res = $dbh->query($query);
+        $rows = $res->numRows();
 
         if ($mysql4) {
             $total_rows =& $dbh->getOne('SELECT FOUND_ROWS()');
