@@ -740,4 +740,3 @@ if (auth_check('pear.dev')) {
 
 response_footer();
 
-?>

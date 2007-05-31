@@ -32,5 +32,3 @@ if (DB::isError($res)) {
 } else {
     echo $res;
 }
-
-?>

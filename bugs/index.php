@@ -18,6 +18,8 @@
  * @version   $Id$
  */
 
+require_once './include/prepend.inc';
+
 response_header('Bugs');
 
 ?>
@@ -74,5 +76,3 @@ You may find the
 <?php
 
 response_footer();
-
-?>

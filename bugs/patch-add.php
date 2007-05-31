@@ -244,4 +244,3 @@ $patches = $patchinfo->listPatches($bug);
 $captcha = $numeralCaptcha->getOperation();
 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
 include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
-?>

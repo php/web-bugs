@@ -18,6 +18,10 @@
  * @version   $Id$
  */
 
+/// FIXME: This should not be needed!
+require dirname(__FILE__) . '/format-html.php'; // aka pear-format-html.php
+
+
 /**
  * Obtain the functions and variables used throughout the bug system
  */
@@ -27,3 +31,10 @@ require_once dirname(__FILE__) . '/functions.inc';
  * Obtain the $RESOLVE_REASONS array
  */
 require dirname(__FILE__) . '/resolve.inc';
+
+
+/** 
+ * Set Base dir
+ **/
+$basedir = dirname($_SERVER['PHP_SELF']);
+define('BASEDIR', ($basedir == '/') ? '' : $basedir);

@@ -444,4 +444,3 @@ function display_stat_header($total, $grandtotal = true)
     return $stat_head;
 }
 
-?>

@@ -24,7 +24,7 @@
  */
 
 // Have this style sheet included in all bug pages.
-extra_styles('/css/bugs.css');
+extra_styles('css/bugs.css');
 // For distinguishing this site from PECL
 $site = 'pear';
 $siteBig = 'PEAR';
