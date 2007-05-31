@@ -86,8 +86,8 @@ if (!empty($_GET['limit'])) {
     $limit = ($_GET['limit'] == 'All') ? 'All' : (($_GET['limit'] > 0) ? (int) $_GET['limit'] : $limit);
 }
 $direction = (!empty($_GET['direction']) && $_GET['direction'] != 'DESC') ? 'ASC' : 'DESC';
-$order_by   = (!empty($_GET['order_by'])   && array_key_exists($_GET['order_by'],   $allowed_order)) ? $_GET['order_by']   : 'id';
-$reorder_by = (!empty($_GET['reorder_by']) && array_key_exists($_GET['reorder_by'], $allowed_order)) ? $_GET['reorder_by'] : '';
+$order_by   = (!empty($_GET['order_by'])   && array_key_exists($_GET['order_by'],   $order_options)) ? $_GET['order_by']   : 'id';
+$reorder_by = (!empty($_GET['reorder_by']) && array_key_exists($_GET['reorder_by'], $order_options)) ? $_GET['reorder_by'] : '';
 $handle = !empty($_GET['handle']) ? $_GET['handle'] : '';
 $assign = !empty($_GET['assign']) ? $_GET['assign'] : '';
 $maintain = !empty($_GET['maintain']) ? $_GET['maintain'] : '';
