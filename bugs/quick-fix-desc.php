@@ -27,6 +27,8 @@ response_header('Quick Fix Descriptions');
 ?> 
 <table border="2" cellpadding="6">
 <?php
+$RESOLVE_REASONS = get_resolve_reasons();
+
 foreach ($RESOLVE_REASONS as $reason) {
     echo "
         <tr>
@@ -38,5 +40,5 @@ foreach ($RESOLVE_REASONS as $reason) {
 } ?>
 </table>
 <?php
+
 response_footer();
-?>

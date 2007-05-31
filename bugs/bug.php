@@ -422,6 +422,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         $ncomment = trim($_POST['ncomment']);
     }
 
+    /* Fetch RESOLVE_REASONS array */
+    $RESOLVE_REASONS = get_resolve_reasons();
+
     if (isset($_POST['in']) && is_array($_POST['in']) &&
           (($_POST['in']['status'] == 'Bogus' && $bug['status'] != 'Bogus') ||
           (isset($_POST['in']['resolve']) && isset($RESOLVE_REASONS[$_POST['in']['resolve']]) &&
