@@ -27,8 +27,6 @@ CREATE TABLE bugdb (
   FULLTEXT KEY email (email,sdesc,ldesc)
 ) TYPE=MyISAM;
 
-
-
 CREATE TABLE bugdb_comments (
   id int(8) NOT NULL auto_increment,
   bug int(8) NOT NULL default '0',
@@ -105,4 +103,12 @@ CREATE TABLE bug_account_request (
   salt CHAR(32) NOT NULL,
   email VARCHAR(65) NOT NULL,
   PRIMARY KEY(id)
+);
+
+CREATE TABLE bugdb_resolves (
+  id INT NOT NULL AUTO_INCREMENT,
+  status varchar(16) default NULL,
+  title varchar(100) NOT NULL,
+  message text NOT NULL,
+  PRIMARY KEY (id)
 );

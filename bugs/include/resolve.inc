@@ -18,6 +18,16 @@
  * @version   $Id$
  */
 
+function get_resolve_reasons ()
+{
+	global $dbh;
+
+	return $dbh->getAll("SELECT * FROM bugdb_resolves");
+}
+
+if (!defined('PEAR_CHANNELNAME'))
+	define ('PEAR_CHANNELNAME', 'pear.php.net');
+
 $RESOLVE_REASONS = array(
 /*
   'trysnapshot4' => array(
