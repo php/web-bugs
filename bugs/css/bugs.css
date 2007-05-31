@@ -1,0 +1,242 @@
+/* STYLES FOR THE BUG SYSTEM */
+
+/* $Id$ */
+
+@import url(bugs-controls.css);
+
+td.content {
+    font-size: 90%;
+}
+
+td.content table {
+    font-size: 100%;  /* make IE look normal */
+}
+
+.headertop {
+    background: #5b69a6;
+}
+.headersep {
+    background: #000033;
+}
+.headerbottom {
+    background: #9999cc;
+}
+
+pre.note {
+    margin-left: 20px;
+}
+
+input.small, select.small {
+    font-size: 75%;
+}
+
+textarea.small {
+    font-size: 75%;
+}
+
+form#comment,
+form#update,
+form#vote,
+div.comment {
+    clear: both;
+}
+
+table.lusersearch td {
+    font-size: 75%;
+}
+
+table.lusersearch tr {
+    vertical-align: top;
+}
+
+/*
+ * these are redundant with things in controls.css, to try and make the
+ * bug forms look a smidge better on netscape 4 (ugh).
+ */
+span.control {
+    font-weight: bold;
+}
+
+td#summary {
+    font-weight: bold;
+}
+th.details {
+    vertical-align: top;
+    text-align: right;
+}
+th.results {
+    background-color: #aaaaaa;
+    text-align: left;
+}
+table#details td {
+    vertical-align: top;
+}
+
+div#bugheader {
+    border-bottom: 2px solid #666666;
+    width: 100%;
+}
+
+div#bugheader table#details th {
+    text-align: right;
+    color: #666666;
+}
+div#bugheader table#details th#number {
+    color: #000066;
+    font-size: larger;
+}
+div#bugheader table#details td#summary {
+    font-weight: bold;
+}
+
+.diffheader {
+    background: #EEEE00;
+}
+.newdiff {
+    background: #FF0000;
+}
+.olddiff {
+    background: #AAAAAA;
+    text-decoration: line-through;
+}
+
+form#vote {
+    font-size: smaller;
+}
+form#vote div.sect {
+    float: left;
+}
+form#vote fieldset {
+    border: 1px solid #000000;
+}
+form#vote div#submit {
+    margin-top: 24px;
+    margin-left: 10px;
+    text-align: center;
+}
+
+form#asearch th {
+    text-align: left;
+    font-weight: bold;
+}
+
+form#asearch table#primary {
+    font-size: 100%;  /* make IE look normal */
+    background: #eee;
+    padding: 4px;
+}
+
+
+/* Used in stats.php */
+
+.bug_bg0 {
+    background-color: #DDDDDD;
+    font-size: 85%;
+    text-align: center;
+}
+.bug_bg1 {
+    background-color: #EEEEEE;
+    font-size: 85%;
+    text-align: center;
+}
+.bug_head {
+    background-color: #339900;
+    color: #FFFFFF;
+    font-size: 80%;
+    font-weight: bold;
+    text-align: right;
+    padding: 0em .2em .2em .2em;
+}
+.bug_header {
+    background-color: #339900;
+    color: #FFFFFF;
+    font-size: 80%;
+    font-weight: bold;
+    text-align: center;
+    padding: 0em .2em .2em .2em;
+}
+
+a.bug_stats {
+    color: #FFFFFF;
+}
+a.bug_stats_choosen {
+    color: #FFFF00;
+}
+
+.bug_bg_selected {
+    background-color: yellow;
+}
+.bug_bg_selected a {
+    color: #006600;
+}
+
+/* === Search === */
+
+a.status_active {
+    font-weight: bold;
+}
+
+td.search-prev_next {
+    background-color: #cccccc;
+    text-align: center;
+    padding-bottom: 0.4em;
+}
+
+td.search-prev_next table {
+    font-size: 100%;  /* make IE look normal */
+}
+
+td.search-prev {
+    text-align: left;
+    width: 33%;
+}
+
+td.search-showing {
+    text-align: center;
+    width: 34%;
+}
+
+td.search-next {
+    text-align: right;
+    width: 33%;
+}
+
+.Asn {
+    background-color: #bbaaff;
+}
+.Ana {
+    background-color: #99bbaa;
+}
+.Bgs {
+    background-color: #aaaaaa;
+}
+.Csd {
+    background-color: #aaffbb;
+}
+.Ctl {
+    background-color: #ff0000;
+}
+.Dup {
+    background-color: #bbbbbb;
+}
+.Fbk {
+    background-color: #bbeeff;
+}
+.Fre {
+    background-color: #aaaaaa;
+}
+.NoF {
+    background-color: #bbffcc;
+}
+.Opn {
+    background-color: #ffbbaa;
+}
+.Sus {
+    background-color: #ffccbb;
+}
+.Ver {
+    background-color: #99bbaa;
+}
+.Wfx {
+    background-color: #aaaaaa;
+}

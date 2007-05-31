@@ -1,0 +1,40 @@
+/* Tabbed sub-navigation */
+
+#nav {
+    width: 100%;
+    border-top: 1px solid #000;
+    display: block;
+    margin-bottom: 35px;
+    clear: both;
+}
+
+#nav ul {
+    padding: 0;
+    margin: 0;
+
+    list-style: none;
+}
+
+#nav li {
+    float: left;
+}
+
+#nav a {
+    float: left;
+    font-weight: bold;
+    font-size: 80%;
+    text-decoration: none;
+    background: #eee;
+    margin-right: 5px;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+#nav a.active {
+    background: #ddd;
+}
+
+#nav a:hover {
+    background: #ddd;
+}
