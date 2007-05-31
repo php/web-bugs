@@ -58,10 +58,7 @@ if (isset($_POST['addpatch'])) {
     if (!$loggedin) {
         try {
             $errors = array();
-            if (empty($_POST['email'])) {
-                $errors[] = 'Email address must be valid!';
-            }
-            if (!preg_match("/^[.\\w+-]+@[.\\w-]+\\.\\w{2,}\z/i",$_POST['email'])) {
+            if (!empty($_POST['email']) && !is_valid_email($_POST['email'])) {
                 $errors[] = 'Email address must be valid!';
             }
             /**

@@ -43,6 +43,7 @@ $ok_to_submit_report = false;
  */
 $numeralCaptcha = new Text_CAPTCHA_Numeral();
 
+// "Login" for cvs users
 if (isset($_POST['save']) && isset($_POST['pw'])) {
     // non-developers don't have $user set
     setcookie('MAGIC_COOKIE', base64_encode(':' . $_POST['pw']),
@@ -127,9 +128,7 @@ if (isset($_POST['in'])) {
                     echo '<h1>WARNING: YOU MUST RE-UPLOAD YOUR PATCH, OR IT WILL BE IGNORED</h1>';
 
                 }
-
                 ?>
-
 <p>
  Are you sure that you searched before you submitted your bug report? We
  found the following bugs that seem to be similar to yours; please check
@@ -150,7 +149,6 @@ if (isset($_POST['in'])) {
   <th>Description</th>
   <th>Possible Solution</th>
  </tr>
-
                 <?php
 
                 while ($row =& $res->fetchRow(DB_FETCHMODE_ASSOC)) {

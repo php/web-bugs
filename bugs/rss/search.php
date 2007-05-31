@@ -37,7 +37,7 @@ $order_options = array(
     'assign'       => 'assignment',
 );
 
-define('BOOLEAN_SEARCH', @intval($_GET['boolean']));
+$boolean_search = (int) isset($_GET['boolean']) ? $_GET['boolean'] : 0;
 
 /*
 * need to move this to DB eventually...
@@ -180,7 +180,7 @@ if (empty($_GET['search_for'])) {
     $search_for = '';
 } else {
     $search_for = htmlspecialchars($_GET['search_for']);
-    list($sql_search, $ignored) = format_search_string($search_for);
+    list($sql_search, $ignored) = format_search_string($search_for, $boolean_search);
     $where_clause .= $sql_search;
     if (count($ignored) > 0 ) {
         $warnings[] = 'The following words were ignored: ' .

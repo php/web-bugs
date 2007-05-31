@@ -18,9 +18,21 @@
  * @version   $Id$
  */
 
+
+// FIXME: Configuration should be elsewhere!
+
+$site = 'php';
+$siteBig = 'PHP';
+$bugEmail = 'php-bugs@lists.php.net';
+
+$basedir = dirname($_SERVER['PHP_SELF']);
+define('BASEDIR', ($basedir == '/') ? '' : $basedir);
+define('PEAR_DATABASE_DSN', 'mysqli://nobody:@localhost/phpbugsdb');
+
 /// FIXME: This should not be needed!
 require dirname(__FILE__) . '/format-html.php'; // aka pear-format-html.php
 
+extra_styles('css/bugs.css');
 
 /**
  * Obtain the functions and variables used throughout the bug system
@@ -31,10 +43,3 @@ require_once dirname(__FILE__) . '/functions.inc';
  * Obtain the $RESOLVE_REASONS array
  */
 require dirname(__FILE__) . '/resolve.inc';
-
-
-/** 
- * Set Base dir
- **/
-$basedir = dirname($_SERVER['PHP_SELF']);
-define('BASEDIR', ($basedir == '/') ? '' : $basedir);

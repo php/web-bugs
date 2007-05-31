@@ -23,13 +23,6 @@
  * DEFINE VARIABLES ============================
  */
 
-// Have this style sheet included in all bug pages.
-extra_styles('css/bugs.css');
-// For distinguishing this site from PECL
-$site = 'pear';
-$siteBig = 'PEAR';
-$bugEmail = 'pear-qa@lists.php.net';
-
 /* update include/bugs/pear-bug-accountrequest.php if these change! */
 // used in mail_bug_updates(), below, and class for search results
 $tla = array(
@@ -78,12 +71,22 @@ $state_types =  array (
 
 // Items that need bug tracking but aren't real packages
 $pseudo_pkgs = array(
-    'Web Site',
-    'Documentation',
-    'Bug System',
+    'Web Site'   => 'Web Site',
+    'Bug System' => '&nbsp;&nbsp;&nbsp;&nbsp;Bug System',
 );
-if ($site == 'pear') {
-    $pseudo_pkgs[] = 'PEPr';
+switch ($site)
+{
+	case 'pear':
+	    $pseudo_pkgs['PEPr'] = '&nbsp;&nbsp;&nbsp;&nbsp;PEPr';
+        $preudo_pkgs['Documentation'] = 'Documentation';
+		break;
+	case 'php':
+		$pseudo_pkgs = array();
+		include('php_bugtypes.inc');
+		foreach ($items as $name => $pretty_name)
+		{
+			$pseudo_pkgs[$name] = $pretty_name;
+		}
 }
 
 
@@ -549,24 +552,24 @@ function show_version_options($current, $default = '')
  */
 function show_types($current, $show_any, $default = '')
 {
-    global $site, $dbh;
+    global $site, $dbh, $pseudo_pkgs;
     static $bug_items;
 
     if (!isset($bug_items)) {
-        $bug_items = array();
-        $bug_items['Web Site']      = 'Web Site';
-        $bug_items['Bug System']    = '&nbsp;&nbsp;&nbsp;Bug System';
-        $bug_items['PEPr']          = '&nbsp;&nbsp;&nbsp;PEPr';
-        $bug_items['Documentation'] = 'Documentation';
+        $bug_items = $pseudo_pkgs;
 
-        $sql = "
-            SELECT name FROM packages
-            WHERE approved = 1 AND package_type = '$site'
-            ORDER BY name";
-        $list = $dbh->getCol($sql);
-        foreach ($list as $name) {
-            $bug_items[$name] = $name;
-        }
+		if ($site != 'php')
+		{
+	        $sql = "
+	            SELECT name FROM packages
+	            WHERE approved = 1 AND package_type = '$site'
+	            ORDER BY name";
+	        $list = $dbh->getCol($sql);
+
+	        foreach ($list as $name) {
+	            $bug_items[$name] = $name;
+	        }
+		}
     }
 
     $use = 0;
@@ -980,6 +983,14 @@ function package_exists($type)
 }
 
 /**
+ * Validate an email address
+ */
+function is_valid_email($email)
+{
+    return (bool) preg_match("/^[.\\w+-]+@[.\\w-]+\\.\\w{2,}\z/i", $email);
+}
+
+/**
  * Validate an incoming bug report
  *
  * @param
@@ -998,7 +1009,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged = false)
     }
 
     if ($initial || (!empty($in['email']) && $bug['email'] != $in['email'])) {
-        if (!preg_match("/^[.\\w+-]+@[.\\w-]+\\.\\w{2,}\z/i",$in['email'])) {
+        if (!is_valid_email($in['email'])) {
             $errors[] = 'Please provide a valid email address.';
         }
     }
@@ -1093,7 +1104,7 @@ function get_package_mail($package_name, $bug_id=false)
  *
  * @return array
  */
-function format_search_string($search)
+function format_search_string($search, $boolean_search = false)
 {
     // Function will be updated to make results more relevant.
     // Quick hack for indicating ignored words.
@@ -1112,9 +1123,9 @@ function format_search_string($search)
         }
     }
 
-    if ($mysql4 && BOOLEAN_SEARCH) {
+    if ($mysql4 && $boolean_search) {
         // require all used words (all)
-        if (BOOLEAN_SEARCH === 1) {
+        if ($boolean_search === 1) {
             $newsearch = '';
             foreach ($used as $word) {
                 $newsearch .= "+$word ";
@@ -1122,7 +1133,7 @@ function format_search_string($search)
             return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($newsearch) . "' IN BOOLEAN MODE)", $ignored);
 
         // allow custom boolean search (raw)
-        } elseif (BOOLEAN_SEARCH === 2) {
+        } elseif ($boolean_search === 2) {
             return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($search) . "' IN BOOLEAN MODE)", $ignored);
         }
     }

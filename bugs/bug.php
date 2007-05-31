@@ -180,7 +180,7 @@ if (!empty($_POST['pw'])) {
 // Subscription
 if (isset($_POST['subscribe_to_bug'])) {
     $email = $_POST['subscribe_email'];
-    if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i", $email)) {
+    if (!is_valid_email($email)) {
         $errors[] = "You must provide a valid email address.";
     } else {
         $query = 'REPLACE INTO bugdb_subscribe SET bug_id=' . $id .
@@ -196,7 +196,7 @@ if (isset($_POST['subscribe_to_bug'])) {
 if (isset($_POST['unsubscribe_to_bug'])) {
     $email = $_POST['subscribe_email'];
 
-    if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i", $email)) {
+    if (!is_valid_email($email)) {
         $errors[] = "You must provide a valid email address.";
     } else {
         /* Generate the hash */
@@ -279,7 +279,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                 // user doesn't exist yet
                 require 'bugs/pear-bug-accountrequest.php';
                 $buggie = new PEAR_Bug_Accountrequest;
-                if (!preg_match("/[.\\w+-]+@[.\\w-]+\\.\\w{2,}/i", $_POST['in']['commentemail'])) {
+                if (!is_valid_email($_POST['in']['commentemail'])) {
                     $errors[] = "You must provide a valid email address.";
                     response_header('Add Comment - Problems');
                     break; // skip bug comment addition
