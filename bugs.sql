@@ -112,3 +112,12 @@ CREATE TABLE bugdb_resolves (
   message text NOT NULL,
   PRIMARY KEY (id)
 );
+
+CREATE TABLE bugdb_packages (
+  id INT NOT NULL AUTO_INCREMENT,
+  parent INT NOT NULL default '0',
+  name varchar(80) NOT NULL default '',
+  project varchar(40) NOT NULL default '',
+  PRIMARY KEY (id),
+  UNIQUE KEY (name, project)
+);

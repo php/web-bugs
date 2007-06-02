@@ -4,7 +4,6 @@ ALTER TABLE bugdb DROP severity;
 ALTER TABLE bugdb DROP dev_id;
 ALTER TABLE bugdb DROP bugpack_id;
 ALTER TABLE bugdb DROP milestone_id;
-ALTER TABLE bugdb MODIFY bug_type varchar(32) NOT NULL default '';
 ALTER TABLE bugdb MODIFY email varchar(40) NOT NULL default '';
 ALTER TABLE bugdb MODIFY sdesc varchar(80) NOT NULL default '';
 ALTER TABLE bugdb MODIFY php_version varchar(100) default NULL;
@@ -14,7 +13,8 @@ ALTER TABLE bugdb MODIFY ts1 datetime default NULL;
 ALTER TABLE bugdb MODIFY ts2 datetime default NULL;
 ALTER TABLE bugdb MODIFY assign varchar(20) default NULL;
 ALTER TABLE bugdb MODIFY passwd varchar(20) default NULL;
-ALTER TABLE bugdb ADD package_name varchar(80) default NULL;
+ALTER TABLE bugdb CHANGE bug_type package_name varchar(80) default NULL;
+ALTER TABLE bugdb ADD bug_type varchar(32) NOT NULL default '';
 ALTER TABLE bugdb ADD handle varchar(20) NOT NULL default '';
 ALTER TABLE bugdb ADD reporter_name varchar(80) default '';
 ALTER TABLE bugdb ADD package_version varchar(100) default NULL;
@@ -95,3 +95,25 @@ CREATE TABLE bug_account_request (
   email VARCHAR(65) NOT NULL,
   PRIMARY KEY(id)
 );
+
+CREATE TABLE bugdb_resolves (
+  id INT NOT NULL AUTO_INCREMENT,
+  status varchar(16) default NULL,
+  title varchar(100) NOT NULL,
+  message text NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE bugdb_packages (
+  id INT NOT NULL AUTO_INCREMENT,
+  parent INT NOT NULL default '0',
+  name varchar(80) NOT NULL default '',
+  project varchar(40) NOT NULL default '',
+  PRIMARY KEY (id),
+  UNIQUE KEY (name, project)
+);
+
+# Populate packages from existing bugs
+INSERT INTO bugdb_packages (name, parent, project) 
+	SELECT package_name AS name, 0 AS parent, 'php' AS project FROM bugdb GROUP BY package_name;
+	
