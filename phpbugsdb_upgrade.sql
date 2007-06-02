@@ -113,7 +113,8 @@ CREATE TABLE bugdb_packages (
   UNIQUE KEY (name, project)
 );
 
-# Populate packages from existing bugs
-INSERT INTO bugdb_packages (name, parent, project) 
-	SELECT package_name AS name, 0 AS parent, 'php' AS project FROM bugdb GROUP BY package_name;
+# Populate packages from existing bugs 
+# - Use to import any package_name which is not mentioned in bugtypes.inc!
+#INSERT INTO bugdb_packages (name, parent, project) 
+#	SELECT package_name AS name, 0 AS parent, 'php' AS project FROM bugdb GROUP BY package_name;
 	
