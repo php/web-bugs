@@ -70,23 +70,32 @@ $state_types =  array (
 );
 
 // Items that need bug tracking but aren't real packages
-$pseudo_pkgs = array(
-    'Web Site'   => 'Web Site',
-    'Bug System' => '&nbsp;&nbsp;&nbsp;&nbsp;Bug System',
+require_once 'Tree/Tree.php';
+
+$tree = Tree::setup (
+	'Memory_DBsimple',
+	PEAR_DATABASE_DSN,
+	array (
+		'order' => 'id',
+		'whereAddOn' => "project IN ('', '$site')",
+		'table' => 'bugdb_packages',
+		'columnNameMaps' => array (
+			'parentId' => 'parent',
+			'name'     => 'package_name',
+		),
+	)
 );
-switch ($site)
+$tree->setup();
+foreach ($tree->data as $data)
 {
-	case 'pear':
-	    $pseudo_pkgs['PEPr'] = '&nbsp;&nbsp;&nbsp;&nbsp;PEPr';
-        $preudo_pkgs['Documentation'] = 'Documentation';
-		break;
-	case 'php':
-		$pseudo_pkgs = array();
-		include('php_bugtypes.inc');
-		foreach ($items as $name => $pretty_name)
+	if (isset($data['children']))
+	{
+		$pseudo_pkgs[$data['package_key']] = $data['name'];
+		foreach ($data['children'] as $child)
 		{
-			$pseudo_pkgs[$name] = $pretty_name;
+			$pseudo_pkgs[$child['package_key']] = "&nbsp;&nbsp;&nbsp;&nbsp;{$child['name']}";
 		}
+	}
 }
 
 

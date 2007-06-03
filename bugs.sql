@@ -116,8 +116,20 @@ CREATE TABLE bugdb_resolves (
 CREATE TABLE bugdb_packages (
   id INT NOT NULL AUTO_INCREMENT,
   parent INT NOT NULL default '0',
-  name varchar(80) NOT NULL default '',
+  package_key varchar(80) NOT NULL default '',
+  package_name varchar(100) NOT NULL default '',
   project varchar(40) NOT NULL default '',
   PRIMARY KEY (id),
-  UNIQUE KEY (name, project)
+  UNIQUE KEY (package_key, project)
 );
+
+# Default pseudo packages (common for all projects)
+INSERT INTO bugdb_packages SET id = '1', parent = '0', package_key = 'Web Site',   package_name = 'Web Site',   project = '';
+INSERT INTO bugdb_packages SET id = '2', parent = '1', package_key = 'Bug System', package_name = 'Bug System', project = '';
+
+# PEAR specific pseudo packages
+INSERT INTO bugdb_packages SET id = '3', parent = '1', package_key = 'PEPr', package_name = 'PEPr', project = 'pear';
+INSERT INTO bugdb_packages SET id = '4', parent = '0', package_key = 'Documentation', package_name = 'Documentation', project = 'pear';
+
+# PECL specific pseudo pacakges
+# none?
