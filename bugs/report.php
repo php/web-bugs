@@ -1,5 +1,5 @@
-<?php /* vim: set noet ts=4 sw=4: : */
-session_start();
+<?php 
+
 /**
  * Procedures for reporting bugs
  *
@@ -19,6 +19,11 @@ session_start();
  * @license   http://www.php.net/license/3_0.txt  PHP License
  * @version   $Id$
  */
+
+/** 
+ * Start session 
+ */
+session_start();
 
 /**
  * Obtain common includes
@@ -400,9 +405,10 @@ if (isset($_POST['in'])) {
 
 }  // end of if input
 
+$package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : '';
 
-if (!package_exists($_REQUEST['package'])) {
-    $errors[] = 'Package "' . clean($_REQUEST['package']) . '" does not exist.';
+if (!package_exists($package)) {
+    $errors[] = 'Package "' . clean($package) . '" does not exist.';
     response_header("Report - Invalid bug type");
     display_bug_error($errors);
 } else {
@@ -424,7 +430,7 @@ if (!package_exists($_REQUEST['package'])) {
             
         );
         response_header('Report - New');
-        show_bugs_menu(clean($_REQUEST['package']));
+        show_bugs_menu(clean($package));
 
         ?>
 
@@ -463,7 +469,7 @@ if (!package_exists($_REQUEST['package'])) {
 
 <?php
 $self = htmlspecialchars($_SERVER['PHP_SELF']);
-$action = $self . '?package=' . clean($_REQUEST['package']);
+$action = $self . '?package=' . clean($package);
 ?>
 <form method="post"
  action="<?php echo $action ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
@@ -502,13 +508,13 @@ else: // if (isset($auth_user))
    </select>
   </td>
  </tr>
- <?php if (!in_array(clean($_REQUEST['package']), $pseudo_pkgs, true)): ?>
+ <?php if (!in_array(clean($package), $pseudo_pkgs, true)): ?>
  <tr>
   <th class="form-label_left">
    Package version:
   </th>
   <td class="form-input">
-   <?php echo show_package_version_options(clean($_REQUEST['package']),
+   <?php echo show_package_version_options(clean($package),
         clean($_POST['in']['package_version'])); ?>
   </td>
  </tr>
@@ -521,10 +527,10 @@ else: // if (isset($auth_user))
 
     <?php
 
-    if (!empty($_REQUEST['package'])) {
+    if (!empty($package)) {
         echo '<input type="hidden" name="in[package_name]" value="';
-        echo clean($_REQUEST['package']) . '" />' . clean($_REQUEST['package']);
-        if ($_REQUEST['package'] == 'Bug System') {
+        echo clean($package) . '" />' . clean($package);
+        if ($package == 'Bug System') {
             echo '<p><strong>WARNING: You are saying the <em>package';
             echo ' affected</em> is the &quot;Bug System.&quot; This';
             echo ' category is <em>only</em> for telling us about problems';
@@ -536,7 +542,7 @@ else: // if (isset($auth_user))
         }
     } else {
         echo '<select name="in[package_name]">' . "\n";
-        show_types(null, 0, clean($_REQUEST['package']));
+        show_types(null, 0, clean($package));
         echo '</select>';
     }
 
@@ -559,7 +565,7 @@ if (auth_check('pear.dev')) {
     $content = '';
     Bug_DataObject::init();
     $db = Bug_DataObject::bugDB('bugdb_roadmap');
-    $db->package = clean($_REQUEST['package']);
+    $db->package = clean($package);
     $db->orderBy('releasedate ASC');
     $myroadmaps = array();
     if (isset($_POST['in']) && isset($_POST['in']['roadmap']) &&
@@ -604,9 +610,9 @@ if (auth_check('pear.dev')) {
   <td class="form-input">
    <?php
     if (isset($_GET['showold'])) {
-        echo '<a href="report.php?package=' . clean($_REQUEST['package']) . '">Hide released roadmaps</a>';
+        echo '<a href="report.php?package=' . clean($package) . '">Hide released roadmaps</a>';
     } else {
-        echo '<a href="report.php?package=' . clean($_REQUEST['package']) . '&amp;showold=1">Show released roadmaps</a>';
+        echo '<a href="report.php?package=' . clean($package) . '&amp;showold=1">Show released roadmaps</a>';
     }
     echo '<br />' . $content;
    ?>

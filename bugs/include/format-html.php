@@ -1170,4 +1170,3 @@ function make_ticket_links($text)
                          '<a href="/bugs/\\2">\\0</a>', $text);
     return $text;
 }
-?>
