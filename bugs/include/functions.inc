@@ -491,62 +491,25 @@ function show_package_version_options($package, $current)
  */
 function show_version_options($current, $default = '')
 {
-    $versions = array(
-        '5.2.1',
-        '5.2.0',
-        'HEAD CVS-' . date('Y-m-d'),
-        '5_2 CVS-' . date('Y-m-d'),
-        '5.1.6',
-        '5.1.5',
-        '5.1.4',
-        '5.1.3',
-        '5.1.2',
-        '5.1.1',
-        '5.1.0',
-        '5.0.5',
-        '5.0.4',
-        '5.0.3',
-        '5.0.2',
-        '5.0.1',
-        '5.0.0',
-        '4.4.5',
-        '4.4.4',
-        '4.4.3',
-        '4.4.2',
-        '4.4.1',
-        '4.4.0',
-        '4_4 CVS-' . date('Y-m-d'),
-        '4.3.11',
-        '4.3.10',
-        '4.3.9',
-        '4.3.8',
-        '4.3.7',
-        '4.3.6',
-        '4.3.5',
-        '4.3.4',
-        '4.3.3',
-        '4.3.2',
-        '4.3.1',
-        '4.3.0',
-        'Irrelevant'
-    );
     $use = 0;
 
-    echo '<option value="">--Please Select--</option>' . "\n";
+    echo '<option value="">--Please Select--</option>' , "\n";
+	include './php_versions.php';
     while (list(,$v) = each($versions)) {
         echo '<option';
         if ($current == $v) {
             echo ' selected="selected"';
         }
-        echo '>' . htmlspecialchars($v) . "</option>\n";
+        echo '>' , htmlspecialchars($v) , "</option>\n";
         if ($current == $v) {
             $use++;
         }
     }
     if (!$use && $current) {
-        echo '<option selected="selected">' . htmlspecialchars($current) . "</option>\n";
+        echo '<option selected="selected">' , htmlspecialchars($current) , "</option>\n";
     }
-    echo '<option value="earlier">Earlier? Upgrade first!</option>' . "\n";
+	echo '<option>Irrelevant</option>', "\n";
+    echo '<option value="earlier">Earlier? Upgrade first!</option>', "\n";
 }
 
 /**

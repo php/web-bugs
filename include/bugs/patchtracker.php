@@ -172,12 +172,17 @@ class Bugs_Patchtracker
             }
             list($id, $fname) = $res;
             $file->setName($fname);
-            if ($file->getProp('type') != 'text/plain') {
+            $allowed_mime_types = array('application/x-txt',
+                                        'text/plain',
+                                        'text/x-diff',
+                                        'text/x-patch'
+                                       );
+            if (!in_array($file->getProp('type'), $allowed_mime_types)) {
                 $this->_dbh->query('DELETE FROM bugdb_patchtracker
                     WHERE bugdb_id = ? and patch = ? and revision = ?',
                     array($bugid, $name, $id));
-                return PEAR::raiseError('Error: uploaded patch file must have text/plain' .
-                    ' MIME type (save as patch.txt)');
+                return PEAR::raiseError('Error: uploaded patch file must be text ' .
+                    'file (save as e.g. "patch.txt" or "package.diff")');
             }
             $tmpfile = $file->moveTo($this->patchDir($bugid, $name));
             if (PEAR::isError($tmpfile)) {
