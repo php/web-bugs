@@ -204,8 +204,8 @@ if (isset($_POST['in'])) {
                 if (!isset($auth_user)) {
                     $registereduser = 0;
                     // user doesn't exist yet
-                    require 'bugs/pear-bug-accountrequest.php';
-                    $buggie = new PEAR_Bug_Accountrequest;
+                    require 'include/classes/bug_accountrequest.php';
+                    $buggie = new Bug_Accountrequest;
                     $salt = $buggie->addRequest($_POST['in']['email']);
                     if (is_array($salt)) {
                         $errors = $salt;
@@ -323,8 +323,8 @@ if (isset($_POST['in'])) {
 
                 $redirectToPatchAdd = false;
                 if (!empty($_POST['in']['patchname']) && $_POST['in']['patchname']) {
-                    require_once 'bugs/patchtracker.php';
-                    $tracker = new Bugs_Patchtracker;
+                    require_once 'include/classes/bug_patchtracker.php';
+                    $tracker = new Bug_Patchtracker;
                     PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
                     $patchrevision = $tracker->attach($cid, 'patchfile',
                         $_POST['in']['patchname'], $_POST['in']['handle'], array());
@@ -389,8 +389,8 @@ if (isset($_POST['in'])) {
                         $_POST['in']['patchname'] . '&email=' .
                         $_POST['in']['email']);
                 } elseif (!isset($buggie) && !empty($_POST['in']['patchname'])) {
-                    require_once 'bugs/pear-bug-accountrequest.php';
-                    $r = new PEAR_Bug_Accountrequest();
+                    require_once 'include/classes/bug_accountrequest.php';
+                    $r = new Bug_Accountrequest();
                     $info = $r->sendPatchEmail($cid, $patchrevision,
                         $_POST['in']['package_name'], $auth_user->handle);
                 }

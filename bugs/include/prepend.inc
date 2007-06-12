@@ -26,20 +26,24 @@ $siteBig = 'PHP';
 $bugEmail = 'php-bugs@lists.php.net';
 
 $basedir = dirname($_SERVER['PHP_SELF']);
+$main_include_path = realpath(dirname(__FILE__).'/../');
 define('BASEDIR', ($basedir == '/') ? '' : $basedir);
+define('INCDIR', $main_include_path);
 define('PEAR_DATABASE_DSN', 'mysqli://nobody:@localhost/phpbugsdb');
 
-/// FIXME: This should not be needed!
-require dirname(__FILE__) . '/format-html.php'; // aka pear-format-html.php
+/// FIXME: These should not be needed!
+require "{$main_include_path}/include/format-html.php"; // aka pear-format-html.php
+require "{$main_include_path}/include/classes/bug_dataobject.php";
 
 extra_styles('css/bugs.css');
 
 /**
  * Obtain the functions and variables used throughout the bug system
  */
-require_once dirname(__FILE__) . '/functions.inc';
+require_once "{$main_include_path}/include/functions.inc";
 
 /**
  * Obtain the $RESOLVE_REASONS array
  */
-require dirname(__FILE__) . '/resolve.inc';
+require_once "{$main_include_path}/include/resolve.inc";
+

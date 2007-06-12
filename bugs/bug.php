@@ -47,16 +47,12 @@ require_once 'Text/CAPTCHA/Numeral.php';
  * Instantiate the numeral captcha object.
  */
 $numeralCaptcha = new Text_CAPTCHA_Numeral();
-
-Bug_DataObject::init();
-
 if (empty($_REQUEST['id']) || !(int)$_REQUEST['id']) {
     localRedirect('search.php');
     exit;
 } else {
     $id = (int)$_REQUEST['id'];
 }
-
 
 if (isset($_GET['unsubscribe'])) {
     $unsubcribe = (int)$_GET['unsubscribe'];
@@ -249,6 +245,11 @@ if ($edit == 1 && isset($_GET['delete_comment'])) {
 // handle any updates, displaying errors if there were any
 $errors = array();
 
+/**
+ * Init BugDataObject class
+ */
+Bug_DataObject::init();
+
 if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     // Submission of additional comment by others
 
@@ -277,8 +278,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         do {
             if (!isset($auth_user) || !$auth_user) {
                 // user doesn't exist yet
-                require 'bugs/pear-bug-accountrequest.php';
-                $buggie = new PEAR_Bug_Accountrequest;
+                require 'include/classes/bug_accountrequest.php';
+                $buggie = new Bug_Accountrequest;
                 if (!is_valid_email($_POST['in']['commentemail'])) {
                     $errors[] = "You must provide a valid email address.";
                     response_header('Add Comment - Problems');

@@ -5,8 +5,8 @@ if (!isset($_GET['handle'])) {
     response_footer();
     exit;
 }
-require 'bugs/pear-bug-accountrequest.php';
-$account = new PEAR_Bug_Accountrequest($_GET['handle']);
+require 'include/classes/bug_accountrequest.php';
+$account = new Bug_Accountrequest($_GET['handle']);
 if ($account->pending()) {
     try {
         $account->sendEmail();

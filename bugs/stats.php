@@ -297,8 +297,8 @@ Developers are considered to have fixed a bug if the bug is marked <strong>Close
 echo '<table>';
 echo '<tr><th>All Time</th><th>Last 30 Days</th><th>Bug Reporting</th></tr>';
 echo '<tr><td valign="top">';
-require_once 'bugs/pear-bugs.php';
-$bugs = new PEAR_Bugs;
+require_once 'include/classes/bug_stats.php';
+$bugs = new Bug_Stats($site);
 $develstats = $bugs->allDevelStats();
 $lastmonth = $bugs->lastMonthStats();
 $reporters = $bugs->reporterStats();

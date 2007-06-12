@@ -1,7 +1,6 @@
 <?php
 session_start();
 $canpatch = true;
-require_once 'bugs/patchtracker.php';
 require_once 'include/functions.inc';
 /**
  * Numeral Captcha Class
@@ -11,7 +10,7 @@ require_once 'Text/CAPTCHA/Numeral.php';
  * Instantiate the numeral captcha object.
  */
 $numeralCaptcha = new Text_CAPTCHA_Numeral();
-$patchinfo = new Bugs_Patchtracker;
+
 // captcha is not necessary if the user is logged in
 if (isset($auth_user) && $auth_user->registered) {
     auth_require('pear.dev', 'pear.bug');
@@ -19,6 +18,10 @@ if (isset($auth_user) && $auth_user->registered) {
         unset($_SESSION['answer']);
     }
 }
+
+require_once 'include/classes/bug_patchtracker.php';
+$patchinfo = new Bug_Patchtracker;
+
 $loggedin = isset($auth_user) && $auth_user->registered;
 if (isset($_POST['addpatch'])) {
     if (!isset($_POST['obsoleted'])) {
@@ -75,8 +78,8 @@ if (isset($_POST['addpatch'])) {
                 throw new Exception('');
             }
             // user doesn't exist yet
-            require_once 'bugs/pear-bug-accountrequest.php';
-            $buggie = new PEAR_Bug_Accountrequest;
+            require_once 'include/classes/bug_accountrequest.php';
+            $buggie = new Bug_Accountrequest;
             $salt = $buggie->addRequest($_POST['email']);
             if (is_array($salt)) {
                 $errors = $salt;

@@ -1,13 +1,17 @@
 <?php
+
 require 'include/functions.inc';
+
 if (!isset($_GET['bug'])) {
     response_header('Error :: no bug selected');
     display_bug_error('No bug selected to add a patch to');
     response_footer();
     exit;
 }
-require 'bugs/patchtracker.php';
-$patchinfo = new Bugs_Patchtracker;
+
+require 'include/classes/bug_patchtracker.php';
+$patchinfo = new Bug_Patchtracker;
+
 if (PEAR::isError($buginfo = $patchinfo->getBugInfo($_GET['bug']))) {
     response_header('Error :: invalid bug selected');
     display_bug_error('Invalid bug "' . (int)$GET['bug'] . '" selected');
