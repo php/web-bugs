@@ -36,7 +36,7 @@ if (in_array($info['roadmap_version'], $this->releases)) {
 <h2>Version <?php echo $info['roadmap_version'] ?></h2>
 <table>
  <tr>
-  <td>
+  <td colspan="2">
    <?php if ($GLOBALS['auth_user']) : ?>
    <a href="roadmap.php?package=<?php echo urlencode($this->package). $showold ?>&addbugs=1&roadmap=<?php
     echo urlencode($info['roadmap_version']) ?>">Add Bugs/Features to this Roadmap</a><br />

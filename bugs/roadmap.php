@@ -131,9 +131,11 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
     $bugdb->releasedate = date('Y-m-d H:i:s', strtotime($_POST['releasedate']));
     $bugdb->package = $_GET['package'];
     $bugdb->description = $_POST['description'];
-    $bugdb->insert();
+    $id = $bugdb->insert();
+
     unset($_GET['new']);
 }
+
 if (isset($_GET['edit']) && isset($_POST['go'])) {
     $bugdb = Bug_DataObject::bugDB('bugdb_roadmap');
     $bugdb->id = $_GET['edit'];
@@ -339,11 +341,7 @@ $savant = Bug_DataObject::getSavant();
 $mysql4 = function_exists('mysqli_connect') ||
     version_compare(mysql_get_server_info(), '4.0.0', 'ge');
 
-if ($mysql4) {
-    $bugdb->selectAdd('SQL_CALC_FOUND_ROWS');
-} else {
-}
-
+$bugdb->selectAdd('SQL_CALC_FOUND_ROWS');
 $bugdb->selectAdd('TO_DAYS(NOW())-TO_DAYS(bugb.ts2) AS unchanged');
 $bugdb->package_name = $_GET['package'];
 
@@ -419,20 +417,14 @@ while ($allroadmaps->fetch()) {
     }
     if (isset($_GET['roadmapdetail']) && $_GET['roadmapdetail'] === $allroadmaps->roadmap_version) {
         $features = clone($bugdb);
-        $bugs = clone($bugdb);
+        $bugs     = clone($bugdb);
 
         $roadmaps->roadmap_id = $allroadmaps->id;
         $features->selectAs();
         $features->joinAdd($roadmaps);
         $features->bug_type = 'Feature/Change Request';
         $rows = $features->find(false);
-
-        if ($mysql4) {
-            $total_rows = $dbh->getOne('SELECT FOUND_ROWS()');
-        } else {
-            /* lame mysql 3 compatible attempt to allow browsing the search */
-            $total_rows = $rows < 10 ? $rows : $begin + $rows + 10;
-        }
+        $total_rows = $dbh->getOne('SELECT FOUND_ROWS()');
 
         if ($rows) {
             $package_string = '';
@@ -458,21 +450,14 @@ while ($allroadmaps->fetch()) {
             $savant->types = $types;
             $features = $savant->fetch('searchresults.php');
         } else {
-            $features = 'None';
+            $features = 'No features';
         }
 
-        $bugs->bug_type = 'Bug';
         $bugs->selectAs();
         $bugs->joinAdd($roadmaps);
-        $bugs->whereAdd('bugdb.bug_type = "Bug"');
+        $bugs->whereAdd('bugdb.bug_type IN("Bug", "Documentation Problem")');
         $rows = $bugs->find(false);
-
-        if ($mysql4) {
-            $total_rows = $dbh->getOne('SELECT FOUND_ROWS()');
-        } else {
-            /* lame mysql 3 compatible attempt to allow browsing the search */
-            $total_rows = $rows < 10 ? $rows : $begin + $rows + 10;
-        }
+        $total_rows = $dbh->getOne('SELECT FOUND_ROWS()');
 
         if ($rows) {
             $package_string = '';
@@ -498,7 +483,7 @@ while ($allroadmaps->fetch()) {
             $savant->types = $types;
             $bugs = $savant->fetch('searchresults.php');
         } else {
-            $bugs = 'None';
+            $bugs = 'No bugs';
         }
         $savant->bugs[$allroadmaps->roadmap_version] = $bugs;
         $savant->feature_requests[$allroadmaps->roadmap_version] = $features;
