@@ -23,7 +23,7 @@
  * DEFINE VARIABLES ============================
  */
 
-/* update include/bugs/pear-bug-accountrequest.php if these change! */
+/* update include/classes/bug_accountrequest.php if these change! */
 // used in mail_bug_updates(), below, and class for search results
 $tla = array(
     'Open'        => 'Opn',
