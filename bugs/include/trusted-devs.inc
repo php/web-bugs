@@ -18,15 +18,29 @@
  * @version   $Id$
  */
 
-/**
- * Figure out PEAR karma levels
- */
-require_once "Damblan/Karma.php";
 
 
-$karma = new Damblan_Karma($dbh);
-$dev_list = $karma->getUsers("pear.bug.admin");
-$trusted_developers = array();
-foreach ($dev_list as $dev) {
-    $trusted_developers[] = $dev['user'];
+if ($site == 'pear') 
+{
+	/**
+	 * Figure out PEAR karma levels
+	 */
+	require_once "Damblan/Karma.php";
+
+	$karma = new Damblan_Karma($dbh);
+	$dev_list = $karma->getUsers("pear.bug.admin");
+	$trusted_developers = array();
+	foreach ($dev_list as $dev) {
+	    $trusted_developers[] = $dev['user'];
+	}
+} else {
+	$trusted_developers = array(
+        'tony2001',
+        'derick',
+        'iliaa',
+        'sniper',
+        'wez',
+        'magnus',
+        'jacques',
+	);
 }
