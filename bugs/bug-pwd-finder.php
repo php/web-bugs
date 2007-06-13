@@ -24,59 +24,47 @@
 require_once './include/prepend.inc';
 
 $errors  = array();
-$success = '';
+$success = false;
+$bug_id = (int) $_GET['bug_id'];
 
-if (isset($_GET['bug_id'])) {
+if (!empty($bug_id)) {
+	// Try to find the email and the password
+	$query = "SELECT email, passwd FROM bugdb WHERE id = '{$bug_id}'";
 
-    // Clean up the bug id
-    $bug_id = ereg_replace ("[^0-9]+", "", $_GET['bug_id']);
+	// Run the query
+	$row = $dbh->getRow($query, null, DB_FETCHMODE_ASSOC);
 
-    if ($bug_id != "") {
-        // Try to find the email and the password
-        $query = "SELECT email, passwd FROM bugdb WHERE id = '" . $bug_id . "'";
+	if (is_null($row)) {
+		$errors[] = "Invalid bug id provided: #{$bug_id}";
+	} else {
+		if (empty($row['passwd'])) {
+			$errors[] = "No password found for #$bug_id bug report, sorry.";
+		} else {
+			$resp = mail($row['email'],
+						 "Password for {$siteBig} bug report #{$bug_id}",
+						 "The password for {$siteBig} bug report #{$bug_id} is {$row['passwd']}",
+						 'From: noreply@php.net');
 
-        // Run the query
-        $row = $dbh->getRow($query, null, DB_FETCHMODE_ASSOC);
-
-        if (is_null($row)) {
-            $errors[] = 'Invalid bug id provided: #' . $bug_id;
-        } else {
-            if (empty($row['passwd'])) {
-                $errors[] = "No password found for #$bug_id bug report, sorry.";
-            } else {
-                $passwd = $row['passwd'];
-
-                $resp = mail($row['email'],
-                             'Password for '.$siteBig.' bug report #' . $bug_id,
-                             'The password for '.$siteBig.' bug report #' . $bug_id
-                             . ' is ' . $passwd . '.',
-                             'From: noreply@php.net');
-
-                if ($resp) {
-                    $success = 'The password for bug report #' . $bug_id
-                               . ' has been sent to '
-                               . spam_protect($row['email'], 'text');
-                } else {
-                    $errors[] = 'Sorry. Mail can not be sent at this time.'
-                                . 'Please try again later.';
-                }
-            }
-        }
-    } else {
-        $errors[] = 'Invalid bug id provided: #' . $bug_id;
-    }
+			if ($resp) {
+				$success = "The password for bug report #{$bug_id} has been sent to " . spam_protect($row['email'], 'text');
+			} else {
+				$errors[] = 'Sorry. Mail can not be sent at this time, please try again later.';
+			}
+		}
+	}
+} else {
+	$errors[] = 'Invalid bug id provided.';
 }
 
-response_header("Bug Report Password Finder");
+response_header('Bug Report Password Finder');
 
-echo '<h1>Bug Report Password Finder</h1>' . "\n";
+echo "<h1>Bug Report Password Finder</h1>\n";
 
 display_bug_error($errors);
 
 if ($success) {
-    display_bug_success($success);
+	display_bug_success($success);
 }
-
 ?>
 
 <p>
@@ -90,7 +78,7 @@ and the password will be mailed to the email address specified
 in the bug report.
 </p>
 
-<form method="get" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+<form method="get" action="bug-pwd-finder.php">
 <p><b>Bug Report ID:</b> #<input type="text" size="20" name="bug_id">
 <input type="submit" value="Send"></p>
 </form>

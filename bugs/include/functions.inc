@@ -660,7 +660,7 @@ function display_bug_success($in)
 function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous = array(),
     $current = array())
 {
-    global $tla, $types, $site, $siteBig;
+    global $tla, $types, $site, $siteBig, $site_urlm, $basedir;
 
     $text = array();
     $headers = array();
@@ -763,17 +763,17 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     /* user text with attention, headers and previous messages */
     $user_text  = "ATTENTION! Do NOT reply to this email!\n" .
                   "To reply, use the web interface found at\n" .
-                  "http://$site.php.net/bugs/bug.php?id=$bug[id]&edit=2\n\n\n" .
+                  "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=2\n\n\n" .
                   $header_text .
                   $wrapped_text;
 
     /* developer text with headers, previous messages, and edit link */
     $dev_text = 'Edit report at ' .
-                "http://$site.php.net/bugs/bug.php?id=$bug[id]&edit=1\n\n" .
+                "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1\n\n" .
                 $header_text .
                 $wrapped_text .
                 "\n-- \nEdit this bug report at " .
-                "http://$site.php.net/bugs/bug.php?id=$bug[id]&edit=1\n";
+                "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1\n";
 
     if (preg_match('/.*@php\.net\z/', $bug['email'])) {
         $user_text = $dev_text;
@@ -807,8 +807,8 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
                   $user_text,
                   "From: $siteBig Bug Database <$mailfrom>\n".
                   "Bcc: $Bcc\n" .
-                  "X-PHP-Bug: $bug[id]\n".
-                  "In-Reply-To: <bug-$bug[id]@$site.php.net>",
+                  "X-PHP-Bug: {$bug['id']}\n".
+                  "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
                   "-fbounces-ignored@php.net");
             # but we go ahead and let the default sender get used for the list
 
@@ -816,7 +816,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
                   "[$siteBig-BUG] " . rinse($subj) . txfield('sdesc'),
                   $dev_text,
                   "From: $from\n".
-                  "X-PHP-Bug: $bug[id]\n".
+                  "X-PHP-Bug: {$bug['id']}\n".
                   "X-PHP-Type: "       . rinse((($edit != 3) ? $in['bug_type']     : $bug['bug_type']))    . "\n" .
                   "X-PHP-PackageVersion: "    . rinse((($edit != 3) ? $in['package_version']  : $bug['package_version'])) . "\n" .
                   "X-PHP-Version: "    . rinse((($edit != 3) ? $in['php_version']  : $bug['php_version'])) . "\n" .
@@ -824,7 +824,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
                   "X-PHP-OS: "         . rinse((($edit != 3) ? $in['php_os']       : $bug['php_os']))      . "\n" .
                   "X-PHP-Status: "     . rinse($new_status) . "\n" .
                   "X-PHP-Old-Status: " . rinse($old_status) . "\n" .
-                  "In-Reply-To: <bug-$bug[id]@$site.php.net>",
+                  "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
                   "-f bounces-ignored@php.net");
         }
     }
@@ -842,11 +842,11 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
         if (DEVBOX == false) {
             @mail($email,
                   rinse($subj) . txfield('sdesc'),
-                  wordwrap($in['assign'] . ' you have just been assigned to this bug by ' . $from . "\n\n") .
+                  wordwrap($in['assign'] . " you have just been assigned to this bug by {$from}\n\n") .
                   $dev_text,
-                  "From: $from\n".
-                  "X-PHP-Bug: $bug[id]\n".
-                  "In-Reply-To: <bug-$bug[id]@$site.php.net>",
+                  "From: {$from}\n".
+                  "X-PHP-Bug: {$bug['id']}\n".
+                  "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
                   "-f bounces-ignored@php.net");
         }
     }
@@ -861,7 +861,8 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
  *
  * @return string  the formatted date
  */
-function format_date($date) {
+function format_date($date)
+{
     return date('Y-m-d H:i', $date - date('Z', $date)) . ' UTC';
 }
 
@@ -875,7 +876,8 @@ function format_date($date) {
  */
 function get_old_comments($bug_id, $all = 0)
 {
-    global $dbh, $site;
+    global $dbh, $site_url;
+
     $divider = str_repeat("-", 72);
     $max_message_length = 10 * 1024;
     $max_comments = 5;
@@ -912,7 +914,7 @@ function get_old_comments($bug_id, $all = 0)
             spam_protect($row[1], 'text');
         return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "[$row[0]] $email\n\n$row[2]\n\n$divider\n\n");
     } else {
-        return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n    http://$site.php.net/bugs/bug.php?id=$bug_id\n");
+        return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n    http://{$site_url}{$basedir}/bug.php?id=$bug_id\n");
     }
 
     return '';
@@ -951,8 +953,8 @@ function package_exists($package)
     if (isset($pseudo_pkgs[$package])) {
         return true;
     }
-    $found = $dbh->getOne("SELECT count(*) FROM packages WHERE packages.name='{$package}'");
-    return $found == 1 ? true : false;
+    $found = $dbh->getOne("SELECT count(*) FROM packages WHERE name='{$package}'");
+    return ($found == 1) ? true : false;
 }
 
 /**
@@ -1021,9 +1023,10 @@ function incoming_details_are_valid($in, $initial = 0, $logged = false)
  *
  * @return array  an array of email addresses
  */
-function get_package_mail($package_name, $bug_id=false)
+function get_package_mail($package_name, $bug_id = false)
 {
     global $site, $bugEmail, $dbh;
+
     // XXX Change to pear-bugs when it gets opened
     //$to[] = "pear-dev@lists.php.net";
 
@@ -1051,17 +1054,17 @@ function get_package_mail($package_name, $bug_id=false)
 
     /* subscription */
     if ($bug_id) {
-        $bug_id = (int)$bug_id;
+        $bug_id = (int) $bug_id;
 
-        $assigned = $dbh->getOne('SELECT assign FROM bugdb WHERE id=' . $bug_id);
+        $assigned = $dbh->getOne("SELECT assign FROM bugdb WHERE id={$bug_id}");
         if ($assigned) {
-            $assigned = $dbh->getOne('SELECT email FROM users WHERE handle="' . $assigned . '"');
+            $assigned = $dbh->getOne("SELECT email FROM users WHERE handle='{$assigned}'");
             if ($assigned && !in_array($assigned, $to)) {
                 // assigned is not a maintainer
                 $to[] = $assigned;
             }
         }
-        $bcc = $dbh->getCol('SELECT email FROM bugdb_subscribe WHERE bug_id=' . $bug_id);
+        $bcc = $dbh->getCol("SELECT email FROM bugdb_subscribe WHERE bug_id={$bug_id}");
         $bcc = array_diff($bcc, $to);
         $bcc = array_unique($bcc);
         return array(implode(', ', $to), $bugEmail, implode(', ', $bcc));
@@ -1081,14 +1084,12 @@ function format_search_string($search, $boolean_search = false)
 {
     // Function will be updated to make results more relevant.
     // Quick hack for indicating ignored words.
-
-    global $mysql4;
-
     $min_word_len=3;
 
     $words = preg_split("/\s+/", $search);
     $ignored = $used = array();
-    foreach($words AS $match) {
+    foreach($words AS $match)
+    {
         if (strlen($match) < $min_word_len) {
             array_push($ignored, $match);
         } else {
@@ -1096,7 +1097,7 @@ function format_search_string($search, $boolean_search = false)
         }
     }
 
-    if ($mysql4 && $boolean_search) {
+    if ($boolean_search) {
         // require all used words (all)
         if ($boolean_search === 1) {
             $newsearch = '';
@@ -1133,7 +1134,7 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
         return;
     }
 
-    $pkgname = (array)$pkgname;
+    $pkgname = (array) $pkgname;
     $home    = true;
 
     foreach ($pkgname as $key => $value) {
@@ -1155,17 +1156,16 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
             echo make_link('/package/' . $pkgname[0], 'Package home');
             echo delim();
         }
-        echo make_link('/bugs/report.php?package=' . $pkgname[0],
-                       'Report new bug');
+        echo make_link(BASEDIR . "/report.php?package={$pkgname[0]}", 'Report new bug');
         echo delim();
     }
 
     if (count($pkgname) == 1 && !$fulllink) {
-        echo make_link('/bugs/search.php?package_name[]=' . $pkgname[0], 'New search');
+        echo make_link(BASEDIR . "/search.php?package_name[]={$pkgname[0]}", 'New search');
         echo delim();
-        echo make_link('/bugs/roadmap.php?package=' . $pkgname[0], 'Development Road Map');
+        echo make_link(BASEDIR . "/roadmap.php?package={$pkgname[0]}", 'Development Road Map');
     } else {
-        echo make_link('/bugs/search.php', 'New search');
+        echo make_link(BASEDIR . '/search.php', 'New search');
     }
 
     echo "\n</td>\n";
@@ -1176,16 +1176,13 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
     $style['CRSLR']    = ($status == 'CRSLR')   ?' class="status_active"':'';
     echo '<td style="text-align: right;">' . "\n Status: ";
     if (!$fulllink) {
-        $fulllink = '/bugs/search.php?cmd=display&amp;' . $pkgs; 
+        $fulllink = BASEDIR . "/search.php?cmd=display&amp;{$pkgs}"; 
     }
-    echo make_link($fulllink .
-                   '&amp;status=Open', 'Open', '', $style['Open']);
+    echo make_link("{$fulllink}&amp;status=Open", 'Open', '', $style['Open']);
     echo delim();
-    echo make_link($fulllink .
-                   '&amp;status=Feedback', 'Feedback', '', $style['Feedback']);
+    echo make_link("{$fulllink}&amp;status=Feedback', 'Feedback', '', $style['Feedback']);
     echo delim();
-    echo make_link($fulllink .
-                   '&amp;status=All', 'All', '', $style['All']);
+    echo make_link("{$fulllink}&amp;status=All", 'All', '', $style['All']);
     if (!class_exists('package')) {
         require_once 'pear-database-package.php';
     }
@@ -1193,9 +1190,7 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
         $releases = package::info($pkgname[0], 'releases');
         if (count($releases)) {
             echo delim();
-            echo make_link($fulllink .
-                           '&amp;status=CRSLR', 'Closed Since Version ' . 
-                           key($releases), '', $style['CRSLR'], 'Closed bugs since last release');
+            echo make_link("{$fulllink}&amp;status=CRSLR", 'Closed Since Version ' . key($releases), '', $style['CRSLR'], 'Closed bugs since last release');
         }
     }
     echo "\n</td></tr></table>\n";
@@ -1214,18 +1209,20 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
  */
  function unsubscribe_hash($bug_id, $email, $bug)
  {
-    global $dbh, $siteBig, $site;
+    global $dbh, $siteBig, $site_url, $bugEmail;
 
-    $now = time();
+	$now = time();
     $hash = crypt($email . $id, $now);
     $bug_id = (int)$bug_id;
 
-    $query = 'UPDATE bugdb_subscribe
-                SET unsubscribe_date=' . $now . ',
-                unsubscribe_hash=' . "'" . escapeSQL($hash) . "'" .
-                ' WHERE bug_id=' . $bug_id . ' AND email=' ."'" . escapeSQL($email) . "'";
+    $query = "
+		UPDATE bugdb_subscribe
+		SET unsubscribe_date = '{$now}',
+			unsubscribe_hash = ?
+		WHERE bug_id = {$bug_id} AND email = ?
+    ";
 
-    $res = $dbh->query($query);
+    $res = $dbh->query($query, array($hash, $email));
 
     $affected = $dbh->affectedRows($res);
 
@@ -1234,16 +1231,16 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
         /* user text with attention, headers and previous messages */
         $user_text  = "ATTENTION! Do NOT reply to this email!\n\n" .
                       "A request has been made to remove your subscription to\n" .
-                      "$siteBig bug #$bug_id ($bug[sdesc])\n\n" .
+                      "{$siteBig} bug #{$bug_id} ({$bug['sdesc']})\n\n" .
                       "To confirm the removal please use this link:\n" .
-                      "http://$site.php.net/bugs/bug.php?id=$bug[id]&unsubscribe=1&t=$hash\n\n\n";
+                      "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&unsubscribe=1&t={$hash}\n\n\n";
 
         @mail($email,
               "[$siteBig-BUG-unsubscribe] " . rinse($bug['sdesc']),
               $user_text,
-              "From: $siteBig Bug Database <$mailfrom>\n".
-              "X-PHP-Bug: $bug[id]\n".
-              "In-Reply-To: <bug-$bug[id]@$site.php.net>",
+              "From: {$siteBig} Bug Database <{$bugEmail}>\n".
+              "X-PHP-Bug: {$bug['id']}\n".
+              "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
               "-fbounces-ignored@php.net");
     }
 }
@@ -1264,15 +1261,11 @@ function unsubscribe($bug_id, $hash)
     $hash = escapeSQL($hash);
     $bug_id = (int) $bug_id;
 
-    $query = 'SELECT
-                bug_id, email, unsubscribe_date, unsubscribe_hash
-            FROM
-                bugdb_subscribe
-            WHERE
-                bug_id=' . $bug_id . '
-            AND
-                unsubscribe_hash=' . "'" . $hash . "'
-            LIMIT 1";
+    $query = "
+		SELECT bug_id, email, unsubscribe_date, unsubscribe_hash
+		FROM bugdb_subscribe
+		WHERE bug_id = {$bug_id} AND unsubscribe_hash = '{$hash}' LIMIT 1
+	";
 
     $sub = $dbh->getRow($query, DB_FETCHMODE_ASSOC);
 
@@ -1287,9 +1280,10 @@ function unsubscribe($bug_id, $hash)
         return false;
     }
 
-    $query = 'DELETE FROM bugdb_subscribe WHERE bug_id=' . $bug_id . '
-                AND unsubscribe_hash=' . "'" . $hash . "'
-                AND email='"  . $sub['email'] . "'";
+    $query = "
+		DELETE FROM bugdb_subscribe
+		WHERE bug_id = {$bug_id} AND unsubscribe_hash = '{$hash}' AND email = '{$sub['email']}'
+	";
     $dbh->query($query);
     return true;
 }

@@ -1,7 +1,10 @@
 <?php
+
 session_start();
 $canpatch = true;
+
 require_once 'include/functions.inc';
+
 /**
  * Numeral Captcha Class
  */
@@ -54,8 +57,7 @@ if (isset($_POST['addpatch'])) {
         $patches = $patchinfo->listPatches($bug);
         $errors[] = 'No patch name entered';
         $captcha = $numeralCaptcha->getOperation();
-        include dirname(dirname(dirname(__FILE__))) . 
-                '/templates/bugs/addpatch.php';
+        include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
         exit;
     }
     if (!$loggedin) {
@@ -120,8 +122,7 @@ if (isset($_POST['addpatch'])) {
                     '" to Bug #' . $bug;
                 $captcha = $numeralCaptcha->getOperation();
                 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-                include dirname(dirname(dirname(__FILE__))) . 
-                        '/templates/bugs/addpatch.php';
+                include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
                 exit;
             }
             try {
@@ -145,8 +146,7 @@ if (isset($_POST['addpatch'])) {
             $patches = $patchinfo->listPatches($bug);
             $captcha = $numeralCaptcha->getOperation();
             $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-            include dirname(dirname(dirname(__FILE__))) . 
-                    '/templates/bugs/addpatch.php';
+            include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
             exit;
         }
     }
@@ -170,8 +170,7 @@ if (isset($_POST['addpatch'])) {
         $captcha = $numeralCaptcha->getOperation();
         $_SESSION['answer'] = $numeralCaptcha->getAnswer();
 
-        include dirname(dirname(dirname(__FILE__))) . 
-                '/templates/bugs/addpatch.php';
+        include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
         exit;
     }
     // {{{ Email after the patch is added.

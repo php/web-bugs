@@ -23,8 +23,9 @@
  */
 require_once './include/prepend.inc';
 
-if (!empty($_GET['search_for']) &&
-    !preg_match('/\\D/', trim($_GET['search_for'])))
+/* Redirect early if a bug id is passed as search string */
+$search_for_id = (isset($_GET['search_for'])) ? (int) $_GET['search_for'] : 0;
+if ($search_for_id)
 {
     if ($auth_user) {
         $x = '&edit=1';
@@ -35,8 +36,7 @@ if (!empty($_GET['search_for']) &&
             $x = '';
         }
     }
-    localRedirect('bug.php?id=' . htmlspecialchars($_GET['search_for']) . $x);
-    exit;
+    localRedirect("bug.php?id={$search_for_id}{$x}");
 }
 
 $newrequest = $_REQUEST;
@@ -49,9 +49,12 @@ if (isset($newrequest['PEAR_PW'])) {
 if (isset($newrequest['PHPSESSID'])) {
     unset($newrequest['PHPSESSID']);
 }
-response_header('Bugs :: Search', false, ' <link rel="alternate" type="application/rdf+xml" title="RSS feed" href="http://' .
-    htmlspecialchars($_SERVER['HTTP_HOST']) . '/bugs/rss/search.php?' . http_build_query($newrequest) . '" />
-');
+response_header(
+	'Bugs :: Search',
+	false,
+	" <link rel='alternate'
+			type='application/rdf+xml'
+			title='RSS feed' href='http://{$site_url}{$basedir}/rss/search.php?" . http_build_query($newrequest) . "' />");
 
 $errors = array();
 $warnings = array();

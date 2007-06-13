@@ -913,10 +913,10 @@ function resize_image($img, $width = 1, $height = 1)
 function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $border = 0, $styles = '')
 {
     if (!$dir) {
-        $dir = BASEDIR . 'gifs';
+        $dir = BASEDIR . '/gifs';
     }
     if (is_string($dir) && $dir{0} != '/') {
-        $dir = BASEDIR . $dir;
+        $dir = BASEDIR . "/$dir";
     }
     if ($size = @getimagesize("{$_SERVER['DOCUMENT_ROOT']}$dir/$file")) {
         $image = sprintf('<img src="%s/%s" style="border: %d;%s%s" %s alt="%s" %s />',

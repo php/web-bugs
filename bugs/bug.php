@@ -1,5 +1,5 @@
-<?php /* vim: set noet ts=4 sw=4: : */
-session_start();
+<?php
+
 /**
  * User interface for viewing and editing bug details
  *
@@ -22,6 +22,8 @@ session_start();
  * NOTE: another require exists in the code below, so if changing
  * the include path, make sure to change it too.
  */
+
+session_start();
 
 /**
  * Obtain common includes
@@ -47,24 +49,25 @@ require_once 'Text/CAPTCHA/Numeral.php';
  * Instantiate the numeral captcha object.
  */
 $numeralCaptcha = new Text_CAPTCHA_Numeral();
+
 if (empty($_REQUEST['id']) || !(int)$_REQUEST['id']) {
     localRedirect('search.php');
     exit;
 } else {
-    $id = (int)$_REQUEST['id'];
+    $bug_id = (int) $_REQUEST['id'];
 }
 
 if (isset($_GET['unsubscribe'])) {
-    $unsubcribe = (int)$_GET['unsubscribe'];
+    $unsubcribe = (int) $_GET['unsubscribe'];
 
     $hash = isset($_GET['t']) ? $_GET['t'] : false;
     $site == 'pear' ? $redirect = 'pecl' : $redirect = 'pear';
 
     if (!$hash) {
-        localRedirect('bug.php?id='.$id);
+        localRedirect("bug.php?id={$bug_id}");
     }
 
-    unsubscribe($id, $hash);
+    unsubscribe($bug_id, $hash);
 }
 
 if (empty($_REQUEST['edit']) || !(int)$_REQUEST['edit']) {
@@ -81,15 +84,15 @@ if (isset($auth_user) && $auth_user && $auth_user->registered) {
 }
 
 if (isset($auth_user) && $auth_user && $auth_user->registered && isset($_GET['delete_comment'])) {
-    $delete_comment = (int)$_GET['delete_comment'];
+    $delete_comment = (int) $_GET['delete_comment'];
 } else {
     $delete_comment = false;
 }
 
-$trytoforce = isset($_POST['trytoforce']) ? (int)$_POST['trytoforce'] : false;
+$trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : false;
 
 // fetch info about the bug into $bug
-if ($dbh->getOne('SELECT handle FROM bugdb WHERE id=?', array($id))) {
+if ($dbh->getOne('SELECT handle FROM bugdb WHERE id=?', array($bug_id))) {
     $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
         b.passwd, b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
         b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
@@ -110,13 +113,13 @@ if ($dbh->getOne('SELECT handle FROM bugdb WHERE id=?', array($id))) {
     $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
         b.passwd, b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
         b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
+        1 as registered,
         UNIX_TIMESTAMP(b.ts2) AS modified,
         COUNT(bug=b.id) AS votes,
         SUM(reproduced) AS reproduced,SUM(tried) AS tried,
         SUM(sameos) AS sameos, SUM(samever) AS samever,
         AVG(score)+3 AS average,STD(score) AS deviation,
-        users.showemail, users.handle, p.package_type,
-        1 as registered
+        users.showemail, users.handle, p.package_type
         FROM bugdb b
         LEFT JOIN bugdb_votes ON b.id = bug
         LEFT JOIN users ON users.email = b.email
@@ -125,8 +128,7 @@ if ($dbh->getOne('SELECT handle FROM bugdb WHERE id=?', array($id))) {
         GROUP BY bug';
 }
 
-$bug =& $dbh->getRow($query, array($id), DB_FETCHMODE_ASSOC);
-
+$bug =& $dbh->getRow($query, array($bug_id), DB_FETCHMODE_ASSOC);
 
 if ($edit == 1) {
     if (isset($auth_user) && $auth_user) {
@@ -177,14 +179,10 @@ if (!empty($_POST['pw'])) {
 if (isset($_POST['subscribe_to_bug'])) {
     $email = $_POST['subscribe_email'];
     if (!is_valid_email($email)) {
-        $errors[] = "You must provide a valid email address.";
+        $errors[] = 'You must provide a valid email address.';
     } else {
-        $query = 'REPLACE INTO bugdb_subscribe SET bug_id=' . $id .
-                    ", email='" . escapeSQL($email) . "'";
-        $dbh->query($query);
-
-        localRedirect('bug.php?id='.$id);
-        exit();
+        $dbh->query("REPLACE INTO bugdb_subscribe SET bug_id='{$bug_id}', email='" . escapeSQL($email) . "'");
+        localRedirect("bug.php?id={$bug_id}");
     }
 }
 
@@ -193,52 +191,51 @@ if (isset($_POST['unsubscribe_to_bug'])) {
     $email = $_POST['subscribe_email'];
 
     if (!is_valid_email($email)) {
-        $errors[] = "You must provide a valid email address.";
+        $errors[] = 'You must provide a valid email address.';
     } else {
         /* Generate the hash */
-        unsubscribe_hash($id, $email, $bug);
-        localRedirect('bug.php?id='.$id);
-        exit();
+        unsubscribe_hash($bug_id, $email, $bug);
+        localRedirect("bug.php?id={$bug_id}");
     }
 }
 
 if (!$bug) {
     response_header('No Such Bug');
-    display_bug_error('No such bug #' . $id);
+    display_bug_error("No such bug #{$bug_id}");
     response_footer();
     exit;
 }
 
-// Redirect to PECL if it's a PECL bug
+// Redirect to correct site if package type is not same as current site
 if (!empty($bug['package_type']) && $bug['package_type'] != $site) {
-    $site == 'pear' ? $redirect = 'pecl' : $redirect = 'pear';
-    localRedirect('http://' . $redirect . '.php.net/bugs/bug.php?id='.$id);
-    exit();
+    localRedirect("http://{$site_data[$bug['package_type']]['url']}{$basedir}/bug.php?id={$bug_id}");
 }
 
 // if the user is not registered, this might be spam, don't display
 if (!$bug['registered'] && !auth_check('pear.dev')) {
     response_header('User has not confirmed identity');
-    display_bug_error('The user who submitted this bug has not yet confirmed ' .
-        'their email address.  ');
-    echo '<p>If you submitted this bug, please check your email.</p>' .
-        '<p><strong>If you do not have a confirmation message</strong>, <a href="resend-request-email.php?' .
-        'handle=' . urlencode($bug['bughandle']) . '">click here to re-send</a>.  MANUAL CONFIRMATION IS NOT POSSIBLE.  Write a message to <a href="mailto:pear-dev@lists.php.net">pear-dev@lists.php.net</a> to request the confirmation link.  All bugs/comments/patches associated with this
-        email address will be deleted
-                within 48 hours if the account request is not confirmed!</p>';
+    display_bug_error('The user who submitted this report has not yet confirmed his/her email address.');
+    $handle_out = urlencode($bug['bughandle']);
+    echo <<< DATA
+If you submitted this report, please check your email.
+If you did not receive any message, <a href="resend-request-email.php?handle={$handle_out}">click here to re-send</a>
+MANUAL CONFIRMATION IS NOT POSSIBLE.  All bugs/comments/patches associated with this email address will be deleted within 48 hours 
+if the account request is not confirmed!
+DATA;
     response_footer();
     exit;
 }
+
 $previous = $current = array();
 // Delete comment
-if ($edit == 1 && isset($_GET['delete_comment'])) {
+if ($edit == 1 && $delete_comment !== false) {
     $addon = '';
 
     if (in_array($user, $trusted_developers) && verify_password($user, $pw)) {
-        delete_comment($id, $_GET['delete_comment']);
+        delete_comment($bug_id, $delete_comment);
         $addon = '&thanks=1';
     }
-    localRedirect('bug.php' . "?id=$id&edit=1$addon");
+    localRedirect('bug.php' . "?id=$bug_id&edit=1$addon");
     exit();
 }
 
@@ -324,13 +321,12 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                 $_POST['in']['name'] = $auth_user->name;
             }
 
-            $query = 'INSERT INTO bugdb_comments' .
-                     ' (bug, email, handle, ts, comment, reporter_name) VALUES (' .
-                     '?,?,?,NOW(),?,?)';
-
-            $dbh->query($query, array($id, $_POST['in']['commentemail'], $_POST['in']['handle'],
-                $ncomment, $_POST['in']['name']));
+            $query = 'INSERT INTO bugdb_comments (bug, email, handle, ts, comment, reporter_name)
+                      VALUES (?, ?, ?, NOW(), ?, ?)
+			';
+            $dbh->query($query, array($bug_id, $_POST['in']['commentemail'], $_POST['in']['handle'], $ncomment, $_POST['in']['name']));
         } while (false);
+
         if (isset($auth_user) && $auth_user) {
             $from = $auth_user->email;
         } else {
@@ -384,26 +380,34 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 
     if (!$errors && !($errors = incoming_details_are_valid($_POST['in'], false, false))) {
-        $query = 'UPDATE bugdb SET' .
-                 " sdesc='" . escapeSQL($_POST['in']['sdesc']) . "'," .
-                 " status='" . escapeSQL($_POST['in']['status']) . "'," .
-                 " package_name='" . escapeSQL($_POST['in']['package_name']) . "'," .
-                 " bug_type='" . escapeSQL($_POST['in']['bug_type']) . "'," .
-                 " package_version='" . escapeSQL($_POST['in']['package_version']) . "'," .
-                 " php_version='" . escapeSQL($_POST['in']['php_version']) . "'," .
-                 " php_os='" . escapeSQL($_POST['in']['php_os']) . "'," .
-                 ' ts2=NOW(), ' .
-                 " email='" . escapeSQL($from) . "' WHERE id=$id";
-        $dbh->query($query);
+        $dbh->query("
+            UPDATE bugdb
+            SET
+            	sdesc = ?,
+            	status = ?,
+            	package_name = ?,
+            	bug_type = ?,
+            	package_version = ?,
+            	php_version = ?,
+            	php_os = ?,
+            	email = ?,
+            	ts2 = NOW()
+            WHERE id={$bug_id}
+		" , array(
+        	$_POST['in']['sdesc'],
+        	$_POST['in']['status'],
+        	$_POST['in']['package_name'],
+        	$_POST['in']['bug_type'],
+        	$_POST['in']['package_version'],
+        	$_POST['in']['php_version'],
+        	$_POST['in']['php_os'],
+        	$from,
+        ));
 
         if (!empty($ncomment)) {
-            $query = 'INSERT INTO bugdb_comments' .
-                     ' (bug, email, ts, comment) VALUES (' .
-                     " $id," .
-                     " '" . escapeSQL($from) . "'," .
-                     ' NOW(),' .
-                     " '" . escapeSQL($ncomment) . "')";
-            $dbh->query($query);
+            $query = "INSERT INTO bugdb_comments (bug, email, ts, comment)
+                      VALUES ('{$bug_id}', ?, NOW(), ?)";
+            $dbh->query($query, array($from, $ncomment));
         }
     }
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
@@ -413,7 +417,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     // Edits submitted by developer
 
     if (!verify_password($user, $pw)) {
-        $errors[] = "You have to login first in order to edit the bug report.";
+        $errors[] = 'You have to login first in order to edit the bug report.';
         $errors[] = 'Tip: log in via another browser window then resubmit the form in this window.';
     }
     $comment_name = $auth_user->name;
@@ -512,20 +516,20 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                   " package_version='" . escapeSQL($_POST['in']['package_version']) . "'," .
                   " php_version='" . escapeSQL($_POST['in']['php_version']) . "'," .
                   " php_os='" . escapeSQL($_POST['in']['php_os']) . "'," .
-                  " ts2=NOW() WHERE id=$id";
+                  " ts2=NOW() WHERE id=$bug_id";
         $dbh->query($query);
         $previous = $dbh->getAll('SELECT roadmap_version
             FROM bugdb_roadmap_link l, bugdb_roadmap b
             WHERE
-                l.id=? AND b.id=l.roadmap_id', array($id));
+                l.id=? AND b.id=l.roadmap_id', array($bug_id));
         if (auth_check('pear.dev')) {
             // don't change roadmap assignments for non-devs editing a bug
             $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
-            $link->id = $id;
+            $link->id = $bug_id;
             $link->delete();
             if (isset($_POST['in']['fixed_versions'])) {
                 foreach ($_POST['in']['fixed_versions'] as $rid) {
-                    $link->id = $id;
+                    $link->id = $bug_id;
                     $link->roadmap_id = $rid;
                     $link->insert();
                 }
@@ -533,7 +537,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             $current = $dbh->getAll('SELECT roadmap_version
                 FROM bugdb_roadmap_link l, bugdb_roadmap b
                 WHERE
-                    l.id=? AND b.id=l.roadmap_id', array($id));
+                    l.id=? AND b.id=l.roadmap_id', array($bug_id));
         } else {
             $current = $previous;
         }
@@ -541,7 +545,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         if (!empty($ncomment)) {
             $query = 'INSERT INTO bugdb_comments' .
                      ' (bug, email, ts, comment, reporter_name, handle) VALUES (?,?,NOW(),?,?,?)';
-            $dbh->query($query, array($id, $from, $ncomment, $comment_name, $auth_user->handle));
+            $dbh->query($query, array($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
         }
     }
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 1) {
@@ -558,45 +562,57 @@ if (isset($_POST['in']) && (!isset($_POST['preview']) && $ncomment ||
       $previous != $current)) {
     if (!$errors) {
         if (!isset($buggie)) {
-            mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $id, $previous, $current);
+            mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $bug_id, $previous, $current);
         }
-        localRedirect('bug.php' . "?id=$id&thanks=$edit");
+        localRedirect('bug.php' . "?id=$bug_id&thanks=$edit");
         exit;
     }
 }
 
-switch ($bug['bug_type']) {
-    case 'Bug' : $bug_type = 'Bug'; break;
-    case 'Feature/Change Request' : $bug_type = 'Request'; break;
-    case 'Documentation Problem' : $bug_type = 'Doc Bug'; break;
+switch ($bug['bug_type'])
+{
+    case 'Bug':
+    	$bug_type = 'Bug';
+    	break;
+    case 'Feature/Change Request':
+    	$bug_type = 'Request';
+    	break;
+    case 'Documentation Problem':
+    	$bug_type = 'Doc Bug';
+    	break;
 }
-response_header("$bug_type #$id :: " . htmlspecialchars($bug['sdesc']), false,
-    ' <link rel="alternate" type="application/rdf+xml" title="RSS feed" href="http://' .
-    htmlspecialchars($_SERVER['HTTP_HOST']) . '/feeds/bug_' . $id . '.rss" />
-');
+response_header(
+	"{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']),
+	false,
+    " <link rel='alternate' type='application/rdf+xml' title='RSS feed' href='http://{$site_url}{$basedir}/feeds/bug_{$bug_id}.rss' />"
+);
 
 // DISPLAY BUG
-if (!isset($_GET['thanks'])) {
-    $_GET['thanks'] = 0;
-}
-if ($_GET['thanks'] == 1 || $_GET['thanks'] == 2) {
-    display_bug_success('The bug was updated successfully.');
+$thanks = (isset($_GET['thanks'])) ? (int) $_GET['thanks'] : 0;
+switch ($thanks)
+{
+	case 1:
+	case 2:
+		display_bug_success('The bug was updated successfully.');
+		break;
+	case 3:
+		display_bug_success('Your comment was added to the bug successfully.');
+		break;
+	case 4:
+		display_bug_success("
+			Thank you for your help!
+			If the status of the bug report you submitted changes, you will be notified.
+			You may return here and check the status or update your report at any time.
+			The URL for your bug report is: <a href='/bugs/bug.php?id={$bug_id}'>http://{$site_url}{$basedir}/bug.php?id={$bug_id}</a>.
+		");
+		break;
+	case 6:
+		display_bug_success('Thanks for voting! Your vote should be reflected in the statistics below.');
+		break;
 
-} elseif ($_GET['thanks'] == 3) {
-    display_bug_success('Your comment was added to the bug successfully.');
-
-} elseif ($_GET['thanks'] == 4) {
-    display_bug_success('Thank you for your help! If the status of the bug'
-                        . ' report you submitted changes, you will be'
-                        . ' notified. You may return here and check on the'
-                        . ' status or update your report at any time. That URL'
-                        . ' for your bug report is: <a href="/bugs/bug.php?id='
-                        . $id . '">http://'.$site.'.php.net/bugs/bug.php?id='
-                        . $id . '</a>.');
-
-} elseif ($_GET['thanks'] == 6) {
-    display_bug_success('Thanks for voting! Your vote should be reflected'
-                        . ' in the statistics below.');
+	default:
+		
+		break;
 }
 
 display_bug_error($errors);
@@ -610,7 +626,7 @@ show_bugs_menu(txfield('package_name'));
   <tr id="title">
 
    <?php
-       echo '<th class="details" id="number">' . $bug_type . '&nbsp;#' . $id . '</th>';
+       echo '<th class="details" id="number">' . $bug_type . '&nbsp;#' . $bug_id . '</th>';
    ?>
 
    <td id="summary" colspan="3"><?php echo clean($bug['sdesc']) ?></td>
@@ -620,11 +636,11 @@ show_bugs_menu(txfield('package_name'));
 <?php
 
 if ($bug['modified']) {
-    echo '   <td style="white-space: nowrap;">' . format_date($bug['submitted']) . "</td>\n";
-    echo '   <th class="details">Modified:</th>' . "\n";
-    echo '   <td style="white-space: nowrap;">' . format_date($bug['modified']) . '</td>';
+    echo '<td style="white-space: nowrap;">' , format_date($bug['submitted']) , "</td>\n";
+    echo '<th class="details">Modified:</th>' , "\n";
+    echo '<td style="white-space: nowrap;">' , format_date($bug['modified']) , '</td>';
 } else {
-    echo '   <td colspan="3">' . format_date($bug['submitted']) . '</td>';
+    echo '<td colspan="3">' , format_date($bug['submitted']) , '</td>';
 }
 
 ?>
@@ -659,7 +675,7 @@ if ($bug['modified']) {
   </tr>
 <?php
         $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
-        $link->id = $id;
+        $link->id = $bug_id;
         $link->find(false);
         $links = array();
         while ($link->fetch()) {
@@ -720,18 +736,14 @@ if ($bug['modified']) {
 </table>
 </div>
 
-
 <div id="controls">
-
 <?php
-
 control(0, 'View');
 if (!(isset($auth_user) && $auth_user && $auth_user->registered) && $edit != 2) {
     control(3, 'Add Comment');
 }
 control(1, 'Edit');
 ?>
-
 </div>
 <?php
 
@@ -756,48 +768,27 @@ if (isset($_POST['preview']) && !empty($ncomment)) {
 if ($edit == 1 || $edit == 2) {
     ?>
 
-    <form id="update" action=
-     "<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $id . '&amp;edit=' . $edit ?>"
-     method="post">
+    <form id="update" action="bug.php?id=<?php echo $bug_id; ?>&amp;edit=<?php echo $edit; ?>" method="post">
 
     <?php
 
     if ($edit == 2) {
         if (!isset($_POST['in']) && $pw && $bug['passwd'] &&
             $pw == $bug['passwd']) {
-
             ?>
-
             <div class="explain">
              Welcome back! Since you opted to store your bug's password in a
              cookie, you can just go ahead and add more information to this
              bug or edit the other fields.
             </div>
-
-            <?php
-        } else {
-            ?>
-
+<?php  } else { ?>
             <div class="explain">
-
-            <?php
-
-            if (!isset($_POST['in'])) {
-                ?>
-
+            <?php if (!isset($_POST['in'])) { ?>
                 Welcome back! If you're the original bug submitter, here's
                 where you can edit the bug or add additional notes. If this
-                is not your bug, you can <a href=
-                "<?php echo htmlspecialchars($_SERVER['PHP_SELF'])."?id=$id&amp;edit=3" ?>"
-                >add a comment by following this link</a>. If this is your
-                bug, but you forgot your password, <a
-                href="bug-pwd-finder.php">you can retrieve your password
-                here</a>.
-
-                <?php
-            }
-
-            ?>
+                is not your bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.
+                If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php">you can retrieve your password here</a>.
+            <?php } ?>
 
              <table>
               <tr>
@@ -813,49 +804,32 @@ if ($edit == 1 || $edit == 2) {
                 </label>
                </th>
                <td>
-                <input type="checkbox" id="save" name="save"
-                 <?php if (isset($_POST['save'])) echo ' checked="checked"'?> />
+                <input type="checkbox" id="save" name="save" <?php echo (isset($_POST['save'])) ? ' checked="checked"' : ''; ?> />
                </td>
               </tr>
              </table>
-
             </div>
-
-            <?php
-        }
+<?php  }
     } else {
         if ($user && $pw && verify_password($user, $pw)) {
             if (!isset($_POST['in']) || !is_array($_POST['in'])) {
-                ?>
-
+?>
                 <div class="explain">
-                 Welcome back, <?php echo $user?>! (Not <?php echo $user?>?
-                 <a href="?logout=1&amp;id=<?php echo $id ?>&amp;edit=1">Log out.</a>)
+                 Welcome back, <?php echo $user; ?>! (Not <?php echo $user; ?>?
+                 <a href="?logout=1&amp;id=<?php echo $bug_id; ?>&amp;edit=1">Log out.</a>)
                 </div>
-
-                <?php
-            }
+<?php
+			}
         } else {
-            ?>
+?>
 
             <div class="explain">
 
-            <?php
-                if (!isset($_POST['in']) || !is_array($_POST['in'])) {
-                    ?>
-
-                    Welcome! If you don't have a CVS account, you can't do
-                    anything here. You can <a href=
-                    "<?php echo htmlspecialchars($_SERVER['PHP_SELF'])."?id=$id&amp;edit=3" ?>"
-                    >add a comment by following this link</a> or if you
-                    reported this bug, you can <a href=
-                    "<?php echo htmlspecialchars($_SERVER['PHP_SELF'])."?id=$id&amp;edit=2" ?>"
-                    >edit this bug over here</a>.
-
-                    <?php
-                }
-
-                ?>
+<?php		if (!isset($_POST['in']) || !is_array($_POST['in'])) { ?>
+                    Welcome! If you don't have a CVS account, you can't do anything here.
+                    You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
+                    or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
+<?php		} ?>
 <!--
 <table>
 <tr>
@@ -937,7 +911,7 @@ if ($edit == 1 || $edit == 2) {
     }
     ?>
 
-       <input type="hidden" name="id" value="<?php echo $id ?>" />
+       <input type="hidden" name="id" value="<?php echo $bug_id ?>" />
        <input type="hidden" name="edit" value="<?php echo $edit ?>" />
        <input type="submit" value="Submit" />
       </td>
@@ -1003,7 +977,7 @@ if ($edit == 1 || $edit == 2) {
       (<span class="headerbottom">Already released</span>)</th>
       <td colspan="5"><?php
         $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
-        $link->id = $id;
+        $link->id = $bug_id;
         $link->find(false);
         $links = array();
         while ($link->fetch()) {
@@ -1043,7 +1017,7 @@ if ($edit == 1 || $edit == 2) {
      <tr>
     </table>
     <div class="explain">
-     <h1><a href="/bugs/patch-add.php?bug=<?php echo $id ?>">Click Here to Submit a Patch</a></h1>
+     <h1><a href="/bugs/patch-add.php?bug=<?php echo $bug_id ?>">Click Here to Submit a Patch</a></h1>
     </div>
     <p style="margin-bottom: 0em">
     <label for="ncomment" accesskey="m"><b>New<?php if ($edit==1) echo "/Additional"?> Co<span class="accesskey">m</span>ment:</b></label>
@@ -1065,7 +1039,7 @@ if (isset($auth_user) && $auth_user && $auth_user->registered) {
 ?>
 <div class="explain">
 
-    <form name="subscribetobug" action="/bugs/bug.php?id=<?php echo $id; ?>" method="post">
+    <form name="subscribetobug" action="/bugs/bug.php?id=<?php echo $bug_id; ?>" method="post">
     <table>
       <tr>
        <th class="details" colspan="2">Subscribe to this entry?</th>
@@ -1090,7 +1064,7 @@ $action = htmlspecialchars($_SERVER['PHP_SELF']);
     <form name="comment" id="comment" action="<?php echo $action ?>" method="post">
 <?php if (isset($auth_user) && $auth_user): ?>
     <div class="explain">
-     <h1><a href="/bugs/patch-add.php?bug=<?php echo $id ?>">Click Here to Submit a Patch</a></h1>
+     <h1><a href="/bugs/patch-add.php?bug=<?php echo $bug_id ?>">Click Here to Submit a Patch</a></h1>
     </div>
 
 <?php endif; //if ($auth_user) ?>
@@ -1105,9 +1079,9 @@ $action = htmlspecialchars($_SERVER['PHP_SELF']);
          say 'Me too!'? Don't clutter the database with that please
 
          <?php
-         if (canvote()) {
+         if (canvote($thanks, $bug['status'])) {
              echo ' &mdash; but make sure to <a href="';
-             echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $id . '">vote on the bug</a>';
+             echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $bug_id . '">vote on the bug</a>';
          }
          ?>!
 
@@ -1129,7 +1103,7 @@ $action = htmlspecialchars($_SERVER['PHP_SELF']);
         value="<?php echo clean(isset($_POST['in']) && isset($_POST['in']['commentemail']) ?
             $_POST['in']['commentemail'] : '') ?>"
         accesskey="o" />
-       <input type="hidden" name="id" value="<?php echo $id ?>" />
+       <input type="hidden" name="id" value="<?php echo $bug_id ?>" />
        <input type="hidden" name="edit" value="<?php echo $edit?>" />
       </td>
      </tr>
@@ -1142,7 +1116,7 @@ $action = htmlspecialchars($_SERVER['PHP_SELF']);
     </table>
 
     <div>
-     <input type="hidden" name="id" value="<?php echo $id ?>" />
+     <input type="hidden" name="id" value="<?php echo $bug_id ?>" />
      <input type="hidden" name="edit" value="<?php echo $edit ?>" />
      <textarea cols="60" rows="10" name="ncomment"
       wrap="physical"><?php echo clean($ncomment) ?></textarea>
@@ -1155,9 +1129,9 @@ $action = htmlspecialchars($_SERVER['PHP_SELF']);
 } // if ($edit == 3)
 
 
-if (!$edit && canvote()) {
-    ?>
-
+if (!$edit && canvote($thanks, $bug['status']))
+{
+?>
   <form id="vote" method="post" action="vote.php">
   <div class="sect">
    <fieldset>
@@ -1205,15 +1179,13 @@ if (!$edit && canvote()) {
    </fieldset>
   </div>
   <div id="submit" class="sect">
-   <input type="hidden" name="id" value="<?php echo $id?>" />
+   <input type="hidden" name="id" value="<?php echo $bug_id?>" />
    <input type="submit" value="Vote" />
   </div>
   </form>
   <br clear="all" />
-
 <?php
 }
-
 
 // Display original report
 if ($bug['ldesc']) {
@@ -1221,12 +1193,15 @@ if ($bug['ldesc']) {
 }
 
 // Display patches
-require_once 'bugs/patchtracker.php';
+require_once 'include/classes/patchtracker.php';
 $patches = new Bugs_Patchtracker;
-$p = $patches->listPatches($id);
-?><h2>Patches</h2>
-<a href="/bugs/patch-add.php?bug=<?php echo $id ?>">Add a Patch</a><br /><?php
-foreach ($p as $name => $revisions) {
+$p = $patches->listPatches($bug_id);
+?>
+<h2>Patches</h2>
+<a href="patch-add.php?bug=<?php echo $bug_id; ?>">Add a Patch</a><br />
+<?php
+foreach ($p as $name => $revisions)
+{
     $obsolete = $patches->getObsoletingPatches($bug['id'], $name, $revisions[0][0]);
     $style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';
     ?><a href="patch-display.php?bug=<?php echo $bug['id'] ?>&patch=<?php
@@ -1240,7 +1215,7 @@ $query = 'SELECT c.id,c.email,c.comment,UNIX_TIMESTAMP(c.ts) AS added, c.reporte
     LEFT JOIN users u ON u.handle = c.handle
     WHERE c.bug = ?
     GROUP BY c.id ORDER BY c.ts';
-$res =& $dbh->query($query, array($id));
+$res =& $dbh->query($query, array($bug_id));
 if ($res) {
     ?><h2>Comments</h2><?php
     while ($row =& $res->fetchRow(DB_FETCHMODE_ASSOC)) {
@@ -1253,64 +1228,62 @@ response_footer();
 
 function output_note($com_id, $ts, $email, $comment, $showemail = 1, $handle = NULL, $comment_name = NULL, $registered)
 {
-    global $edit, $id, $trusted_developers, $user, $dbh;
+    global $edit, $bug_id, $trusted_developers, $user, $dbh;
 
     echo '<div class="comment">';
-    echo '<a name="' . urlencode($ts) . '">&nbsp;</a>';
-    echo "<strong>[",format_date($ts),"] ";
+    echo '<a name="' , urlencode($ts) , '">&nbsp;</a>';
+    echo "<strong>[" , format_date($ts) , "] ";
     if (!$registered) {
-        echo 'User who submitted this comment has not confirmed identity</strong>';
-        echo '<pre class="note">If you submitted this note, check your email.';
-        echo 'If you do not have a message, <a href="resend-request-email.php?' .
-            'handle=' . urlencode($handle) . "\">click here to re-send</a>\n",
-            "MANUAL CONFIRMATION IS NOT POSSIBLE.  Write a message to <a href=\"mailto:pear-dev@lists.php.net\">pear-dev@lists.php.net</a>\n",
-            "to request the confirmation link.  All bugs/comments/patches associated with this
-\nemail address will be deleted within 48 hours if the account request is not confirmed!";
-        echo "</pre>\n</div>";
+		$handle_out = urlencode($handle);
+        echo <<< DATA
+User who submitted this comment has not confirmed identity</strong>
+<pre class="note">
+If you submitted this note, please check your email.
+If you did not receive any message, <a href="resend-request-email.php?handle={$handle_out}">click here to re-send</a>
+MANUAL CONFIRMATION IS NOT POSSIBLE.  Write a message to <a href='mailto:pear-dev@lists.php.net'>pear-dev@lists.php.net</a>
+to request the confirmation link.  All bugs/comments/patches associated with this email address will be deleted within 48 hours 
+if the account request is not confirmed!</pre>
+</div>
+DATA;
         return;
     }
     if ($handle) {
-        echo '<a href="/user/' . $handle . '">' . $handle . "</a></strong>\n";
+        echo "<a href='/user/{$handle}'>{$handle}</a></strong>\n";
     } else {
-        echo spam_protect(htmlspecialchars($email))."</strong>\n";
+        echo spam_protect(htmlspecialchars($email)) , "</strong>\n";
     }
     if ($comment_name) {
-        echo '(' . htmlspecialchars($comment_name) . ')';
+        echo '(' , htmlspecialchars($comment_name) , ')';
     }
-    echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href=\"".htmlspecialchars($_SERVER['PHP_SELF'])."?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
-    echo '<pre class="note">';
+    // Delete comment action only for trusted developers
+    echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href='bug.php?id={$bug_id}&amp;edit=1&amp;delete_comment={$com_id}'>[delete]</a>\n" : '';
     $comment = wordwrap($comment, 72);
     $comment = make_ticket_links(addlinks($comment));
-    echo $comment;
-    echo "</pre>\n";
-    echo '</div>';
+    echo "<pre class='note'>\n{$comment}</pre>\n</div>\n";
 }
 
-function delete_comment($id, $com_id)
+function delete_comment($bug_id, $com_id)
 {
     global $dbh;
-    $query = 'DELETE FROM bugdb_comments WHERE bug='.(int)$id.' AND id='.(int)$com_id;
-    $res =& $dbh->query($query);
+    
+    $res =& $dbh->query("DELETE FROM bugdb_comments WHERE bug='{$bug_id}' AND id='{$com_id}'");
 }
 
-function control($num, $desc, $dev = false)
+function control($num, $desc)
 {
-    echo '<span id="control_' . $num . '" class="control';
-    if ($GLOBALS['edit'] == $num) {
+	global $bug_id, $edit;
+	
+    echo "<span id='control_{$num}' class='control";
+    if ($edit == $num) {
         echo ' active">';
         echo $desc;
     } else {
-        echo '">';
-        echo '<a href="' . htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $GLOBALS['id'];
-        echo ($num ? "&amp;edit=$num" : '');
-        echo '">' . $desc . '</a>';
+        echo "'><a href='bug.php?id={$bug_id}" , (($num) ? "&amp;edit={$num}" : '') , "'>{$desc}</a>";
     }
     echo "</span>\n";
 }
 
-function canvote()
+function canvote($thanks, $status)
 {
-    return false;
-    global $bug;
-    return ($_GET['thanks'] != 4 && $_GET['thanks'] != 6 && $bug['status'] != 'Closed' && $bug['status'] != 'Bogus' && $bug['status'] != 'Duplicate');
+    return ($thanks != 4 && $thanks != 6 && $status != 'Closed' && $status != 'Bogus' && $status != 'Duplicate');
 }

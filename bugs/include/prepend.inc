@@ -27,7 +27,7 @@ $site = 'php';
 $site_data = array (
 	'php' => array (
 		'url' => 'bugs.php.net',
-		'basedir' => '/bugs/',
+		'basedir' => '/bugs',
 		'email' => 'php-bugs@lists.php.net',
 		'db' => 'phpbugsdb',
 		'db_user' => 'nobody',
@@ -36,7 +36,7 @@ $site_data = array (
 	),
 	'pear' => array (
 		'url' => 'pear.php.net',
-		'basedir' => '/bugs/',
+		'basedir' => '/bugs',
 		'email' => 'pear-bugs@lists.php.net',
 		'db' => 'phpbugsdb',
 		'db_user' => 'nobody',
@@ -45,7 +45,7 @@ $site_data = array (
 	),
 	'pecl' => array (
 		'url' => 'pecl.php.net',
-		'basedir' => '/bugs/',
+		'basedir' => '/bugs',
 		'email' => 'pecl-bugs@lists.php.net',
 		'db' => 'phpbugsdb',
 		'db_user' => 'nobody',
@@ -61,7 +61,7 @@ $site_url = $site_data[$site]['url'];
 $bugEmail = $site_data[$site]['email'];
 $basedir  = $site_data[$site]['basedir'];
 $main_include_path = realpath(dirname(__FILE__).'/../');
-define('BASEDIR', ($basedir != '/') ? '' : $basedir);
+define('BASEDIR', ($basedir == '/') ? '' : $basedir);
 define('PEAR_DATABASE_DSN', "mysqli://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
 
 /// FIXME: These should not be needed!
