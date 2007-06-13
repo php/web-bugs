@@ -5,7 +5,7 @@ include './bugtypes.inc';
 mysql_connect('localhost', 'nobody', '') or die('Unable to connect to SQL server.');
 mysql_select_db('phpbugsdb') or die('Unable to select database.');
 
-$res = mysql_query('SELECT id from bugdb_packages');
+$res = mysql_query('SELECT id from bugdb_pseudo_packages');
 
 $i = 0;
 
@@ -19,11 +19,11 @@ foreach ($items as $key => $name)
 	$key = mysql_escape_string($key);
 	$name = mysql_escape_string(trim(str_replace('&nbsp;', '', $name)));
 
-	$sql = "INSERT INTO bugdb_packages SET package_key = '$key', package_name = '$name', project = 'php'";
+	$sql = "INSERT INTO bugdb_pseudo_packages SET name = '$key', long_name = '$name', project = 'php'";
 
 	if ($key[0] == '*')
 	{
-		mysql_query($sql);
+		mysql_query($sql) or die(mysql_error());
 		$parent = mysql_insert_id();
 	} else {
 		mysql_query("$sql, parent = '$parent'");

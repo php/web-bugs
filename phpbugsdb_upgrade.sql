@@ -104,17 +104,48 @@ CREATE TABLE bugdb_resolves (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE bugdb_packages (
+CREATE TABLE bugdb_pseudo_packages (
   id INT NOT NULL AUTO_INCREMENT,
   parent INT NOT NULL default '0',
   name varchar(80) NOT NULL default '',
+  long_name varchar(100) NOT NULL default '',
   project varchar(40) NOT NULL default '',
+  disabled tinyint(1) NOT NULL default 0, # Disabled == read-only (no new reports in these!)
   PRIMARY KEY (id),
   UNIQUE KEY (name, project)
 );
 
-# Populate packages from existing bugs 
-# - Use to import any package_name which is not mentioned in bugtypes.inc!
-#INSERT INTO bugdb_packages (name, parent, project) 
-#	SELECT package_name AS name, 0 AS parent, 'php' AS project FROM bugdb GROUP BY package_name;
-	
+# Populate pseudo packages from existing bugs 
+# - NOTE: Use only to import any package_name which is not mentioned in bugtypes.inc!
+INSERT IGNORE INTO bugdb_pseudo_packages (name, long_name, parent, project) 
+	SELECT package_name as name, package_name as long_name, 0 AS parent, 'php' AS project FROM bugdb GROUP BY package_name;
+
+
+#
+# This table is copy of pearweb/sql/package.sql
+#
+CREATE TABLE packages (
+  id int(11) NOT NULL default '0',
+  name varchar(80) NOT NULL default '',
+  category int(11) default NULL,
+  stablerelease varchar(20) default NULL,
+  develrelease varchar(20) default NULL,
+  license varchar(50) default NULL,
+  summary text,
+  description text,
+  homepage varchar(255) default NULL,
+  package_type enum('pear','pecl') NOT NULL default 'pear',
+  doc_link varchar(255) default NULL,
+  cvs_link varchar(255) default NULL,
+  approved tinyint(4) NOT NULL default '0',
+  wiki_area tinyint(1) NOT NULL default '0',
+  blocktrackbacks tinyint(1) NOT NULL default '0',
+  unmaintained tinyint(1) NOT NULL default '0',
+  newpk_id int(11) default NULL,
+  newpackagename varchar(100) default NULL,
+  newchannel varchar(255) default NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY name (name),
+  KEY category (category)
+);
+
