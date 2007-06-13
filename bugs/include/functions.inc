@@ -78,10 +78,9 @@ $tree = Tree::setup (
 	array (
 		'order' => 'id',
 		'whereAddOn' => "project IN ('', '$site')",
-		'table' => 'bugdb_packages',
+		'table' => 'bugdb_pseudo_packages',
 		'columnNameMaps' => array (
 			'parentId' => 'parent',
-			'name'     => 'package_name',
 		),
 	)
 );
@@ -90,12 +89,13 @@ foreach ($tree->data as $data)
 {
 	if (isset($data['children']))
 	{
-		$pseudo_pkgs[$data['package_key']] = $data['name'];
+		$pseudo_pkgs[$data['name']] = $data['long_name'];
 		foreach ($data['children'] as $child)
 		{
-			$pseudo_pkgs[$child['package_key']] = "&nbsp;&nbsp;&nbsp;&nbsp;{$child['name']}";
+			$pseudo_pkgs[$child['name']] = "&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}";
 		}
-	}
+	} else if (!isset($pseudo_pkgs[$data['name']]))
+		$pseudo_pkgs[$data['name']] = $data['long_name'];
 }
 
 
