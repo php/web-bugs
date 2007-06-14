@@ -66,7 +66,7 @@ $_style = '';
  */
 function response_header($title = 'The PHP Extension and Application Repository', $style = false, $extraHeaders = '')
 {
-    global $_style, $_header_done, $SIDEBAR_DATA, $self, $auth_user;
+    global $_style, $_header_done, $SIDEBAR_DATA, $self, $auth_user, $site, $siteBig;
 
     $extra_styles = extra_styles();
 
@@ -119,9 +119,9 @@ function response_header($title = 'The PHP Extension and Application Repository'
 <?php
 echo $extraHeaders;
 ?>
- <title>PEAR :: <?php echo $title; ?></title>
- <link rel="shortcut icon" href="gifs/favicon.ico" />
- <link rel="stylesheet" href="css/style.css" />
+ <title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
+ <link rel="shortcut icon" href="gifs/<?php echo $site; ?>-favicon.ico" />
+ <link rel="stylesheet" href="css/<?php echo $site; ?>-style.css" />
 <?php
 
     foreach ($extra_styles as $style_file) {
@@ -141,7 +141,7 @@ echo $extraHeaders;
 <table id="head-menu" class="head" cellspacing="0" cellpadding="0">
  <tr>
   <td class="head-logo">
-   <?php print_link('/', make_image('pearsmall.gif', 'PEAR', false, false, false, false, 'margin: 5px;') ); ?><br />
+   <?php print_link('/', make_image($site.'-logo.gif', $siteBig, false, false, false, false, 'margin: 5px;') ); ?><br />
   </td>
   <td class="head-menu">
    <?php
@@ -246,7 +246,7 @@ echo $extraHeaders;
 
 function response_footer($style = false, $extraContent = false)
 {
-    global $LAST_UPDATED, $MIRRORS, $MYSITE, $COUNTRIES,$SCRIPT_NAME, $RSIDEBAR_DATA;
+    global $LAST_UPDATED, $MIRRORS, $MYSITE, $COUNTRIES, $SCRIPT_NAME, $RSIDEBAR_DATA;
 
     static $called;
     if ($called) {
@@ -263,10 +263,7 @@ function response_footer($style = false, $extraContent = false)
 
 <!-- END MAIN CONTENT -->
 
-    <?php
-
-    if (isset($RSIDEBAR_DATA)) {
-        ?>
+<?php if (isset($RSIDEBAR_DATA)) { ?>
 
 <!-- START RIGHT SIDEBAR -->
   <td class="sidebar_right">
@@ -274,10 +271,7 @@ function response_footer($style = false, $extraContent = false)
   </td>
 <!-- END RIGHT SIDEBAR -->
 
-        <?php
-    }
-
-    ?>
+<?php } ?>
 
  </tr>
 </table>
@@ -299,8 +293,7 @@ print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
  <tr>
   <td class="foot-copy">
    <small>
-    <?php print_link('/copyright.php',
-                     'Copyright &copy; 2001-' . date('Y') . ' The PHP Group'); ?><br />
+    <?php print_link('/copyright.php', 'Copyright &copy; 2001-' . date('Y') . ' The PHP Group'); ?><br />
     All rights reserved.
    </small>
   </td>
@@ -325,7 +318,8 @@ print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
 <!-- Onload focus to pear -->
 <?php if (isset($GLOBALS['ONLOAD'])): ?>
 <script language="javascript">
-function makeFocus() {
+function makeFocus()
+{
     <?php echo htmlspecialchars($GLOBALS['ONLOAD']); ?>
 }
 
@@ -554,9 +548,9 @@ function report_success($in)
 }
 
 
-class BorderBox {
-    function BorderBox($title, $width = '90%', $indent = '', $cols = 1,
-                       $open = false)
+class BorderBox
+{
+    function BorderBox($title, $width = '90%', $indent = '', $cols = 1, $open = false)
     {
         $this->title  = $title;
         $this->width  = $width;
