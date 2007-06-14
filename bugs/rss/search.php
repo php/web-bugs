@@ -19,7 +19,7 @@ define ('MAX_BUGS_RETURN', 150);
 /**
  * Obtain common includes
  */
-require_once '../include/functions.inc';
+require_once '../include/prepend.inc';
 
 $errors = array();
 $warnings = array();
@@ -37,28 +37,21 @@ $order_options = array(
     'assign'       => 'assignment',
 );
 
+// Pseudo packages
+$pseudo_pkgs = get_pseudo_packages($site);
+
+// Input variables
 $boolean_search = (int) isset($_GET['boolean']) ? $_GET['boolean'] : 0;
 
-/*
-* need to move this to DB eventually...
-*/
-$mysql4 = false;
-if ($dbh->phptype == 'mysql') {
-    $mysql4 = version_compare(mysql_get_server_info(), '4.0.0', 'ge');
-} else {
-    $mysql4 = version_compare(mysqli_get_server_version($dbh->connection), '4.0.0', 'ge');
-
-}
-
-if ($mysql4) {
-    $query = 'SELECT SQL_CALC_FOUND_ROWS';
-} else {
-    $query = 'SELECT';
-}
-
-$query .= ' bugdb.*, UNIX_TIMESTAMP(ts1) as ts1a, UNIX_TIMESTAMP(ts2) as ts2a,
-            TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) AS unchanged'
-        . ' FROM bugdb';
+// Get bugs
+$query = "
+	SELECT SQL_CALC_FOUND_ROWS 
+		bugdb.*,
+		UNIX_TIMESTAMP(ts1) as ts1a,
+		UNIX_TIMESTAMP(ts2) as ts2a,
+		TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) AS unchanged
+    FROM {$site_data[$site]['db']} 
+";
 
 if (!empty($site) || !empty($_GET['maintain']) || !empty($_GET['handle'])) {
     $query .= ' LEFT JOIN packages ON packages.name = bugdb.package_name';
@@ -407,10 +400,10 @@ echo '
     </items>
   </channel>
 
-  <image rdf:about="http://' . $_SERVER['HTTP_HOST'] . '/gifs/pearsmall.gif">
-    <title>PEAR Bugs</title>
-    <url>http://' . $_SERVER['HTTP_HOST'] . '/gifs/pearsmall.gif</url>
-    <link>http://' . $_SERVER['HTTP_HOST'] . '/bugs</link>
+  <image rdf:about="http://' , $site_url , '/gifs/', $site, '-logo.gif">
+    <title>' , $siteBig , ' Bugs</title>
+    <url>http://' , $site_url , '/gifs/', $site, '-logo.gif</url>
+    <link>http://' , $site_url , $basedir, '</link>
   </image>
 
 ', $items;

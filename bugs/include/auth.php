@@ -21,6 +21,7 @@
 function auth_reject($realm = null, $message = null)
 {
     global $format;
+
     if ($realm === null) {
         $realm = PEAR_AUTH_REALM;
     }
@@ -190,6 +191,7 @@ function auth_check($atom)
 function auth_require($admin = false)
 {
     global $auth_user;
+
     $res = true;
 
     $user = @$_COOKIE['PEAR_USER'];
@@ -235,9 +237,7 @@ function auth_logout()
     if ($_SERVER['QUERY_STRING'] == 'logout=1') {
         localRedirect($_SERVER['PHP_SELF']);
     } else {
-        localRedirect($_SERVER['PHP_SELF'] . '?' .
-                   preg_replace('/logout=1/',
-                                '', $_SERVER['QUERY_STRING']));
+        localRedirect($_SERVER['PHP_SELF'] . '?' . preg_replace('/logout=1/', '', $_SERVER['QUERY_STRING']));
     }
 }
 
@@ -247,6 +247,7 @@ function auth_logout()
 function init_auth_user()
 {
     global $auth_user, $dbh;
+
     if (empty($_COOKIE['PEAR_USER']) || empty($_COOKIE['PEAR_PW'])) {
         $auth_user = null;
         return false;
