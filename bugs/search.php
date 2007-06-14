@@ -72,9 +72,11 @@ $order_options = array(
     'assign'       => 'assignment',
 );
 
-$boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
+// Fetch pseudo packages
+$pseudo_pkgs = get_pseudo_packages($site);
 
 // Setup input variables..
+$boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
 $status = !empty($_GET['status']) ? $_GET['status'] : 'Open';
 $search_for = !empty($_GET['search_for']) ? $_GET['search_for'] : '';
 $bug_type = (!empty($_GET['bug_type']) && $_GET['bug_type'] != 'All') ? $_GET['bug_type'] : '';
