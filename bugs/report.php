@@ -42,6 +42,7 @@ require_once 'Text/CAPTCHA/Numeral.php';
 
 $errors              = array();
 $ok_to_submit_report = false;
+$pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
 
 /**
  * Instantiate the numeral captcha object.
@@ -407,7 +408,7 @@ if (isset($_POST['in'])) {
 
 $package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : '';
 
-if (!package_exists($package)) {
+if ($site != 'php' && !package_exists($package)) {
     $errors[] = 'Package "' . clean($package) . '" does not exist.';
     response_header("Report - Invalid bug type");
     display_bug_error($errors);
@@ -437,7 +438,7 @@ if (!package_exists($package)) {
 <p>
  Before you report a bug, make sure to search for similar bugs using the
  &quot;Bug List&quot; link. Also, read the instructions for
- <a target="top" href="http://bugs.php.net/how-to-report.php">how to report
+ <a target="top" href="how-to-report.php">how to report
  a bug that someone will want to help fix</a>.
 </p>
 
@@ -662,7 +663,7 @@ if (auth_check('pear.dev')) {
      (<strong>not</strong> your whole php.ini!)
     </li>
     <li>
-     A <a href="http://bugs.php.net/bugs-generating-backtrace.php">gdb
+     A <a href="bugs-generating-backtrace.php">gdb
      backtrace</a>.
     </li>
    </ul>
@@ -700,7 +701,7 @@ if (auth_check('pear.dev')) {
  <?php
  $patchname = isset($_POST['in']['patchname']) ? $_POST['in']['patchname'] : '';
  $patchfile = isset($_FILES['patchfile']['name']) ? $_FILES['patchfile']['name'] : '';
- include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/patchform.php'; ?>
+ include $templates_path . '/templates/patchform.php'; ?>
  <tr>
   <th class="form-label_left">
    Expected result:
@@ -717,9 +718,7 @@ if (auth_check('pear.dev')) {
   <th class="form-label_left">
    Actual result:
    <p class="cell_note">
-    This could be a
-    <a href="http://bugs.php.net/bugs-generating-backtrace.php">backtrace</a>
-    for example.
+    This could be a <a href="bugs-generating-backtrace.php">backtrace</a> for example.
     Try to keep it as short as possible without leaving anything relevant out.
    </p>
   </th>

@@ -428,17 +428,17 @@ function show_state_options($state, $user_mode = 0, $default = '')
  */
 function show_reason_types($current = '', $expanded = 0)
 {
+	global $RESOLVE_REASONS;
+
     if ($expanded) {
         echo '<option value=""></option>' . "\n";
     }
-    while (list($k,$v) = each($GLOBALS['RESOLVE_REASONS'])) {
-        echo '<option value="' . $k . '"';
-        if ($current==$k) {
-            echo ' selected="selected"';
-        }
-        echo ">$v[desc]";
+	foreach ($RESOLVE_REASONS as $key => $val)
+	{
+		$sel = ($current == $key) ? " selected='selected'" : '';
+        echo "<option value='{$key}' {$sel} >{$val['desc']}";
         if ($expanded) {
-            echo " ($v[status])";
+            echo " ({$val['status']})";
         }
         echo "</option>\n";
     }

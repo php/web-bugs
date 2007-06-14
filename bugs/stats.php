@@ -54,6 +54,7 @@ $pkg_total = array();
 $pkg_names = array();
 $all       = array();
 $pseudo    = true;
+$pseudo_pkgs = get_pseudo_packages($site);
 
 if (!array_key_exists($sort_by, $titles)) {
     $sort_by = 'Open';
