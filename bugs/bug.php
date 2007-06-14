@@ -582,14 +582,15 @@ if (isset($_POST['in']) && (!isset($_POST['preview']) && $ncomment ||
 
 switch ($bug['bug_type'])
 {
-    case 'Bug':
-    	$bug_type = 'Bug';
-    	break;
     case 'Feature/Change Request':
     	$bug_type = 'Request';
     	break;
     case 'Documentation Problem':
     	$bug_type = 'Doc Bug';
+    	break;
+	default:
+    case 'Bug':
+    	$bug_type = 'Bug';
     	break;
 }
 response_header(
@@ -1203,8 +1204,8 @@ if ($bug['ldesc']) {
 }
 
 // Display patches
-require_once 'include/classes/patchtracker.php';
-$patches = new Bugs_Patchtracker;
+require_once './include/classes/bug_patchtracker.php';
+$patches = new Bug_Patchtracker;
 $p = $patches->listPatches($bug_id);
 ?>
 <h2>Patches</h2>

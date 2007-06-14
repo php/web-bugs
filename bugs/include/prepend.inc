@@ -33,6 +33,7 @@ $site_data = array (
 		'db_user' => 'nobody',
 		'db_pass' => '',
 		'db_host' => 'localhost',
+		'patch_tmp' => '/tmp/patches/', 
 	),
 	'pear' => array (
 		'url' => 'pear.php.net',
@@ -42,6 +43,7 @@ $site_data = array (
 		'db_user' => 'nobody',
 		'db_pass' => '',
 		'db_host' => 'localhost',
+		'patch_tmp' => '/tmp/patches/', 
 	),
 	'pecl' => array (
 		'url' => 'pecl.php.net',
@@ -51,10 +53,15 @@ $site_data = array (
 		'db_user' => 'nobody',
 		'db_pass' => '',
 		'db_host' => 'localhost',
+		'patch_tmp' => '/tmp/patches/', 
 	),
 );
 
 define('DEVBOX', true);
+
+if (!defined('PEAR_CHANNELNAME'))
+        define ('PEAR_CHANNELNAME', 'pear.php.net');
+
 // CONFIG END
 
 // DO NOT EDIT ANYTHING BELOW THIS LINE, edit $site_data above instead!
@@ -65,6 +72,7 @@ $basedir  = $site_data[$site]['basedir'];
 $main_include_path = realpath(dirname(__FILE__).'/../');
 $templates_path = realpath(dirname(__FILE__).'/../../');
 define('BASEDIR', ($basedir == '/') ? '' : $basedir);
+define('BUG_PATCHTRACKER_TMPDIR', $site_data[$site]['patch_tmp']);
 define('PEAR_DATABASE_DSN', "mysqli://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
 
 /// FIXME: These should not be needed!

@@ -10,8 +10,8 @@ class Bug_Patchtracker
 
     function __construct()
     {
-        if (!file_exists(PEAR_PATCHTRACKER_TMPDIR)) {
-            if (!@mkdir(PEAR_PATCHTRACKER_TMPDIR)) {
+        if (!file_exists(BUG_PATCHTRACKER_TMPDIR)) {
+            if (!@mkdir(BUG_PATCHTRACKER_TMPDIR)) {
                 $this->_upload = false;
                 $this->_dbh = &$GLOBALS['dbh'];
                 return;
@@ -30,7 +30,7 @@ class Bug_Patchtracker
      */
     function patchDir($bugid, $name)
     {
-        return PEAR_PATCHTRACKER_TMPDIR . '/p' . $bugid . '/' . $name;
+        return BUG_PATCHTRACKER_TMPDIR . '/p' . $bugid . '/' . $name;
     }
     /**
      * Create the directory in which patches for this bug ID will be stored

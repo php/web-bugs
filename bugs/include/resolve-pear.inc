@@ -18,9 +18,6 @@
  * @version   $Id$
  */
 
-if (!defined('PEAR_CHANNELNAME'))
-	define ('PEAR_CHANNELNAME', 'pear.php.net');
-
 $RESOLVE_REASONS = array(
   'fixedcvs' => array(
     'status' => 'Closed',

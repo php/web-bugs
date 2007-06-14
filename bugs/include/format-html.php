@@ -246,7 +246,7 @@ echo $extraHeaders;
 
 function response_footer($style = false, $extraContent = false)
 {
-    global $LAST_UPDATED, $MIRRORS, $MYSITE, $COUNTRIES, $SCRIPT_NAME, $RSIDEBAR_DATA;
+    global $site_url, $LAST_UPDATED, $MIRRORS, $MYSITE, $COUNTRIES, $SCRIPT_NAME, $RSIDEBAR_DATA;
 
     static $called;
     if ($called) {
@@ -302,9 +302,9 @@ print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
     Last updated: <?php echo $LAST_UPDATED; ?><br />
     Bandwidth and hardware provided by:
     <?php
-     if ($_SERVER['SERVER_NAME'] == 'pear.php.net') {
+     if ($site_url == 'pear.php.net') {
          print_link('http://www.pair.com/', 'pair Networks');
-     } elseif ($_SERVER['SERVER_NAME'] == PEAR_CHANNELNAME) {
+     } elseif ($site_url == PEAR_CHANNELNAME) {
          print PEAR_CHANNELNAME;
      } else {
          print '<i>This is an unofficial mirror!</i>';
