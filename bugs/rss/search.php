@@ -50,7 +50,7 @@ $query = "
 		UNIX_TIMESTAMP(ts1) as ts1a,
 		UNIX_TIMESTAMP(ts2) as ts2a,
 		TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) AS unchanged
-    FROM {$site_data[$site]['db']} 
+    FROM bugdb
 ";
 
 if (!empty($site) || !empty($_GET['maintain']) || !empty($_GET['handle'])) {
