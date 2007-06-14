@@ -73,18 +73,20 @@ if ($auth_user) {
 $query  = 'SELECT b.package_name, b.status, COUNT(*) AS quant'
         . ' FROM bugdb AS b';
 
-$from = ' LEFT JOIN packages AS p ON p.name = b.package_name';
-if ($category) {
-    $pseudo = false;
-    $from .= ' JOIN categories AS c ON c.id = p.category';
-    $from .= ' AND c.name = ' .  $dbh->quoteSmart($category);
+$from = '';
+if ($site != 'php') {
+	$from = ' LEFT JOIN packages AS p ON p.name = b.package_name';
+	if ($category) {
+	    $pseudo = false;
+	    $from .= ' JOIN categories AS c ON c.id = p.category';
+	    $from .= ' AND c.name = ' .  $dbh->quoteSmart($category);
+	}
+	if ($developer) {
+	    $pseudo = false;
+	    $from .= ' JOIN maintains AS m ON m.package = p.id';
+	    $from .= ' AND m.handle = ' .  $dbh->quoteSmart($developer);
+	}
 }
-if ($developer) {
-    $pseudo = false;
-    $from .= ' JOIN maintains AS m ON m.package = p.id';
-    $from .= ' AND m.handle = ' .  $dbh->quoteSmart($developer);
-}
-
 switch ($site) {
     case 'pecl':
         $where = ' WHERE p.package_type = ' . $dbh->quoteSmart($site);
@@ -106,11 +108,8 @@ if ($developer) {
     $where .= ' AND m.active = 1';
 }
 
-if (empty($_GET['bug_type'])) {
-    $bug_type = 'Bugs';
-    $where .= " AND (bug_type = 'Bug' OR bug_type = 'Documentation Problem')";
-} elseif ($_GET['bug_type'] == 'All') {
-    $bug_type = '';
+if (empty($_GET['bug_type']) || $_GET['bug_type'] == 'All') {
+    $bug_type = 'All';
 } else {
     $bug_type = $_GET['bug_type'];
     $where .= ' AND bug_type = ' . $dbh->quoteSmart($bug_type);
@@ -124,18 +123,20 @@ $result =& $dbh->query($query);
 
 while ($result->fetchInto($row)) {
     $pkg_tmp[$row['status']][$row['package_name']]  = $row['quant'];
-    $pkg_total[$row['package_name']]               += $row['quant'];
-    $all[$row['status']]                           += $row['quant'];
-    $total                                         += $row['quant'];
+    @$pkg_total[$row['package_name']]               += $row['quant'];
+    @$all[$row['status']]                           += $row['quant'];
+    @$total                                         += $row['quant'];
     $pkg_names[$row['package_name']]                = 0;
 }
 
-foreach ($titles as $key => $val) {
-    if (is_array($pkg_tmp[$key])) {
-        $pkg[$key] = array_merge($pkg_names, $pkg_tmp[$key]);
-    } else {
-        $pkg[$key] = $pkg_names;
-    }
+if (count($pkg_tmp)) {
+	foreach ($titles as $key => $val) {
+	    if (isset($pkg_tmp[$key]) && is_array($pkg_tmp[$key])) {
+	        $pkg[$key] = array_merge($pkg_names, $pkg_tmp[$key]);
+	    } else {
+	        $pkg[$key] = $pkg_names;
+	    }
+	}
 }
 
 if ($total > 0) {
@@ -147,20 +148,28 @@ if ($total > 0) {
 }
 
 
-$_SERVER['QUERY_STRING'] ? $query_string = '?' . $_SERVER['QUERY_STRING'] : '';
-
 /*
  * Fetch list of all categories
  */
-include_once 'pear-database-category.php';
-$res = category::listAll();
+$res = array();
+if ($site != 'php') {
+	include_once 'pear-database-category.php';
+	$res = category::listAll();
 
+	// DB error
+	if (is_object($res)) {
+	    response_header('DB error');
+	    display_bug_error($res);
+	    response_footer();
+	    exit;
+	}
+}
 ?>
 
 <table>
  <tr>
   <td style="white-space: nowrap">
-   <form method="get" action="stats.php<?php echo $query_string ?>">
+   <form method="get" action="stats.php">
    <strong>
     <label for="category" accesskey="o">
      Categ<span class="accesskey">o</span>ry:
@@ -197,33 +206,34 @@ foreach ($res as $row) {
 /*
  * Fetch list of developers
  */
-$users =& $dbh->query('SELECT u.handle AS handle, u.name AS name'
+if ($site != 'php') {
+	$users =& $dbh->query('SELECT u.handle AS handle, u.name AS name'
                       . ' FROM users u, maintains m'
                       . ' WHERE u.handle = m.handle'
                       . ' GROUP BY handle ORDER BY u.name');
 
-if (!$developer) {
-    echo ' selected="selected"';
-    $developer = '';
+	if (!$developer) {
+	    echo ' selected="selected"';
+	    $developer = '';
+	}
 }
-
 echo '>All</option>' . "\n";
 
-while ($u = $users->fetchRow(DB_FETCHMODE_ASSOC)) {
-    echo '    <option value="' . $u['handle'] . '"';
-    if ($developer == $u['handle']) {
-        echo ' selected="selected"';
-    }
-    echo '>' . $u['name'] . '</option>' . "\n";
+if ($site != 'php') {
+	while ($u = $users->fetchRow(DB_FETCHMODE_ASSOC)) {
+	    echo '    <option value="' . $u['handle'] . '"';
+	    if ($developer == $u['handle']) {
+	        echo ' selected="selected"';
+	    }
+	    echo '>' . $u['name'] . '</option>' . "\n";
+	}
 }
-
 ?>
 
    </select>
 
    <strong>Bug Type:</strong>
-   <select class="small" id="bug_type" name="bug_type"
-           onchange="this.form.submit(); return false;">
+   <select class="small" id="bug_type" name="bug_type" onchange="this.form.submit(); return false;">
 
    <?php show_type_options($bug_type, true) ?>
 
@@ -373,7 +383,7 @@ function bugstats($status, $name)
         if (isset($all[$status])) {
             return '<a href="search.php?cmd=display&amp;' .
                    'bug_type='.$bug_type.'&amp;status=' .$status .
-                   '&amp;by=Any&amp;limit=30'.$string.'">' .
+                   '&amp;by=Any&amp;limit=30">' .
                    $all[$status] . "</a>\n";
         }
     } else {
@@ -384,7 +394,7 @@ function bugstats($status, $name)
                    'bug_type='.$bug_type.'&amp;status=' .
                    $status .
                    '&amp;package_name%5B%5D=' . urlencode($name) .
-                   '&amp;by=Any&amp;limit=30'.$string.'">' .
+                   '&amp;by=Any&amp;limit=30">' .
                    $pkg[$status][$name] . "</a>\n";
         }
     }
@@ -414,7 +424,7 @@ function package_link($name)
 {
     global $pseudo_pkgs;
 
-    if (!in_array($name, $pseudo_pkgs)) {
+    if (!isset($pseudo_pkgs[$name])) {
         return '<a href="/package/' . $name . '" class="bug_stats">' .
                $name . '</a>';
     } else {
