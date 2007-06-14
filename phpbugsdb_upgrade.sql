@@ -98,9 +98,11 @@ CREATE TABLE bug_account_request (
 
 CREATE TABLE bugdb_resolves (
   id INT NOT NULL AUTO_INCREMENT,
+  name varchar(100) NOT NULL,
   status varchar(16) default NULL,
   title varchar(100) NOT NULL,
   message text NOT NULL,
+  project varchar(40) NOT NULL default '',
   PRIMARY KEY (id)
 );
 
@@ -115,10 +117,18 @@ CREATE TABLE bugdb_pseudo_packages (
   UNIQUE KEY (name, project)
 );
 
+# Default pseudo packages (common for all projects)
+INSERT INTO bugdb_pseudo_packages SET id = '1', parent = '0', name = 'Web Site',   long_name = 'Web Site',   project = '';
+INSERT INTO bugdb_pseudo_packages SET id = '2', parent = '1', name = 'Bug System', long_name = 'Bug System', project = '';
+
+# PEAR specific pseudo packages
+INSERT INTO bugdb_pseudo_packages SET id = '3', parent = '1', name = 'PEPr', long_name = 'PEPr', project = 'pear';
+INSERT INTO bugdb_pseudo_packages SET id = '4', parent = '0', name = 'Documentation', long_name = 'Documentation', project = 'pear';
+
 # Populate pseudo packages from existing bugs 
-# - NOTE: Use only to import any package_name which is not mentioned in bugtypes.inc!
-INSERT IGNORE INTO bugdb_pseudo_packages (name, long_name, parent, project) 
-	SELECT package_name as name, package_name as long_name, 0 AS parent, 'php' AS project FROM bugdb GROUP BY package_name;
+# - NOTE: Use only to import any package_name which is not mentioned in bugtypes.inc, run convert_bugtypes_to_db.php first!!!
+INSERT IGNORE INTO bugdb_pseudo_packages (name, long_name, parent, project, disabled) 
+	SELECT package_name as name, package_name as long_name, 0 AS parent, 'php' AS project, 1 AS disabled FROM bugdb GROUP BY package_name;
 
 
 #
@@ -147,5 +157,33 @@ CREATE TABLE packages (
   PRIMARY KEY  (id),
   UNIQUE KEY name (name),
   KEY category (category)
+);
+
+#
+# This table is copy of pearweb/sql/users.sql
+#
+CREATE TABLE users (
+  handle varchar(20) NOT NULL default '',
+  password varchar(64) default NULL,
+  name varchar(100) default NULL,
+  email varchar(100) default NULL,
+  homepage varchar(255) default NULL,
+  created datetime default NULL,
+  createdby varchar(20) default NULL,
+  lastlogin datetime default NULL,
+  showemail tinyint(1) default NULL,
+  registered tinyint(1) default NULL,
+  admin tinyint(1) default NULL,
+  userinfo text default NULL,
+  pgpkeyid varchar(20) default NULL,
+  pgpkey text,
+  wishlist varchar(255) NOT NULL default '',
+  active tinyint(1) NOT NULL default 1,
+  from_site varchar(4) NOT NULL default '',
+  PRIMARY KEY  (handle),
+  KEY handle (handle,registered),
+  KEY pgpkeyid (pgpkeyid),
+  KEY email (email(25)),
+  UNIQUE KEY email_u (email)
 );
 

@@ -107,29 +107,32 @@ CREATE TABLE bug_account_request (
 
 CREATE TABLE bugdb_resolves (
   id INT NOT NULL AUTO_INCREMENT,
+  name varchar(100) NOT NULL,
   status varchar(16) default NULL,
   title varchar(100) NOT NULL,
   message text NOT NULL,
+  project varchar(40) NOT NULL default '', # if empty, common for all projects
   PRIMARY KEY (id)
 );
 
-CREATE TABLE bugdb_packages (
+CREATE TABLE bugdb_pseudo_packages (
   id INT NOT NULL AUTO_INCREMENT,
   parent INT NOT NULL default '0',
-  package_key varchar(80) NOT NULL default '',
-  package_name varchar(100) NOT NULL default '',
+  name varchar(80) NOT NULL default '',
+  long_name varchar(100) NOT NULL default '',
   project varchar(40) NOT NULL default '',
+  disabled tinyint(1) NOT NULL default 0, # Disabled == read-only (no new reports in these!)
   PRIMARY KEY (id),
-  UNIQUE KEY (package_key, project)
+  UNIQUE KEY (name, project)
 );
 
 # Default pseudo packages (common for all projects)
-INSERT INTO bugdb_packages SET id = '1', parent = '0', package_key = 'Web Site',   package_name = 'Web Site',   project = '';
-INSERT INTO bugdb_packages SET id = '2', parent = '1', package_key = 'Bug System', package_name = 'Bug System', project = '';
+INSERT INTO bugdb_pseudo_packages SET id = '1', parent = '0', name = 'Web Site',   long_name = 'Web Site',   project = '';
+INSERT INTO bugdb_pseudo_packages SET id = '2', parent = '1', name = 'Bug System', long_name = 'Bug System', project = '';
 
 # PEAR specific pseudo packages
-INSERT INTO bugdb_packages SET id = '3', parent = '1', package_key = 'PEPr', package_name = 'PEPr', project = 'pear';
-INSERT INTO bugdb_packages SET id = '4', parent = '0', package_key = 'Documentation', package_name = 'Documentation', project = 'pear';
+INSERT INTO bugdb_pseudo_packages SET id = '3', parent = '1', name = 'PEPr', long_name = 'PEPr', project = 'pear';
+INSERT INTO bugdb_pseudo_packages SET id = '4', parent = '0', name = 'Documentation', long_name = 'Documentation', project = 'pear';
 
 # PECL specific pseudo pacakges
 # none?
