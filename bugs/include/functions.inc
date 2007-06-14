@@ -69,39 +69,58 @@ $state_types =  array (
     'All'          => 0
 );
 
-// Items that need bug tracking but aren't real packages
-require_once 'Tree/Tree.php';
-
-$tree = Tree::setup (
-	'Memory_DBsimple',
-	PEAR_DATABASE_DSN,
-	array (
-		'order' => 'id',
-		'whereAddOn' => "project IN ('', '$site')",
-		'table' => 'bugdb_pseudo_packages',
-		'columnNameMaps' => array (
-			'parentId' => 'parent',
-		),
-	)
-);
-$tree->setup();
-foreach ($tree->data as $data)
-{
-	if (isset($data['children']))
-	{
-		$pseudo_pkgs[$data['name']] = $data['long_name'];
-		foreach ($data['children'] as $child)
-		{
-			$pseudo_pkgs[$child['name']] = "&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}";
-		}
-	} else if (!isset($pseudo_pkgs[$data['name']]))
-		$pseudo_pkgs[$data['name']] = $data['long_name'];
-}
-
 
 /*
  * DEFINE FUNCTIONS ============================
  */
+
+/**
+ * Fetches pseudo packages from database
+ *
+ * @param string $project          define what project pseudo packages are returned
+ * @param bool   $return_disabled  whether to return read-only items, defaults to true
+ *
+ * @return array  array of pseudo packages
+ */
+function get_pseudo_packages ($project, $return_disabled = true)
+{
+	require_once 'Tree/Tree.php';
+
+	$where = "project IN ('', '$project')";
+	if (!$return_disabled)
+		$where.= " AND disabled = 0";
+
+	$pseudo_pkgs = array();
+
+	$tree = Tree::setup (
+		'Memory_DBsimple',
+		PEAR_DATABASE_DSN,
+		array (
+			'order' => 'id',
+			'whereAddOn' => $where,
+			'table' => 'bugdb_pseudo_packages',
+			'columnNameMaps' => array (
+				'parentId' => 'parent',
+			),
+		)
+	);
+	$tree->setup();
+	foreach ($tree->data as $data)
+	{
+		if (isset($data['children']))
+		{
+			$pseudo_pkgs[$data['name']] = $data['long_name'];
+			foreach ($data['children'] as $child)
+			{
+				$pseudo_pkgs[$child['name']] = "&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}";
+			}
+		} else if (!isset($pseudo_pkgs[$data['name']]))
+			$pseudo_pkgs[$data['name']] = $data['long_name'];
+	}
+
+	return $pseudo_pkgs;
+}
+
 
 /**
  * Obfuscates email addresses to hinder spammer's spiders
@@ -1288,3 +1307,19 @@ function unsubscribe($bug_id, $hash)
     return true;
 }
 
+
+/**
+ * Fetch bug resolves 
+ *
+ * @return array array of resolves
+ */
+function get_resolve_reasons ($project = false)
+{
+	global $dbh;
+
+	$where = '';
+	if ($project !== false)
+		$where = "WHERE project = '{$project}' OR project = ''";
+
+	return $dbh->getAll("SELECT * FROM bugdb_resolves $where");
+}
