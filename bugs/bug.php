@@ -130,6 +130,22 @@ if ($dbh->getOne('SELECT handle FROM bugdb WHERE id=?', array($bug_id))) {
 
 $bug =& $dbh->getRow($query, array($bug_id), DB_FETCHMODE_ASSOC);
 
+// DB error
+if (is_object($bug)) {
+    response_header('DB error');
+	display_bug_error($bug);
+    response_footer();
+    exit;
+}
+
+// Bug not found with passed id
+if (!$bug) {
+    response_header('No Such Bug');
+    display_bug_error("No such bug #{$bug_id}");
+    response_footer();
+    exit;
+}
+
 if ($edit == 1) {
     if (isset($auth_user) && $auth_user) {
         if (auth_check('pear.bug') && !auth_check('pear.dev') &&
@@ -199,16 +215,10 @@ if (isset($_POST['unsubscribe_to_bug'])) {
     }
 }
 
-if (!$bug) {
-    response_header('No Such Bug');
-    display_bug_error("No such bug #{$bug_id}");
-    response_footer();
-    exit;
-}
-
 // Redirect to correct site if package type is not same as current site
 if (!empty($bug['package_type']) && $bug['package_type'] != $site) {
-    localRedirect("http://{$site_data[$bug['package_type']]['url']}{$basedir}/bug.php?id={$bug_id}");
+	$url = "{$site_data[$bug['package_type']]['url']}{$site_data[$bug['package_type']]['basedir']}";
+    localRedirect("http://{$url}/bug.php?id={$bug_id}");
 }
 
 // if the user is not registered, this might be spam, don't display
@@ -236,7 +246,6 @@ if ($edit == 1 && $delete_comment !== false) {
         $addon = '&thanks=1';
     }
     localRedirect('bug.php' . "?id=$bug_id&edit=1$addon");
-    exit();
 }
 
 // handle any updates, displaying errors if there were any
@@ -447,10 +456,12 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             if ($_POST['in']['status'] == $bug['status']) {
                 $_POST['in']['status'] = $RESOLVE_REASONS[$_POST['in']['resolve']]['status'];
             }
-            require './include/resolve.inc';
-            $reason = isset($RESOLVE_REASONS[$_POST['in']['resolve']]) ?
-                $RESOLVE_REASONS[$_POST['in']['resolve']]['message'] :
-                '';
+            if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS[$in['resolve']][$bug['package_name']])) {
+                $reason = $FIX_VARIATIONS[$in['resolve']][$bug['package_name']];
+            } else {
+                $reason = isset($RESOLVE_REASONS[$_POST['in']['resolve']]) ? $RESOLVE_REASONS[$_POST['in']['resolve']]['message'] : '';
+            }
+
             // do a replacement on @cvs@ to the likely location of CVS for this package
             if ($_POST['in']['resolve'] == 'trycvs') {
                 switch ($bug['package_name']) {
@@ -868,8 +879,7 @@ if ($edit == 1 || $edit == 2) {
          </th>
          <td colspan="3">
           <select name="in[resolve]" id="in">
-           <?php show_reason_types(isset($_POST['in']) && isset($_POST['in']['resolve']) ?
-                    $_POST['in']['resolve'] : -1, 1) ?>
+           <?php show_reason_types((isset($_POST['in']) && isset($_POST['in']['resolve'])) ? $_POST['in']['resolve'] : -1, 1) ?>
           </select>
 
           <?php
