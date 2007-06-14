@@ -53,6 +53,8 @@ $site_data = array (
 		'db_host' => 'localhost',
 	),
 );
+
+define('DEVBOX', true);
 // CONFIG END
 
 // DO NOT EDIT ANYTHING BELOW THIS LINE, edit $site_data above instead!
@@ -61,6 +63,7 @@ $site_url = $site_data[$site]['url'];
 $bugEmail = $site_data[$site]['email'];
 $basedir  = $site_data[$site]['basedir'];
 $main_include_path = realpath(dirname(__FILE__).'/../');
+$templates_path = realpath(dirname(__FILE__).'/../../');
 define('BASEDIR', ($basedir == '/') ? '' : $basedir);
 define('PEAR_DATABASE_DSN', "mysqli://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
 
@@ -76,7 +79,7 @@ extra_styles('css/bugs.css');
 require_once "{$main_include_path}/include/functions.inc";
 
 /**
- * Obtain the $RESOLVE_REASONS array
+ * Obtain the $RESOLVE_REASONS array (project specific!)
  */
-require_once "{$main_include_path}/include/resolve.inc";
+require_once "{$main_include_path}/include/resolve-{$site}.inc";
 
