@@ -1180,7 +1180,7 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
     }
     echo make_link("{$fulllink}&amp;status=Open", 'Open', '', $style['Open']);
     echo delim();
-    echo make_link("{$fulllink}&amp;status=Feedback', 'Feedback', '', $style['Feedback']);
+    echo make_link("{$fulllink}&amp;status=Feedback", 'Feedback', '', $style['Feedback']);
     echo delim();
     echo make_link("{$fulllink}&amp;status=All", 'All', '', $style['All']);
     if (!class_exists('package')) {
