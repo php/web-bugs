@@ -183,14 +183,14 @@ if (isset($_POST['addpatch'])) {
     }
     // }}}
 
-    $patches = $patchinfo->listPatches($bug);
+    $patches = $patchinfo->listPatches($bug_id);
     $errors = array();
     include $templates_path . '/templates/patchadded.php';
     exit;
 }
 
 $errors = array();
-$patches = $patchinfo->listPatches($bug);
+$patches = $patchinfo->listPatches($bug_id);
 $captcha = $numeralCaptcha->getOperation();
 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
 
