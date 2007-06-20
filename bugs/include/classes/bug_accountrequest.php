@@ -136,8 +136,7 @@ class Bug_Accountrequest
             return $res;
         }
 
-        $this->handle = $this->dbh->getOne('SELECT handle FROM bug_account_request WHERE
-            salt=?', array($salt));
+        $this->handle = $this->dbh->getOne('SELECT handle FROM bug_account_request WHERE salt=?', array($salt));
         return $salt;
     }
 
@@ -664,9 +663,7 @@ class Bug_Accountrequest
     function cleanOldRequests()
     {
         $old = gmdate('Y-m-d H:i:s', time() - 604800);
-        $findquery = '
-            select handle from bug_account_request
-            where created_on < ?';
+        $findquery = 'select handle from bug_account_request where created_on < ?';
         $all = $this->dbh->getAll($findquery, array($old));
         require_once 'include/classes/bug_patchtracker.php';
         $p = new Bug_Patchtracker;
@@ -689,9 +686,7 @@ class Bug_Accountrequest
                 }
             }
         }
-        $query = '
-            delete from bug_account_request
-            where created_on < ?';
+        $query = 'delete from bug_account_request where created_on < ?';
         // purge out-of-date account requests
         return $this->dbh->query($query, array($old));
     }
