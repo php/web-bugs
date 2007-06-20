@@ -1,6 +1,6 @@
 <?php
 
-require './include/prepend.inc';
+require_once './include/prepend.inc';
 
 /* Input vars */
 $bug_id = !empty($_GET['bug_id']) ? (int) $_GET['bug_id'] : 0;

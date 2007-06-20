@@ -3,7 +3,7 @@
 /**
  * Obtain common includes
  */
-require './include/prepend.inc';
+require_once './include/prepend.inc';
 
 Bug_DataObject::init();
 

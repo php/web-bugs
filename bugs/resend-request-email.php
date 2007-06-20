@@ -1,12 +1,15 @@
 <?php
+
 if (!isset($_GET['handle'])) {
     response_header('Error: no handle selected');
     report_error('Error: no handle selected for display');
     response_footer();
     exit;
 }
-require 'include/classes/bug_accountrequest.php';
+
+require_once 'include/classes/bug_accountrequest.php';
 $account = new Bug_Accountrequest($_GET['handle']);
+
 if ($account->pending()) {
     try {
         $account->sendEmail();

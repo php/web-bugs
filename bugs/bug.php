@@ -284,7 +284,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         do {
             if (!isset($auth_user) || !$auth_user) {
                 // user doesn't exist yet
-                require 'include/classes/bug_accountrequest.php';
+                require_once 'include/classes/bug_accountrequest.php';
                 $buggie = new Bug_Accountrequest;
                 if (!is_valid_email($_POST['in']['commentemail'])) {
                     $errors[] = "You must provide a valid email address.";

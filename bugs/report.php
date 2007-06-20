@@ -200,7 +200,7 @@ if (isset($_POST['in'])) {
                 if (!isset($auth_user)) {
                     $registereduser = 0;
                     // user doesn't exist yet
-                    require 'include/classes/bug_accountrequest.php';
+                    require_once 'include/classes/bug_accountrequest.php';
                     $buggie = new Bug_Accountrequest;
                     $salt = $buggie->addRequest($_POST['in']['email']);
                     if (is_array($salt)) {
