@@ -3,8 +3,10 @@
 /**
  * Obtain common includes
  */
-require dirname(__FILE__) . '/include/functions.inc';
+require './include/prepend.inc';
+
 Bug_DataObject::init();
+
 if (isset($_GET['packagexml'])) {
     $roadmap = Bug_DataObject::bugDB('bugdb_roadmap');
     if (!isset($_GET['package'])) {
@@ -447,7 +449,7 @@ while ($allroadmaps->fetch()) {
             }
             $savant->results = $results;
             $savant->tla = $tla;
-            $savant->types = $types;
+            $savant->types = $bug_types;
             $features = $savant->fetch('searchresults.php');
         } else {
             $features = 'No features';
@@ -480,7 +482,7 @@ while ($allroadmaps->fetch()) {
             }
             $savant->results = $results;
             $savant->tla = $tla;
-            $savant->types = $types;
+            $savant->types = $bug_types;
             $bugs = $savant->fetch('searchresults.php');
         } else {
             $bugs = 'No bugs';
@@ -571,3 +573,4 @@ if (isset($_GET['new'])) {
     exit;
 }
 $savant->display('roadmap.php');
+

@@ -41,7 +41,7 @@ $tla = array(
     'Spam'        => 'Spm',
 );
 
-$types = array(
+$bug_types = array(
     'Bug'                     => 'Bug',
     'Feature/Change Request'  => 'Req',
     'Documentation Problem'   => 'Doc',
@@ -350,7 +350,7 @@ function show_limit_options($limit = 30)
  */
 function show_type_options($current = 'Bug', $all = false)
 {
-    global $types;
+    global $bug_types;
 
     if ($all) {
         if (!$current) {
@@ -365,12 +365,8 @@ function show_type_options($current = 'Bug', $all = false)
         $current = 'Bug';
     }
 
-    foreach ($types as $k => $v) {
-        echo '<option value="' . $k . '"';
-        if ($current == $k) {
-            echo ' selected="selected"';
-        }
-        echo '>' . $k . '</option>' . "\n";
+    foreach ($bug_types as $k => $v) {
+        echo '<option value="', $k, '"', (($current == $k) ? ' selected="selected"' : ''), ">{$k}</option>\n";
     }
 }
 
@@ -676,10 +672,9 @@ function display_bug_success($in)
  *
  * @return void
  */
-function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous = array(),
-    $current = array())
+function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous = array(), $current = array())
 {
-    global $tla, $types, $site, $siteBig, $site_urlm, $basedir;
+    global $tla, $bug_types, $site, $siteBig, $site_url, $basedir;
 
     $text = array();
     $headers = array();
@@ -802,9 +797,9 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     if ($in['status'] != $bug['status'] || $ncomment != "" || ($current != $previous)) {
 
         if (isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type']) {
-            $subj = $types[$bug['bug_type']] . '->' . $types[$in['bug_type']];
+            $subj = $bug_types[$bug['bug_type']] . '->' . $bug_types[$in['bug_type']];
         } else {
-            $subj = $types[$bug['bug_type']];
+            $subj = $bug_types[$bug['bug_type']];
         }
 
         $old_status = $bug['status'];
@@ -993,7 +988,7 @@ function is_valid_email($email)
  */
 function incoming_details_are_valid($in, $initial = 0, $logged = false)
 {
-    global $bug, $dbh, $types;
+    global $bug, $dbh, $bug_types;
 
     $errors = array();
     if (empty ($in['package_name']) || $in['package_name'] == 'none') {
@@ -1016,7 +1011,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged = false)
         $errors[] = 'Please select a valid Package version. If your Package version is too old, please upgrade first and see if the problem has not already been fixed.';
     }
 
-    if (!array_key_exists($in['bug_type'], $types)) {
+    if (!array_key_exists($in['bug_type'], $bug_types)) {
         $errors[] = 'Please select a valid bug type.';
     }
 
@@ -1226,8 +1221,8 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
  *
  * @return void
  */
- function unsubscribe_hash($bug_id, $email, $bug)
- {
+function unsubscribe_hash($bug_id, $email, $bug)
+{
     global $dbh, $siteBig, $site_url, $bugEmail;
 
 	$now = time();

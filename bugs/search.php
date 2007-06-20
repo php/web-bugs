@@ -393,7 +393,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 echo ' <tr valign="top" class="' . $tla[$row['status']] . '">' . "\n";
 
                 /* Bug ID */
-                echo '  <td align="center"><a href="/bugs/'.$row['id'].'">'.$row['id'].'</a>';
+                echo '  <td align="center"><a href="bug.php?id='.$row['id'].'">'.$row['id'].'</a>';
                 echo '<br /><a href="bug.php?id='.$row['id'].'&amp;edit=1">(edit)</a></td>' . "\n";
 
                 /* Date */
@@ -428,7 +428,7 @@ display_bug_error($errors);
 display_bug_error($warnings, 'warnings', 'WARNING:');
 
 ?>
-<form id="asearch" method="get" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+<form id="asearch" method="get" action="search.php">
 <table id="primary" width="100%">
 <tr valign="top">
   <th>Find bugs</th>

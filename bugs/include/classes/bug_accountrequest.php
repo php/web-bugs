@@ -196,6 +196,8 @@ class Bug_Accountrequest
 
     function confirmRequest($handle, $password, $name)
     {
+    	global $siteBig, $bugEmail;
+    	
         if ($handle == $this->dbh->getOne('SELECT handle FROM users WHERE
               handle=?', array($handle))) {
             $id = $this->dbh->nextId("karma");
@@ -225,8 +227,7 @@ class Bug_Accountrequest
             return $useradd;
         }
 
-        $temphandle = $this->dbh->getOne('
-            SELECT handle from bug_account_request WHERE salt=?', array($this->salt));
+        $temphandle = $this->dbh->getOne('SELECT handle from bug_account_request WHERE salt=?', array($this->salt));
         // update all relevant records to the new handle
         $this->dbh->query('UPDATE bugdb_comments set reporter_name=? WHERE handle=?', array($name, $temphandle));
         $this->dbh->query('UPDATE bugdb set reporter_name=? WHERE handle=?', array($name, $temphandle));
@@ -296,12 +297,12 @@ class Bug_Accountrequest
             foreach ($bugs as $bug) {
                 $this->sendBugCommentEmail($bug);
             }
-            $msg = "Your PEAR bug tracker account has been opened.\n"
+            $msg = "Your {$siteBig} bug tracker account has been opened.\n"
                 . "Bugs you have opened will now be displayed, and you can\n"
                 . "add new comments to existing bugs";
-            $xhdr = "From: pear-webmaster@lists.php.net";
+            $xhdr = "From: [$bugEmail}";
             if (!DEVBOX) {
-                mail($user['email'], "Your PEAR Bug Tracker Account Request", $msg, $xhdr, "-f bounce-no-user@php.net");
+                mail($user['email'], "Your {$siteBig} Bug Tracker Account Request", $msg, $xhdr, "-f bounce-no-user@php.net");
             }
             $this->deleteRequest();
             return true;
@@ -316,7 +317,7 @@ class Bug_Accountrequest
      *
      * @return array  an array of email addresses
      */
-    function get_package_mail($package_name, $bug_id=false)
+    function get_package_mail($package_name, $bug_id = false)
     {
         global $site, $bugEmail, $dbh;
         switch ($package_name) {
@@ -345,15 +346,15 @@ class Bug_Accountrequest
         if ($bug_id) {
             $bug_id = (int)$bug_id;
 
-            $assigned = $dbh->getOne('SELECT assign FROM bugdb WHERE id=' . $bug_id);
+            $assigned = $dbh->getOne("SELECT assign FROM bugdb WHERE id = {$bug_id}");
             if ($assigned) {
-                $assigned = $dbh->getOne('SELECT email FROM users WHERE handle="' . $assigned . '"');
+                $assigned = $dbh->getOne("SELECT email FROM users WHERE handle = '{$assigned}'");
                 if ($assigned && !in_array($assigned, $to)) {
                     // assigned is not a maintainer
                     $to[] = $assigned;
                 }
             }
-            $bcc = $dbh->getCol('SELECT email FROM bugdb_subscribe WHERE bug_id=' . $bug_id);
+            $bcc = $dbh->getCol("SELECT email FROM bugdb_subscribe WHERE bug_id = {$bug_id}");
             $bcc = array_diff($bcc, $to);
             $bcc = array_unique($bcc);
             return array(implode(', ', $to), $bugEmail, implode(', ', $bcc));
@@ -364,61 +365,38 @@ class Bug_Accountrequest
 
     function sendBugCommentEmail($bug)
     {
-        $ncomment = trim($bug['comment']);
-        $tla = array(
-            'Open'        => 'Opn',
-            'Bogus'       => 'Bgs',
-            'Feedback'    => 'Fbk',
-            'No Feedback' => 'NoF',
-            'Wont fix'    => 'WFx',
-            'Duplicate'   => 'Dup',
-            'Critical'    => 'Ctl',
-            'Assigned'    => 'Asn',
-            'Analyzed'    => 'Ana',
-            'Verified'    => 'Ver',
-            'Suspended'   => 'Sus',
-            'Closed'      => 'Csd',
-            'Spam'        => 'Spm',
-        );
-        $types = array(
-            'Bug'                     => 'Bug',
-            'Feature/Change Request'  => 'Req',
-            'Documentation Problem'   => 'Doc',
-        );
+    	global $bug_types, $siteBig, $site_url, $basedir;
 
+        $ncomment = trim($bug['comment']);
         $text = array();
         $headers = array();
 
         /* Default addresses */
-        list($mailto,$mailfrom, $Bcc) =
-            $this->get_package_mail($bug['package_name'], $bug['id']);
+        list ($mailto, $mailfrom, $Bcc) = $this->get_package_mail($bug['package_name'], $bug['id']);
 
         $headers[] = array(" ID", $bug['id']);
-
         $headers[] = array(" Comment by", $this->handle);
-        $from = "\"$this->handle\" <$this->email>";
+        $from = "\"{$this->handle}\" <{$this->email}>";
 
-        $prefix = " ";
         if ($f = $this->spam_protect($this->email, 'text')) {
-            $headers[] = array($prefix.'Reported By', $f);
+            $headers[] = array(" Reported By", $f);
         }
 
-        $fields = array(
-            'sdesc'        => 'Summary',
-            'status'       => 'Status',
-            'bug_type'     => 'Type',
-            'package_name' => 'Package',
-            'php_os'       => 'Operating System',
-            'package_version'  => 'Package Version',
-            'php_version'  => 'PHP Version',
-            'assign'       => 'Assigned To'
+        $fields = array (
+            'sdesc'           => 'Summary',
+            'status'          => 'Status',
+            'bug_type'        => 'Type',
+            'package_name'    => 'Package',
+            'php_os'          => 'Operating System',
+            'package_version' => 'Package Version',
+            'php_version'     => 'PHP Version',
+            'assign'          => 'Assigned To'
         );
 
         foreach ($fields as $name => $desc) {
-            $prefix = " ";
             /* only fields that are set get added. */
             if ($f = $bug[$name]) {
-                $headers[] = array($prefix . $desc, $f);
+                $headers[] = array(" $desc", $f);
             }
         }
 
@@ -433,7 +411,7 @@ class Bug_Accountrequest
         # align header content with headers (if a header contains
         # more than one line, wrap it intelligently)
         $header_text = "";
-        $spaces = str_repeat(" ", $maxlength + 1);
+        $spaces = str_repeat(' ', $maxlength + 1);
         foreach ($headers as $v) {
             $hcontent = wordwrap($v[1], 72-$maxlength, "\n$spaces"); # wrap and indent
             $hcontent = rtrim($hcontent); # wordwrap may add spacer to last line
@@ -451,15 +429,15 @@ class Bug_Accountrequest
 
         /* developer text with headers, previous messages, and edit link */
         $dev_text = 'Edit report at ' .
-                    "http://pear.php.net/bugs/bug.php?id=$bug[id]&edit=1\n\n" .
+                    "http://{$site_url}{$basedir}/bug.php?id=$bug[id]&edit=1\n\n" .
                     $header_text .
                     $wrapped_text .
                     "\n-- \nEdit this bug report at " .
-                    "http://pear.php.net/bugs/bug.php?id=$bug[id]&edit=1\n";
+                    "http://{$site_url}{$basedir}/bug.php?id=$bug[id]&edit=1\n";
 
         $user_text = $dev_text;
 
-        $subj = $types[$bug['bug_type']];
+        $subj = $bug_types[$bug['bug_type']];
 
         $new_status = $bug['status'];
 
@@ -468,27 +446,27 @@ class Bug_Accountrequest
         # the user gets sent mail with an envelope sender that ignores bounces
         if (DEVBOX == false) {
             @mail($bug['email'],
-                  "[PEAR-BUG] " . $subj . $bug['sdesc'],
+                  "[{$siteBig}-BUG] {$subj} {$bug['sdesc']}",
                   $user_text,
-                  "From: PEAR Bug Database <$mailfrom>\n".
+                  "From: {$siteBig} Bug Database <$mailfrom>\n".
                   "Bcc: $Bcc\n" .
                   "X-PHP-Bug: $bug[id]\n".
-                  "In-Reply-To: <bug-$bug[id]@pear.php.net>",
+                  "In-Reply-To: <bug-$bug[id]@{$site_url}>",
                   "-fbounces-ignored@php.net");
             # but we go ahead and let the default sender get used for the list
 
             @mail($mailto,
-                  "[PEAR-BUG] " . $subj . $bug['sdesc'],
+                  "[{$siteBig}] " . $subj . $bug['sdesc'],
                   $dev_text,
                   "From: $from\n".
-                  "X-PHP-Bug: $bug[id]\n".
-                  "X-PHP-Type: "       . $bug['bug_type']    . "\n" .
-                  "X-PHP-PackageVersion: "    . $bug['package_version'] . "\n" .
-                  "X-PHP-Version: "    . $bug['php_version'] . "\n" .
-                  "X-PHP-Category: "   . $bug['package_name']    . "\n" .
-                  "X-PHP-OS: "         . $bug['php_os']      . "\n" .
-                  "X-PHP-Status: "     . $new_status . "\n" .
-                  "In-Reply-To: <bug-$bug[id]@pear.php.net>",
+                  "X-PHP-Bug: {$bug['id']}\n".
+                  "X-PHP-Type: {$bug['bug_type']}\n" .
+                  "X-PHP-PackageVersion: " . $bug['package_version'] . "\n" .
+                  "X-PHP-Version: "        . $bug['php_version'] . "\n" .
+                  "X-PHP-Category: "       . $bug['package_name']    . "\n" .
+                  "X-PHP-OS: "             . $bug['php_os']      . "\n" .
+                  "X-PHP-Status: "         . $new_status . "\n" .
+                  "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
                   "-f bounce-no-user@php.net");
         }
     }
@@ -602,6 +580,8 @@ class Bug_Accountrequest
 
     function sendBugEmail($buginfo)
     {
+    	global $bug_types, $siteBig, $site_url, $basedir;
+    	
         $report  = '';
         $report .= 'From:             ' . $this->handle . "\n";
         $report .= 'Operating system: ' . $buginfo['php_os'] . "\n";
@@ -616,7 +596,7 @@ class Bug_Accountrequest
 
         $ascii_report  = "$report$sdesc\n\n" . wordwrap($fdesc);
         $ascii_report .= "\n-- \nEdit bug report at ";
-        $ascii_report .= "http://pear.php.net/bugs/bug.php?id=$buginfo[id]&edit=1";
+        $ascii_report .= "http://{$site_url}{$basedir}/bug.php?id=$buginfo[id]&edit=1";
 
         list($mailto, $mailfrom) = $this->get_package_mail($buginfo['package_name']);
 
@@ -635,24 +615,19 @@ class Bug_Accountrequest
         $extra_headers .= 'X-PHP-Status: Open' . "\n";
         $extra_headers .= 'Message-ID: <bug-' . $buginfo['id'] . '@pear.php.net>';
 
-        $types = array(
-            'Bug'                     => 'Bug',
-            'Feature/Change Request'  => 'Req',
-            'Documentation Problem'   => 'Doc',
-        );
-        $type = @$types[$buginfo['bug_type']];
+        $type = @$bug_types[$buginfo['bug_type']];
 
         if (DEVBOX == false) {
             // mail to package developers
-            @mail($mailto, "[PEAR-BUG] $buginfo[bug_type] #$buginfo[id] [NEW]: $sdesc",
+            @mail($mailto, "[{$siteBig}] $buginfo[bug_type] #$buginfo[id] [NEW]: $sdesc",
                   $ascii_report . "1\n-- \n$dev_extra", $extra_headers,
                   '-f bounce-no-user@php.net');
             // mail to reporter
-            @mail($email, "[PEAR-BUG] $buginfo[bug_type] #$buginfo[id]: $sdesc",
+            @mail($email, "[{$siteBig}] $buginfo[bug_type] #$buginfo[id]: $sdesc",
                   $ascii_report . "2\n",
-                  "From: pear.php.net Bug Database <$mailfrom>\n" .
+                  "From: {$siteBig} Bug Database <$mailfrom>\n" .
                   "X-PHP-Bug: $buginfo[id]\n" .
-                  "Message-ID: <bug-$buginfo[id]@pear.php.net>",
+                  "Message-ID: <bug-$buginfo[id]@{$site_url}>",
                   '-f bounce-no-user@php.net');
         }
     }

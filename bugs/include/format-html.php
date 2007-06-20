@@ -64,7 +64,7 @@ $_style = '';
  * @param string $style
  * @return void
  */
-function response_header($title = 'The PHP Extension and Application Repository', $style = false, $extraHeaders = '')
+function response_header($title, $style = false, $extraHeaders = '')
 {
     global $_style, $_header_done, $SIDEBAR_DATA, $self, $auth_user, $site, $siteBig;
 
@@ -163,8 +163,8 @@ echo $extraHeaders;
         print 'Logged in as ' . strtoupper($auth_user->handle) . ' (';
         print '<a class="menuWhite" href="/user/' . $auth_user->handle . '">Info</a> | ';
         print '<a class="menuWhite" href="/account-edit.php?handle=' . $auth_user->handle . '">Profile</a> | ';
-        print '<a class="menuWhite" href="/bugs/search.php?handle=' . $auth_user->handle . '&amp;cmd=display&amp;status=OpenFeedback&amp;showmenu=1">Bugs</a> | ';
-        print '<a class="menuWhite" href="/bugs/search.php?cmd=display' .
+        print '<a class="menuWhite" href="search.php?handle=' . $auth_user->handle . '&amp;cmd=display&amp;status=OpenFeedback&amp;showmenu=1">Bugs</a> | ';
+        print '<a class="menuWhite" href="search.php?cmd=display' .
             '&amp;status=All&amp;bug_type=All&amp;author_email=' . $auth_user->handle .
             '&amp;direction=DESC&amp;order_by=ts1&amp;showmenu=1">My Bugs</a>';
         print ")</small><br />\n";
@@ -183,9 +183,9 @@ echo $extraHeaders;
     echo delim();
     print_link('/packages.php', 'Packages', false, 'class="menuBlack"');
     echo delim();
-    print_link('/support/','Support',false, 'class="menuBlack"');
+    print_link('/support/', 'Support', false, 'class="menuBlack"');
     echo delim();
-    print_link('/bugs/','Bugs',false, 'class="menuBlack"');
+    print_link('/bugs/', 'Bugs', false, 'class="menuBlack"');
     ?>
 
   </td>
@@ -509,28 +509,6 @@ function report_error($in, $class = 'errors', $head = 'ERROR:')
 function report_warning($in)
 {
     return report_error($in, 'warnings', 'WARNING:');
-}
-
-/**
- * Generates a complete PEAR web page with an error message in it then
- * calls exit
- *
- * For use with PEAR_ERROR_CALLBACK error handling mode to print fatal
- * errors and die.
- *
- * @param string|array|PEAR_Error $in  see report_error() for more info
- * @param string $title  string to be put above the message
- *
- * @return void
- *
- * @see report_error()
- */
-function error_handler($errobj, $title = 'Error')
-{
-    response_header($title);
-    report_error($errobj);
-    response_footer();
-    exit;
 }
 
 /**

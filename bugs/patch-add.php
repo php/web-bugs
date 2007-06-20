@@ -3,12 +3,25 @@
 session_start();
 $canpatch = true;
 
-require_once 'include/functions.inc';
+require_once './include/prepend.inc';
+
+/* Input vars */
+$bug_id = isset ($_REQUEST['bug_id']) ? (int) $_REQUEST['bug_id'] : 0;
+$patchname = is_string($_REQUEST['patchname']) ? $_REQUEST['patchname'] : '';
+$email = isset($_REQUEST['email']) ? $_REQUEST['email'] : '';
+
+if (empty($bug_id)) {
+    response_header('Error :: no bug selected');
+    display_bug_error('No bug selected to add a patch to');
+    response_footer();
+    exit;
+}
 
 /**
  * Numeral Captcha Class
  */
 require_once 'Text/CAPTCHA/Numeral.php';
+
 /**
  * Instantiate the numeral captcha object.
  */
@@ -22,48 +35,36 @@ if (isset($auth_user) && $auth_user->registered) {
     }
 }
 
+/**
+ * Bug Patch tracker class 
+ */
 require_once 'include/classes/bug_patchtracker.php';
 $patchinfo = new Bug_Patchtracker;
 
+if (PEAR::isError($buginfo = $patchinfo->getBugInfo($bug_id))) {
+    response_header('Error :: invalid bug selected');
+    display_bug_error("Invalid bug #{bug_id} selected");
+    response_footer();
+    exit;
+}
+$package = $buginfo['package_name'];
+
 $loggedin = isset($auth_user) && $auth_user->registered;
+
 if (isset($_POST['addpatch'])) {
-    if (!isset($_POST['obsoleted'])) {
-        $_POST['obsoleted'] = array();
-    }
-    if (!isset($_POST['bug'])) {
-        response_header('Error :: no bug selected');
-        display_bug_error('No bug selected to add a patch to');
-        response_footer();
-        exit;
-    }
-    if (PEAR::isError($buginfo = $patchinfo->getBugInfo($_POST['bug']))) {
-        response_header('Error :: invalid bug selected');
-        display_bug_error('Invalid bug "' . $id . '" selected');
-        response_footer();
-        exit;
-    }
-    if (isset($_POST['email'])) {
-        $email = $_POST['email'];
-    } else {
-        $email = '';
-    }
-    if (!isset($_POST['name']) || empty($_POST['name']) || !is_string($_POST['name'])) {
-        $package = $buginfo['package_name'];
-        $bug = $buginfo['id'];
-        if (!is_string($_POST['name'])) {
-            $_POST['name'] = '';
-        }
-        $name = $_POST['name'];
-        $patches = $patchinfo->listPatches($bug);
-        $errors[] = 'No patch name entered';
+    $obsoleted = (!isset($_POST['obsoleted']) || !is_array($_POST['obsoleted'])) ? array() : $_POST['obsoleted'];
+
+    if (empty($patchname)) {
+        $patches = $patchinfo->listPatches($bug_id);
+        $errors[] = 'Invalid or empty patch name entered';
         $captcha = $numeralCaptcha->getOperation();
-        include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
+        include $templates_path . '/templates/addpatch.php';
         exit;
     }
     if (!$loggedin) {
         try {
             $errors = array();
-            if (!empty($_POST['email']) && !is_valid_email($_POST['email'])) {
+            if (!empty($email) && !is_valid_email($email)) {
                 $errors[] = 'Email address must be valid!';
             }
             /**
@@ -82,7 +83,7 @@ if (isset($_POST['addpatch'])) {
             // user doesn't exist yet
             require_once 'include/classes/bug_accountrequest.php';
             $buggie = new Bug_Accountrequest;
-            $salt = $buggie->addRequest($_POST['email']);
+            $salt = $buggie->addRequest($email);
             if (is_array($salt)) {
                 $errors = $salt;
                 response_header('Add patch - Problems');
@@ -101,28 +102,17 @@ if (isset($_POST['addpatch'])) {
                 throw new Exception('');
             }
 
-            $bug = $buginfo['id'];
             PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-            $e = $patchinfo->attach($bug, 'patch', $_POST['name'],
-                $buggie->handle, $_POST['obsoleted']);
+            $e = $patchinfo->attach($bug_id, 'patch', $patchname, $buggie->handle, $obsoleted);
             PEAR::popErrorHandling();
             if (PEAR::isError($e)) {
                 $buggie->deleteRequest();
-                $package = $buginfo['package_name'];
-                $bug = $buginfo['id'];
-                if (!is_string($_POST['name'])) {
-                    $_POST['name'] = '';
-                }
-                $name = $_POST['name'];
-                $patches = $patchinfo->listPatches($bug);
+                $patches = $patchinfo->listPatches($bug_id);
                 $errors[] = $e->getMessage();
-                $errors[] =
-                    'Could not attach patch "' . 
-                    htmlspecialchars($_POST['name']) . 
-                    '" to Bug #' . $bug;
+                $errors[] = 'Could not attach patch "' . clean($patchname) . '" to Bug #' . $bug_id;
                 $captcha = $numeralCaptcha->getOperation();
                 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-                include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
+                include $templates_path . '/templates/addpatch.php';
                 exit;
             }
             try {
@@ -133,44 +123,25 @@ if (isset($_POST['addpatch'])) {
                 response_footer();
                 exit;
             }
-            localRedirect('/bugs/patch-display.php?bug=' . $bug . '&patch=' .
-                urlencode($_POST['name']) . '&revision=' . $e);
+            localRedirect("patch-display.php?bug_id={$bug_id}&patch=" . urlencode($patchname) . '&revision=' . $e);
             exit;
         } catch (Exception $e) {
-            $package = $buginfo['package_name'];
-            $bug = $buginfo['id'];
-            if (!is_string($_POST['name'])) {
-                $_POST['name'] = '';
-            }
-            $name = $_POST['name'];
-            $patches = $patchinfo->listPatches($bug);
+            $patches = $patchinfo->listPatches($bug_id);
             $captcha = $numeralCaptcha->getOperation();
             $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-            include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
+            include $templates_path . '/templates/addpatch.php';
             exit;
         }
     }
-    $bug = $buginfo['id'];
     PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-    $e = $patchinfo->attach($bug, 'patch', $_POST['name'], $auth_user->handle,
-        $_POST['obsoleted']);
+    $e = $patchinfo->attach($bug_id, 'patch', $patchname, $auth_user->handle, $obsoleted);
     PEAR::popErrorHandling();
     if (PEAR::isError($e)) {
-        $package = $buginfo['package_name'];
-        $bug = $buginfo['id'];
-        if (!is_string($_POST['name'])) {
-            $_POST['name'] = '';
-        }
-        $name = $_POST['name'];
-        $patches = $patchinfo->listPatches($bug);
-        $errors = array($e->getMessage(),
-            'Could not attach patch "' . 
-            htmlspecialchars($_POST['name']) . 
-            '" to Bug #' . $bug);
+        $patches = $patchinfo->listPatches($bug_id);
+        $errors = array($e->getMessage(), 'Could not attach patch "' . clean($patchname) . '" to Bug #' . $bug_id);
         $captcha = $numeralCaptcha->getOperation();
         $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-
-        include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
+        include $templates_path . '/templates/addpatch.php';
         exit;
     }
     // {{{ Email after the patch is added.
@@ -182,21 +153,18 @@ if (isset($_POST['addpatch'])) {
         require_once 'Damblan/Mailer.php';
         require_once 'Damblan/Bugs.php';
 
-        $patchName = htmlspecialchars($_POST['name']);
+        $patchName = clean($patchname);
 
         $rev       = $e;
 
         $mailData = array(
-            'id'         => $bug,
-            'url'        => 'http://' . PEAR_CHANNELNAME . 
-                        "/bugs/patch-display.php?bug=$bug&patch=$patchName&revision=$rev&display=1",
-            'package'    => $buginfo['package_name'],
-            'summary'    => $dbh->getOne('SELECT sdesc from bugdb
-                WHERE id=?', array($bug)),
+            'id'         => $bug_id,
+            'url'        => "http://{$site_url}{$basedir}/patch-display.php?bug_id={$bug_id}&patch={$patchName}&revision={$rev}&display=1",
+            'package'    => $package,
+            'summary'    => $dbh->getOne("SELECT sdesc from bugdb WHERE id = {$bug_id}"),
             'date'       => date('Y-m-d H:i:s'),
-            'name'       => $_POST['name'],
-            'packageUrl' => 'http://' . PEAR_CHANNELNAME .
-                            '/bugs/bug.php?id=' . $bug,
+            'name'       => $patchname,
+            'packageUrl' => "http://{$site_url}{$basedir}/bug.php?id={$bug_id}",
         );
 
         $additionalHeaders['To'] = Damblan_Bugs::getMaintainers($buginfo['package_name']);
@@ -214,32 +182,16 @@ if (isset($_POST['addpatch'])) {
         }
     }
     // }}}
-    $package = $buginfo['package_name'];
-    $bug = $buginfo['id'];
-    $name = $_POST['name'];
+
     $patches = $patchinfo->listPatches($bug);
     $errors = array();
-    include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/patchadded.php';
+    include $templates_path . '/templates/patchadded.php';
     exit;
 }
-if (!isset($_GET['bug'])) {
-    response_header('Error :: no bug selected');
-    display_bug_error('No bug selected to add a patch to');
-    response_footer();
-    exit;
-}
-if (PEAR::isError($buginfo = $patchinfo->getBugInfo($_GET['bug']))) {
-    response_header('Error :: invalid bug selected');
-    display_bug_error('Invalid bug "' . $id . '" selected');
-    response_footer();
-    exit;
-}
-$email = isset($_GET['email']) ? $_GET['email'] : '';
+
 $errors = array();
-$package = $buginfo['package_name'];
-$bug = $buginfo['id'];
-$name = isset($_GET['patch']) ? $_GET['patch'] : '';
 $patches = $patchinfo->listPatches($bug);
 $captcha = $numeralCaptcha->getOperation();
 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/addpatch.php';
+
+include $templates_path . '/templates/addpatch.php';

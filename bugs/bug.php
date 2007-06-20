@@ -611,11 +611,12 @@ switch ($thanks)
 		display_bug_success('Your comment was added to the bug successfully.');
 		break;
 	case 4:
+		$bug_url = "http://{$site_url}{$basedir}/bug.php?id={$bug_id}";
 		display_bug_success("
 			Thank you for your help!
 			If the status of the bug report you submitted changes, you will be notified.
 			You may return here and check the status or update your report at any time.
-			The URL for your bug report is: <a href='/bugs/bug.php?id={$bug_id}'>http://{$site_url}{$basedir}/bug.php?id={$bug_id}</a>.
+			The URL for your bug report is: <a href='{$bug_url}'>{$bug_url}</a>.
 		");
 		break;
 	case 6:
@@ -707,7 +708,7 @@ if ($bug['modified']) {
                     releases.version=b.roadmap_version',
                     array($db->id));
                 if (isset($links[$db->id])) {
-					$assignedRoadmap[] = '<a href="/bugs/roadmap.php?package=' .
+					$assignedRoadmap[] = '<a href="roadmap.php?package=' .
 				        $db->package . ($released ? '&showold=1' : '') .
 				        '&roadmapdetail=' . $db->roadmap_version .
 						'#a' . $db->roadmap_version . '">' . $db->roadmap_version .
@@ -893,7 +894,7 @@ if ($edit == 1 || $edit == 2) {
           }
           ?>
 
-          <small>(<a href="/bugs/quick-fix-desc.php">description</a>)</small>
+          <small>(<a href="quick-fix-desc.php">description</a>)</small>
          </td>
         </tr>
     <?php
@@ -1028,14 +1029,14 @@ if ($edit == 1 || $edit == 2) {
      <tr>
     </table>
     <div class="explain">
-     <h1><a href="/bugs/patch-add.php?bug=<?php echo $bug_id ?>">Click Here to Submit a Patch</a></h1>
+     <h1><a href="patch-add.php?bug=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a></h1>
     </div>
     <p style="margin-bottom: 0em">
     <label for="ncomment" accesskey="m"><b>New<?php if ($edit==1) echo "/Additional"?> Co<span class="accesskey">m</span>ment:</b></label>
     </p>
 
     <textarea cols="60" rows="8" name="ncomment" id="ncomment"
-     wrap="physical"><?php echo clean($ncomment) ?></textarea>
+     wrap="physical"><?php echo clean($ncomment); ?></textarea>
 
     <p style="margin-top: 0em">
         <input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
@@ -1050,7 +1051,7 @@ if (isset($auth_user) && $auth_user && $auth_user->registered) {
 ?>
 <div class="explain">
 
-    <form name="subscribetobug" action="/bugs/bug.php?id=<?php echo $bug_id; ?>" method="post">
+    <form name="subscribetobug" action="bug.php?id=<?php echo $bug_id; ?>" method="post">
     <table>
       <tr>
        <th class="details" colspan="2">Subscribe to this entry?</th>
@@ -1070,52 +1071,43 @@ if (isset($auth_user) && $auth_user && $auth_user->registered) {
 }
 
 if ($edit == 3) {
-$action = htmlspecialchars($_SERVER['PHP_SELF']);
+
 ?>
-    <form name="comment" id="comment" action="<?php echo $action ?>" method="post">
-<?php if (isset($auth_user) && $auth_user): ?>
+    <form name="comment" id="comment" action="bug.php" method="post">
+
+<?php if (isset($auth_user) && $auth_user) { ?>
     <div class="explain">
-     <h1><a href="/bugs/patch-add.php?bug=<?php echo $bug_id ?>">Click Here to Submit a Patch</a></h1>
+     <h1><a href="patch-add.php?bug=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a></h1>
     </div>
+<?php } ?>
 
-<?php endif; //if ($auth_user) ?>
-
-    <?php
-    if (!isset($_POST['in'])) {
-        ?>
+<?php if (!isset($_POST['in'])) { ?>
 
         <div class="explain">
          Anyone can comment on a bug. Have a simpler test case? Does it
          work for you on a different platform? Let us know! Just going to
          say 'Me too!'? Don't clutter the database with that please
 
-         <?php
+<?php
          if (canvote($thanks, $bug['status'])) {
-             echo ' &mdash; but make sure to <a href="';
-             echo htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $bug_id . '">vote on the bug</a>';
+             echo ' &mdash; but make sure to <a href="bug.php?id=' , $bug_id , '">vote on the bug</a>';
          }
-         ?>!
-
+?>!
         </div>
 
-        <?php
-    }
-    echo $preview;
-    ?>
+<?php }
 
+echo $preview;
 
+?>
+
+<?php if (!isset($auth_user) || !$auth_user) { ?>
     <table>
-     <?php if (!isset($auth_user) || !$auth_user): ?>
      <tr>
       <th class="details">Y<span class="accesskey">o</span>ur email address:<br />
       <strong>MUST BE VALID</strong></th>
       <td class="form-input">
-       <input type="text" size="40" maxlength="40" name="in[commentemail]"
-        value="<?php echo clean(isset($_POST['in']) && isset($_POST['in']['commentemail']) ?
-            $_POST['in']['commentemail'] : '') ?>"
-        accesskey="o" />
-       <input type="hidden" name="id" value="<?php echo $bug_id ?>" />
-       <input type="hidden" name="edit" value="<?php echo $edit?>" />
+       <input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo isset($_POST['in']['commentemail']) ? clean($_POST['in']['commentemail']) : ''; ?>" accesskey="o" />
       </td>
      </tr>
      <tr>
@@ -1123,14 +1115,13 @@ $action = htmlspecialchars($_SERVER['PHP_SELF']);
       <td class="form-input"><input type="text" name="captcha" /></td>
      </tr>
      <?php $_SESSION['answer'] = $numeralCaptcha->getAnswer(); ?>
-     <?php endif; // if (!$auth_user): ?>
     </table>
+<?php } ?>
 
     <div>
-     <input type="hidden" name="id" value="<?php echo $bug_id ?>" />
-     <input type="hidden" name="edit" value="<?php echo $edit ?>" />
-     <textarea cols="60" rows="10" name="ncomment"
-      wrap="physical"><?php echo clean($ncomment) ?></textarea>
+     <input type="hidden" name="id" value="<?php echo $bug_id; ?>" />
+     <input type="hidden" name="edit" value="<?php echo $edit; ?>" />
+     <textarea cols="60" rows="10" name="ncomment" wrap="physical"><?php echo clean($ncomment); ?></textarea>
      <br /><input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
     </div>
 
@@ -1213,30 +1204,40 @@ $p = $patches->listPatches($bug_id);
 <?php
 foreach ($p as $name => $revisions)
 {
-    $obsolete = $patches->getObsoletingPatches($bug['id'], $name, $revisions[0][0]);
-    $style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';
-    ?><a href="patch-display.php?bug=<?php echo $bug['id'] ?>&patch=<?php
-        echo urlencode($name) ?>&revision=latest" <?php echo $style; ?>><?php echo clean($name) ?></a> (last revision <?php echo format_date($revisions[0][0]) ?> by <?php echo $revisions[0][1] ?>)<br /><?php
-        echo "\n";
+    $obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
+    echo '<a href="patch-display.php?bug=', $bug_id,
+         '&patch=', urlencode($name),
+         '&revision=latest',
+         (!empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : ''),
+         '">', clean($name),
+         '</a> (last revision ', format_date($revisions[0][0]), ' by ', $revisions[0][1], ')<br />';
 }
+
 // Display comments
-$query = 'SELECT c.id,c.email,c.comment,UNIX_TIMESTAMP(c.ts) AS added, c.reporter_name as comment_name, IF(c.handle <> "",u.registered,1) as registered,
-    u.showemail, u.handle,c.handle as bughandle
+$query = '
+	SELECT c.id, c.email, c.comment, 
+	       UNIX_TIMESTAMP(c.ts) AS added,
+		   c.reporter_name AS comment_name,
+		   IF(c.handle <> "", u.registered, 1) AS registered,
+           u.showemail, u.handle, c.handle AS bughandle
     FROM bugdb_comments c
     LEFT JOIN users u ON u.handle = c.handle
     WHERE c.bug = ?
-    GROUP BY c.id ORDER BY c.ts';
+    GROUP BY c.id ORDER BY c.ts
+';
 $res =& $dbh->query($query, array($bug_id));
 if ($res) {
-    ?><h2>Comments</h2><?php
+    echo '<h2>Comments</h2>';
     while ($row =& $res->fetchRow(DB_FETCHMODE_ASSOC)) {
-        output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['showemail'], $row['bughandle'] ? $row['bughandle'] : $row['handle'], $row['comment_name'], $row['registered']);
+        output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['showemail'], ($row['bughandle'] ? $row['bughandle'] : $row['handle']), $row['comment_name'], $row['registered']);
     }
 }
 
 response_footer();
 
-
+/** 
+ * Helper functions 
+ */
 function output_note($com_id, $ts, $email, $comment, $showemail = 1, $handle = NULL, $comment_name = NULL, $registered)
 {
     global $edit, $bug_id, $trusted_developers, $user, $dbh;

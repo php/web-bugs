@@ -1,8 +1,11 @@
 <?php
 
-require 'include/functions.inc';
+require './include/prepend.inc';
 
-if (!isset($_GET['bug'])) {
+/* Input vars */
+$bug_id = !empty($_GET['bug_id']) ? (int) $_GET['bug_id'] : 0;
+
+if (empty($bug_id)) {
     response_header('Error :: no bug selected');
     display_bug_error('No bug selected to add a patch to');
     response_footer();
@@ -12,35 +15,32 @@ if (!isset($_GET['bug'])) {
 require 'include/classes/bug_patchtracker.php';
 $patchinfo = new Bug_Patchtracker;
 
-if (PEAR::isError($buginfo = $patchinfo->getBugInfo($_GET['bug']))) {
+if (PEAR::isError($buginfo = $patchinfo->getBugInfo($bug_id))) {
     response_header('Error :: invalid bug selected');
-    display_bug_error('Invalid bug "' . (int)$GET['bug'] . '" selected');
+    display_bug_error("Invalid bug #{$bug_id} selected");
     response_footer();
     exit;
 }
-if (isset($_GET['patch']) && isset($_GET['revision'])) {
+if (isset($_GET['patchname']) && isset($_GET['revision'])) {
     if ($_GET['revision'] == 'latest') {
-        $revisions = $patchinfo->listRevisions($buginfo['id'], $_GET['patch']);
+        $revisions = $patchinfo->listRevisions($bug_id, $_GET['patchname']);
         if (isset($revisions[0])) {
             $_GET['revision'] = $revisions[0][0];
         }
     }
-    if (!file_exists($path = $patchinfo->getPatchFullpath($_GET['bug'], $_GET['patch'],
-                                                        $_GET['revision']))) {
+    if (!file_exists($path = $patchinfo->getPatchFullpath($bug_id, $_GET['patchname'], $_GET['revision']))) {
         response_header('Error :: no such patch/revision');
         display_bug_error('Invalid patch/revision specified');
         response_footer();
         exit;
     }
-    if ($patchinfo->userNotRegistered($_GET['bug'], $_GET['patch'], $_GET['revision'])) {
+    if ($patchinfo->userNotRegistered($bug_id, $_GET['patchname'], $_GET['revision'])) {
         response_header('User has not confirmed identity');
-        display_bug_error('The user who submitted this patch has not yet confirmed ' .
-            'their email address.  ');
+        display_bug_error('The user who submitted this patch has not yet confirmed their email address.');
         echo '<p>If you submitted this patch, please check your email.</p>' .
             '<p><strong>If you do not have a confirmation message</strong>, <a href="resend-request-email.php?' .
-            'handle=' . urlencode($patchinfo->getDeveloper($_GET['bug'], $_GET['patch'],
-                $_GET['revision'])) . '">click here to re-send</a> or write a message to' .
-            ' <a href="mailto:pear-dev@lists.php.net">pear-dev@lists.php.net</a> asking for manual approval of your account.</p>';
+            'handle=' . urlencode($patchinfo->getDeveloper($bug_id, $_GET['patchname'], $_GET['revision'])) . '">click here to re-send</a>' .
+            'or write a message to <a href="mailto:pear-dev@lists.php.net">pear-dev@lists.php.net</a> asking for manual approval of your account.</p>';
         response_footer();
         exit;
     }
@@ -48,12 +48,12 @@ if (isset($_GET['patch']) && isset($_GET['revision'])) {
     if (isset($_GET['download'])) {
         header('Last-modified: ' . HTTP::date(filemtime($path)));
         header('Content-type: application/octet-stream');
-        header('Content-disposition: attachment; filename="' . $_GET['patch'] . '.patch.txt"');
+        header("Content-disposition: attachment; filename=\"{$_GET['patchname']}.patch.txt\"");
         header('Content-length: '.filesize($path));
         readfile($path);
         exit;
     }
-    $patchcontents = $patchinfo->getPatch($buginfo['id'], $_GET['patch'], $_GET['revision']);
+    $patchcontents = $patchinfo->getPatch($bug_id, $_GET['patchname'], $_GET['revision']);
 
     if (PEAR::isError($patchcontents)) {
         response_header('Error :: Cannot retrieve patch');
@@ -62,23 +62,19 @@ if (isset($_GET['patch']) && isset($_GET['revision'])) {
         exit;
     }
     $package = $buginfo['package_name'];
-    $bug = $buginfo['id'];
-    $handle = $patchinfo->getDeveloper($bug, $_GET['patch'], $_GET['revision']);
+    $handle = $patchinfo->getDeveloper($bug_id, $_GET['patchname'], $_GET['revision']);
     $revision = $_GET['revision'];
-    $patch = $_GET['patch'];
-    response_header('Bug #' . clean($buginfo['id']) . ' :: Patches');
-    $bug = $buginfo['id'];
-    $obsoletedby = $patchinfo->getObsoletingPatches($bug, $_GET['patch'], $_GET['revision']);
-    $obsoletes = $patchinfo->getObsoletePatches($bug, $_GET['patch'], $_GET['revision']);
-    $patches = $patchinfo->listPatches($buginfo['id']);
+    $patchname = $_GET['patchname'];
+    response_header("Bug #{$bug_id} :: Patches");
+    $obsoletedby = $patchinfo->getObsoletingPatches($bug_id, $_GET['patchname'], $_GET['revision']);
+    $obsoletes = $patchinfo->getObsoletePatches($bug_id, $_GET['patchname'], $_GET['revision']);
+    $patches = $patchinfo->listPatches($bug_id);
     $canpatch = auth_check('pear.bug') || auth_check('pear.dev');
-    include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/listpatches.php';
-    $revisions = $patchinfo->listRevisions($buginfo['id'], $_GET['patch']);
+    include $templates_path . '/templates/listpatches.php';
+    $revisions = $patchinfo->listRevisions($bug_id, $_GET['patchname']);
     $revision = $_GET['revision'];
-    $patch = $_GET['patch'];
     if (isset($_GET['diff']) && $_GET['diff'] && isset($_GET['old']) && is_numeric($_GET['old'])) {
-        $old = $patchinfo->getPatchFullpath($_GET['bug'], $_GET['patch'],
-                                            $_GET['old']);
+        $old = $patchinfo->getPatchFullpath($bug_id, $_GET['patchname'], $_GET['old']);
         $new = $path;
         if (!realpath($old) || !realpath($new)) {
             response_header('Error :: Cannot retrieve patch');
@@ -91,17 +87,16 @@ if (isset($_GET['patch']) && isset($_GET['revision'])) {
         assert_options(ASSERT_WARNING, 0);
         $d = new Text_Diff($orig = file($old), $now = file($new));
         $diff = new Text_Diff_Renderer_Bugtracker($d);
-        include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/patchdiff.php';
+        include $templates_path . '/templates/patchdiff.php';
         response_footer();
         exit;
     }
-    include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/patchdisplay.php';
+    include $templates_path . '/templates/patchdisplay.php';
     response_footer();
     exit;
 }
-response_header('Bug #' . clean($buginfo['id']) . ' :: Patches');
-$bug = $buginfo['id'];
-$patches = $patchinfo->listPatches($buginfo['id']);
+response_header("Bug #{$bug_id} :: Patches");
+$patches = $patchinfo->listPatches($bug_id);
 $canpatch = auth_check('pear.bug') || auth_check('pear.dev');
-include dirname(dirname(dirname(__FILE__))) . '/templates/bugs/listpatches.php';
+include $templates_path . '/templates/listpatches.php';
 response_footer();
