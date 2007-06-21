@@ -7,7 +7,7 @@ require_once './include/prepend.inc';
 
 /* Input vars */
 $bug_id = isset ($_REQUEST['bug_id']) ? (int) $_REQUEST['bug_id'] : 0;
-$patchname = is_string($_REQUEST['patchname']) ? $_REQUEST['patchname'] : '';
+$patchname = isset($_REQUEST['patchname']) ? $_REQUEST['patchname'] : '';
 $email = isset($_REQUEST['email']) ? $_REQUEST['email'] : '';
 
 if (empty($bug_id)) {

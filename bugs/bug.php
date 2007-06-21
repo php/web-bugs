@@ -222,7 +222,7 @@ if (!empty($bug['package_type']) && $bug['package_type'] != $site) {
 }
 
 // if the user is not registered, this might be spam, don't display
-if (!$bug['registered'] && !auth_check('pear.dev')) {
+if ($site != 'php' && !$bug['registered'] && !auth_check('pear.dev')) {
     response_header('User has not confirmed identity');
     display_bug_error('The user who submitted this report has not yet confirmed his/her email address.');
     $handle_out = urlencode($bug['bughandle']);
@@ -388,7 +388,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         $_POST['in']['package_version'] = '';
     }
 
-    if (!$errors && !($errors = incoming_details_are_valid($_POST['in'], false, false))) {
+    if (!$errors && !($errors = incoming_details_are_valid($_POST['in'], false))) {
         $dbh->query("
             UPDATE bugdb
             SET
@@ -596,7 +596,10 @@ switch ($bug['bug_type'])
 response_header(
 	"{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']),
 	false,
-    " <link rel='alternate' type='application/rdf+xml' title='RSS feed' href='http://{$site_url}{$basedir}/feeds/bug_{$bug_id}.rss' />"
+    " 
+      <link rel='alternate' type='application/rdf+xml' title='RSS feed' href='http://{$site_url}{$basedir}/feeds/bug_{$bug_id}.rss' />
+      <script type='text/javascript' src='js/util.js'></script>    
+    "
 );
 
 // DISPLAY BUG
@@ -678,7 +681,10 @@ if ($bug['modified']) {
    <th class="details">Status:</th>
    <td><?php echo htmlspecialchars($bug['status']) ?></td>
    <th class="details">Package:</th>
-   <td><?php echo htmlspecialchars($bug['package_name']); if ($bug['package_version']): ?> (version <?php echo htmlspecialchars($bug['package_version']);?>)<?php endif; ?></td>
+   <td>
+   <?php echo htmlspecialchars($bug['package_name']); ?>
+   <?php if ($bug['package_version']) { ?>(version <?php echo htmlspecialchars($bug['package_version']);?>)<?php } ?>
+   </td>
   </tr>
   <tr id="situation">
    <th class="details">PHP Version:</th>
@@ -1029,7 +1035,7 @@ if ($edit == 1 || $edit == 2) {
      <tr>
     </table>
     <div class="explain">
-     <h1><a href="patch-add.php?bug=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a></h1>
+     <h1><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a></h1>
     </div>
     <p style="margin-bottom: 0em">
     <label for="ncomment" accesskey="m"><b>New<?php if ($edit==1) echo "/Additional"?> Co<span class="accesskey">m</span>ment:</b></label>
@@ -1077,7 +1083,7 @@ if ($edit == 3) {
 
 <?php if (isset($auth_user) && $auth_user) { ?>
     <div class="explain">
-     <h1><a href="patch-add.php?bug=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a></h1>
+     <h1><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a></h1>
     </div>
 <?php } ?>
 
@@ -1200,7 +1206,7 @@ $patches = new Bug_Patchtracker;
 $p = $patches->listPatches($bug_id);
 ?>
 <h2>Patches</h2>
-<a href="patch-add.php?bug=<?php echo $bug_id; ?>">Add a Patch</a><br />
+<a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a><br />
 <?php
 foreach ($p as $name => $revisions)
 {

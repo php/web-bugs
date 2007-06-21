@@ -52,7 +52,7 @@ if (isset($_POST['save']) && isset($_POST['pw'])) {
 }
 
 // captcha is not necessary if the user is logged in
-if (isset($auth_user) && $auth_user->registered) {
+if ($site != 'php' && isset($auth_user) && $auth_user->registered) {
     if (!auth_check('pear.dev') && auth_check('pear.voter') && !auth_check('pear.bug')) {
         // auto-grant bug tracker karma if it isn't present
         require_once 'Damblan/Karma.php';
@@ -68,7 +68,13 @@ if (isset($auth_user) && $auth_user->registered) {
 }
 
 if (isset($_POST['in'])) {
-    $errors = incoming_details_are_valid($_POST['in'], 1, (isset($auth_user) && $auth_user->registered));
+    $errors = incoming_details_are_valid($_POST['in'], 1);
+
+	if ($site == 'php') {
+		$auth_user->email  = $_POST['in']['email'];
+		$auth_user->handle = 'user';
+		$auth_user->name = '';
+	}
 
     /**
      * Check if session answer is set, then compare
@@ -103,10 +109,10 @@ if (isset($_POST['in'])) {
              * If they are filing a feature request,
              * only look for similar features
              */
-            $package = $_POST['in']['package'];
+            $package_name = $_POST['in']['package_name'];
             $where_clause = 'WHERE bugdb.package_name=p.name ';
-            if ($package == 'Feature/Change Request') {
-                $where_clause .= "AND package_name = '$package'";
+            if ($package_name == 'Feature/Change Request') {
+                $where_clause .= "AND package_name = '$package_name'";
             } else {
                 $where_clause .= "AND package_name != 'Feature/Change Request'";
             }
@@ -260,8 +266,8 @@ if (isset($_POST['in'])) {
                 }
 
                 // shunt website bugs to the website package
-                if (in_array($_POST['in']['package'], array('Web Site', 'PEPr', 'Bug System'), true)) {
-                    $_POST['in']['package'] = 'pearweb';
+                if (in_array($_POST['in']['package_name'], array('Web Site', 'PEPr', 'Bug System'), true)) {
+                    $_POST['in']['package_name'] = 'pearweb';
                 }
 
                 $query = 'INSERT INTO bugdb (
@@ -279,7 +285,7 @@ if (isset($_POST['in'])) {
                           passwd,
                           reporter_name
                          ) VALUES (' . $registereduser . ',' . 
-                         " '" . escapeSQL($_POST['in']['package']) . "'," .
+                         " '" . escapeSQL($_POST['in']['package_name']) . "'," .
                          " '" . escapeSQL($_POST['in']['bug_type']) . "'," .
                          " '" . escapeSQL($_POST['in']['email']) . "'," .
                          " '" . escapeSQL($_POST['in']['handle']) . "'," .
@@ -321,8 +327,7 @@ if (isset($_POST['in'])) {
                     require_once 'include/classes/bug_patchtracker.php';
                     $tracker = new Bug_Patchtracker;
                     PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-                    $patchrevision = $tracker->attach($cid, 'patchfile',
-                        $_POST['in']['patchname'], $_POST['in']['handle'], array());
+                    $patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $_POST['in']['handle'], array());
                     PEAR::staticPopErrorHandling();
                     if (PEAR::isError($patchrevision)) {
                         $redirectToPatchAdd = true;
@@ -335,7 +340,7 @@ if (isset($_POST['in'])) {
                     $report .= 'Operating system: ' . rinse($_POST['in']['php_os']) . "\n";
                     $report .= 'Package version:  ' . rinse($_POST['in']['package_version']) . "\n";
                     $report .= 'PHP version:      ' . rinse($_POST['in']['php_version']) . "\n";
-                    $report .= 'Package:          ' . $_POST['in']['package'] . "\n";
+                    $report .= 'Package:          ' . $_POST['in']['package_name'] . "\n";
                     $report .= 'Bug Type:         ' . $_POST['in']['bug_type'] . "\n";
                     $report .= 'Bug description:  ';
 
@@ -346,7 +351,7 @@ if (isset($_POST['in'])) {
                     $ascii_report .= "\n-- \nEdit bug report at ";
                     $ascii_report .= "http://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
 
-                    list($mailto, $mailfrom) = get_package_mail($_POST['in']['package']);
+                    list($mailto, $mailfrom) = get_package_mail($_POST['in']['package_name']);
 
                     $email = rinse($_POST['in']['email']);
                     $protected_email  = '"' . spam_protect($email, 'text') . '"';
@@ -358,38 +363,40 @@ if (isset($_POST['in'])) {
                     $extra_headers .= 'X-PHP-Type: '     . rinse($_POST['in']['bug_type']) . "\n";
                     $extra_headers .= 'X-PHP-PackageVersion: ' . rinse($_POST['in']['package_version']) . "\n";
                     $extra_headers .= 'X-PHP-Version: '  . rinse($_POST['in']['php_version']) . "\n";
-                    $extra_headers .= 'X-PHP-Category: ' . rinse($_POST['in']['package']) . "\n";
+                    $extra_headers .= 'X-PHP-Category: ' . rinse($_POST['in']['package_name']) . "\n";
                     $extra_headers .= 'X-PHP-OS: '       . rinse($_POST['in']['php_os']) . "\n";
                     $extra_headers .= 'X-PHP-Status: Open' . "\n";
                     $extra_headers .= "Message-ID: <bug-{$cid}@{$site_url}>";
 
-                    $type = @$bug_types[$_POST['in']['bug_type']];
+					if (isset($bug_types[$_POST['in']['bug_type']])) {
+	                    $type = $bug_types[$_POST['in']['bug_type']];
+					} else {
+						$type = 'unknown';
+					}
 
-                    if (DEVBOX == false) {
-                        // mail to package developers
-                        @mail($mailto, "[$siteBig-BUG] $type #$cid [NEW]: $sdesc",
-                              $ascii_report . "1\n-- \n$dev_extra", $extra_headers,
-                              '-f bounce-no-user@php.net');
-                        // mail to reporter
-                        @mail($email, "[$siteBig-BUG] $type #$cid: $sdesc",
-                              $ascii_report . "2\n",
-                              "From: $siteBig Bug Database <$mailfrom>\n" .
-                              "X-PHP-Bug: $cid\n" .
-                              "Message-ID: <bug-$cid@$site.php.net>",
-                              '-f bounce-no-user@php.net');
-                    }
+                    // mail to package developers
+                    @mail($mailto, "[$siteBig-BUG] $type #$cid [NEW]: $sdesc",
+                          $ascii_report . "1\n-- \n$dev_extra", $extra_headers,
+                          '-f bounce-no-user@php.net');
+                    // mail to reporter
+                    if (!DEVBOX)
+                    	@mail($email, "[$siteBig-BUG] $type #$cid: $sdesc",
+                    	      $ascii_report . "2\n",
+                    	      "From: $siteBig Bug Database <$mailfrom>\n" .
+                    	      "X-PHP-Bug: $cid\n" .
+                    	      "Message-ID: <bug-$cid@{$site_url}>",
+                    	      '-f bounce-no-user@php.net');
                 }
                 if ($redirectToPatchAdd) {
-                    localRedirect('patch-add.php?bug=' . $cid . '&patchname=' .
-                        $_POST['in']['patchname'] . '&email=' .
-                        $_POST['in']['email']);
+                	$patchname = urlencode($_POST['in']['patchname']);
+                	$patchemail= urlencode($_POST['in']['email']);
+                    localRedirect("patch-add.php?bug_id={$cid}&patchname={$patchname}&email={$patchemail}");
                 } elseif (!isset($buggie) && !empty($_POST['in']['patchname'])) {
                     require_once 'include/classes/bug_accountrequest.php';
                     $r = new Bug_Accountrequest();
-                    $info = $r->sendPatchEmail($cid, $patchrevision, $_POST['in']['package'], $auth_user->handle);
+                    $info = $r->sendPatchEmail($cid, $patchrevision, $_POST['in']['package_name'], $auth_user->handle);
                 }
-                localRedirect('bug.php?id=' . $cid . '&thanks=4');
-                exit;
+                localRedirect("bug.php?id={$cid}&thanks=4");
             }
         } while (false);
     } else {
@@ -400,9 +407,6 @@ if (isset($_POST['in'])) {
 }  // end of if input
 
 $package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : '';
-if (!empty($_POST['in']['package']) && empty($package)) {
-	$package = $_POST['in']['package'];
-}
 
 if ($site != 'php' && !package_exists($package)) {
     $errors[] = 'Package "' . clean($package) . '" does not exist.';
@@ -411,7 +415,7 @@ if ($site != 'php' && !package_exists($package)) {
 } else {
     if (!isset($_POST['in'])) {
         $_POST['in'] = array(
-                 'package' => '',
+                 'package_name' => '',
                  'bug_type' => '',
                  'email' => '',
                  'handle' => '',
@@ -462,9 +466,7 @@ if ($site != 'php' && !package_exists($package)) {
     display_bug_error($errors);
 
 ?>
-<form method="post" action="report.php" name="bugreport" id="bugreport" enctype="multipart/form-data">
-<input type="hidden" name="package" value="<?php echo clean($package); ?>">
-
+<form method="post" action="report.php?package=<?php echo clean($package); ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
 <table class="form-holder" cellspacing="1">
  <tr>
   <th class="form-label_left">
@@ -484,9 +486,21 @@ if ($site != 'php' && !package_exists($package)) {
   <td class="form-input">
    <input type="hidden" name="in[did_luser_search]"
     value="<?php echo isset($_POST['in']['did_luser_search']) ? 1 : 0; ?>" />
-   <input type="text" size="20" maxlength="40" name="in[email]"
-    value="<?php echo clean($_POST['in']['email']); ?>" accesskey="o" />
+   <input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo clean($_POST['in']['email']); ?>" accesskey="o" />
   </td>
+<?php } ?>
+
+<?php if ($site == 'php') { ?>
+ <tr>
+  <th class="form-label_left"><span class="accesskey">P</span>assword:</th>
+  <td class="form-input">
+   <input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo clean($_POST['in']['passwd']);?>" accesskey="p" />
+   <br />
+    You <b>must</b> enter any password here, which will be stored for this bug report.<br />
+    This password allows you to come back and modify your submitted bug report
+    at a later date. [<a href="bug-pwd-finder.php">Lost a bug password?</a>]
+  </td>
+ </tr>
 <?php } ?>
 
  </tr>
@@ -519,7 +533,7 @@ if ($site != 'php' && !package_exists($package)) {
     <?php
 
     if (!empty($package)) {
-        echo '<input type="hidden" name="in[package]" value="', clean($package) , '" />' , clean($package);
+        echo '<input type="hidden" name="in[package_name]" value="', clean($package) , '" />' , clean($package);
         if ($package == 'Bug System') {
             echo <<< DATA
             	<p>
@@ -534,7 +548,7 @@ if ($site != 'php' && !package_exists($package)) {
 DATA;
         }
     } else {
-        echo '<select name="in[package]">' , "\n";
+        echo '<select name="in[package_name]">' , "\n";
         show_types(null, 0, clean($package));
         echo '</select>';
     }

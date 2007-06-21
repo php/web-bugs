@@ -440,16 +440,16 @@ function show_reason_types($current = '', $expanded = 0)
     }
 }
 
-function show_package_version_options($package, $current)
+function show_package_version_options($package_name, $current)
 {
     global $pseudo_pkgs, $dbh;
 
-    if (isset($pseudo_pkgs[$package])) {
+    if (isset($pseudo_pkgs[$package_name])) {
         echo '<input type="text" size="20" maxlength="100" name="in[package_version]"
     value="' . clean($current) . '" />';
         return;
     }
-    $pid = $dbh->getOne('SELECT id from packages where name = ?', array($package));
+    $pid = $dbh->getOne('SELECT id from packages where name = ?', array($package_name));
     if (!$pid) {
         echo '<input type="text" size="20" maxlength="100" name="in[package_version]"
     value="' . clean($current) . '" />';
@@ -458,7 +458,7 @@ function show_package_version_options($package, $current)
     $candidates = $dbh->getAll('
         SELECT releases.version, releases.state
             FROM releases, packages
-            WHERE packages.name = ? and releases.package = packages.id ORDER BY releases.releasedate DESC', array($package));
+            WHERE packages.name = ? and releases.package = packages.id ORDER BY releases.releasedate DESC', array($package_name));
     $newest = count($candidates) ? $candidates[0] : false;
     if ($newest) {
         $stable = null;
@@ -680,7 +680,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     $headers = array();
 
     /* Default addresses */
-    list($mailto,$mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'],$bug['package_name']), $id);
+    list($mailto,$mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id);
 
     /* Get rid of slashes in bug status */
     $bug['status'] = rinse($bug['status']);
@@ -831,13 +831,13 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
                   $dev_text,
                   "From: $from\n".
                   "X-PHP-Bug: {$bug['id']}\n".
-                  "X-PHP-Type: "       . rinse((($edit != 3) ? $in['bug_type']     : $bug['bug_type']))    . "\n" .
-                  "X-PHP-PackageVersion: "    . rinse((($edit != 3) ? $in['package_version']  : $bug['package_version'])) . "\n" .
-                  "X-PHP-Version: "    . rinse((($edit != 3) ? $in['php_version']  : $bug['php_version'])) . "\n" .
-                  "X-PHP-Category: "   . rinse((($edit != 3) ? $in['package_name'] : $bug['package_name']))    . "\n" .
-                  "X-PHP-OS: "         . rinse((($edit != 3) ? $in['php_os']       : $bug['php_os']))      . "\n" .
-                  "X-PHP-Status: "     . rinse($new_status) . "\n" .
-                  "X-PHP-Old-Status: " . rinse($old_status) . "\n" .
+                  "X-PHP-Type: "           . rinse((($edit != 3) ? $in['bug_type']        : $bug['bug_type']))        . "\n" .
+                  "X-PHP-PackageVersion: " . rinse((($edit != 3) ? $in['package_version'] : $bug['package_version'])) . "\n" .
+                  "X-PHP-Version: "        . rinse((($edit != 3) ? $in['php_version']     : $bug['php_version']))     . "\n" .
+                  "X-PHP-Category: "       . rinse((($edit != 3) ? $in['package_name']    : $bug['package_name']))    . "\n" .
+                  "X-PHP-OS: "             . rinse((($edit != 3) ? $in['php_os']          : $bug['php_os']))          . "\n" .
+                  "X-PHP-Status: "         . rinse($new_status) . "\n" .
+                  "X-PHP-Old-Status: "     . rinse($old_status) . "\n" .
                   "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
                   "-f bounces-ignored@php.net");
         }
@@ -953,21 +953,21 @@ function addlinks($text)
 /**
  * Determine if the given package name is legitimate
  *
- * @param string $type  the name of the package
+ * @param string $package_name  the name of the package
  *
  * @return bool
  */
-function package_exists($package)
+function package_exists($package_name)
 {
     global $dbh, $pseudo_pkgs;
 
-    if (empty($package)) {
+    if (empty($package_name)) {
         return false;
     }
-    if (isset($pseudo_pkgs[$package])) {
+    if (isset($pseudo_pkgs[$package_name])) {
         return true;
     }
-    $found = $dbh->getOne("SELECT count(*) FROM packages WHERE name='{$package}'");
+    $found = $dbh->getOne('SELECT count(name) FROM packages WHERE name = ?', array($package_name));
     return ($found == 1) ? true : false;
 }
 
@@ -986,37 +986,40 @@ function is_valid_email($email)
  *
  * @return void
  */
-function incoming_details_are_valid($in, $initial = 0, $logged = false)
+function incoming_details_are_valid($in, $initial = 0)
 {
-    global $bug, $dbh, $bug_types;
+    global $site, $bug, $dbh, $bug_types;
 
     $errors = array();
-    if (empty ($in['package_name']) || $in['package_name'] == 'none') {
-        $errors[] = 'Please select an appropriate bug type.';
-    } else if (!package_exists($in['package_name'])) {
-        $errors[] = 'Please select an appropriate bug type.';
-    }
-
     if ($initial || (!empty($in['email']) && $bug['email'] != $in['email'])) {
         if (!is_valid_email($in['email'])) {
             $errors[] = 'Please provide a valid email address.';
         }
+    }
+    if ($initial && empty($in['passwd'])) {
+        $errors[] = 'Please provide a password for this bug report.';
     }
 
     if (isset($in['php_version']) && $in['php_version'] == 'earlier') {
         $errors[] = 'Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.';
     }
 
+    if (empty($in['php_version'])) {
+        $errors[] = 'Please select a valid PHP version.';
+    }
+
     if (isset($in['package_version']) && $in['package_version'] == 'earlier') {
         $errors[] = 'Please select a valid Package version. If your Package version is too old, please upgrade first and see if the problem has not already been fixed.';
     }
 
-    if (!array_key_exists($in['bug_type'], $bug_types)) {
-        $errors[] = 'Please select a valid bug type.';
+    if (empty ($in['package_name']) || $in['package_name'] == 'none') {
+        $errors[] = 'Please select an appropriate package.';
+    } else if (!package_exists($in['package_name'])) {
+        $errors[] = 'Please select an appropriate package.';
     }
 
-    if (empty($in['php_version'])) {
-        $errors[] = 'Please select a valid PHP version.';
+    if (!array_key_exists($in['bug_type'], $bug_types)) {
+        $errors[] = 'Please select a valid bug type.';
     }
 
     if (empty($in['sdesc'])) {
@@ -1041,8 +1044,12 @@ function get_package_mail($package_name, $bug_id = false)
 {
     global $site, $bugEmail, $dbh;
 
-    // XXX Change to pear-bugs when it gets opened
-    //$to[] = "pear-dev@lists.php.net";
+	if (DEVBOX) {
+		return array ('root@localhost', 'root@localhost');
+	}
+
+	if ($site == 'php')
+		return array ($bugEmail, $bugEmail);
 
     switch ($package_name) {
         case 'Bug System':
@@ -1060,7 +1067,7 @@ function get_package_mail($package_name, $bug_id = false)
 
     $to = array();
     foreach ($maintainers as $data) {
-        if (!$data['active']) {
+        if (empty($data['active'])) {
             continue;
         }
         $to[] = $data['email'];
