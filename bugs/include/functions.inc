@@ -543,7 +543,7 @@ function show_types($current, $show_any, $default = '')
     global $site, $dbh, $pseudo_pkgs;
     static $bug_items;
 
-    if (!isset($bug_items)) {
+    if (!isset($bug_items) || !is_array($bug_items)) {
         $bug_items = $pseudo_pkgs;
 
 		if ($site != 'php')
@@ -569,7 +569,7 @@ function show_types($current, $show_any, $default = '')
     } elseif (!$current) {
         $current = $default;
     }
-
+var_dump($bug_items);
     foreach ($bug_items as $key => $value) {
         if ($show_any == 1 || $key != 'Any') {
             echo "<option value=\"$key\"";
@@ -1228,13 +1228,12 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
  *
  * @return void
  */
-function unsubscribe_hash($bug_id, $email, $bug)
+function unsubscribe_hash($bug_id, $email)
 {
     global $dbh, $siteBig, $site_url, $bugEmail;
 
 	$now = time();
     $hash = crypt($email . $id, $now);
-    $bug_id = (int)$bug_id;
 
     $query = "
 		UPDATE bugdb_subscribe
@@ -1252,16 +1251,18 @@ function unsubscribe_hash($bug_id, $email, $bug)
         /* user text with attention, headers and previous messages */
         $user_text  = "ATTENTION! Do NOT reply to this email!\n\n" .
                       "A request has been made to remove your subscription to\n" .
-                      "{$siteBig} bug #{$bug_id} ({$bug['sdesc']})\n\n" .
+                      "{$siteBig} bug #{$bug_id}\n\n" .
+                      "To view the bug in question please use this link:\n" .
+                      "http://{$site_url}{$basedir}/bug.php?id={$bug_id}\n\n" .
                       "To confirm the removal please use this link:\n" .
-                      "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&unsubscribe=1&t={$hash}\n\n\n";
+                      "http://{$site_url}{$basedir}/bug.php?id={$bug_id}&unsubscribe=1&t={$hash}\n\n\n";
 
         @mail($email,
-              "[$siteBig-BUG-unsubscribe] " . rinse($bug['sdesc']),
+              "[$siteBig-BUG-unsubscribe] #{$bug_id}",
               $user_text,
               "From: {$siteBig} Bug Database <{$bugEmail}>\n".
-              "X-PHP-Bug: {$bug['id']}\n".
-              "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
+              "X-PHP-Bug: {$bug_id}\n".
+              "In-Reply-To: <bug-{$bug_id}@{$site_url}>",
               "-fbounces-ignored@php.net");
     }
 }

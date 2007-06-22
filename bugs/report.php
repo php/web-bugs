@@ -72,7 +72,7 @@ if (isset($_POST['in'])) {
 
 	if ($site == 'php') {
 		$auth_user->email  = $_POST['in']['email'];
-		$auth_user->handle = 'user';
+		$auth_user->handle = '';
 		$auth_user->name = '';
 	}
 

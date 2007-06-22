@@ -1,45 +1,43 @@
 <?php
 
-/**
- * Obtains users's CVS password
- *
- * This source file is subject to version 3.0 of the PHP license,
- * that is bundled with this package in the file LICENSE, and is
- * available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_0.txt.
- * If you did not receive a copy of the PHP license and are unable to
- * obtain it through the world-wide-web, please send a note to
- * license@php.net so we can mail you a copy immediately.
- *
- * @category  pearweb
- * @package   Bugs
- * @copyright Copyright (c) 1997-2005 The PHP Group
- * @license   http://www.php.net/license/3_0.txt  PHP License
- * @version   $Id$
- */
+/* $Id$ */
 
 $ignore_password = false;
-$passwd_file = "/repository/CVSROOT/passwd";
+$passwd_file = '/repository/CVSROOT/passwd';
 
-function find_password($user) {
+function find_cvs_password($user)
+{
 	global $passwd_file, $ignore_password;
-	if ($ignore_password) return " "; // can't be ""
-	$fp=fopen($passwd_file,"r");
+
+	if ($ignore_password) {
+		 return ' '; // can't be ''
+	}
+
+	$fp = fopen($passwd_file,'r');
+	if (!$fp) {
+		return ('');
+	}
 	while(!feof($fp)) {
-		$line=fgets($fp,120);
-		list($luser,$passwd,$junk) = explode(":",$line);
-		if($user==$luser) {
+		$line = fgets($fp, 120);
+		list ($luser, $passwd, $junk) = explode(':', $line);
+		if ($user == $luser) {
 			fclose($fp);
 			return($passwd);
 		}
 	}
 	fclose($fp);
-	return("");
+	return('');
 }
 
-function verify_password($user, $pass) {
-    global $auth_user;
-    $logged = ($auth_user ? true : false);
-    return $logged;
-}
+function verify_cvs_password($user, $pass)
+{
+	global $ignore_password;
 
+	$psw = find_cvs_password($user);
+	if (strlen($psw) > 0) {
+		if ($ignore_password || crypt($pass, substr($psw, 0, 2)) == $psw) {
+			return true;
+		}
+	}
+	return false;
+}
