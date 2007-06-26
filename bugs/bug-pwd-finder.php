@@ -25,7 +25,7 @@ require_once './include/prepend.inc';
 
 $errors  = array();
 $success = false;
-$bug_id = (int) $_GET['bug_id'];
+$bug_id = isset($_GET['bug_id']) ? (int) $_GET['bug_id'] : 0;
 
 if (!empty($bug_id)) {
 	// Try to find the email and the password
