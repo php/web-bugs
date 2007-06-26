@@ -17,6 +17,6 @@
    </p>
   </th>
   <td class="form-input">
-   <input type="file" name="patchfile" value="<?php echo clean($patchfile) ?>"/>
+   <input type="file" name="patchfile" value="<?php echo clean($patchfile); ?>"/>
   </td>
  </tr>

@@ -1151,7 +1151,7 @@ function format_search_string($search, $boolean_search = false)
  */
 function show_bugs_menu($pkgname, $status = null, $fulllink = false)
 {
-    global $dbh, $pseudo_pkgs;
+    global $dbh, $pseudo_pkgs, $site;
 
     if (empty($pkgname) && !$fulllink) {
         return;
@@ -1207,16 +1207,19 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
     echo make_link("{$fulllink}&amp;status=Feedback", 'Feedback', '', $style['Feedback']);
     echo delim();
     echo make_link("{$fulllink}&amp;status=All", 'All', '', $style['All']);
-    if (!class_exists('package')) {
-        require_once 'pear-database-package.php';
-    }
-    if (count($pkgname) == 1) {
-        $releases = package::info($pkgname[0], 'releases');
-        if (count($releases)) {
-            echo delim();
-            echo make_link("{$fulllink}&amp;status=CRSLR", 'Closed Since Version ' . key($releases), '', $style['CRSLR'], 'Closed bugs since last release');
-        }
-    }
+
+	if ($site != 'php') {
+	    if (!class_exists('package')) {
+	        require_once 'pear-database-package.php';
+	    }
+	    if (count($pkgname) == 1) {
+	        $releases = package::info($pkgname[0], 'releases');
+	        if (count($releases)) {
+	            echo delim();
+	            echo make_link("{$fulllink}&amp;status=CRSLR", 'Closed Since Version ' . key($releases), '', $style['CRSLR'], 'Closed bugs since last release');
+	        }
+	    }
+	}
     echo "\n</td></tr></table>\n";
     echo '<hr />';
     echo "\n\n<!-- END BUG NAV -->\n\n";

@@ -1,15 +1,14 @@
 <?php response_header('Add Patch :: ' . clean($package)); ?>
-<h2>Add a Patch to <a href="/bugs/<?php echo clean($bug) ?>">Bug #<?php echo clean($bug) ?></a> for Package <?php echo '<a href="/package/', clean($package), '">', clean($package), '</a>'; ?></h2>
+<h2>Add a Patch to <a href="bug.php?id=<? echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a> for Package <?php echo '<a href="/package/', clean($package), '">', clean($package), '</a>'; ?></h2>
 <ul>
  <li>One problem per patch, please</li>
  <li>Patches must be 20k or smaller</li>
- <li>Make sure your coding style complies with <a href="/manual/en/standards.php">Coding Standards</a></li>
  <li>Only text/plain files accepted</li>
  <li>choose a meaningful patch name (i.e. add-fronk-support)</li>
 </ul>
 <form name="patchform" method="post" action="patch-add.php" enctype="multipart/form-data">
 <input type="hidden" name="MAX_FILE_SIZE" value="20480" />
-<input type="hidden" name="bug" value="<?php echo clean($bug) ?>" />
+<input type="hidden" name="bug_id" value="<?php echo $bug_id; ?>" />
 <?php
 if ($errors) {
     foreach ($errors as $err) {
@@ -18,8 +17,7 @@ if ($errors) {
 }
 ?>
 <table>
-<?php
-if (!$loggedin) {?>
+<?php if (!$loggedin) { ?>
  <tr>
   <th class="form-label_left">
    Email Address (MUST BE VALID)
@@ -38,7 +36,7 @@ if (!$loggedin) {?>
    Choose an existing Patch to update, or add a new one
   </th>
   <td class="form-input">
-   <input type="text" maxlength="40" name="name" value="<?php echo clean($name) ?>" /><br />
+   <input type="text" maxlength="40" name="patchname" value="<?php echo clean($patchname); ?>" /><br />
    <small>The patch name must be shorter than 40 characters and it must only contain alpha-numeric characters, dots, underscores or hyphens.</small>
   </td>
  </tr>
@@ -47,7 +45,7 @@ if (!$loggedin) {?>
    Patch File
   </th>
   <td class="form-input">
-   <input type="file" name="patch"/>
+   <input type="file" name="patchfile" />
   </td>
  </tr>
  <tr>
@@ -58,10 +56,10 @@ if (!$loggedin) {?>
    <select name="obsoleted[]" multiple="true" size="5">
     <option value="0">(none)</option>
    <?php
-   foreach ($patches as $patchname => $patch2) {
+   foreach ($patches as $patch_name => $patch2) {
        foreach ($patch2 as $patch) {
-           echo '<option value="', htmlspecialchars($patchname . '#' . $patch[0]),
-                '">', htmlspecialchars($patchname), ', Revision ',
+           echo '<option value="', htmlspecialchars($patch_name . '#' . $patch[0]),
+                '">', htmlspecialchars($patch_name), ', Revision ',
                 format_date($patch[0]), ' (', $patch[1], ')</option>';
        }
    }
@@ -73,7 +71,8 @@ if (!$loggedin) {?>
 <input type="submit" name="addpatch" value="Save" />
 </form>
 <h2>Existing patches:</h2>
+
 <?php
 $canpatch = false;
-require dirname(__FILE__) . '/listpatches.php';
-response_footer(); ?>
+require $templates_path . '/templates/listpatches.php';
+response_footer();
