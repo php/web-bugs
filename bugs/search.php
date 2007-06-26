@@ -73,7 +73,7 @@ $order_options = array(
 
 // Fetch pseudo packages
 $pseudo_pkgs = get_pseudo_packages($site);
-v
+
 // Setup input variables..
 $boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
 $status = !empty($_GET['status']) ? $_GET['status'] : 'Open';

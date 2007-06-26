@@ -91,13 +91,8 @@ function response_header($title, $extraHeaders = '')
         }
     }
 
-    if ($GLOBALS['in_manual'] == false) {
-        /* The manual-related code takes care of sending the right
-         * headers.
-         */
-        header('Content-Type: text/html; charset=ISO-8859-15');
-        echo '<?xml version="1.0" encoding="ISO-8859-15" ?>';
-    }
+    header('Content-Type: text/html; charset=ISO-8859-15');
+    echo '<?xml version="1.0" encoding="ISO-8859-15" ?>';
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -233,7 +228,7 @@ echo $extraHeaders;
 
 function response_footer($extraContent = false)
 {
-    global $site_url, $LAST_UPDATED, $MIRRORS, $MYSITE, $COUNTRIES, $SCRIPT_NAME, $RSIDEBAR_DATA;
+    global $site_url, $LAST_UPDATED, $RSIDEBAR_DATA;
 
     static $called;
     if ($called) {
@@ -299,7 +294,7 @@ print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
  </tr>
 </table>
 <!-- Onload focus to pear -->
-<?php if (isset($GLOBALS['ONLOAD'])): ?>
+<?php if (isset($GLOBALS['ONLOAD'])) { ?>
 <script language="javascript">
 function makeFocus()
 {
@@ -319,14 +314,14 @@ function addEvent(obj, eventType, functionCall){
 }
 addEvent(window, 'load', makeFocus);
 </script>
-<?php endif; ?>
+<?php } ?>
 
 <!-- END FOOTER -->
 
 </body>
 <?php
 if ($extraContent) {
-    print $extraContent;
+    echo $extraContent;
 }
 ?>
 </html>
