@@ -442,8 +442,23 @@ if ($site != 'php' && !package_exists($package)) {
 <p>
  <strong>If you feel this bug concerns a security issue, eg a buffer
  overflow, weak encryption, etc, then email
- <?php echo make_mailto_link('pear-group@php.net?subject=%5BSECURITY%5D+possible+new+bug%21', 'pear-group'); ?>
- who will assess the situation.</strong>
+ <?php
+
+switch ($site)
+{
+	case 'pear':
+		$email = 'pear-group@php.net';
+		break;
+
+	case 'pecl':
+	case 'php':
+		$email = 'security@php.net';
+		break;
+}
+echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $email);
+
+?>who will assess the situation.</strong>
+
 </p>
 
 <?php
