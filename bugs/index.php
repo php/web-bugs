@@ -36,8 +36,7 @@ response_header('Bugs');
  Before submitting a bug, please make sure nobody has already reported it by
  <?php print_link('search.php', 'searching the existing bugs'); ?>.
  Also, read the tips on how to
- <?php print_link('http://bugs.php.net/how-to-report.php',
-                  'report a bug that someone will want to help fix', 'top'); ?>.
+ <?php print_link('how-to-report.php', 'report a bug that someone will want to help fix', 'top'); ?>.
 </p>
 
 <p>Now that you are ready to proceed:</p>

@@ -83,5 +83,4 @@ in the bug report.
 <input type="submit" value="Send"></p>
 </form>
 
-<?php
-response_footer();
+<?php response_footer();

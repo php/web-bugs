@@ -449,7 +449,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
         if (!empty($ncomment)) {
             $query = "INSERT INTO bugdb_comments (bug, email, ts, comment)
-                      VALUES ('{$bug_id}', ?, NOW(), ?)";
+                      VALUES ({$bug_id}, ?, NOW(), ?)";
             $dbh->query($query, array($from, $ncomment));
         }
     }

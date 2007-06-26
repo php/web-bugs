@@ -435,7 +435,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">with all or any of the w<span class="accesskey">o</span>rds</td>
   <td style="white-space: nowrap"><input type="text" name="search_for" value="<?php echo clean($search_for);?>" size="20" maxlength="255" accesskey="o" />
       <br /><small><?php show_boolean_options($boolean_search) ?>
-      (<?php print_link('http://bugs.php.net/search-howto.php', '?', true);?>)</small>
+      (<?php print_link('search-howto.php', '?', true);?>)</small>
   </td>
   <td rowspan="3">
    <select name="limit"><?php show_limit_options($limit);?></select>

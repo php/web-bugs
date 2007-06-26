@@ -35,21 +35,10 @@ require_once './include/prepend.inc';
  */
 require_once './include/cvs-auth.inc';
 
-/**
- * Numeral Captcha Class
- */
-require_once 'Text/CAPTCHA/Numeral.php';
-
+// Init variables
 $errors              = array();
 $ok_to_submit_report = false;
 $pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
-
-// "Login" for cvs users
-if (isset($_POST['save']) && isset($_POST['pw'])) {
-    // non-developers don't have $user set
-    setcookie('MAGIC_COOKIE', base64_encode(':' . $_POST['pw']),
-              time() + 3600 * 24 * 12, '/', '.php.net');
-}
 
 // captcha is not necessary if the user is logged in
 if ($site != 'php' && isset($auth_user) && $auth_user->registered) {
@@ -59,9 +48,7 @@ if ($site != 'php' && isset($auth_user) && $auth_user->registered) {
         $karma = new Damblan_Karma($dbh);
         $karma->grant($auth_user->user, 'pear.bug');
     }
-    if (isset($_SESSION['answer'])) {
-        unset($_SESSION['answer']);
-    }
+    unset($_SESSION['answer']);
     if (isset($_POST['in'])) {
         $_POST['in']['email'] = $auth_user->email;
     }
@@ -270,7 +257,7 @@ if (isset($_POST['in'])) {
                     $_POST['in']['package_name'] = 'pearweb';
                 }
 
-                $query = 'INSERT INTO bugdb (
+                $dbh->query('INSERT INTO bugdb (
                           registered,
                           package_name,
                           bug_type,
@@ -281,25 +268,25 @@ if (isset($_POST['in'])) {
                           package_version,
                           php_version,
                           php_os,
-                          status, ts1,
                           passwd,
-                          reporter_name
-                         ) VALUES (' . $registereduser . ',' . 
-                         " '" . escapeSQL($_POST['in']['package_name']) . "'," .
-                         " '" . escapeSQL($_POST['in']['bug_type']) . "'," .
-                         " '" . escapeSQL($_POST['in']['email']) . "'," .
-                         " '" . escapeSQL($_POST['in']['handle']) . "'," .
-                         " '" . escapeSQL($_POST['in']['sdesc']) . "'," .
-                         " '" . escapeSQL($fdesc) . "'," .
-                         " '" . escapeSQL($_POST['in']['package_version']) . "'," .
-                         " '" . escapeSQL($_POST['in']['php_version']) . "'," .
-                         " '" . escapeSQL($_POST['in']['php_os']) . "'," .
-                         " 'Open', NOW(), " .
-                         " ''," .
-                         " '" . escapeSQL($_POST['in']['reporter_name']) . "')";
-
-
-                $dbh->query($query);
+                          reporter_name,
+                          status,
+                          ts1
+                         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())', array (
+                          $registereduser,
+                          $_POST['in']['package_name'],
+                          $_POST['in']['bug_type'],
+                          $_POST['in']['email'],
+                          $_POST['in']['handle'],
+                          $_POST['in']['sdesc'],
+                          $fdesc,
+                          $_POST['in']['package_version'],
+                          $_POST['in']['php_version'],
+                          $_POST['in']['php_os'],
+                          $_POST['in']['passwd'],
+                          $_POST['in']['reporter_name'],
+                        )
+				);
 
     /*
      * Need to move the insert ID determination to DB eventually...
@@ -567,8 +554,7 @@ DATA;
    </select>
   </td>
  </tr>
-<?php if (auth_check('pear.dev'))
-{
+<?php if (auth_check('pear.dev')) {
     $content = '';
     Bug_DataObject::init();
     $db = Bug_DataObject::bugDB('bugdb_roadmap');
@@ -638,15 +624,16 @@ DATA;
  </tr>
 
 <?php if (!isset($auth_user)) { 
-	 $numeralCaptcha = new Text_CAPTCHA_Numeral();
+	require_once 'Text/CAPTCHA/Numeral.php';
+	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+	$captcha_operation = $numeralCaptcha->getOperation();
+	$_SESSION['answer'] = $numeralCaptcha->getAnswer()
 ?>
  <tr>
-  <th>Solve the problem : <?php print $numeralCaptcha->getOperation(); ?> = ?</th>
+  <th>Solve the problem : <?php echo $captcha_operation; ?> = ?</th>
   <td class="form-input"><input type="text" name="captcha" /></td>
  </tr>
-<?php 
-	$_SESSION['answer'] = $numeralCaptcha->getAnswer(); 
-} ?>
+<?php } ?>
 
  <tr>
   <th class="form-label_left">
@@ -667,9 +654,7 @@ DATA;
     <li>A short script that reproduces the problem.</li>
     <li>The list of modules you compiled PHP with (your configure line).</li>
     <li>Any other information unique or specific to your setup.</li>
-    <li>
-     Any changes made in your php.ini compared to php.ini-dist
-     (<strong>not</strong> your whole php.ini!)
+    <li>Any changes made in your php.ini compared to php.ini-dist or php.ini-recommended (<strong>not</strong> your whole php.ini!)
     </li>
     <li>
      A <a href="bugs-generating-backtrace.php">gdb backtrace</a>.
@@ -741,7 +726,7 @@ DATA;
 </table>
 </form>
 
-    <?php
+<?php
 }
 
 response_footer();

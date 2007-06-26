@@ -24,10 +24,13 @@
 require_once './include/prepend.inc';
 
 response_header('Quick Fix Descriptions'); 
+
 ?> 
-<table border="2" cellpadding="6">
+<table border="1" cellpadding="3" cellspacing="1">
 <?php
-$RESOLVE_REASONS = get_resolve_reasons();
+
+// FIXME: Move these to database later..
+// $RESOLVE_REASONS = get_resolve_reasons();
 
 foreach ($RESOLVE_REASONS as $key => $reason) {
 	echo "
@@ -44,12 +47,12 @@ foreach ($RESOLVE_REASONS as $key => $reason) {
 					<td>{$reason['desc']} ({$type})</td>
 					<td>Status: {$reason['status']}</td>
 					<td><pre>{$variation}</pre></td>
-				</tr>";
+				</tr>
+			";
 		}
 	}
 } 
 ?>
 </table>
-<?php
 
-response_footer();
+<?php response_footer();

@@ -142,4 +142,4 @@ with the different bugs.</p>
  </li>
 </ul>
 
-<?php response_footer(); ?>
+<?php response_footer();

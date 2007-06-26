@@ -251,9 +251,9 @@ function oneof()
  *
  * @see clean(), rinse(), escapeSQL(), oneof(), txfield()
  */
-function field($n) {
-    return oneof(isset($_POST['in']) ? clean($_POST['in'][$n]) : null,
-                 htmlspecialchars($GLOBALS['bug'][$n]));
+function field($n)
+{
+    return oneof(isset($_POST['in']) ? clean($_POST['in'][$n]) : null, htmlspecialchars($GLOBALS['bug'][$n]));
 }
 
 /**
@@ -445,8 +445,7 @@ function show_package_version_options($package_name, $current)
     global $pseudo_pkgs, $dbh;
 
     if (isset($pseudo_pkgs[$package_name])) {
-        echo '<input type="text" size="20" maxlength="100" name="in[package_version]"
-    value="' . clean($current) . '" />';
+        echo '<input type="text" size="20" maxlength="100" name="in[package_version]" value="' . clean($current) . '" />';
         return;
     }
     $pid = $dbh->getOne('SELECT id from packages where name = ?', array($package_name));
@@ -497,6 +496,7 @@ function show_package_version_options($package_name, $current)
     echo "<option value=\"earlier\"", ($current == "earlier" ? " selected" : ""),  ">Earlier? Upgrade first!</option>\n";
     echo "</select>\n";
 }
+
 /**
  * Prints PHP version number <option>'s for use in a <select> list
  *
@@ -543,7 +543,7 @@ function show_types($current, $show_any, $default = '')
     global $site, $dbh, $pseudo_pkgs;
     static $bug_items;
 
-    if (!isset($bug_items) || !is_array($bug_items)) {
+    if (!isset($bug_items)) {
         $bug_items = $pseudo_pkgs;
 
 		if ($site != 'php')
@@ -569,7 +569,10 @@ function show_types($current, $show_any, $default = '')
     } elseif (!$current) {
         $current = $default;
     }
-var_dump($bug_items);
+
+	if (!is_array($bug_items))
+		return;
+
     foreach ($bug_items as $key => $value) {
         if ($show_any == 1 || $key != 'Any') {
             echo "<option value=\"$key\"";
@@ -638,7 +641,7 @@ function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
         return false;
     }
 
-    echo '<div class="' . $class . '">' . $head . '<ul>';
+    echo "<div class='{$class}'>{$head}<ul>";
     foreach ($in as $msg) {
         if (PEAR::isError($msg)) {
             if (DEVBOX == true) {
@@ -647,7 +650,7 @@ function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
                 $msg = $msg->getMessage();
             }
         }
-        echo '<li>' . htmlspecialchars($msg) . "</li>\n";
+        echo '<li>' , htmlspecialchars($msg) , "</li>\n";
     }
     echo "</ul></div>\n";
     return true;
@@ -662,7 +665,7 @@ function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
  */
 function display_bug_success($in)
 {
-    echo '<div class="success">' . $in . "</div>\n";
+    echo "<div class='success'>{$in}</div>\n";
 }
 
 /**
@@ -685,51 +688,51 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     /* Get rid of slashes in bug status */
     $bug['status'] = rinse($bug['status']);
 
-    $headers[] = array(" ID", $bug['id']);
+    $headers[] = array(' ID', $bug['id']);
 
     switch ($edit) {
         case 3:
-            $headers[] = array(" Comment by", $from);
+            $headers[] = array(' Comment by', $from);
             $from = "\"$from\" <$mailfrom>";
             break;
         case 2:
             $from = spam_protect(txfield('email'), 'text');
-            $headers[] = array(" User updated by", $from);
-            $from = "\"$from\" <$mailfrom>";
+            $headers[] = array(' User updated by', $from);
+            $from = "\"{$from}\" <{$mailfrom}>";
             break;
         default:
-            $headers[] = array(" Updated by", $from);
+            $headers[] = array(' Updated by', $from);
     }
 
     if (changed('sdesc')) {
-        $headers[] = array("-Summary", $bug['sdesc']);
+        $headers[] = array('-Summary', $bug['sdesc']);
     }
 
-    $prefix = " ";
+    $prefix = ' ';
     if (changed('email')) {
-        $headers[] = array("-Reported By", spam_protect($bug['email']), 'text');
-        $prefix = "+";
+        $headers[] = array('-Reported By', spam_protect($bug['email']), 'text');
+        $prefix = '+';
     }
     if ($f = spam_protect(txfield('email'), 'text')) {
         $headers[] = array($prefix.'Reported By', $f);
     }
 
     $fields = array(
-        'sdesc'        => 'Summary',
-        'status'       => 'Status',
-        'bug_type'     => 'Type',
-        'package_name' => 'Package',
-        'php_os'       => 'Operating System',
-        'package_version'  => 'Package Version',
-        'php_version'  => 'PHP Version',
-        'assign'       => 'Assigned To'
+        'sdesc'           => 'Summary',
+        'status'          => 'Status',
+        'bug_type'        => 'Type',
+        'package_name'    => 'Package',
+        'php_os'          => 'Operating System',
+        'package_version' => 'Package Version',
+        'php_version'     => 'PHP Version',
+        'assign'          => 'Assigned To'
     );
 
     foreach ($fields as $name => $desc) {
-        $prefix = " ";
+        $prefix = ' ';
         if (changed($name)) {
-            $headers[] = array("-$desc", $bug[$name]);
-            $prefix = "+";
+            $headers[] = array("-{$desc}", $bug[$name]);
+            $prefix = '+';
         }
         /* only fields that are set get added. */
         if ($f = txfield($name)) {
@@ -747,7 +750,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
         }
     }
 
-    # make header output aligned
+    /* Make header output aligned */
     $maxlength = 0;
     $actlength = 0;
     foreach ($headers as $v) {
@@ -755,29 +758,28 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
         $maxlength = (($maxlength < $actlength) ? $actlength : $maxlength);
     }
 
-    # align header content with headers (if a header contains
-    # more than one line, wrap it intelligently)
-    $header_text = "";
-    $spaces = str_repeat(" ", $maxlength + 1);
+    /* Align header content with headers (if a header contains more than one line, wrap it intelligently)
+    $header_text = '';
+    $spaces = str_repeat(' ', $maxlength + 1);
     foreach ($headers as $v) {
-        $hcontent = wordwrap($v[1], 72-$maxlength, "\n$spaces"); # wrap and indent
-        $hcontent = rtrim($hcontent); # wordwrap may add spacer to last line
-        $header_text .= str_pad($v[0] . ":", $maxlength) . " " . $hcontent . "\n";
+        $hcontent = wordwrap($v[1], 72 - $maxlength, "\n{$spaces}"); // wrap and indent
+        $hcontent = rtrim($hcontent); // wordwrap may add spacer to last line
+        $header_text .= str_pad($v[0] . ':', $maxlength) . " {$hcontent}\n";
     }
 
     if ($ncomment) {
-        $text[] = " New Comment:\n\n".rinse($ncomment);
+        $text[] = " New Comment:\n\n" . rinse($ncomment);
     }
 
     $text[] = get_old_comments($bug['id'], empty($ncomment));
 
     /* format mail so it looks nice, use 72 to make piners happy */
-    $wrapped_text = wordwrap(join("\n",$text), 72);
+    $wrapped_text = wordwrap(join("\n", $text), 72);
 
     /* user text with attention, headers and previous messages */
-    $user_text  = "ATTENTION! Do NOT reply to this email!\n" .
-                  "To reply, use the web interface found at\n" .
-                  "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=2\n\n\n" .
+    $user_text = "ATTENTION! Do NOT reply to this email!\n" .
+                 "To reply, use the web interface found at\n" .
+                 "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=2\n\n\n" .
                   $header_text .
                   $wrapped_text;
 
@@ -794,7 +796,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     }
 
     /* send mail if status was changed or there is a comment */
-    if ($in['status'] != $bug['status'] || $ncomment != "" || ($current != $previous)) {
+    if ($in['status'] != $bug['status'] || $ncomment != '' || ($current != $previous)) {
 
         if (isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type']) {
             $subj = $bug_types[$bug['bug_type']] . '->' . $bug_types[$in['bug_type']];
@@ -814,7 +816,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
             $subj .= " #{$bug['id']} [{$tla[$bug['status']]}]: ";
         }
 
-        # the user gets sent mail with an envelope sender that ignores bounces
+        // the user gets sent mail with an envelope sender that ignores bounces
         if (DEVBOX == false) {
             @mail($bug['email'],
                   "[$siteBig-BUG] " . rinse($subj) . txfield('sdesc'),
@@ -824,7 +826,8 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
                   "X-PHP-Bug: {$bug['id']}\n".
                   "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
                   "-fbounces-ignored@php.net");
-            # but we go ahead and let the default sender get used for the list
+          
+		// but we go ahead and let the default sender get used for the list
 
             @mail($mailto,
                   "[$siteBig-BUG] " . rinse($subj) . txfield('sdesc'),
@@ -892,14 +895,15 @@ function get_old_comments($bug_id, $all = 0)
 {
     global $dbh, $site_url;
 
-    $divider = str_repeat("-", 72);
+    $divider = str_repeat('-', 72);
     $max_message_length = 10 * 1024;
     $max_comments = 5;
-    $output = ""; $count = 0;
+    $output = '';
+	$count = 0;
 
-    $res =& $dbh->query("SELECT ts, email, comment, handle FROM bugdb_comments WHERE bug=$bug_id ORDER BY ts DESC");
+    $res =& $dbh->query("SELECT ts, email, comment, handle FROM bugdb_comments WHERE bug = {$bug_id} ORDER BY ts DESC");
 
-    # skip the most recent unless the caller wanted all comments
+	// skip the most recent unless the caller wanted all comments
     if (!$all) {
         $row =& $res->fetchRow(DB_FETCHMODE_ORDERED);
         if (!$row) {
@@ -908,14 +912,12 @@ function get_old_comments($bug_id, $all = 0)
     }
 
     while (($row =& $res->fetchRow(DB_FETCHMODE_ORDERED)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
-        $email = $row[3] ?
-            $row[3] :
-            spam_protect($row[1], 'text');
-        $output .= "[$row[0]] $email\n\n$row[2]\n\n$divider\n\n";
+        $email = ($row[3]) ? $row[3] : spam_protect($row[1], 'text');
+        $output .= "[{$row[0]}] {$email}\n\n{$row[2]}\n\n{$divider}\n\n";
     }
 
     if (strlen($output) < $max_message_length && $count < $max_comments) {
-        $res =& $dbh->query("SELECT ts1,email,ldesc,handle FROM bugdb WHERE id=$bug_id");
+        $res =& $dbh->query("SELECT ts1, email, ldesc, handle FROM bugdb WHERE id = {$bug_id}");
         if (!$res) {
             return $output;
         }
@@ -923,12 +925,10 @@ function get_old_comments($bug_id, $all = 0)
         if (!$row) {
             return $output;
         }
-        $email = $row[3] ?
-            $row[3] :
-            spam_protect($row[1], 'text');
-        return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "[$row[0]] $email\n\n$row[2]\n\n$divider\n\n");
+        $email = ($row[3]) ? $row[3] : spam_protect($row[1], 'text');
+        return ("\n\nPrevious Comments:\n{$divider}\n\n{$output}[{$row[0]}] {$email}\n\n{$row[2]}\n\n{$divider}\n\n");
     } else {
-        return ("\n\nPrevious Comments:\n$divider\n\n" . $output . "The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n    http://{$site_url}{$basedir}/bug.php?id=$bug_id\n");
+        return ("\n\nPrevious Comments:\n{$divider}\n\n{$output}The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n    http://{$site_url}{$basedir}/bug.php?id={$bug_id}\n");
     }
 
     return '';
@@ -944,7 +944,8 @@ function get_old_comments($bug_id, $all = 0)
 function addlinks($text)
 {
     $text = htmlspecialchars($text);
-    $text = preg_replace("/((mailto|http|ftp|nntp|news):.+?)(&gt;|\\s|\\)|\\.\\s|$)/i","<a href=\"\\1\">\\1</a>\\3",$text);
+    $text = preg_replace("/((mailto|http|https|ftp|nntp|news):.+?)(&gt;|\\s|\\)|\\.\\s|$)/i","<a href=\"\\1\">\\1</a>\\3",$text);
+
     # what the heck is this for?
     $text = preg_replace("/[.,]?-=-\"/", '"', $text);
     return $text;
@@ -1048,6 +1049,7 @@ function get_package_mail($package_name, $bug_id = false)
 		return array ('root@localhost', 'root@localhost');
 	}
 
+	// FIXME: Need to add support for this in pseudo-packages!!
 	if ($site == 'php')
 		return array ($bugEmail, $bugEmail);
 
