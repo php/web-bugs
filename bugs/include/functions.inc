@@ -1193,6 +1193,7 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
 
     echo "\n</td>\n";
 
+	$style = array();
     $style['Open']     = ($status == 'Open')    ?' class="status_active"':'';
     $style['Feedback'] = ($status == 'Feedback')?' class="status_active"':'';
     $style['All']      = ($status == 'All')     ?' class="status_active"':'';

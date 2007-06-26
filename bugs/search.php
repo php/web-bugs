@@ -51,7 +51,6 @@ if (isset($newrequest['PHPSESSID'])) {
 }
 response_header(
 	'Bugs :: Search',
-	false,
 	" <link rel='alternate'
 			type='application/rdf+xml'
 			title='RSS feed' href='http://{$site_url}{$basedir}/rss/search.php?" . http_build_query($newrequest) . "' />");
@@ -74,7 +73,7 @@ $order_options = array(
 
 // Fetch pseudo packages
 $pseudo_pkgs = get_pseudo_packages($site);
-
+v
 // Setup input variables..
 $boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
 $status = !empty($_GET['status']) ? $_GET['status'] : 'Open';

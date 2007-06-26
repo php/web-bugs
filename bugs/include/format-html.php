@@ -19,15 +19,6 @@
 */
 
 
-function extra_styles($new = null)
-{
-    static $extra_styles = array();
-    if (!is_null($new)) {
-        $extra_styles[] = $new;
-    }
-    return $extra_styles;
-}
-
 include_once 'DB.php';
 
 if (empty($dbh))
@@ -41,32 +32,29 @@ if (empty($dbh))
 
 $self = htmlspecialchars($_SERVER['PHP_SELF']);
 
-// Handling things related to the manual
-$in_manual = false;
-
-if (substr($self, 0, 7) == '/manual') {
-    if (substr($self, 7, 10) != "/index.php") {
-        $in_manual = true;
+/**
+ * Adds extra CSS files to be loaded
+ *
+ * @param string $style
+ */
+function extra_styles($new = null)
+{
+    static $extra_styles = array();
+    if (!is_null($new)) {
+        $extra_styles[] = $new;
     }
-
-    require_once 'pear-manual.php';
-
-    extra_styles('css/manual.css');
+    return $extra_styles;
 }
-
-$GLOBALS['_style'] = '';
-$_style = '';
 
 /**
  * Prints out the XHTML headers and top of the page.
  *
  * @param string $title  a string to go into the header's <title>
- * @param string $style
  * @return void
  */
-function response_header($title, $style = false, $extraHeaders = '')
+function response_header($title, $extraHeaders = '')
 {
-    global $_style, $_header_done, $SIDEBAR_DATA, $self, $auth_user, $site, $siteBig;
+    global $_header_done, $SIDEBAR_DATA, $self, $auth_user, $site, $siteBig;
 
     $extra_styles = extra_styles();
 
@@ -75,7 +63,6 @@ function response_header($title, $style = false, $extraHeaders = '')
     }
 
     $_header_done    = true;
-    $_style          = $style;
     $rts             = rtrim($SIDEBAR_DATA);
 
     if (substr($rts, -1) == '-') {
@@ -244,7 +231,7 @@ echo $extraHeaders;
 }
 
 
-function response_footer($style = false, $extraContent = false)
+function response_footer($extraContent = false)
 {
     global $site_url, $LAST_UPDATED, $MIRRORS, $MYSITE, $COUNTRIES, $SCRIPT_NAME, $RSIDEBAR_DATA;
 
@@ -253,10 +240,6 @@ function response_footer($style = false, $extraContent = false)
         return;
     }
     $called = true;
-    if (!$style) {
-        $style = $GLOBALS['_style'];
-    }
-
     ?>
 
   </td>
@@ -918,8 +901,7 @@ function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $bor
 /**
  * Prints an IMG tag for a given file
  */
-function print_image($file, $alt = '', $align = '', $extras = '', $dir = '',
-                     $border = 0)
+function print_image($file, $alt = '', $align = '', $extras = '', $dir = '', $border = 0)
 {
     print make_image($file, $alt, $align, $extras, $dir);
 }
@@ -1046,8 +1028,7 @@ function print_package_navigation($pacid, $name, $action)
 function make_ticket_links($text)
 {
     $text = preg_replace('/(?<=php)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
-                         ' <a href="http://bugs.php.net/\\2">\\1 \\2</a>',
-                         $text);
+                         ' <a href="http://bugs.php.net/\\2">\\1 \\2</a>', $text);
     $text = preg_replace('/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
                          '<a href="/bugs/\\2">\\0</a>', $text);
     return $text;
