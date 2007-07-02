@@ -1,6 +1,6 @@
-<?php response_header('Roadmap :: ' . clean($this->package));?>
-<h1>Roadmap for Package <?php echo clean($this->package); ?></h1>
-<a href="/bugs/search.php?package_name[]=<?php echo urlencode(clean($this->package)) ?>&status=Open&cmd=display">Bug Tracker</a> | <a href="/<?php echo urlencode(clean($this->package)) ?>">Package Home</a> | <a href="roadmap.php?showold=1&package=<?php echo urlencode($this->package) ?>">Show Old Roadmaps</a>
+<?php response_header('Roadmap :: ' . htmlspecialchars($this->package));?>
+<h1>Roadmap for Package <?php echo htmlspecialchars($this->package); ?></h1>
+<a href="/bugs/search.php?package_name[]=<?php echo urlencode(htmlspecialchars($this->package)) ?>&status=Open&cmd=display">Bug Tracker</a> | <a href="/<?php echo urlencode(htmlspecialchars($this->package)) ?>">Package Home</a> | <a href="roadmap.php?showold=1&package=<?php echo urlencode($this->package) ?>">Show Old Roadmaps</a>
 <?php if ($GLOBALS['auth_user']) { ?>
 <ul class="side_pages">
 <?php foreach ($this->roadmap as $info):

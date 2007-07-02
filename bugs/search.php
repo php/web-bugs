@@ -204,7 +204,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
             // Fetch the last release date
             include_once 'pear-database-package.php';
-            $releaseDate = package::getRecent(1, rinse($package_name[0]));
+            $releaseDate = package::getRecent(1, $package_name[0]);
             if (PEAR::isError($releaseDate)) {
                 break;
             }
@@ -225,7 +225,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         list($sql_search, $ignored) = format_search_string($search_for, $boolean_search);
         $where_clause .= $sql_search;
         if (count($ignored) > 0 ) {
-            $warnings[] = 'The following words were ignored: ' . rinse(implode(', ', array_unique($ignored)));
+            $warnings[] = 'The following words were ignored: ' . implode(', ', array_unique($ignored));
         }
     }
 
@@ -344,10 +344,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
             }
 
             $link = "search.php?cmd=display{$package_name_string}{$package_nname_string}".
-                    '&amp;search_for='  . urlencode(rinse($search_for)) .
-                    '&amp;php_os='      . urlencode(rinse($php_os)) .
-                    '&amp;author_email='. urlencode(rinse($author_email)) .
-                    '&amp;bug_type='    . urlencode(rinse($bug_type)) .
+                    '&amp;search_for='  . urlencode($search_for) .
+                    '&amp;php_os='      . urlencode($php_os) .
+                    '&amp;author_email='. urlencode($author_email) .
+                    '&amp;bug_type='    . urlencode($bug_type) .
                     "&amp;boolean=$boolean_search" .
                     "&amp;bug_age=$bug_age" .
                     "&amp;bug_updated=$bug_updated" .
@@ -367,7 +367,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 show_bugs_menu($package_name, $status);
             }
 
-            $link .= '&amp;status='      . urlencode(rinse($status));
+            $link .= '&amp;status='      . urlencode($status);
 ?>
 
 <table border="0" cellspacing="2" width="100%">
@@ -408,7 +408,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 echo '  <td>', htmlspecialchars($row['package_version']), '</td>';
                 echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
                 echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>' . "\n";
-                echo '  <td>', $row['sdesc']  ? clean($row['sdesc'])             : '&nbsp;', '</td>' . "\n";
+                echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc'])             : '&nbsp;', '</td>' . "\n";
                 echo '  <td>', $row['assign'] ? htmlspecialchars($row['assign']) : '&nbsp;', '</td>' . "\n";
                 echo " </tr>\n";
             }
@@ -432,7 +432,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Find bugs</th>
   <td style="white-space: nowrap">with all or any of the w<span class="accesskey">o</span>rds</td>
-  <td style="white-space: nowrap"><input type="text" name="search_for" value="<?php echo clean($search_for);?>" size="20" maxlength="255" accesskey="o" />
+  <td style="white-space: nowrap"><input type="text" name="search_for" value="<?php echo htmlspecialchars($search_for);?>" size="20" maxlength="255" accesskey="o" />
       <br /><small><?php show_boolean_options($boolean_search) ?>
       (<?php print_link('search-howto.php', '?', true);?>)</small>
   </td>
@@ -483,25 +483,25 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>OS</th>
   <td style="white-space: nowrap">Return bugs with <b>operating system</b></td>
-  <td><input type="text" name="php_os" value="<?php echo clean($php_os);?>" /></td>
+  <td><input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os);?>" /></td>
 </tr>
 <tr valign="top">
   <th>Version</th>
   <td style="white-space: nowrap">Return bugs reported with <b>Package version</b></td>
-  <td><input type="text" name="packagever" value="<?php echo clean($packagever);?>" /></td>
+  <td><input type="text" name="packagever" value="<?php echo htmlspecialchars($packagever);?>" /></td>
 </tr>
 <tr valign="top">
   <th>PHP Version</th>
   <td style="white-space: nowrap">Return bugs reported with <b>PHP version</b></td>
-  <td><input type="text" name="phpver" value="<?php echo clean($phpver);?>" /></td>
+  <td><input type="text" name="phpver" value="<?php echo htmlspecialchars($phpver);?>" /></td>
 </tr>
 <tr valign="top">
   <th>Assigned</th>
   <td style="white-space: nowrap">Return bugs <b>assigned</b> to</td>
-  <td><input type="text" name="assign" value="<?php echo clean($assign);?>" />
+  <td><input type="text" name="assign" value="<?php echo htmlspecialchars($assign);?>" />
 <?php
     if ($auth_user) {
-        $u = rinse(htmlspecialchars($_REQUEST['PEAR_USER']));
+        $u = htmlspecialchars($_REQUEST['PEAR_USER']);
         print "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\" />";
     }
 ?>
@@ -510,10 +510,10 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <tr valign="top">
   <th>Maintainer</th>
   <td nowrap="nowrap">Return only bugs in packages <b>maintained</b> by</td>
-  <td><input type="text" name="maintain" value="<?php echo clean($maintain);?>" />
+  <td><input type="text" name="maintain" value="<?php echo htmlspecialchars($maintain);?>" />
 <?php
     if ($auth_user) {
-        $u = htmlspecialchars(stripslashes($_REQUEST['PEAR_USER']));
+        $u = htmlspecialchars($_REQUEST['PEAR_USER']);
         print "<input type=\"button\" value=\"set to $u\" onclick=\"form.maintain.value='$u'\" />";
     }
 ?>
@@ -522,10 +522,10 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Author e<span class="accesskey">m</span>ail</th>
   <td style="white-space: nowrap">Return bugs with author email/handle</td>
-  <td><input accesskey="m" type="text" name="author_email" value="<?php echo clean($author_email); ?>" />
+  <td><input accesskey="m" type="text" name="author_email" value="<?php echo htmlspecialchars($author_email); ?>" />
 <?php
     if ($auth_user) {
-        $u = rinse(htmlspecialchars($_REQUEST['PEAR_USER']));
+        $u = htmlspecialchars($_REQUEST['PEAR_USER']);
         print "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u'\" />";
     }
 ?>

@@ -150,37 +150,6 @@ function spam_protect($txt, $format = 'html')
 }
 
 /**
- * Escape string so it can be used as HTML
- *
- * If magic_quotes_gpc is on, the slashes are stripped out
- * then the escaping is done.
- *
- * @param string $in  the string to be sanitized
- *
- * @return string  the sanitized string
- *
- * @see rinse(), escapeSQL(), oneof(), field(), txfield()
- */
-function clean($in)
-{
-    return htmlspecialchars(get_magic_quotes_gpc() ? stripslashes($in) : $in);
-}
-
-/**
- * Remove slashes from a string if magic_quotes_gpc is on
- *
- * @param string $in  the string to be sanitized
- *
- * @return string  the sanitized string
- *
- * @see clean(), escapeSQL(), oneof(), field(), txfield()
- */
-function rinse($in)
-{
-    return get_magic_quotes_gpc() ? stripslashes($in) : $in;
-}
-
-/**
  * Escape strings so they can be used as literals in queries
  *
  * If magic_quotes_gpc is on, the slashes are stripped out
@@ -191,7 +160,7 @@ function rinse($in)
  *
  * @return string|array  the sanitized data
  *
- * @see clean(), rinse(), oneof(), field(), txfield()
+ * @see oneof(), field(), txfield()
  */
 function escapeSQL($in)
 {
@@ -227,7 +196,7 @@ function escapeSQL($in)
  *
  * @return mixed  the value, if any
  *
- * @see clean(), rinse(), escapeSQL(), field(), txfield()
+ * @see escapeSQL(), field(), txfield()
  */
 function oneof()
 {
@@ -249,11 +218,11 @@ function oneof()
  *
  * @return mixed  the data requested
  *
- * @see clean(), rinse(), escapeSQL(), oneof(), txfield()
+ * @see escapeSQL(), oneof(), txfield()
  */
 function field($n)
 {
-    return oneof(isset($_POST['in']) ? clean($_POST['in'][$n]) : null, htmlspecialchars($GLOBALS['bug'][$n]));
+    return oneof(isset($_POST['in']) ? htmlspecialchars($_POST['in'][$n]) : null, htmlspecialchars($GLOBALS['bug'][$n]));
 }
 
 /**
@@ -267,14 +236,12 @@ function field($n)
  *
  * @return mixed  the data requested
  *
- * @see clean(), rinse(), escapeSQL(), oneof(), field()
+ * @see escapeSQL(), oneof(), field()
  */
 function txfield($n)
 {
-    return oneof((isset($_POST['in']) && isset($_POST['in'][$n])) ?
-                    rinse($_POST['in'][$n]) : false,
-                 (isset($GLOBALS['bug']) && isset($GLOBALS['bug'][$n])) ?
-                    $GLOBALS['bug'][$n] : false);
+    return oneof((isset($_POST['in'])    && isset($_POST['in'][$n]))    ? $_POST['in'][$n]    : false,
+                 (isset($GLOBALS['bug']) && isset($GLOBALS['bug'][$n])) ? $GLOBALS['bug'][$n] : false);
 }
 
 /**
@@ -286,8 +253,7 @@ function txfield($n)
  * @return bool  true if the data is different, false if it's the same
  */
 function changed($n) {
-    return $_POST['in'][$n]
-        && (rinse(trim($_POST['in'][$n])) != trim($GLOBALS['bug'][$n]));
+    return $_POST['in'][$n] && (trim($_POST['in'][$n]) != trim($GLOBALS['bug'][$n]));
 }
 
 /**
@@ -308,8 +274,7 @@ function show_byage_options($current)
         '90'  => '90 days ago',
     );
     while (list($k,$v) = each($opts)) {
-        echo "<option value=\"$k\"", ($current==$k ? ' selected="selected"' : ''),
-             ">$v</option>\n";
+        echo "<option value=\"$k\"", ($current==$k ? ' selected="selected"' : ''), ">$v</option>\n";
     }
 }
 
@@ -445,13 +410,13 @@ function show_package_version_options($package_name, $current)
     global $pseudo_pkgs, $dbh;
 
     if (isset($pseudo_pkgs[$package_name])) {
-        echo '<input type="text" size="20" maxlength="100" name="in[package_version]" value="' . clean($current) . '" />';
+        echo '<input type="text" size="20" maxlength="100" name="in[package_version]" value="' . htmlspecialchars($current) . '" />';
         return;
     }
     $pid = $dbh->getOne('SELECT id from packages where name = ?', array($package_name));
     if (!$pid) {
         echo '<input type="text" size="20" maxlength="100" name="in[package_version]"
-    value="' . clean($current) . '" />';
+    value="' . htmlspecialchars($current) . '" />';
         return;
     }
     $candidates = $dbh->getAll('
@@ -685,9 +650,6 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     /* Default addresses */
     list($mailto,$mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id);
 
-    /* Get rid of slashes in bug status */
-    $bug['status'] = rinse($bug['status']);
-
     $headers[] = array(' ID', $bug['id']);
 
     switch ($edit) {
@@ -768,7 +730,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     }
 
     if ($ncomment) {
-        $text[] = " New Comment:\n\n" . rinse($ncomment);
+        $text[] = " New Comment:\n\n{$ncomment}";
     }
 
     $text[] = get_old_comments($bug['id'], empty($ncomment));
@@ -819,7 +781,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
         // the user gets sent mail with an envelope sender that ignores bounces
         if (DEVBOX == false) {
             @mail($bug['email'],
-                  "[$siteBig-BUG] " . rinse($subj) . txfield('sdesc'),
+                  "[$siteBig-BUG] {$subj}" . txfield('sdesc'),
                   $user_text,
                   "From: $siteBig Bug Database <$mailfrom>\n".
                   "Bcc: $Bcc\n" .
@@ -830,17 +792,17 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
 		// but we go ahead and let the default sender get used for the list
 
             @mail($mailto,
-                  "[$siteBig-BUG] " . rinse($subj) . txfield('sdesc'),
+                  "[$siteBig-BUG] {$subj}" . txfield('sdesc'),
                   $dev_text,
                   "From: $from\n".
                   "X-PHP-Bug: {$bug['id']}\n".
-                  "X-PHP-Type: "           . rinse((($edit != 3) ? $in['bug_type']        : $bug['bug_type']))        . "\n" .
-                  "X-PHP-PackageVersion: " . rinse((($edit != 3) ? $in['package_version'] : $bug['package_version'])) . "\n" .
-                  "X-PHP-Version: "        . rinse((($edit != 3) ? $in['php_version']     : $bug['php_version']))     . "\n" .
-                  "X-PHP-Category: "       . rinse((($edit != 3) ? $in['package_name']    : $bug['package_name']))    . "\n" .
-                  "X-PHP-OS: "             . rinse((($edit != 3) ? $in['php_os']          : $bug['php_os']))          . "\n" .
-                  "X-PHP-Status: "         . rinse($new_status) . "\n" .
-                  "X-PHP-Old-Status: "     . rinse($old_status) . "\n" .
+                  "X-PHP-Type: "           . (($edit != 3) ? $in['bug_type']        : $bug['bug_type'])        . "\n" .
+                  "X-PHP-PackageVersion: " . (($edit != 3) ? $in['package_version'] : $bug['package_version']) . "\n" .
+                  "X-PHP-Version: "        . (($edit != 3) ? $in['php_version']     : $bug['php_version'])     . "\n" .
+                  "X-PHP-Category: "       . (($edit != 3) ? $in['package_name']    : $bug['package_name'])    . "\n" .
+                  "X-PHP-OS: "             . (($edit != 3) ? $in['php_os']          : $bug['php_os'])          . "\n" .
+                  "X-PHP-Status: {$new_status}\n" .
+                  "X-PHP-Old-Status: {$old_status}\n" .
                   "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
                   "-f bounces-ignored@php.net");
         }
@@ -858,7 +820,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
 
         if (DEVBOX == false) {
             @mail($email,
-                  rinse($subj) . txfield('sdesc'),
+                  $subj . txfield('sdesc'),
                   wordwrap($in['assign'] . " you have just been assigned to this bug by {$from}\n\n") .
                   $dev_text,
                   "From: {$from}\n".
@@ -1151,7 +1113,7 @@ function format_search_string($search, $boolean_search = false)
  */
 function show_bugs_menu($pkgname, $status = null, $fulllink = false)
 {
-    global $dbh, $pseudo_pkgs, $site;
+    global $dbh, $pseudo_pkgs, $site, $basedir;
 
     if (empty($pkgname) && !$fulllink) {
         return;
@@ -1179,16 +1141,16 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
             echo make_link('/package/' . $pkgname[0], 'Package home');
             echo delim();
         }
-        echo make_link(BASEDIR . "/report.php?package={$pkgname[0]}", 'Report new bug');
+        echo make_link("{$basedir}/report.php?package={$pkgname[0]}", 'Report new bug');
         echo delim();
     }
 
     if (count($pkgname) == 1 && !$fulllink) {
-        echo make_link(BASEDIR . "/search.php?package_name[]={$pkgname[0]}", 'New search');
+        echo make_link("{$basedir}/search.php?package_name[]={$pkgname[0]}", 'New search');
         echo delim();
-        echo make_link(BASEDIR . "/roadmap.php?package={$pkgname[0]}", 'Development Road Map');
+        echo make_link("{$basedir}/roadmap.php?package={$pkgname[0]}", 'Development Road Map');
     } else {
-        echo make_link(BASEDIR . '/search.php', 'New search');
+        echo make_link("{$basedir}/search.php", 'New search');
     }
 
     echo "\n</td>\n";
@@ -1200,7 +1162,7 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
     $style['CRSLR']    = ($status == 'CRSLR')   ?' class="status_active"':'';
     echo '<td style="text-align: right;">' . "\n Status: ";
     if (!$fulllink) {
-        $fulllink = BASEDIR . "/search.php?cmd=display&amp;{$pkgs}"; 
+        $fulllink = "{$basedir}/search.php?cmd=display&amp;{$pkgs}"; 
     }
     echo make_link("{$fulllink}&amp;status=Open", 'Open', '', $style['Open']);
     echo delim();

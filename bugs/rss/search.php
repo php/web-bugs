@@ -149,7 +149,7 @@ switch ($status) {
 
         // Fetch the last release date
         include_once 'pear-database-package.php';
-        $releaseDate = package::getRecent(1, rinse($_GET['package_name'][0]));
+        $releaseDate = package::getRecent(1, $_GET['package_name'][0]);
         if (PEAR::isError($releaseDate)) {
             break;
         }
@@ -176,8 +176,7 @@ if (empty($_GET['search_for'])) {
     list($sql_search, $ignored) = format_search_string($search_for, $boolean_search);
     $where_clause .= $sql_search;
     if (count($ignored) > 0 ) {
-        $warnings[] = 'The following words were ignored: ' .
-                rinse(implode(', ', array_unique($ignored)));
+        $warnings[] = 'The following words were ignored: ' . implode(', ', array_unique($ignored));
     }
 }
 
@@ -395,18 +394,18 @@ if ($total_rows > 0) {
     $warnings[] = "No bugs matched your criteria";
 }
 
-echo '
+echo <<< DATA
      </rdf:Seq>
     </items>
   </channel>
 
-  <image rdf:about="http://' , $site_url , '/gifs/', $site, '-logo.gif">
-    <title>' , $siteBig , ' Bugs</title>
-    <url>http://' , $site_url , '/gifs/', $site, '-logo.gif</url>
-    <link>http://' , $site_url , $basedir, '</link>
+  <image rdf:about="http://{$site_url}{$basedir}/gifs/{$site}-logo.gif">
+    <title>{$siteBig} Bugs</title>
+    <url>http://{$site_url}{$basedir}/gifs/{$site}-logo.gif</url>
+    <link>http://{$site_url}{$basedir}</link>
   </image>
-
-', $items;
+  {$items}
+DATA;
 ?>
 </rdf:RDF>
 <?php

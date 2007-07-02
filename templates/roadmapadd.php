@@ -1,14 +1,14 @@
-<?php response_header('Roadmap :: ' . clean($this->package)) . ' :: Manage Bugs'; ?>
-<h1>Manage Bugs/Features in Roadmap for Package <?php echo clean($this->package); ?></h1>
-<a href="/bugs/search.php?package_name[]=<?php echo urlencode(clean($this->package)) ?>&status=Open&cmd=display">Bug Tracker</a> |
-<a href="roadmap.php?package=<?php echo urlencode(clean($this->package)) ?>">Back to Roadmap Manager</a> | <a href="/<?php echo urlencode(clean($this->package)) ?>">Package Home</a>
+<?php response_header('Roadmap :: ' . htmlspecialchars($this->package)) . ' :: Manage Bugs'; ?>
+<h1>Manage Bugs/Features in Roadmap for Package <?php echo htmlspecialchars($this->package); ?></h1>
+<a href="/bugs/search.php?package_name[]=<?php echo urlencode(htmlspecialchars($this->package)) ?>&status=Open&cmd=display">Bug Tracker</a> |
+<a href="roadmap.php?package=<?php echo urlencode(htmlspecialchars($this->package)) ?>">Back to Roadmap Manager</a> | <a href="/<?php echo urlencode(htmlspecialchars($this->package)) ?>">Package Home</a>
 <h2>Version <?php echo $this->roadmap ?></h2>
 <?php if ($this->saved):?>
 <div class="errors">Changes Saved</div>
 <?php endif; // if ($this->saved) ?>
 <form name="addbugs" action="roadmap.php" method="post">
-<input type="hidden" name="package" value="<?php echo clean($this->package); ?>" />
-<input type="hidden" name="roadmap" value="<?php echo clean($this->roadmap); ?>" />
+<input type="hidden" name="package" value="<?php echo htmlspecialchars($this->package); ?>" />
+<input type="hidden" name="roadmap" value="<?php echo htmlspecialchars($this->roadmap); ?>" />
 <table>
  <tr>
   <th class="form-label_left">

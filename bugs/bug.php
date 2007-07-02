@@ -103,20 +103,19 @@ if (!empty($_POST['pw'])) {
     if (empty($_POST['user'])) {
         $user = '';
     } else {
-        $user = htmlspecialchars(rinse($_POST['user']));
+        $user = htmlspecialchars($_POST['user']);
     }
-    $pw = rinse($_POST['pw']);
+    $pw = $_POST['pw'];
 
 	// Remember password / user next time 
 	if (isset($_POST['save'])) { # non-developers don't have $user set
-		setcookie('MAGIC_COOKIE', base64_encode("$user:$pw"), time() + 3600 * 24 * 12, '/','.php.net');
+		setcookie('MAGIC_COOKIE', base64_encode("{$user}:{$pw}"), time() + 3600 * 24 * 12, '/','.php.net');
 	}
 } elseif (isset($auth_user) && $auth_user && $auth_user->handle) {
-    $user = rinse($auth_user->handle);
-    $pw   = rinse($auth_user->password);
+    $user = $auth_user->handle;
+    $pw   = $auth_user->password;
 } elseif (isset($_COOKIE['MAGIC_COOKIE'])) {
     @list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']));
-    $user = rinse($user);
     if ($pw === null) {
         $pw = '';
     }
@@ -455,7 +454,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
     $ncomment = trim($_POST['ncomment']);
-    $from = rinse($_POST['in']['commentemail']);
+    $from = $_POST['in']['commentemail'];
 } elseif (isset($_POST['in'])  && !isset($_POST['preview']) && $edit == 1) {
     // Edits submitted by developer
     if ($logged_in != 'developer') {
@@ -677,7 +676,7 @@ show_bugs_menu(txfield('package_name'));
        echo '<th class="details" id="number">' . $bug_type . '&nbsp;#' . $bug_id . '</th>';
    ?>
 
-   <td id="summary" colspan="3"><?php echo clean($bug['sdesc']) ?></td>
+   <td id="summary" colspan="3"><?php echo htmlspecialchars($bug['sdesc']) ?></td>
   </tr>
   <tr id="submission">
    <th class="details">Submitted:</th>
@@ -1048,7 +1047,7 @@ if ($edit == 1 || $edit == 2) {
     </p>
 
     <textarea cols="60" rows="8" name="ncomment" id="ncomment"
-     wrap="physical"><?php echo clean($ncomment); ?></textarea>
+     wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
 
     <p style="margin-top: 0em">
         <input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
@@ -1093,7 +1092,7 @@ echo $preview;
       <th class="details">Y<span class="accesskey">o</span>ur email address:<br />
       <strong>MUST BE VALID</strong></th>
       <td class="form-input">
-       <input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo isset($_POST['in']['commentemail']) ? clean($_POST['in']['commentemail']) : ''; ?>" accesskey="o" />
+       <input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo isset($_POST['in']['commentemail']) ? htmlspecialchars($_POST['in']['commentemail']) : ''; ?>" accesskey="o" />
       </td>
      </tr>
      <tr>
@@ -1118,7 +1117,7 @@ echo $preview;
     <div>
      <input type="hidden" name="id" value="<?php echo $bug_id; ?>" />
      <input type="hidden" name="edit" value="<?php echo $edit; ?>" />
-     <textarea cols="60" rows="10" name="ncomment" wrap="physical"><?php echo clean($ncomment); ?></textarea>
+     <textarea cols="60" rows="10" name="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
      <br /><input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
     </div>
 
@@ -1204,7 +1203,7 @@ foreach ($p as $name => $revisions)
          '&patch=', urlencode($name),
          '&revision=latest',
          (!empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : ''),
-         '">', clean($name),
+         '">', htmlspecialchars($name),
          '</a> (last revision ', format_date($revisions[0][0]), ' by ', $revisions[0][1], ')<br />';
 }
 

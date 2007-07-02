@@ -1,5 +1,5 @@
-<?php response_header('Add Patch :: ' . clean($package)); ?>
-<h2>Add a Patch to <a href="bug.php?id=<? echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a> for Package <?php echo '<a href="/package/', clean($package), '">', clean($package), '</a>'; ?></h2>
+<?php response_header('Add Patch :: ' . htmlspecialchars($package)); ?>
+<h2>Add a Patch to <a href="bug.php?id=<? echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a> for Package <?php echo '<a href="/package/', htmlspecialchars($package), '">', htmlspecialchars($package), '</a>'; ?></h2>
 <ul>
  <li>One problem per patch, please</li>
  <li>Patches must be 20k or smaller</li>
@@ -23,7 +23,7 @@ if ($errors) {
    Email Address (MUST BE VALID)
   </th>
   <td class="form-input">
-   <input type="text" name="email" value="<?php echo clean($email) ?>" />
+   <input type="text" name="email" value="<?php echo htmlspecialchars($email) ?>" />
   </td>
  </tr>
  <tr>
@@ -36,7 +36,7 @@ if ($errors) {
    Choose an existing Patch to update, or add a new one
   </th>
   <td class="form-input">
-   <input type="text" maxlength="40" name="patchname" value="<?php echo clean($patchname); ?>" /><br />
+   <input type="text" maxlength="40" name="patchname" value="<?php echo htmlspecialchars($patchname); ?>" /><br />
    <small>The patch name must be shorter than 40 characters and it must only contain alpha-numeric characters, dots, underscores or hyphens.</small>
   </td>
  </tr>

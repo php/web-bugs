@@ -18,11 +18,16 @@
  * @version   $Id$
  */
 
+// magic_quotes_gpc is not supported!
+if (get_magic_quotes_gpc()) {
+	die('Turn off "magic_quotes_gpc" in php.ini!');
+}
 
 // FIXME: Configuration should be elsewhere!
 
 // CONFIG START
 $site = 'php';
+$SIDEBAR_DATA = '-';
 
 $site_data = array (
 	'php' => array (
@@ -60,7 +65,7 @@ $site_data = array (
 define('DEVBOX', true);
 
 if (!defined('PEAR_CHANNELNAME'))
-        define ('PEAR_CHANNELNAME', 'pear.php.net');
+	define ('PEAR_CHANNELNAME', 'pear.php.net');
 
 // CONFIG END
 
@@ -71,7 +76,6 @@ $bugEmail = $site_data[$site]['email'];
 $basedir  = $site_data[$site]['basedir'];
 $main_include_path = realpath(dirname(__FILE__).'/../');
 $templates_path = realpath(dirname(__FILE__).'/../../');
-define('BASEDIR', ($basedir == '/') ? '' : $basedir);
 define('BUG_PATCHTRACKER_TMPDIR', $site_data[$site]['patch_tmp']);
 define('PEAR_DATABASE_DSN', "mysqli://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
 

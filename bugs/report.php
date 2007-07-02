@@ -89,9 +89,6 @@ if (isset($_POST['in'])) {
 
             $_POST['in']['did_luser_search'] = 1;
 
-            // search for a match using keywords from the subject
-            $sdesc = rinse($_POST['in']['sdesc']);
-
             /*
              * If they are filing a feature request,
              * only look for similar features
@@ -104,11 +101,12 @@ if (isset($_POST['in'])) {
                 $where_clause .= "AND package_name != 'Feature/Change Request'";
             }
 
-            list($sql_search, $ignored) = format_search_string($sdesc);
+            // search for a match using keywords from the subject
+            list($sql_search, $ignored) = format_search_string($_POST['in']['sdesc']);
 
             $where_clause .= $sql_search;
 
-            $where_clause .= ' AND p.package_type="pear"';
+            $where_clause .= " AND p.package_type= '{$site}'";
 
             $query = "SELECT bugdb.* from bugdb, packages p $where_clause LIMIT 5";
 
@@ -324,35 +322,31 @@ if (isset($_POST['in'])) {
                 if (!isset($buggie)) {
                     $report  = '';
                     $report .= 'From:             ' . $_POST['in']['handle'] . "\n";
-                    $report .= 'Operating system: ' . rinse($_POST['in']['php_os']) . "\n";
-                    $report .= 'Package version:  ' . rinse($_POST['in']['package_version']) . "\n";
-                    $report .= 'PHP version:      ' . rinse($_POST['in']['php_version']) . "\n";
+                    $report .= 'Operating system: ' . $_POST['in']['php_os'] . "\n";
+                    $report .= 'Package version:  ' . $_POST['in']['package_version'] . "\n";
+                    $report .= 'PHP version:      ' . $_POST['in']['php_version'] . "\n";
                     $report .= 'Package:          ' . $_POST['in']['package_name'] . "\n";
                     $report .= 'Bug Type:         ' . $_POST['in']['bug_type'] . "\n";
                     $report .= 'Bug description:  ';
 
-                    $fdesc = rinse($fdesc);
-                    $sdesc = rinse($_POST['in']['sdesc']);
-
-                    $ascii_report  = "$report$sdesc\n\n" . wordwrap($fdesc);
+                    $ascii_report  = "$report{$_POST['in']['sdesc']}\n\n" . wordwrap($fdesc);
                     $ascii_report .= "\n-- \nEdit bug report at ";
                     $ascii_report .= "http://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
 
                     list($mailto, $mailfrom) = get_package_mail($_POST['in']['package_name']);
 
-                    $email = rinse($_POST['in']['email']);
-                    $protected_email  = '"' . spam_protect($email, 'text') . '"';
+                    $protected_email  = '"' . spam_protect($_POST['in']['email'], 'text') . '"';
                     $protected_email .= '<' . $mailfrom . '>';
 
-                    $extra_headers  = 'From: '           . $protected_email . "\n";
+                    $extra_headers  = "From: {$protected_email}\n";
                     $extra_headers .= "X-PHP-BugTracker: {$siteBig}bug\n";
-                    $extra_headers .= 'X-PHP-Bug: '      . $cid . "\n";
-                    $extra_headers .= 'X-PHP-Type: '     . rinse($_POST['in']['bug_type']) . "\n";
-                    $extra_headers .= 'X-PHP-PackageVersion: ' . rinse($_POST['in']['package_version']) . "\n";
-                    $extra_headers .= 'X-PHP-Version: '  . rinse($_POST['in']['php_version']) . "\n";
-                    $extra_headers .= 'X-PHP-Category: ' . rinse($_POST['in']['package_name']) . "\n";
-                    $extra_headers .= 'X-PHP-OS: '       . rinse($_POST['in']['php_os']) . "\n";
-                    $extra_headers .= 'X-PHP-Status: Open' . "\n";
+                    $extra_headers .= "X-PHP-Bug: {$cid}\n";
+                    $extra_headers .= "X-PHP-Type: {$_POST['in']['bug_type']}\n";
+                    $extra_headers .= "X-PHP-PackageVersion: {$_POST['in']['package_version']}\n";
+                    $extra_headers .= "X-PHP-Version: {$_POST['in']['php_version']}\n";
+                    $extra_headers .= "X-PHP-Category: {$_POST['in']['package_name']}\n";
+                    $extra_headers .= "X-PHP-OS: {$_POST['in']['php_os']}\n";
+                    $extra_headers .= "X-PHP-Status: Open\n";
                     $extra_headers .= "Message-ID: <bug-{$cid}@{$site_url}>";
 
 					if (isset($bug_types[$_POST['in']['bug_type']])) {
@@ -362,12 +356,12 @@ if (isset($_POST['in'])) {
 					}
 
                     // mail to package developers
-                    @mail($mailto, "[$siteBig-BUG] $type #$cid [NEW]: $sdesc",
+                    @mail($mailto, "[$siteBig-BUG] $type #$cid [NEW]: {$_POST['in']['sdesc']}",
                           $ascii_report . "1\n-- \n$dev_extra", $extra_headers,
                           '-f bounce-no-user@php.net');
                     // mail to reporter
                     if (!DEVBOX)
-                    	@mail($email, "[$siteBig-BUG] $type #$cid: $sdesc",
+                    	@mail($_POST['in']['email'], "[$siteBig-BUG] $type #$cid: {$_POST['in']['sdesc']}",
                     	      $ascii_report . "2\n",
                     	      "From: $siteBig Bug Database <$mailfrom>\n" .
                     	      "X-PHP-Bug: $cid\n" .
@@ -396,7 +390,7 @@ if (isset($_POST['in'])) {
 $package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : '';
 
 if ($site != 'php' && !package_exists($package)) {
-    $errors[] = 'Package "' . clean($package) . '" does not exist.';
+    $errors[] = 'Package "' . htmlspecialchars($package) . '" does not exist.';
     response_header("Report - Invalid bug type");
     display_bug_error($errors);
 } else {
@@ -418,7 +412,7 @@ if ($site != 'php' && !package_exists($package)) {
             
         );
         response_header('Report - New');
-        show_bugs_menu(clean($package));
+        show_bugs_menu(htmlspecialchars($package));
 ?>
 
 <p>
@@ -468,7 +462,7 @@ echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $em
     display_bug_error($errors);
 
 ?>
-<form method="post" action="report.php?package=<?php echo clean($package); ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
+<form method="post" action="report.php?package=<?php echo htmlspecialchars($package); ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
 <table class="form-holder" cellspacing="1">
  <tr>
   <th class="form-label_left">
@@ -488,7 +482,7 @@ echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $em
   <td class="form-input">
    <input type="hidden" name="in[did_luser_search]"
     value="<?php echo isset($_POST['in']['did_luser_search']) ? 1 : 0; ?>" />
-   <input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo clean($_POST['in']['email']); ?>" accesskey="o" />
+   <input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo htmlspecialchars($_POST['in']['email']); ?>" accesskey="o" />
   </td>
 <?php } ?>
 
@@ -496,7 +490,7 @@ echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $em
  <tr>
   <th class="form-label_left"><span class="accesskey">P</span>assword:</th>
   <td class="form-input">
-   <input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo clean($_POST['in']['passwd']);?>" accesskey="p" />
+   <input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd']);?>" accesskey="p" />
    <br />
     You <b>must</b> enter any password here, which will be stored for this bug report.<br />
     This password allows you to come back and modify your submitted bug report
@@ -516,13 +510,13 @@ echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $em
    </select>
   </td>
  </tr>
- <?php if (!isset($pseudo_pkgs[clean($package)])) { ?>
+ <?php if (!isset($pseudo_pkgs[htmlspecialchars($package)])) { ?>
  <tr>
   <th class="form-label_left">
    Package version:
   </th>
   <td class="form-input">
-   <?php echo show_package_version_options(clean($package), clean($_POST['in']['package_version'])); ?>
+   <?php echo show_package_version_options(htmlspecialchars($package), htmlspecialchars($_POST['in']['package_version'])); ?>
   </td>
  </tr>
  <?php } ?>
@@ -535,7 +529,7 @@ echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $em
     <?php
 
     if (!empty($package)) {
-        echo '<input type="hidden" name="in[package_name]" value="', clean($package) , '" />' , clean($package);
+        echo '<input type="hidden" name="in[package_name]" value="', htmlspecialchars($package) , '" />' , htmlspecialchars($package);
         if ($package == 'Bug System') {
             echo <<< DATA
             	<p>
@@ -551,7 +545,7 @@ DATA;
         }
     } else {
         echo '<select name="in[package_name]">' , "\n";
-        show_types(null, 0, clean($package));
+        show_types(null, 0, htmlspecialchars($package));
         echo '</select>';
     }
 
@@ -573,7 +567,7 @@ DATA;
     $content = '';
     Bug_DataObject::init();
     $db = Bug_DataObject::bugDB('bugdb_roadmap');
-    $db->package = clean($package);
+    $db->package = htmlspecialchars($package);
     $db->orderBy('releasedate ASC');
     $myroadmaps = array();
     if (isset($_POST['in']['roadmap']) && is_array($_POST['in']['roadmap'])) {
@@ -618,9 +612,9 @@ DATA;
   <td class="form-input">
    <?php
     if (isset($_GET['showold'])) {
-        echo '<a href="report.php?package=' , clean($package) , '">Hide released roadmaps</a>';
+        echo '<a href="report.php?package=' , htmlspecialchars($package) , '">Hide released roadmaps</a>';
     } else {
-        echo '<a href="report.php?package=' , clean($package) , '&amp;showold=1">Show released roadmaps</a>';
+        echo '<a href="report.php?package=' , htmlspecialchars($package) , '&amp;showold=1">Show released roadmaps</a>';
     }
     echo '<br />' , $content;
    ?>
@@ -634,7 +628,7 @@ DATA;
    Operating system:
   </th>
   <td class="form-input">
-   <input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo clean($_POST['in']['php_os']); ?>" />
+   <input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo htmlspecialchars($_POST['in']['php_os']); ?>" />
   </td>
  </tr>
 
@@ -655,7 +649,7 @@ DATA;
    Summary:
   </th>
   <td class="form-input">
-   <input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo clean($_POST['in']['sdesc']); ?>" />
+   <input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo htmlspecialchars($_POST['in']['sdesc']); ?>" />
   </td>
  </tr>
  <tr>
@@ -686,7 +680,7 @@ DATA;
    </p>
   </th>
   <td class="form-input">
-   <textarea cols="60" rows="15" name="in[ldesc]" wrap="physical"><?php echo clean($_POST['in']['ldesc']); ?></textarea>
+   <textarea cols="60" rows="15" name="in[ldesc]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['ldesc']); ?></textarea>
   </td>
  </tr>
  <tr>
@@ -700,7 +694,7 @@ DATA;
    </p>
   </th>
   <td class="form-input">
-   <textarea cols="60" rows="15" name="in[repcode]" wrap="no"><?php echo clean($_POST['in']['repcode']); ?></textarea>
+   <textarea cols="60" rows="15" name="in[repcode]" wrap="no"><?php echo htmlspecialchars($_POST['in']['repcode']); ?></textarea>
   </td>
  </tr>
  <?php
@@ -715,7 +709,7 @@ DATA;
    </p>
   </th>
   <td class="form-input">
-   <textarea cols="60" rows="15" name="in[expres]" wrap="physical"><?php echo clean($_POST['in']['expres']); ?></textarea>
+   <textarea cols="60" rows="15" name="in[expres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['expres']); ?></textarea>
   </td>
  </tr>
  <tr>
@@ -727,7 +721,7 @@ DATA;
    </p>
   </th>
   <td class="form-input">
-   <textarea cols="60" rows="15" name="in[actres]" wrap="physical"><?php echo clean($_POST['in']['actres']); ?></textarea>
+   <textarea cols="60" rows="15" name="in[actres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['actres']); ?></textarea>
   </td>
  </tr>
  <tr>

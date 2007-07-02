@@ -67,7 +67,7 @@ if (isset($_GET['edit'])) {
     $bugdb->id = $_GET['edit'];
     if (!$bugdb->find(true)) {
         response_header('Error :: no such roadmap');
-        display_bug_error('Unknown roadmap "' . clean($_GET['edit']));
+        display_bug_error('Unknown roadmap "' . htmlspecialchars($_GET['edit']));
         response_footer();
         exit;
     }
@@ -112,12 +112,12 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
             $_POST['releasedate'] = date('Y-m-d', strtotime($_POST['releasedate']));
         }
         $savant->info = array(
-            'package' => clean($_GET['package']),
+            'package' => htmlspecialchars($_GET['package']),
             'releasedate' => isset($_POST['releasedate']) ?
                 $_POST['releasedate'] : '',
-            'roadmap_version' => isset($_POST['roadmap_version']) ? clean($_POST['roadmap_version']) :
+            'roadmap_version' => isset($_POST['roadmap_version']) ? htmlspecialchars($_POST['roadmap_version']) :
                 '',
-            'description' => isset($_POST['description']) ? clean($_POST['description']) :
+            'description' => isset($_POST['description']) ? htmlspecialchars($_POST['description']) :
                 '',
             );
         $savant->isnew = true;
@@ -156,12 +156,12 @@ if (isset($_GET['edit']) && isset($_POST['go'])) {
             $_POST['releasedate'] = date('Y-m-d', strtotime($_POST['releasedate']));
         }
         $savant->info = array(
-            'package' => clean($_GET['package']),
+            'package' => htmlspecialchars($_GET['package']),
             'releasedate' => isset($_POST['releasedate']) ?
                 $_POST['releasedate'] : '',
-            'roadmap_version' => isset($_POST['roadmap_version']) ? clean($_POST['roadmap_version']) :
+            'roadmap_version' => isset($_POST['roadmap_version']) ? htmlspecialchars($_POST['roadmap_version']) :
                 '',
-            'description' => isset($_POST['description']) ? clean($_POST['description']) :
+            'description' => isset($_POST['description']) ? htmlspecialchars($_POST['description']) :
                 '',
             );
         $savant->isnew = true;
@@ -208,7 +208,7 @@ if (isset($_POST['saveaddbugs'])) {
     $roadmap->roadmap_version = $_POST['roadmap'];
     if (!$roadmap->find(true)) {
         response_header('Error :: no such roadmap');
-        display_bug_error('Unknown roadmap "' . clean($_GET['roadmap']) . '"');
+        display_bug_error('Unknown roadmap "' . htmlspecialchars($_GET['roadmap']) . '"');
         response_footer();
         exit;
     }
@@ -237,7 +237,7 @@ if (!isset($_GET['package'])) {
 }
 if (!$test->find()) {
     response_header('Error :: no such package');
-    display_bug_error('Unknown package "' . clean($_GET['package']) . '"');
+    display_bug_error('Unknown package "' . htmlspecialchars($_GET['package']) . '"');
     response_footer();
     exit;
 }
@@ -254,7 +254,7 @@ if (isset($_GET['addbugs'])) {
     $roadmap->roadmap_version = $_GET['roadmap'];
     if (!$roadmap->find(true)) {
         response_header('Error :: no such roadmap');
-        display_bug_error('Unknown roadmap "' . clean($_GET['roadmap']) . '"');
+        display_bug_error('Unknown roadmap "' . htmlspecialchars($_GET['roadmap']) . '"');
         response_footer();
         exit;
     }
@@ -528,7 +528,7 @@ if (isset($_GET['edit'])) {
     $bugdb->id = $_GET['edit'];
     if (!$bugdb->find(true)) {
         response_header('Error :: no such roadmap');
-        display_bug_error('Unknown roadmap "' . clean($_GET['edit']));
+        display_bug_error('Unknown roadmap "' . htmlspecialchars($_GET['edit']));
         response_footer();
         exit;
     }
@@ -560,12 +560,12 @@ if (isset($_GET['new'])) {
         $_POST['releasedate'] = date('Y-m-d', strtotime($_POST['releasedate']));
     }
     $savant->info = array(
-        'package' => clean($_GET['package']),
+        'package' => htmlspecialchars($_GET['package']),
         'releasedate' => isset($_POST['releasedate']) ?
             $_POST['releasedate'] : '',
-        'roadmap_version' => isset($_POST['roadmap_version']) ? clean($_POST['roadmap_version']) :
+        'roadmap_version' => isset($_POST['roadmap_version']) ? htmlspecialchars($_POST['roadmap_version']) :
             '',
-        'description' => isset($_POST['description']) ? clean($_POST['description']) :
+        'description' => isset($_POST['description']) ? htmlspecialchars($_POST['description']) :
             '',
         );
     $savant->isnew = true;

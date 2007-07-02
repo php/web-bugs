@@ -1,4 +1,5 @@
 <?php
+
 if (!function_exists('show_prev_next')) {
     function show_prev_next($begin, $rows, $total_rows, $link, $limit)
 {
@@ -75,7 +76,7 @@ if (!function_exists('show_prev_next')) {
         echo '  <td>', htmlspecialchars($row['package_version']), '</td>';
         echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
         echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>' . "\n";
-        echo '  <td>', $row['sdesc']  ? clean($row['sdesc'])             : '&nbsp;', '</td>' . "\n";
+        echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc'])  : '&nbsp;', '</td>' . "\n";
         echo '  <td>', $row['assign'] ? htmlspecialchars($row['assign']) : '&nbsp;', '</td>' . "\n";
         echo " </tr>\n";
     }

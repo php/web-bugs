@@ -91,7 +91,7 @@ function auth_reject($realm = null, $message = null)
         }
         print "\" />\n";
         print "</form>\n";
-        print hdelim();
+        print "<hr />\n";
         print "<p><strong>Note:</strong> If you just want to browse the website, ";
         print "you will not need to log in. For all tasks that require ";
         print "authentication, you will be redirected to this form ";

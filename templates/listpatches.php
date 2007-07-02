@@ -17,7 +17,7 @@
 ?>
  <tr>
   <th class="details">
-   Patch <a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&patchname=<?php echo urlencode($patch_name); ?>"><?php echo clean($patch_name); ?></a>
+   Patch <a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&patchname=<?php echo urlencode($patch_name); ?>"><?php echo htmlspecialchars($patch_name); ?></a>
   </th>
   <td>
    <?php foreach ($revisions as $revision) { ?>

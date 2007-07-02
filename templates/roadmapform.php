@@ -1,5 +1,5 @@
-<?php response_header('Roadmap :: ' . clean($this->package)); ?>
-<h1>Roadmap for Package <?php echo clean($this->package); ?></h1>
+<?php response_header('Roadmap :: ' . htmlspecialchars($this->package)); ?>
+<h1>Roadmap for Package <?php echo htmlspecialchars($this->package); ?></h1>
 <ul class="side_pages">
 <?php foreach ($this->roadmap as $info): ?>
  <li class="side_page"><a href="roadmap.php?package=<?php echo urlencode($info['package'])

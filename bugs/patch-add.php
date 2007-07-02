@@ -109,7 +109,7 @@ if (isset($_POST['addpatch'])) {
                 $buggie->deleteRequest();
                 $patches = $patchinfo->listPatches($bug_id);
                 $errors[] = $e->getMessage();
-                $errors[] = 'Could not attach patch "' . clean($patchname) . '" to Bug #' . $bug_id;
+                $errors[] = 'Could not attach patch "' . htmlspecialchars($patchname) . '" to Bug #' . $bug_id;
                 $captcha = $numeralCaptcha->getOperation();
                 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
                 include $templates_path . '/templates/addpatch.php';
@@ -138,7 +138,7 @@ if (isset($_POST['addpatch'])) {
     PEAR::popErrorHandling();
     if (PEAR::isError($e)) {
         $patches = $patchinfo->listPatches($bug_id);
-        $errors = array($e->getMessage(), 'Could not attach patch "' . clean($patchname) . '" to Bug #' . $bug_id);
+        $errors = array($e->getMessage(), 'Could not attach patch "' . htmlspecialchars($patchname) . '" to Bug #' . $bug_id);
         $captcha = $numeralCaptcha->getOperation();
         $_SESSION['answer'] = $numeralCaptcha->getAnswer();
         include $templates_path . '/templates/addpatch.php';
@@ -153,7 +153,7 @@ if (isset($_POST['addpatch'])) {
         require_once 'Damblan/Mailer.php';
         require_once 'Damblan/Bugs.php';
 
-        $patchName = clean($patchname);
+        $patchName = htmlspecialchars($patchname);
 
         $rev       = $e;
 

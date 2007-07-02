@@ -68,7 +68,6 @@ function response_header($title, $extraHeaders = '')
     if (substr($rts, -1) == '-') {
         $SIDEBAR_DATA = substr($rts, 0, -1);
     } else {
-
         $SIDEBAR_DATA .= draw_navigation('main_menu', 'Main:');
         $SIDEBAR_DATA .= draw_navigation('docu_menu', 'Documentation:');
         $SIDEBAR_DATA .= draw_navigation('downloads_menu', 'Downloads:');
@@ -200,10 +199,7 @@ echo $extraHeaders;
 <table class="middle" cellspacing="0" cellpadding="0">
  <tr>
 
-    <?php
-
-    if (isset($SIDEBAR_DATA)) {
-        ?>
+<?php if (!empty($SIDEBAR_DATA)) { ?>
 
 <!-- START LEFT SIDEBAR -->
   <td class="sidebar_left">
@@ -213,16 +209,12 @@ echo $extraHeaders;
   </td>
 <!-- END LEFT SIDEBAR -->
 
-        <?php
-    }
-
-    ?>
+<?php } ?>
 
 <!-- START MAIN CONTENT -->
 
   <td class="content">
-
-    <?php
+<?php
 }
 
 
@@ -235,13 +227,12 @@ function response_footer($extraContent = false)
         return;
     }
     $called = true;
-    ?>
-
+?>
   </td>
 
 <!-- END MAIN CONTENT -->
 
-<?php if (isset($RSIDEBAR_DATA)) { ?>
+<?php if (!empty($RSIDEBAR_DATA)) { ?>
 
 <!-- START RIGHT SIDEBAR -->
   <td class="sidebar_right">
@@ -279,7 +270,7 @@ print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
    <small>
     Last updated: <?php echo $LAST_UPDATED; ?><br />
     Bandwidth and hardware provided by:
-    <?php
+<?php
      if ($site_url == 'pear.php.net') {
          print_link('http://www.pair.com/', 'pair Networks');
      } elseif ($site_url == PEAR_CHANNELNAME) {
@@ -287,12 +278,13 @@ print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
      } else {
          print '<i>This is an unofficial mirror!</i>';
      }
-    ?>
+?>
 
    </small>
   </td>
  </tr>
 </table>
+
 <!-- Onload focus to pear -->
 <?php if (isset($GLOBALS['ONLOAD'])) { ?>
 <script language="javascript">
@@ -320,17 +312,16 @@ addEvent(window, 'load', makeFocus);
 
 </body>
 <?php
-if ($extraContent) {
+if (!empty($extraContent)) {
     echo $extraContent;
 }
 ?>
 </html>
-
-    <?php
+<?php
 }
 
 
-function draw_navigation($type, $menu_title='')
+function draw_navigation($type, $menu_title = '')
 {
     global $self;
 
@@ -862,13 +853,15 @@ function resize_image($img, $width = 1, $height = 1)
  */
 function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $border = 0, $styles = '')
 {
+	global $basedir, $main_include_path;
+	
     if (!$dir) {
-        $dir = BASEDIR . '/gifs';
+        $dir = "{$basedir}/gifs";
     }
     if (is_string($dir) && $dir{0} != '/') {
-        $dir = BASEDIR . "/$dir";
+        $dir = "{$basedir}/{$dir}";
     }
-    if ($size = @getimagesize("{$_SERVER['DOCUMENT_ROOT']}$dir/$file")) {
+    if ($size = @getimagesize("{$main_include_path}/{$dir}/{$file}")) {
         $image = sprintf('<img src="%s/%s" style="border: %d;%s%s" %s alt="%s" %s />',
             $dir,
             $file,
@@ -913,108 +906,10 @@ function delim($color = false, $delimiter = '&nbsp;|&nbsp;')
 }
 
 /**
- * Prints a horizontal delimiter
- */
-function hdelim()
-{
-    return '<hr />';
-}
-
-/**
- * Prints a tabbed navigation bar based on the parameter $items
- */
-function print_tabbed_navigation($items)
-{
-    global $self;
-
-    $page = basename($self);
-
-    echo '<div id="nav">' . "\n";
-    echo "  <ul>\n";
-    foreach ($items as $title => $item) {
-        echo "    <li>";
-        echo '<a href="' . $item['url']
-             . '" title="' . $item['title'] . '"';
-        if ($page == $item['url']) {
-            echo ' class="active"';
-        }
-        echo '>' . $title . "</a>";
-        echo "</li>\n";
-    }
-    echo "  </ul>\n";
-    echo "</div>\n";
-}
-
-/**
- * Prints a tabbed navigation bar for the various package pages.
- *
- * @param int    $pacid   the id number of the package being viewed
- * @param string $name    the name of the package being viewed
- * @param string $action  the indicator of the current page view
- *
- * @return void
- */
-function print_package_navigation($pacid, $name, $action)
-{
-    global $auth_user;
-
-    $nav_items = array('Main'          => array('url'   => '',
-                                                'title' => ''),
-                       'Download'      => array('url'   => 'download',
-                                                'title' => 'Download releases of this package'),
-                       'Documentation' => array('url'   => 'docs',
-                                                'title' => 'Read the available documentation'),
-                       'Bugs'          => array('url'   => 'bugs',
-                                                'title' => 'View/Report Bugs'),
-
-                       'Trackbacks'    => array('url'   => 'trackbacks',
-                                                'title' => 'Show Related Sites'),
-/*
-		       'Wiki'          => array('url'   => 'wiki',
-		                                'title' => 'View wiki area')*/
-                       );
-
-    if (isset($auth_user) && is_object($auth_user) &&
-        (user::maintains($auth_user->handle, $pacid, 'lead') ||
-         user::isAdmin($auth_user->handle) ||
-         user::isQA($auth_user->handle))
-       ) {
-        $nav_items['Edit']             = array('url'   => '/package-edit.php?id='.$pacid,
-                                               'title' => 'Edit this package');
-        $nav_items['Edit Maintainers'] = array('url'   => '/admin/package-maintainers.php?pid='.$pacid,
-                                               'title' => 'Edit the maintainers of this package');
-    }
-    if (isset($auth_user) && is_object($auth_user) &&
-        ($auth_user->isAdmin() || $auth_user->isQA())
-       ) {
-        $nav_items['Delete']           = array('url'   => '/package-delete.php?id='.$pacid,
-                                               'title' => 'Delete this package');
-    }
-
-    print '<div id="nav">';
-
-    foreach ($nav_items as $title => $item) {
-        if (!empty($item['url']) && $item['url']{0} == '/') {
-            $url = $item['url'];
-        } else {
-            $url = '/package/' . htmlspecialchars($name) . '/' . $item['url'];
-        }
-        print '<a href="' . $url . '"'
-            . ' title="' . $item['title'] . '" '
-            . ($action == $item['url'] ? ' class="active" ' : '')
-            . '>'
-            . $title
-            . '</a> ';
-    }
-
-    print '</div>';
-}
-
-/**
  * Turns bug/feature request numbers into hyperlinks
  *
- * If the bug number is prefixed by the word "PHP," the link will
- * go to bugs.php.net.  Otherwise, the bug is considered a PEAR bug.
+ * If the bug number is prefixed by the word "PHP, PEAR, PECL" the link will
+ * go to correct bugs site.  Otherwise, the bug is considered "local" bug.
  *
  * @param string $text  the text to check for bug numbers
  *
@@ -1022,9 +917,22 @@ function print_package_navigation($pacid, $name, $action)
  */
 function make_ticket_links($text)
 {
+	global $site_url, $basedir, $site_data;
+	
+	// PHP
+	$url = "{$site_data['php']['url']}{$site_data['php']['basedir']}";
     $text = preg_replace('/(?<=php)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
-                         ' <a href="http://bugs.php.net/\\2">\\1 \\2</a>', $text);
+                         " <a href='http://{$url}/\\2'>\\1 \\2</a>", $text);
+	// PEAR
+	$url = "{$site_data['pear']['url']}{$site_data['pear']['basedir']}";
+    $text = preg_replace('/(?<=pear)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
+                         " <a href='http://{$url}/\\2'>\\1 \\2</a>", $text);
+	// PECL
+	$url = "{$site_data['pecl']['url']}{$site_data['pecl']['basedir']}";
+    $text = preg_replace('/(?<=pecl)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
+                         " <a href='http://{$url}/\\2'>\\1 \\2</a>", $text);
+	// Local
     $text = preg_replace('/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
-                         '<a href="/bugs/\\2">\\0</a>', $text);
+                         "<a href='http://{$site_url}{$basedir}/\\2'>\\0</a>", $text);
     return $text;
 }

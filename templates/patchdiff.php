@@ -1,8 +1,8 @@
 <?php
 
-response_header('Patch :: ' . clean($package) . " :: Bug #{$bug_id}"); ?>
+response_header('Patch :: ' . htmlspecialchars($package) . " :: Bug #{$bug_id}"); ?>
 
-<h1>Patch version <?php echo format_date($revision) ?> for <?php echo clean($package) ?> Bug #<?php echo $bug_id; ?></h1>
+<h1>Patch version <?php echo format_date($revision) ?> for <?php echo htmlspecialchars($package) ?> Bug #<?php echo $bug_id; ?></h1>
 <a href="bug.php?id=<?php echo $bug_id; ?>">Return to Bug #<?php echo $bug_id; ?></a> 
 | <a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&patchname=<?php echo urlencode($patchname)
     ?>&revision=<?php echo urlencode($revision) ?>&download=1">Download this patch</a><br />
