@@ -70,6 +70,7 @@ if (!defined('PEAR_CHANNELNAME'))
 // CONFIG END
 
 // DO NOT EDIT ANYTHING BELOW THIS LINE, edit $site_data above instead!
+$logged_in = false;
 $siteBig = strtoupper($site);
 $site_url = $site_data[$site]['url'];
 $bugEmail = $site_data[$site]['email'];

@@ -48,8 +48,8 @@ td.head-menu {
 td.head-search {
     color: #FFFFFF;
     background-color: #9999cc;
-    border-top: 1px solid #003300;
-    border-bottom: 1px solid #003300;
+    border-top: 1px solid #000066;
+    border-bottom: 1px solid #000066;
     padding-right: 0.5em;
     text-align: right;
 }
@@ -134,8 +134,8 @@ li.side_page {
 td.foot-bar {
     color: #000000;
     background-color: #5b69a6;
-    border-top: 1px solid #003300;
-    border-bottom: 1px solid #003300;
+    border-top: 1px solid #000066;
+    border-bottom: 1px solid #000066;
     text-align: right;
     vertical-align: bottom;
     padding-right: 0.3em;
@@ -313,9 +313,9 @@ div.explain {
 }
 
 div.success {
-    border: 1px dashed #006600;
+    border: 1px dashed #000066;
     background-color: #CCFF99;
-    color: #006600;
+    color: #000066;
 }
 
 div.errors ul,
@@ -330,15 +330,15 @@ div.success ul {
 /* ========= Other ========= */
 
 a:link {
-    color: #006600;
+    color: #000066;
 }
 
 a:visited {
-    color: #030;
+    color: #003;
 }
 
 a:hover {
-    color: #003300;
+    color: #000033;
 }
 
 th.headrow {
@@ -394,27 +394,27 @@ code, pre, tt {
 h1 {
     font-size: 140%;
     font-weight: bold;
-    color: #006600;
+    color: #000066;
     margin-top: 0em;
 }
 
 h2 {
     font-size: 125%;
     font-weight: bold;
-    color: #006600;
+    color: #000066;
     border-bottom: 1px solid #000;
 }
 
 h3 {
     font-size: 110%;
     font-weight: bold;
-    color: #006600;
+    color: #000066;
 }
 
 h4 {
     font-size: 100%;
     font-weight: bold;
-    color: #006600;
+    color: #000066;
 }
 
 small {

@@ -337,12 +337,6 @@ $order_options = array(
 );
 $bugdb = Bug_DataObject::bugDb('bugdb');
 $savant = Bug_DataObject::getSavant();
-/*
-* need to move this to DB eventually...
-*/
-$mysql4 = function_exists('mysqli_connect') ||
-    version_compare(mysql_get_server_info(), '4.0.0', 'ge');
-
 $bugdb->selectAdd('SQL_CALC_FOUND_ROWS');
 $bugdb->selectAdd('TO_DAYS(NOW())-TO_DAYS(bugb.ts2) AS unchanged');
 $bugdb->package_name = $_GET['package'];

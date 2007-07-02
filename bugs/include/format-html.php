@@ -54,7 +54,7 @@ function extra_styles($new = null)
  */
 function response_header($title, $extraHeaders = '')
 {
-    global $_header_done, $SIDEBAR_DATA, $self, $auth_user, $site, $siteBig;
+    global $_header_done, $SIDEBAR_DATA, $self, $auth_user, $logged_in, $site, $siteBig, $basedir;
 
     $extra_styles = extra_styles();
 
@@ -72,11 +72,10 @@ function response_header($title, $extraHeaders = '')
         $SIDEBAR_DATA .= draw_navigation('docu_menu', 'Documentation:');
         $SIDEBAR_DATA .= draw_navigation('downloads_menu', 'Downloads:');
         $SIDEBAR_DATA .= draw_navigation('proposal_menu', 'Package Proposals:');
-        include_once 'auth.php';
-        init_auth_user();
-        if (!empty($auth_user)) {
+
+        if ($logged_in) {
             if (!empty($auth_user->registered)) {
-                if (auth_check('pear.dev')) {
+                if ($logged_in == 'developer') {
                     global $developer_menu;
                     $SIDEBAR_DATA .= draw_navigation('developer_menu', 'Developers:');
                 }
@@ -122,12 +121,29 @@ echo $extraHeaders;
 <table id="head-menu" class="head" cellspacing="0" cellpadding="0">
  <tr>
   <td class="head-logo">
-   <?php print_link('/', make_image($site.'-logo.gif', $siteBig, false, false, false, false, 'margin: 5px;') ); ?><br />
+   <?php print_link("{$basedir}/", make_image($site.'-logo.gif', $siteBig, false, false, false, false, 'margin: 5px;') ); ?><br />
   </td>
   <td class="head-menu">
-   <?php
 
-    if (!$auth_user) {
+<?php 
+
+if ($site == 'php') {
+        print_link('http://www.php.net/', 'php.net', false, 'class="menuWhite"');
+        echo delim();
+        print_link('http://www.php.net/support.php', 'support', false, 'class="menuWhite"');
+        echo delim();
+        print_link('http://www.php.net/docs.php', 'documentation', false, 'class="menuWhite"');
+        echo delim();
+        print_link('report.php', 'report a bug', false, 'class="menuWhite"');
+        echo delim();
+        print_link('search.php', 'advanced search', false, 'class="menuWhite"');
+        echo delim();
+        print_link('search-howto.php', 'search howto', false, 'class="menuWhite"');
+        echo delim();
+        print_link('stats.php', 'statistics', false, 'class="menuWhite"');
+} else { 
+
+    if (!$logged_in) {
         print_link('/account-request.php', 'Register', false,
                    'class="menuBlack"');
         echo delim();
@@ -167,17 +183,33 @@ echo $extraHeaders;
     print_link('/support/', 'Support', false, 'class="menuBlack"');
     echo delim();
     print_link('/bugs/', 'Bugs', false, 'class="menuBlack"');
-    ?>
+} 
 
+?>
   </td>
  </tr>
 
+<?php if ($site == 'php') { ?>
+  <tr>
+   <td class="head-search" colspan="2">
+    <form method="get" action="search.php">
+    <p class="head-search">
+      <input type="hidden" name="cmd" value="display" />
+      <small>go to bug id or search bugs for</small>
+      <input class="small" type="text" name="search_for" value="" size="30" />
+      <input type="image" src="gifs/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
+     </p>
+    </form>
+   </td>
+  </tr>
+<?php } else { ?>
  <tr>
   <td class="head-search" colspan="2">
    <form method="get" action="/search.php">
-    <p class="head-search"><span class="accesskey">S</span>earch for
-    <input class="small" type="text" name="q" value="" size="20" accesskey="s" />
-    in the
+    <p class="head-search">
+     <span class="accesskey">S</span>earch for
+     <input class="small" type="text" name="q" value="" size="20" accesskey="s" />
+     in the
     <select name="in" class="small">
         <option value="packages">Packages</option>
         <option value="site">This site (using Yahoo!)</option>
@@ -191,6 +223,7 @@ echo $extraHeaders;
    </form>
   </td>
  </tr>
+<?php } ?>
 </table>
 
 <!-- END HEADER -->
@@ -262,24 +295,14 @@ print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
  <tr>
   <td class="foot-copy">
    <small>
-    <?php print_link('/copyright.php', 'Copyright &copy; 2001-' . date('Y') . ' The PHP Group'); ?><br />
+   	<?php print_link('http://www.php.net/', make_image('php-logo-small.gif', 'PHP', 'left', false, false, false, 'padding-right: 5px;') ); ?>
+    <?php print_link("http://www.php.net/copyright.php", 'Copyright &copy; 2001-' . date('Y') . ' The PHP Group'); ?><br />
     All rights reserved.
    </small>
   </td>
   <td class="foot-source">
    <small>
     Last updated: <?php echo $LAST_UPDATED; ?><br />
-    Bandwidth and hardware provided by:
-<?php
-     if ($site_url == 'pear.php.net') {
-         print_link('http://www.pair.com/', 'pair Networks');
-     } elseif ($site_url == PEAR_CHANNELNAME) {
-         print PEAR_CHANNELNAME;
-     } else {
-         print '<i>This is an unofficial mirror!</i>';
-     }
-?>
-
    </small>
   </td>
  </tr>

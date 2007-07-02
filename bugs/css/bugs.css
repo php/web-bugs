@@ -140,16 +140,16 @@ form#asearch table#primary {
     text-align: center;
 }
 .bug_head {
-    background-color: #339900;
-    color: #FFFFFF;
+    background-color: #aabbcc;
+    color: #000000;
     font-size: 80%;
     font-weight: bold;
     text-align: right;
     padding: 0em .2em .2em .2em;
 }
 .bug_header {
-    background-color: #339900;
-    color: #FFFFFF;
+    background-color: #aabbcc;
+    color: #000000;
     font-size: 80%;
     font-weight: bold;
     text-align: center;
@@ -157,7 +157,7 @@ form#asearch table#primary {
 }
 
 a.bug_stats {
-    color: #FFFFFF;
+    color: #000000;
 }
 a.bug_stats_choosen {
     color: #FFFF00;

@@ -27,17 +27,11 @@ require_once './include/prepend.inc';
 $search_for_id = (isset($_GET['search_for'])) ? (int) $_GET['search_for'] : 0;
 if ($search_for_id)
 {
-    if ($auth_user) {
-        $x = '&edit=1';
-    } else {
-        if (isset($_COOKIE['MAGIC_COOKIE'])) {
-            $x = '&edit=2';
-        } else {
-            $x = '';
-        }
-    }
-    localRedirect("bug.php?id={$search_for_id}{$x}");
+    localRedirect("bug.php?id={$search_for_id}");
 }
+
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
 $newrequest = $_REQUEST;
 if (isset($newrequest['PEAR_USER'])) {
@@ -102,36 +96,19 @@ $package_nname = (isset($_GET['package_nname']) && is_array($_GET['package_nname
     
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 {
-/*
- * need to move this to DB eventually...
- */
-    $mysql4 = false;
-    if ($dbh->phptype == 'mysql') {
-        $mysql4 = version_compare(mysql_get_server_info(), '4.0.0', 'ge');
-    } else {
-        $mysql4 = version_compare(mysqli_get_server_version($dbh->connection), '4.0.0', 'ge');
-
-    }
-
-    if ($mysql4) {
-        $query = 'SELECT SQL_CALC_FOUND_ROWS';
-    } else {
-        $query = 'SELECT';
-    }
-
-    $query .= ' bugdb.*, TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) AS unchanged
-                FROM bugdb';
+    $query = '
+    	SELECT SQL_CALC_FOUND_ROWS bugdb.*, TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) AS unchanged
+        FROM bugdb
+	';
 
     if (($site != '' && $site != 'php') || $maintain != '' || $handle != '') {
-        $query .= " LEFT JOIN packages ON packages.name = bugdb.package_name";
+        $query .= '
+        	LEFT JOIN packages ON packages.name = bugdb.package_name
+		';
         if ($maintain != '' || $handle != '') {
-            $query .= ' LEFT JOIN maintains ON packages.id = maintains.package
-                        AND maintains.handle = ';
-            if ($maintain != '') {
-                $query .= $dbh->quoteSmart($maintain);
-            } else {
-                $query .= $dbh->quoteSmart($handle);
-            }
+            $query .= '
+            	LEFT JOIN maintains ON packages.id = maintains.package
+                	AND maintains.handle = '. ($maintain != '') ? $dbh->quoteSmart($maintain) : $dbh->quoteSmart($handle);
         }
     }
 
@@ -144,8 +121,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                            . join("', '", escapeSQL($package_name))
                            . "')";
         } else {
-            $where_clause .= ' = '
-                               . $dbh->quoteSmart($package_name[0]);
+            $where_clause .= ' = ' . $dbh->quoteSmart($package_name[0]);
         }
     }
 
@@ -317,12 +293,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         $res = $dbh->query($query);
         $rows = $res->numRows();
 
-        if ($mysql4) {
-            $total_rows =& $dbh->getOne('SELECT FOUND_ROWS()');
-        } else {
-            /* lame mysql 3 compatible attempt to allow browsing the search */
-            $total_rows = $rows < 10 ? $rows : $begin + $rows + 10;
-        }
+        $total_rows =& $dbh->getOne('SELECT FOUND_ROWS()');
 
         if (!$rows) {
             show_bugs_menu(@$package_name[0], $status);
@@ -500,9 +471,9 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">Return bugs <b>assigned</b> to</td>
   <td><input type="text" name="assign" value="<?php echo htmlspecialchars($assign);?>" />
 <?php
-    if ($auth_user) {
-        $u = htmlspecialchars($_REQUEST['PEAR_USER']);
-        print "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\" />";
+    if (!empty($auth_user->handle)) {
+        $u = htmlspecialchars($auth_user->handle);
+        echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\" />";
     }
 ?>
   </td>
@@ -512,9 +483,9 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td nowrap="nowrap">Return only bugs in packages <b>maintained</b> by</td>
   <td><input type="text" name="maintain" value="<?php echo htmlspecialchars($maintain);?>" />
 <?php
-    if ($auth_user) {
-        $u = htmlspecialchars($_REQUEST['PEAR_USER']);
-        print "<input type=\"button\" value=\"set to $u\" onclick=\"form.maintain.value='$u'\" />";
+    if (!empty($auth_user->handle)) {
+        $u = htmlspecialchars($auth_user->handle);
+        echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.maintain.value='$u'\" />";
     }
 ?>
   </td>
@@ -524,9 +495,9 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">Return bugs with author email/handle</td>
   <td><input accesskey="m" type="text" name="author_email" value="<?php echo htmlspecialchars($author_email); ?>" />
 <?php
-    if ($auth_user) {
-        $u = htmlspecialchars($_REQUEST['PEAR_USER']);
-        print "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u'\" />";
+    if (!empty($auth_user->handle)) {
+        $u = htmlspecialchars($auth_user->handle);
+        echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u'\" />";
     }
 ?>
   </td>

@@ -74,6 +74,90 @@ $state_types =  array (
  * DEFINE FUNCTIONS ============================
  */
 
+/** 
+ * Authentication
+ */
+function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
+{
+	global $auth_user, $site;
+
+	// Default values
+	$user = '';
+	$pw   = '';
+	$logged_in = false;
+	$is_trusted_developer = false;
+
+	if ($site != 'php')	{
+		include_once 'auth.php';
+		init_auth_user();
+	}
+
+	// Set username and password
+	if (!empty($_POST['pw'])) {
+		if (empty($_POST['user'])) {
+			$user = '';
+		} else {
+			$user = htmlspecialchars($_POST['user']);
+		}
+		$pw = $_POST['pw'];
+
+		// Remember password / user next time 
+		if (isset($_POST['save'])) { # non-developers don't have $user set
+			setcookie('MAGIC_COOKIE', base64_encode("{$user}:{$pw}"), time() + 3600 * 24 * 12, '/','.php.net');
+		}
+	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
+		$user = $auth_user->handle;  
+		$pw   = $auth_user->password;
+	} elseif (isset($_COOKIE['MAGIC_COOKIE'])) {
+		@list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']));
+		if ($pw === null) {
+			$pw = '';
+		}   
+	}
+
+	// Authentication and user level check
+	// User levels are: reader (0), commenter/patcher/etc. (edit = 3), submitter (edit = 2), developer (edit = 1) 
+	switch ($site)
+	{
+		case 'php':
+			// Only used for bugs.php.net
+			require_once 'cvs-auth.inc';
+			if ($user != '' && $pw != '' && verify_cvs_password($user, $pw)) {
+				$logged_in = 'developer';  
+				$auth_user->handle = $user;
+				$auth_user->email  = "{$user}@php.net";
+				$auth_user->name   = $user;
+			} else {
+				$auth_user->handle = '';
+				$auth_user->email  = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
+				$auth_user->name   = '';
+			}
+			// Other authentication is handled per bug report!
+			break;
+
+		case 'pear':
+			if (isset($auth_user) && is_object($auth_user) && $auth_user->registered) {
+				if (auth_check('pear.dev') || auth_check('pear.bug')) {
+					$logged_in = 'developer';
+				} else {
+					$logged_in = 'submitter';
+				}
+			} else {
+				$auth_user->handle = '';
+				$auth_user->email  = '';
+				$auth_user->name   = '';
+				$auth_user->registered = false;
+			}
+			break;
+	}
+
+	// Check if developer is trusted
+	if ($logged_in == 'developer') {
+		require_once 'trusted-devs.inc';
+		$is_trusted_developer = in_array($user, $trusted_developers);
+	}
+}
+
 /**
  * Fetches pseudo packages from database
  *
@@ -942,6 +1026,10 @@ function incoming_details_are_valid($in, $initial = 0)
     global $site, $bug, $dbh, $bug_types;
 
     $errors = array();
+	if (!is_array($in)) {
+		$errors[] = 'Invalid data submitted!';
+		return $errors;
+	}
     if ($initial || (!empty($in['email']) && $bug['email'] != $in['email'])) {
         if (!is_valid_email($in['email'])) {
             $errors[] = 'Please provide a valid email address.';
@@ -1282,3 +1370,4 @@ function get_resolve_reasons ($project = false)
 
 	return $dbh->getAll("SELECT * FROM bugdb_resolves $where");
 }
+

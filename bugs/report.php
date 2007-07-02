@@ -40,28 +40,27 @@ $errors              = array();
 $ok_to_submit_report = false;
 $pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+
 // captcha is not necessary if the user is logged in
-if ($site != 'php' && isset($auth_user) && $auth_user->registered) {
-    if (!auth_check('pear.dev') && auth_check('pear.voter') && !auth_check('pear.bug')) {
-        // auto-grant bug tracker karma if it isn't present
-        require_once 'Damblan/Karma.php';
-        $karma = new Damblan_Karma($dbh);
-        $karma->grant($auth_user->user, 'pear.bug');
-    }
-    unset($_SESSION['answer']);
-    if (isset($_POST['in'])) {
-        $_POST['in']['email'] = $auth_user->email;
-    }
+if ($logged_in) {
+	unset($_SESSION['answer']);
+} else {
+	/**
+	 * Numeral Captcha Class
+	 */
+	require_once 'Text/CAPTCHA/Numeral.php';
+
+	/**
+	 * Instantiate the numeral captcha object.
+	 */
+	$numeralCaptcha = new Text_CAPTCHA_Numeral();
 }
+
 
 if (isset($_POST['in'])) {
     $errors = incoming_details_are_valid($_POST['in'], 1);
-
-	if ($site == 'php') {
-		$auth_user->email  = $_POST['in']['email'];
-		$auth_user->handle = '';
-		$auth_user->name = '';
-	}
 
     /**
      * Check if session answer is set, then compare
@@ -75,9 +74,8 @@ if (isset($_POST['in'])) {
     }
 
     // try to verify the user
-    if (isset($auth_user)) {
-        $_POST['in']['handle'] = $auth_user->handle;
-    }
+	$_POST['in']['handle'] = $auth_user->handle;
+	$_POST['in']['email'] = $auth_user->email;
 
     if (!$errors) {
 
@@ -113,14 +111,14 @@ if (isset($_POST['in'])) {
             $res =& $dbh->query($query);
 
             if ($res->numRows() == 0) {
-                $ok_to_submit_report = 1;
+                $ok_to_submit_report = true;
             } else {
                 response_header("Report - Confirm");
                 if (count($_FILES)) {
                     echo '<h1>WARNING: YOU MUST RE-UPLOAD YOUR PATCH, OR IT WILL BE IGNORED</h1>';
 
                 }
-                ?>
+?>
 <p>
  Are you sure that you searched before you submitted your bug report? We
  found the following bugs that seem to be similar to yours; please check
@@ -141,13 +139,18 @@ if (isset($_POST['in'])) {
   <th>Description</th>
   <th>Possible Solution</th>
  </tr>
-                <?php
+
+<?php
 
                 while ($row =& $res->fetchRow(DB_FETCHMODE_ASSOC)) {
 
-                    $resolution =& $dbh->getOne('SELECT comment FROM' .
-                            ' bugdb_comments where bug = ' .
-                            $row['id'] . ' ORDER BY id DESC LIMIT 1');
+                    $resolution =& $dbh->getOne("
+						SELECT comment 
+						FROM bugdb_comments
+						WHERE bug = {$row['id']}
+						ORDER BY id DESC
+						LIMIT 1
+					");
 
                     if ($resolution) {
                         $resolution = htmlspecialchars($resolution);
@@ -155,21 +158,20 @@ if (isset($_POST['in'])) {
 
                     $summary = $row['ldesc'];
                     if (strlen($summary) > 256) {
-                        $summary = htmlspecialchars(substr(trim($summary),
-                                                    0, 256)) . ' ...';
+                        $summary = htmlspecialchars(substr(trim($summary), 0, 256)) . ' ...';
                     } else {
                         $summary = htmlspecialchars($summary);
                     }
 
-                    $bug_url = "bug.php?id=$row[id]&amp;edit=2";
+                    $bug_url = "bug.php?id={$row['id']}&amp;edit=2";
 
                     echo " <tr>\n";
-                    echo '  <td colspan="2"><strong>' . $row['package_name'] . '</strong> : <a href="' . $bug_url . '">Bug #';
+                    echo "  <td colspan='2'><strong>{$row['package_name']}</strong> : <a href='{$bug_url}'>Bug #";
                     echo $row['id'] . ': ' . htmlspecialchars($row['sdesc']);
                     echo "</a></td>\n";
                     echo " </tr>\n";
                     echo " <tr>\n";
-                    echo '  <td>' . $summary . "</td>\n";
+                    echo "  <td>{$summary}</td>\n";
                     echo '  <td>' . nl2br($resolution) . "</td>\n";
                     echo " </tr>\n";
 
@@ -188,7 +190,7 @@ if (isset($_POST['in'])) {
 
         do {
             if ($ok_to_submit_report) {
-                if (!isset($auth_user)) {
+                if ($site != 'php' && !$logged_in) {
                     $registereduser = 0;
                     // user doesn't exist yet
                     require_once 'include/classes/bug_accountrequest.php';
@@ -467,7 +469,7 @@ echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $em
  <tr>
   <th class="form-label_left">
 
-<?php if (isset($auth_user)) { ?>
+<?php if ($logged_in) { ?>
    Your handle:
   </th>
   <td class="form-input">
@@ -563,7 +565,7 @@ DATA;
    </select>
   </td>
  </tr>
-<?php if (auth_check('pear.dev')) {
+<?php if ($logged_in == 'developer') {
     $content = '';
     Bug_DataObject::init();
     $db = Bug_DataObject::bugDB('bugdb_roadmap');
@@ -632,9 +634,7 @@ DATA;
   </td>
  </tr>
 
-<?php if (!isset($auth_user)) { 
-	require_once 'Text/CAPTCHA/Numeral.php';
-	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+<?php if (!$logged_in) { 
 	$captcha_operation = $numeralCaptcha->getOperation();
 	$_SESSION['answer'] = $numeralCaptcha->getAnswer()
 ?>

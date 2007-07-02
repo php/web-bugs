@@ -98,69 +98,19 @@ if (empty($_REQUEST['edit']) || !((int) $_REQUEST['edit'])) {
     $edit = (int) $_REQUEST['edit'];
 }
 
-// Set username and password
-if (!empty($_POST['pw'])) {
-    if (empty($_POST['user'])) {
-        $user = '';
-    } else {
-        $user = htmlspecialchars($_POST['user']);
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+
+// Delete comment
+if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
+	$delete_comment = (int) $_GET['delete_comment'];
+    $addon = '';
+
+    if ($delete_comment) {
+        delete_comment($bug_id, $delete_comment);
+        $addon = '&thanks=1';
     }
-    $pw = $_POST['pw'];
-
-	// Remember password / user next time 
-	if (isset($_POST['save'])) { # non-developers don't have $user set
-		setcookie('MAGIC_COOKIE', base64_encode("{$user}:{$pw}"), time() + 3600 * 24 * 12, '/','.php.net');
-	}
-} elseif (isset($auth_user) && $auth_user && $auth_user->handle) {
-    $user = $auth_user->handle;
-    $pw   = $auth_user->password;
-} elseif (isset($_COOKIE['MAGIC_COOKIE'])) {
-    @list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']));
-    if ($pw === null) {
-        $pw = '';
-    }
-} else {
-    $user = '';
-    $pw   = '';
-}
-
-// Authentication and user level check
-// User levels are: reader (0), commenter/patcher/etc. (edit = 3), submitter (edit = 2), developer (edit = 1) 
-$logged_in = '';
-switch ($site)
-{
-	case 'php':
-		// Only used for bugs.php.net
-		require_once './include/cvs-auth.inc';
-        if ($user != '' && $pw != '' && verify_cvs_password($user, $pw)) {
-        	$logged_in = 'developer';
-            $auth_user->handle = $user;
-            $auth_user->email  = "{$user}@php.net";
-			$auth_user->name   = $user;
-        } else {
-            $auth_user->handle = '';
-            $auth_user->email  = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
-	        $auth_user->name   = '';
-		}
-        // Other authentication is handled per bug report!
-		break;
-
-	case 'pear':
-		if (isset($auth_user) && $auth_user && $auth_user->registered) {
-			if (auth_check('pear.dev') || auth_check('pear.bug')) {
-				$logged_in = 'developer';
-			} else {
-				$logged_in = 'submitter';
-			}
-		}
-		break;
-}
-
-// Check if developer is trusted
-$is_trusted_developer = false;
-if ($logged_in == 'developer') {
-	require_once './include/trusted-devs.inc';
-	$is_trusted_developer = in_array($user, $trusted_developers);
+    localRedirect("bug.php?id=$bug_id&edit=1$addon");
 }
 
 // captcha is not necessary if the user is logged in
@@ -176,13 +126,6 @@ if ($logged_in) {
 	 * Instantiate the numeral captcha object.
 	 */
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
-}
-
-// Delete comment
-if ($is_trusted_developer && isset($_GET['delete_comment'])) {
-    $delete_comment = (int) $_GET['delete_comment'];
-} else {
-    $delete_comment = false;
 }
 
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
@@ -263,20 +206,9 @@ DATA;
     exit;
 }
 
-$previous = $current = array();
-// Delete comment
-if ($edit == 1 && $delete_comment !== false) {
-    $addon = '';
-
-    if ($is_trusted_developer) {
-        delete_comment($bug_id, $delete_comment);
-        $addon = '&thanks=1';
-    }
-    localRedirect("bug.php?id=$bug_id&edit=1$addon");
-}
-
 // handle any updates, displaying errors if there were any
 $errors = array();
+$previous = $current = array();
 
 /**
  * Init BugDataObject class
@@ -297,10 +229,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         }
     }
 
-    // try to verify the user
-    if (isset($auth_user) && $auth_user) {
-        $_POST['in']['handle'] = $auth_user->handle;
-    }
+    // Defaults to '' if not logged in
+    $_POST['in']['handle'] = $auth_user->handle;
 
     $ncomment = trim($_POST['ncomment']);
     if (!$ncomment) {
@@ -309,7 +239,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
     if (!$errors) {
         do {
-            if ($site != 'php' && (!isset($auth_user) || !$auth_user)) {
+            if ($site != 'php' && !$logged_in) {
                 // user doesn't exist yet
                 require_once 'include/classes/bug_accountrequest.php';
                 $buggie = new Bug_Accountrequest;
@@ -401,22 +331,23 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     /* check that they aren't changing the mail to a php.net address
        (gosh, somebody might be fooled!) */
     if (preg_match('/^(.+)@php\.net/i', $_POST['in']['email'], $m)) {
-        if ($user != $m[1] || !verify_password($user, $pass)) {
+        if ($user != $m[1] || $logged_in != 'developer') {
             $errors[] = 'You have to be logged in as a developer to use your php.net email address.';
             $errors[] = 'Tip: log in via another browser window then resubmit the form in this window.';
         }
     }
 
     if (!empty($_POST['in']['email']) &&
-        $bug['email'] != $_POST['in']['email'])
-    {
+    	$bug['email'] != $_POST['in']['email']
+	) {
         $from = $_POST['in']['email'];
     } else {
         $from = $bug['email'];
     }
 
     if (!empty($_POST['in']['package_name']) &&
-        $bug['package_name'] != $_POST['in']['package_name']) {
+    	$bug['package_name'] != $_POST['in']['package_name']
+	) {
         // reset package version if we change package name
         $_POST['in']['package_version'] = '';
     }
@@ -478,8 +409,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         strlen($ncomment) == 0)
     {
         $errors[] = "You must provide a comment when marking a bug 'Bogus'";
-    } elseif (isset($_POST['in']) && is_array($_POST['in']) &&
-          !empty($_POST['in']['resolve'])) {
+    } elseif (isset($_POST['in']) && is_array($_POST['in']) && !empty($_POST['in']['resolve'])) {
         if (!$trytoforce && isset($RESOLVE_REASONS[$_POST['in']['resolve']]) &&
             $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == $bug['status'])
         {
@@ -697,10 +627,10 @@ if ($bug['modified']) {
    <th class="details">From:</th>
    <td>
    <?php
-    if ($bug['bughandle']) {
-        echo '<a href="/user/' . $bug['bughandle'] . '">' . $bug['bughandle'] . '</a>';
-    } elseif ($bug['handle'] && $bug['showemail'] != '0') {
-        echo '<a href="/user/' . $bug['handle'] . '">' . $bug['handle'] . '</a>';
+    if (!empty($bug['bughandle'])) {
+        echo "<a href='/user/{$bug['bughandle']}'>{$bug['bughandle']}</a>";
+    } elseif (!empty($bug['handle']) && $bug['showemail'] != '0') {
+        echo "<a href='/user/{$bug['handle']}'>{$bug['handle']}</a>";
     } else {
         echo spam_protect(htmlspecialchars($bug['email']));
     }
@@ -759,29 +689,24 @@ if ($bug['modified']) {
         ?>
   <tr id="roadmap">
    <th class="details">Roadmaps: </th>
-
-   <td>
-   <?php
-    echo implode(', ', $assignedRoadmap);
-   ?>
-   </td>
+   <td><?php echo implode(', ', $assignedRoadmap); ?></td>
    <th>&nbsp;</th>
    <td>&nbsp;</td>
   </tr>
 
-<?php if ($bug['votes']) {?>
+<?php if ($bug['votes']) { ?>
   <tr id="votes">
    <th class="details">Votes:</th><td><?php echo $bug['votes'] ?></td>
    <th class="details">Avg. Score:</th><td><?php printf("%.1f &plusmn; %.1f", $bug['average'], $bug['deviation']) ?></td>
    <th class="details">Reproduced:</th><td><?php printf("%d of %d (%.1f%%)",$bug['reproduced'],$bug['tried'],$bug['tried']?($bug['reproduced']/$bug['tried'])*100:0) ?></td>
   </tr>
-<?php if ($bug['reproduced']) {?>
+<?php	if ($bug['reproduced']) { ?>
   <tr id="reproduced">
    <td colspan="2"></td>
    <th class="details">Same Version:</th><td><?php printf("%d (%.1f%%)",$bug['samever'],($bug['samever']/$bug['reproduced'])*100) ?></td>
    <th class="details">Same OS:</th><td><?php printf("%d (%.1f%%)",$bug['sameos'],($bug['sameos']/$bug['reproduced'])*100) ?></td>
   </tr>
-<?php } ?>
+<?php	} ?>
 <?php } ?>
 </table>
 </div>
@@ -869,7 +794,6 @@ if ($edit == 1 || $edit == 2) {
 			}
         } else {
 ?>
-
             <div class="explain">
 
 <?php		if ($site == 'php' && !isset($_POST['in']) || !is_array($_POST['in'])) { ?>
