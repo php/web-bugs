@@ -427,13 +427,23 @@ if ($site != 'php' && !package_exists($package)) {
 <p>
  If you aren't sure that what you're about to report is a bug, you should
  ask for help using one of the means for support
- <a href="/support/">listed here</a>.
+ <a href="<?php echo ($site == 'php') ? 'http://www.php.net/support.php' : '/support/'; ?>">listed here</a>.
 </p>
 
 <p>
  <strong>Failure to follow these instructions may result in your bug
  simply being marked as &quot;bogus.&quot;</strong>
 </p>
+
+<?php if ($site != 'php') { ?>
+<p>Report <img src="gifs/php_item.gif"><b>PHP</b> related bugs <a href="http://<?php echo $site_data['php']['url'], $site_data['php']['basedir'], '/'; ?>">here</a></p>
+<?php } ?>
+<?php if ($site != 'pear') { ?>
+<p>Report <img src="gifs/pear_item.gif"><b>PEAR</b> related bugs <a href="http://<?php echo $site_data['pear']['url'], $site_data['pear']['basedir'], '/'; ?>">here</a></p>
+<?php } ?>
+<?php if ($site != 'pecl') { ?>
+<p>Report <img src="gifs/pecl_item.gif"><b>PECL</b> related bugs <a href="http://<?php echo $site_data['pecl']['url'], $site_data['pecl']['basedir'], '/'; ?>">here</a></p>
+<?php } ?>
 
 <p>
  <strong>If you feel this bug concerns a security issue, eg a buffer
