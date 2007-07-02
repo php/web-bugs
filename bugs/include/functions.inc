@@ -1180,7 +1180,8 @@ function format_search_string($search, $boolean_search = false)
  * Print the bug navigation menu
  *
  * The package home page and report new bug links are only displayed
- * if the bug/search being looked at only covers a single package.
+ * if the bug/search being looked at only covers a single package
+ * and when the single package is not a pseudo package.
  *
  * @param string|array $pkgname  the names of the packages the user is
  *                               presently viewing bugs for
@@ -1196,14 +1197,14 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
     }
 
     $pkgname = (array) $pkgname;
-    $home    = true;
+    $pseudo = false;
 
     foreach ($pkgname as $key => $value) {
         if (!preg_match('/^[A-Za-z0-9_ ]+\z/', $value)) {
             return;
         }
         if (isset($pseudo_pkgs[$value])) {
-            $home = false;
+            $pseudo = true;
             $pkgname[$key] = htmlspecialchars(strtr($value, ' ', '+'));
         }
     }
@@ -1213,7 +1214,7 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
     echo '<table width="100%" border="0"><tr><td>' . "\n ";
 
     if (count($pkgname) == 1 && !$fulllink) {
-        if ($home) {
+        if (!$pseudo) {
             echo make_link('/package/' . $pkgname[0], 'Package home');
             echo delim();
         }
@@ -1223,8 +1224,10 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
 
     if (count($pkgname) == 1 && !$fulllink) {
         echo make_link("{$basedir}/search.php?package_name[]={$pkgname[0]}", 'New search');
-        echo delim();
-        echo make_link("{$basedir}/roadmap.php?package={$pkgname[0]}", 'Development Road Map');
+		if (!$pseudo) {
+	        echo delim();
+	        echo make_link("{$basedir}/roadmap.php?package={$pkgname[0]}", 'Development Road Map');
+		}
     } else {
         echo make_link("{$basedir}/search.php", 'New search');
     }
