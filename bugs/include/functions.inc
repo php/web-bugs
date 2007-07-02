@@ -152,9 +152,6 @@ function spam_protect($txt, $format = 'html')
 /**
  * Escape strings so they can be used as literals in queries
  *
- * If magic_quotes_gpc is on, the slashes are stripped out
- * then the escaping is done.
- *
  * @param string|array $in  the data to be sanitized.  If it's an array, each
  *                           element is sanitized.
  *
@@ -165,24 +162,15 @@ function spam_protect($txt, $format = 'html')
 function escapeSQL($in)
 {
     global $dbh;
+
     if (is_array($in)) {
         $out = array();
-        if (get_magic_quotes_gpc()) {
-            foreach ($in as $key => $value) {
-                $out[$key] = $dbh->escapeSimple(stripslashes($value));
-            }
-        } else {
-            foreach ($in as $key => $value) {
-                $out[$key] = $dbh->escapeSimple($value);
-            }
+        foreach ($in as $key => $value) {
+            $out[$key] = $dbh->escapeSimple($value);
         }
         return $out;
     } else {
-        if (get_magic_quotes_gpc()) {
-            return $dbh->escapeSimple(stripslashes($in));
-        } else {
-            return $dbh->escapeSimple($in);
-        }
+        return $dbh->escapeSimple($in);
     }
 }
 
