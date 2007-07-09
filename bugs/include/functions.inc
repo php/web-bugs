@@ -88,7 +88,6 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 	$is_trusted_developer = false;
 
 	if ($site != 'php')	{
-		include_once 'auth.php';
 		init_auth_user();
 	}
 

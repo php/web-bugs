@@ -31,13 +31,13 @@ td.content {
 /* ========= Header ========= */
 
 td.head-logo {
-    background-color: #339900;
+    background-color: #330099;
     width: 120px;
     text-align: left;
 }
 
 td.head-menu {
-    background-color: #339900;
+    background-color: #330099;
     height: 1px;
     padding-right: 0.5em;
     padding-bottom: 0.1em;
@@ -47,9 +47,9 @@ td.head-menu {
 
 td.head-search {
     color: #FFFFFF;
-    background-color: #006600;
-    border-top: 1px solid #003300;
-    border-bottom: 1px solid #003300;
+    background-color: #000066;
+    border-top: 1px solid #000033;
+    border-bottom: 1px solid #000033;
     padding-right: 0.5em;
     text-align: right;
 }
@@ -80,14 +80,14 @@ a:link.menuWhite,
 a:hover.menuWhite,
 a:visited.menuWhite {
     text-decoration: none;
-    color: #FFFFFF;
+    color: #000000;
 }
 
 a:link.menuBlack,
 a:hover.menuBlack,
 a:visited.menuBlack {
     text-decoration: none;
-    color: #000000;
+    color: #FFFFFF;
 }
 
 
@@ -133,7 +133,7 @@ li.side_page {
 
 td.foot-bar {
     color: #000000;
-    background-color: #339900;
+    background-color: #330099;
     border-top: 1px solid #003300;
     border-bottom: 1px solid #003300;
     text-align: right;
@@ -167,7 +167,7 @@ table.form-holder {
 caption.form-caption {
     font-weight: bold;
     color: #FFFFFF;
-    background-color: #339900;
+    background-color: #330099;
     padding: 0.3em;
     border-left: 1px solid #FFFFFF;
     border-right: 1px solid #FFFFFF;
@@ -181,7 +181,7 @@ th.form-label_left {
     vertical-align: top;
     font-weight: bold;
     color: #FFFFFF;
-    background-color: #339900;
+    background-color: #330099;
     width: 25%;
 }
 
@@ -192,7 +192,7 @@ th.form-label_top_center {
     text-align: center;
     font-weight: bold;
     color: #FFFFFF;
-    background-color: #339900;
+    background-color: #330099;
 }
 
 td.form-input {
@@ -313,9 +313,9 @@ div.explain {
 }
 
 div.success {
-    border: 1px dashed #006600;
+    border: 1px dashed #000066;
     background-color: #CCFF99;
-    color: #006600;
+    color: #000066;
 }
 
 div.errors ul,
@@ -330,15 +330,15 @@ div.success ul {
 /* ========= Other ========= */
 
 a:link {
-    color: #006600;
+    color: #000066;
 }
 
 a:visited {
-    color: #030;
+    color: #003;
 }
 
 a:hover {
-    color: #003300;
+    color: #000033;
 }
 
 th.headrow {
@@ -348,7 +348,7 @@ th.headrow {
 }
 
 th.others {
-    color: #006600;
+    color: #000066;
     text-align: left;
 }
 
@@ -394,27 +394,27 @@ code, pre, tt {
 h1 {
     font-size: 140%;
     font-weight: bold;
-    color: #006600;
+    color: #000066;
     margin-top: 0em;
 }
 
 h2 {
     font-size: 125%;
     font-weight: bold;
-    color: #006600;
+    color: #000066;
     border-bottom: 1px solid #000;
 }
 
 h3 {
     font-size: 110%;
     font-weight: bold;
-    color: #006600;
+    color: #000066;
 }
 
 h4 {
     font-size: 100%;
     font-weight: bold;
-    color: #006600;
+    color: #000066;
 }
 
 small {

@@ -30,8 +30,6 @@ if (empty($dbh))
     $dbh =& DB::connect(PEAR_DATABASE_DSN, $options);
 }
 
-$self = htmlspecialchars($_SERVER['PHP_SELF']);
-
 /**
  * Adds extra CSS files to be loaded
  *
@@ -71,8 +69,9 @@ function response_header($title, $extraHeaders = '')
         $SIDEBAR_DATA .= draw_navigation('main_menu', 'Main:');
         $SIDEBAR_DATA .= draw_navigation('docu_menu', 'Documentation:');
         $SIDEBAR_DATA .= draw_navigation('downloads_menu', 'Downloads:');
-        $SIDEBAR_DATA .= draw_navigation('proposal_menu', 'Package Proposals:');
-
+        if ($site == 'pear') {
+	        $SIDEBAR_DATA .= draw_navigation('proposal_menu', 'Package Proposals:');
+		}
         if ($logged_in) {
             if (!empty($auth_user->registered)) {
                 if ($logged_in == 'developer') {
@@ -84,7 +83,7 @@ function response_header($title, $extraHeaders = '')
                 global $admin_menu;
                 $SIDEBAR_DATA .= draw_navigation('admin_menu', 'Administrators:');
             }
-        } else {
+        } elseif ($site == 'pear') {
             $SIDEBAR_DATA .= draw_navigation('developer_menu_public', 'Developers:');
         }
     }
@@ -144,16 +143,12 @@ if ($site == 'php') {
 } else { 
 
     if (!$logged_in) {
-        print_link('/account-request.php', 'Register', false,
-                   'class="menuBlack"');
+        print_link('/account-request.php', 'Register', false, 'class="menuBlack"');
         echo delim();
         if ($_SERVER['QUERY_STRING'] && $_SERVER['QUERY_STRING'] != 'logout=1') {
-            print_link('/login.php?redirect=' . urlencode(
-                       "{$self}?{$_SERVER['QUERY_STRING']}"),
-                       'Login', false, 'class="menuBlack"');
+            print_link('/login.php?redirect=' . urlencode("{$self}?{$_SERVER['QUERY_STRING']}"), 'Login', false, 'class="menuBlack"');
         } else {
-            print_link('/login.php?redirect=' . $self,
-                       'Login', false, 'class="menuBlack"');
+            print_link('/login.php?redirect=' . $self, 'Login', false, 'class="menuBlack"');
         }
     } else {
         print '<small class="menuWhite">';
@@ -169,20 +164,24 @@ if ($site == 'php') {
         if (empty($_SERVER['QUERY_STRING'])) {
             print_link('?logout=1', 'Logout', false, 'class="menuBlack"');
         } else {
-            print_link('?logout=1&amp;'
-                            . htmlspecialchars($_SERVER['QUERY_STRING']),
-                       'Logout', false, 'class="menuBlack"');
+            print_link('?logout=1&amp;' . htmlspecialchars($_SERVER['QUERY_STRING']), 'Logout', false, 'class="menuBlack"');
         }
     }
 
     echo delim();
-    print_link('/manual/', 'Documentation', false, 'class="menuBlack"');
-    echo delim();
+    if ($site == 'pear') {
+	    print_link('/manual/', 'Documentation', false, 'class="menuBlack"');
+	    echo delim();
+	}
     print_link('/packages.php', 'Packages', false, 'class="menuBlack"');
     echo delim();
-    print_link('/support/', 'Support', false, 'class="menuBlack"');
+    if ($site == 'pear') {
+	    print_link('/support/', 'Support', false, 'class="menuBlack"');
+	} else {
+	    print_link('support.php', 'Support', false, 'class="menuBlack"');
+	}
     echo delim();
-    print_link('/bugs/', 'Bugs', false, 'class="menuBlack"');
+    print_link("{$basedir}/", 'Bugs', false, 'class="menuBlack"');
 } 
 
 ?>
@@ -213,10 +212,16 @@ if ($site == 'php') {
     <select name="in" class="small">
         <option value="packages">Packages</option>
         <option value="site">This site (using Yahoo!)</option>
+<?php if ($site == 'pear') { ?>
         <option value="users">Developers</option>
         <option value="pear-dev">Developer mailing list</option>
         <option value="pear-general">General mailing list</option>
         <option value="pear-cvs">CVS commits mailing list</option>
+<?php } else { ?>
+        <option value="developers">Developers</option>
+        <option value="pecl-dev">Developer mailing list</option>
+        <option value="pecl-cvs">CVS commits mailing list</option>
+<?php } ?>
     </select>
     <input type="image" src="gifs/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
     </p>
@@ -346,24 +351,30 @@ if (!empty($extraContent)) {
 
 function draw_navigation($type, $menu_title = '')
 {
-    global $self;
+    global $self, $site;
 
     switch ($type) {
         case 'main_menu':
             $data = array(
                 '/index.php'           => 'Home',
                 '/news/'               => 'News',
-                '/qa/'                 => 'Quality Assurance',
-                '/group/'              => 'The PEAR Group',
             );
+            if ($site == 'pear') {
+            	$data['/qa/']    = 'Quality Assurance';
+                $date['/group/'] = 'The PEAR Group';
+			}
             break;
         case 'docu_menu':
-            $data = array(
-                '/manual/en/about-pear.php' => 'About PEAR',
-                '/manual/index.php'    => 'Manual',
-                '/manual/en/faq.php'   => 'FAQ',
-                '/support/'            => 'Support',
-            );
+            if ($site == 'pear') {
+	            $data = array(
+	                '/manual/en/about-pear.php' => 'About PEAR',
+	                '/manual/index.php'    => 'Manual',
+	                '/manual/en/faq.php'   => 'FAQ',
+	            );
+			} else {
+				$data = array();
+			}
+            $data['/support/'] = 'Support';
             break;
         case 'downloads_menu':
             $data = array(
@@ -373,14 +384,16 @@ function draw_navigation($type, $menu_title = '')
             );
             break;
         case 'developer_menu':
-            $data= array(
+            $data = array(
                 '/map/'                => 'Find a Developer',
                 '/accounts.php'        => 'List Accounts',
                 '/release-upload.php'  => 'Upload Release',
                 '/package-new.php'     => 'New Package',
-                '/notes/admin'         => 'Manage User Notes',
-                '/election/'           => 'View Elections',
             );
+            if ($site == 'pear') {
+                $data['/notes/admin'] = 'Manage User Notes';
+                $data['/election/']   = 'View Elections';
+			}
             break;
         case 'developer_menu_public':
             $data= array(
@@ -389,13 +402,13 @@ function draw_navigation($type, $menu_title = '')
             break;
         case 'proposal_menu':
             $data = array(
-                        '/pepr/'       => 'Browse Proposals',
-                        '/pepr/pepr-proposal-edit.php'  => 'New Proposal'
-                    );
+            	'/pepr/'                        => 'Browse Proposals',
+            	'/pepr/pepr-proposal-edit.php'  => 'New Proposal'
+            );
             break;
         case 'admin_menu':
             $data = array(
-                '/admin/'                     => 'Overview'
+                '/admin/' => 'Overview'
             );
             break;
         default:

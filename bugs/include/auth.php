@@ -223,7 +223,7 @@ function auth_require($admin = false)
 /**
  * Perform logout for the current user
  */
-function auth_logout()
+function auth_logout($self)
 {
     if (isset($_COOKIE['PEAR_USER'])) {
         setcookie('PEAR_USER', '', 0, '/');
@@ -235,9 +235,9 @@ function auth_logout()
     }
 
     if ($_SERVER['QUERY_STRING'] == 'logout=1') {
-        localRedirect($_SERVER['PHP_SELF']);
+        localRedirect($self);
     } else {
-        localRedirect($_SERVER['PHP_SELF'] . '?' . preg_replace('/logout=1/', '', $_SERVER['QUERY_STRING']));
+        localRedirect("{$self}?" . preg_replace('/logout=1/', '', $_SERVER['QUERY_STRING']));
     }
 }
 

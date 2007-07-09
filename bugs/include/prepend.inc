@@ -18,7 +18,7 @@
  * @version   $Id$
  */
 
-// magic_quotes_gpc is not supported!
+// magic_quotes_gpc is no longer supported!
 if (get_magic_quotes_gpc()) {
 	die('Turn off "magic_quotes_gpc" in php.ini!');
 }
@@ -26,8 +26,7 @@ if (get_magic_quotes_gpc()) {
 // FIXME: Configuration should be elsewhere!
 
 // CONFIG START
-$site = 'php';
-$SIDEBAR_DATA = '-';
+$site = 'php'; // This can be one of php, pear or pecl.
 
 $site_data = array (
 	'php' => array (
@@ -87,8 +86,33 @@ $LAST_UPDATED = date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC';
 /// FIXME: These should not be needed!
 require "{$main_include_path}/include/format-html.php"; // aka pear-format-html.php
 require "{$main_include_path}/include/classes/bug_dataobject.php";
+$self = htmlspecialchars($_SERVER['PHP_SELF']);
 
 extra_styles('css/bugs.css');
+
+// Auth stuff only for PEAR/PECL sites for now
+$SIDEBAR_DATA = '-';
+if ($site != 'php') {
+	include_once 'auth.php';
+
+	if (!empty($_GET['logout']) && $_GET['logout'] === '1') {
+	    auth_logout($self);
+	}
+
+	if (!empty($_COOKIE['PEAR_USER']) && !auth_verify($_COOKIE['PEAR_USER'], $_COOKIE['PEAR_PW'])) {
+	    $__user = $_COOKIE['PEAR_USER'];
+	    setcookie('PEAR_USER', '', 0, '/');
+	    unset($_COOKIE['PEAR_USER']);
+	    setcookie('PEAR_PW', '', 0, '/');
+	    unset($_COOKIE['PEAR_PW']);
+	    $msg = "Invalid username ($__user) or password";
+	    if ($format == 'html') {
+	        $msg .= " <a href=\"/?logout=1\">[logout]</a>";
+	    }
+	    auth_reject(null, $msg);
+	}
+	$SIDEBAR_DATA = '';
+}
 
 /**
  * Obtain the functions and variables used throughout the bug system
