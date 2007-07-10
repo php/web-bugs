@@ -5,6 +5,10 @@ require_once './include/prepend.inc';
 /* Input vars */
 $bug_id = !empty($_GET['bug_id']) ? (int) $_GET['bug_id'] : 0;
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+$canpatch = ($logged_in == 'developer');
+
 if (empty($bug_id)) {
     response_header('Error :: no bug selected');
     display_bug_error('No bug selected to add a patch to');
@@ -69,7 +73,6 @@ if (isset($_GET['patchname']) && isset($_GET['revision'])) {
     $obsoletedby = $patchinfo->getObsoletingPatches($bug_id, $_GET['patchname'], $_GET['revision']);
     $obsoletes = $patchinfo->getObsoletePatches($bug_id, $_GET['patchname'], $_GET['revision']);
     $patches = $patchinfo->listPatches($bug_id);
-    $canpatch = auth_check('pear.bug') || auth_check('pear.dev');
     include $templates_path . '/templates/listpatches.php';
     $revisions = $patchinfo->listRevisions($bug_id, $_GET['patchname']);
     $revision = $_GET['revision'];
@@ -97,6 +100,5 @@ if (isset($_GET['patchname']) && isset($_GET['revision'])) {
 }
 response_header("Bug #{$bug_id} :: Patches");
 $patches = $patchinfo->listPatches($bug_id);
-$canpatch = auth_check('pear.bug') || auth_check('pear.dev');
 include $templates_path . '/templates/listpatches.php';
 response_footer();

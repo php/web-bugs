@@ -60,50 +60,46 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
     $errors = '';
     if (isset($_SESSION['answer']) && strlen(trim($_SESSION['answer'])) > 0) {
         if ($_POST['captcha'] != $_SESSION['answer']) {
-        	$errors = 'Incorrect Captcha';
+            $errors = 'Incorrect Captcha';
         }
     }
 
     if (empty($errors)) {
-	    $email = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
-	    if ($email == '' || !is_valid_email($email)) {
-	        $errors = 'You must provide a valid email address.';
-	    } else {
-	    	// Unsubscribe
-			if (isset($_POST['unsubscribe_to_bug'])) {
-		        /* Generate the hash */
-		        unsubscribe_hash($bug_id, $email);
-			}
-			else // Subscribe
-			{
-		        $dbh->query('REPLACE INTO bugdb_subscribe SET bug_id = ?, email = ?', array($bug_id, $email));
-			}
-	        localRedirect("bug.php?id={$bug_id}");
-	    }
-	}
-	// If we get here, display errors
-	response_header('Error in subscription');
-	display_bug_error($errors);
-   	response_footer();
-   	exit;
+        $email = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
+        if ($email == '' || !is_valid_email($email)) {
+            $errors = 'You must provide a valid email address.';
+        } else {
+            // Unsubscribe
+            if (isset($_POST['unsubscribe_to_bug'])) {
+                /* Generate the hash */
+                unsubscribe_hash($bug_id, $email);
+            }
+            else // Subscribe
+            {
+                $dbh->query('REPLACE INTO bugdb_subscribe SET bug_id = ?, email = ?', array($bug_id, $email));
+            }
+            localRedirect("bug.php?id={$bug_id}");
+        }
+    }
+    // If we get here, display errors
+    response_header('Error in subscription');
+    display_bug_error($errors);
+    response_footer();
+    exit;
 }
 
 // Set pseudo_pkgs array
 $pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
 
 // Set edit mode
-if (empty($_REQUEST['edit']) || !((int) $_REQUEST['edit'])) {
-    $edit = 0;
-} else {
-    $edit = (int) $_REQUEST['edit'];
-}
+$edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
 
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
 // Delete comment
 if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
-	$delete_comment = (int) $_GET['delete_comment'];
+    $delete_comment = (int) $_GET['delete_comment'];
     $addon = '';
 
     if ($delete_comment) {
@@ -115,17 +111,17 @@ if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
 
 // captcha is not necessary if the user is logged in
 if ($logged_in) {
-	unset($_SESSION['answer']);
+    unset($_SESSION['answer']);
 } else {
-	/**
-	 * Numeral Captcha Class
-	 */
-	require_once 'Text/CAPTCHA/Numeral.php';
+    /**
+     * Numeral Captcha Class
+     */
+    require_once 'Text/CAPTCHA/Numeral.php';
 
-	/**
-	 * Instantiate the numeral captcha object.
-	 */
-	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+    /**
+     * Instantiate the numeral captcha object.
+     */
+    $numeralCaptcha = new Text_CAPTCHA_Numeral();
 }
 
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
@@ -172,7 +168,7 @@ $bug =& $dbh->getRow($query, array($bug_id), DB_FETCHMODE_ASSOC);
 // DB error
 if (is_object($bug)) {
     response_header('DB error');
-	display_bug_error($bug);
+    display_bug_error($bug);
     response_footer();
     exit;
 }
@@ -187,8 +183,8 @@ if (!$bug) {
 
 // Redirect to correct site if package type is not same as current site
 if (!empty($bug['package_type']) && $bug['package_type'] != $site) {
-	$url = "{$site_data[$bug['package_type']]['url']}{$site_data[$bug['package_type']]['basedir']}";
-	localRedirect("http://{$url}/bug.php?id={$bug_id}");
+    $url = "{$site_data[$bug['package_type']]['url']}{$site_data[$bug['package_type']]['basedir']}";
+    localRedirect("http://{$url}/bug.php?id={$bug_id}");
 }
 
 // if the user is not registered, this might be spam, don't display
@@ -239,48 +235,52 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
     if (!$errors) {
         do {
-            if ($site != 'php' && !$logged_in) {
-                // user doesn't exist yet
-                require_once 'include/classes/bug_accountrequest.php';
-                $buggie = new Bug_Accountrequest;
+            if (!$logged_in) {
+
                 if (!is_valid_email($_POST['in']['commentemail'])) {
-                    $errors[] = "You must provide a valid email address.";
+                    $errors[] = 'You must provide a valid email address.';
                     response_header('Add Comment - Problems');
                     break; // skip bug comment addition
-                }
-                $salt = $buggie->addRequest($_POST['in']['commentemail']);
-                if (is_array($salt)) {
-                    $errors = $salt;
-                    response_header('Add Comment - Problems');
-                    break; // skip bug comment addition
-                }
-                if (PEAR::isError($salt)) {
-                    $errors[] = $salt;
-                    response_header('Add Comment - Problems');
-                    break;
-                }
-                if ($salt === false) {
-                    $errors[] = 'Your account cannot be added to the queue.'
-                         . ' Please write a mail message to the '
-                         . ' <i>pear-dev</i> mailing list.';
-                    response_header('Report - Problems');
-                    break;
                 }
 
-                try {
-                    $buggie->sendEmail();
-                } catch (Exception $e) {
-                    $errors[] = 'Critical internal error: could not send' .
-                        ' email to your address ' . $_POST['in']['email'] .
-                        ', please write a mail message to the <i>pear-dev</i>' .
-                        'mailing list and report this problem with details.' .
-                        '  We apologize for the problem, your report will help' .
-                        ' us to fix it for future users: ' . $e->getMessage();
-                    response_header('Add Comment - Problems');
-                    break;
+                if ($site != 'php') {
+                    // user doesn't exist yet
+                    require_once 'include/classes/bug_accountrequest.php';
+                    $buggie = new Bug_Accountrequest;
+                    $salt = $buggie->addRequest($_POST['in']['commentemail']);
+                    if (is_array($salt)) {
+                        $errors = $salt;
+                        response_header('Add Comment - Problems');
+                        break; // skip bug comment addition
+                    }
+                    if (PEAR::isError($salt)) {
+                        $errors[] = $salt;
+                        response_header('Add Comment - Problems');
+                        break;
+                    }
+                    if ($salt === false) {
+                        $errors[] = 'Your account cannot be added to the queue.'
+                             . ' Please write a mail message to the '
+                             . ' <i>pear-dev</i> mailing list.';
+                        response_header('Report - Problems');
+                        break;
+                    }
+
+                    try {
+                        $buggie->sendEmail();
+                    } catch (Exception $e) {
+                        $errors[] = 'Critical internal error: could not send' .
+                            ' email to your address ' . $_POST['in']['email'] .
+                            ', please write a mail message to the <i>pear-dev</i>' .
+                            'mailing list and report this problem with details.' .
+                            '  We apologize for the problem, your report will help' .
+                            ' us to fix it for future users: ' . $e->getMessage();
+                        response_header('Add Comment - Problems');
+                        break;
+                    }
+                    $_POST['in']['handle'] =
+                    $_POST['in']['name'] = $buggie->handle;
                 }
-                $_POST['in']['handle'] =
-                $_POST['in']['name'] = $buggie->handle;
             } else {
                 $_POST['in']['commentemail'] = $auth_user->email;
                 $_POST['in']['handle'] = $auth_user->handle;
@@ -288,15 +288,15 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             }
 
             $dbh->query('
-				INSERT INTO bugdb_comments (bug, email, handle, ts, comment, reporter_name)
-				VALUES (?, ?, ?, NOW(), ?, ?)', array (
-					$bug_id,
-					$_POST['in']['commentemail'],
-					$_POST['in']['handle'],
-					$ncomment,
-					$_POST['in']['name']
-				)
-			);
+                INSERT INTO bugdb_comments (bug, email, handle, ts, comment, reporter_name)
+                VALUES (?, ?, ?, NOW(), ?, ?)', array (
+                    $bug_id,
+                    $_POST['in']['commentemail'],
+                    $_POST['in']['handle'],
+                    $ncomment,
+                    $_POST['in']['name']
+                )
+            );
         } while (false);
 
         if (isset($auth_user) && $auth_user) {
@@ -309,7 +309,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 } elseif (isset($_POST['ncomment']) && isset($_POST['preview']) && $edit == 3) {
     $ncomment = trim($_POST['ncomment']);
-
+    $from = spam_protect($_POST['in']['commentemail']);
+    
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
     // Edits submitted by original reporter for old bugs
 
@@ -338,16 +339,16 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 
     if (!empty($_POST['in']['email']) &&
-    	$bug['email'] != $_POST['in']['email']
-	) {
+        $bug['email'] != $_POST['in']['email']
+    ) {
         $from = $_POST['in']['email'];
     } else {
         $from = $bug['email'];
     }
 
     if (!empty($_POST['in']['package_name']) &&
-    	$bug['package_name'] != $_POST['in']['package_name']
-	) {
+        $bug['package_name'] != $_POST['in']['package_name']
+    ) {
         // reset package version if we change package name
         $_POST['in']['package_version'] = '';
     }
@@ -356,25 +357,25 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         $dbh->query("
             UPDATE bugdb
             SET
-            	sdesc = ?,
-            	status = ?,
-            	package_name = ?,
-            	bug_type = ?,
-            	package_version = ?,
-            	php_version = ?,
-            	php_os = ?,
-            	email = ?,
-            	ts2 = NOW()
+                sdesc = ?,
+                status = ?,
+                package_name = ?,
+                bug_type = ?,
+                package_version = ?,
+                php_version = ?,
+                php_os = ?,
+                email = ?,
+                ts2 = NOW()
             WHERE id={$bug_id}
-		" , array(
-        	$_POST['in']['sdesc'],
-        	$_POST['in']['status'],
-        	$_POST['in']['package_name'],
-        	$_POST['in']['bug_type'],
-        	$_POST['in']['package_version'],
-        	$_POST['in']['php_version'],
-        	$_POST['in']['php_os'],
-        	$from,
+        " , array(
+            $_POST['in']['sdesc'],
+            $_POST['in']['status'],
+            $_POST['in']['package_name'],
+            $_POST['in']['bug_type'],
+            $_POST['in']['package_version'],
+            $_POST['in']['php_version'],
+            $_POST['in']['php_os'],
+            $from,
         ));
 
         if (!empty($ncomment)) {
@@ -453,6 +454,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     if (!$errors && !($errors = incoming_details_are_valid($_POST['in']))) {
         $query = 'UPDATE bugdb SET';
 
+        // Update email only if it's passed
         if ($bug['email'] != $_POST['in']['email'] && !empty($_POST['in']['email']))
         {
             $query .= " email='{$_POST['in']['email']}',";
@@ -480,22 +482,34 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             $_POST['in']['package_version'] = '';
         }
 
-        $query .= " sdesc='" . escapeSQL($_POST['in']['sdesc']) . "'," .
-                  " status='" . escapeSQL($status) . "'," .
-                  " package_name='" . escapeSQL($_POST['in']['package_name']) . "'," .
-                  " bug_type='" . escapeSQL($_POST['in']['bug_type']) . "'," .
-                  " assign='" . escapeSQL($_POST['in']['assign']) . "'," .
-                  " package_version='" . escapeSQL($_POST['in']['package_version']) . "'," .
-                  " php_version='" . escapeSQL($_POST['in']['php_version']) . "'," .
-                  " php_os='" . escapeSQL($_POST['in']['php_os']) . "'," .
-                  " ts2=NOW() WHERE id=$bug_id";
-        $dbh->query($query);
-        $previous = $dbh->getAll('SELECT roadmap_version
+        $dbh->query($query .= "
+            sdesc = ?, 
+            status = ?, 
+            package_name = ?,
+            bug_type = ?,
+            assign = ?,
+            package_version = ?,
+            php_version = ?,
+            php_os = ?,
+            ts2=NOW() WHERE id = {$bug_id}
+        ", array (
+            $_POST['in']['sdesc'],
+            $status,
+            $_POST['in']['package_name'],
+            $_POST['in']['bug_type'],
+            $_POST['in']['assign'],
+            $_POST['in']['package_version'],
+            $_POST['in']['php_version'],
+            $_POST['in']['php_os'],
+        ));
+        $previous = $dbh->getAll("
+            SELECT roadmap_version
             FROM bugdb_roadmap_link l, bugdb_roadmap b
-            WHERE
-                l.id=? AND b.id=l.roadmap_id', array($bug_id));
-        if (auth_check('pear.dev')) {
-            // don't change roadmap assignments for non-devs editing a bug
+            WHERE l.id = {$bug_id} AND b.id=l.roadmap_id
+        ");
+
+        // don't change roadmap assignments for non-devs editing a bug
+        if ($logged_in == 'developer') {
             $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
             $link->id = $bug_id;
             $link->delete();
@@ -506,18 +520,20 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                     $link->insert();
                 }
             }
-            $current = $dbh->getAll('SELECT roadmap_version
+            $current = $dbh->getAll("
+                SELECT roadmap_version
                 FROM bugdb_roadmap_link l, bugdb_roadmap b
-                WHERE
-                    l.id=? AND b.id=l.roadmap_id', array($bug_id));
+                WHERE l.id = {$bug_id} AND b.id = l.roadmap_id
+            ");
         } else {
             $current = $previous;
         }
 
         if (!empty($ncomment)) {
-            $query = 'INSERT INTO bugdb_comments' .
-                     ' (bug, email, ts, comment, reporter_name, handle) VALUES (?,?,NOW(),?,?,?)';
-            $dbh->query($query, array($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
+            $dbh->query('
+                INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle)
+                VALUES (?, ?, NOW(), ?, ?, ?)
+            ', array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
         }
     }
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 1) {
@@ -543,20 +559,19 @@ if (isset($_POST['in']) && (!isset($_POST['preview']) && $ncomment || $previous 
 switch ($bug['bug_type'])
 {
     case 'Feature/Change Request':
-    	$bug_type = 'Request';
-    	break;
+        $bug_type = 'Request';
+        break;
     case 'Documentation Problem':
-    	$bug_type = 'Doc Bug';
-    	break;
-	default:
+        $bug_type = 'Doc Bug';
+        break;
+    default:
     case 'Bug':
-    	$bug_type = 'Bug';
-    	break;
+        $bug_type = 'Bug';
+        break;
 }
 
 response_header(
-	"{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']),
-	false,
+    "{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']),
     " 
       <link rel='alternate' type='application/rdf+xml' title='RSS feed' href='http://{$site_url}{$basedir}/feeds/bug_{$bug_id}.rss' />
       <script type='text/javascript' src='js/util.js'></script>    
@@ -567,29 +582,29 @@ response_header(
 $thanks = (isset($_GET['thanks'])) ? (int) $_GET['thanks'] : 0;
 switch ($thanks)
 {
-	case 1:
-	case 2:
-		display_bug_success('The bug was updated successfully.');
-		break;
-	case 3:
-		display_bug_success('Your comment was added to the bug successfully.');
-		break;
-	case 4:
-		$bug_url = "http://{$site_url}{$basedir}/bug.php?id={$bug_id}";
-		display_bug_success("
-			Thank you for your help!
-			If the status of the bug report you submitted changes, you will be notified.
-			You may return here and check the status or update your report at any time.
-			The URL for your bug report is: <a href='{$bug_url}'>{$bug_url}</a>.
-		");
-		break;
-	case 6:
-		display_bug_success('Thanks for voting! Your vote should be reflected in the statistics below.');
-		break;
+    case 1:
+    case 2:
+        display_bug_success('The bug was updated successfully.');
+        break;
+    case 3:
+        display_bug_success('Your comment was added to the bug successfully.');
+        break;
+    case 4:
+        $bug_url = "http://{$site_url}{$basedir}/bug.php?id={$bug_id}";
+        display_bug_success("
+            Thank you for your help!
+            If the status of the bug report you submitted changes, you will be notified.
+            You may return here and check the status or update your report at any time.
+            The URL for your bug report is: <a href='{$bug_url}'>{$bug_url}</a>.
+        ");
+        break;
+    case 6:
+        display_bug_success('Thanks for voting! Your vote should be reflected in the statistics below.');
+        break;
 
-	default:
-		
-		break;
+    default:
+        
+        break;
 }
 
 display_bug_error($errors);
@@ -597,36 +612,37 @@ display_bug_error($errors);
 show_bugs_menu(txfield('package_name'));
 
 ?>
-
 <div id="bugheader">
-<table id="details">
+ <table id="details">
   <tr id="title">
-
-   <?php
-       echo '<th class="details" id="number">' . $bug_type . '&nbsp;#' . $bug_id . '</th>';
-   ?>
-
-   <td id="summary" colspan="3"><?php echo htmlspecialchars($bug['sdesc']) ?></td>
+   <th class="details" id="number"><?php echo $bug_type , '&nbsp;#' , $bug_id; ?></th>
+   <td id="summary" colspan="5"><?php echo htmlspecialchars($bug['sdesc']); ?></td>
   </tr>
   <tr id="submission">
    <th class="details">Submitted:</th>
-<?php
+   <td style="white-space: nowrap;"><?php echo format_date($bug['submitted']); ?></td>
+   <th class="details">Modified:</th>
+   <td style="white-space: nowrap;"><?php echo ($bug['modified']) ? format_date($bug['modified']) : '-'; ?></td>
+   <td rowspan="5">
+<?php if ($bug['votes']) { ?>
+    <table id="votes">
+     <tr><th class="details">Votes:</th><td><?php echo $bug['votes'] ?></td></tr>
+     <tr><th class="details">Avg. Score:</th><td><?php printf("%.1f &plusmn; %.1f", $bug['average'], $bug['deviation']) ?></td></tr>
+     <tr><th class="details">Reproduced:</th><td><?php printf("%d of %d (%.1f%%)",$bug['reproduced'],$bug['tried'],$bug['tried']?($bug['reproduced']/$bug['tried'])*100:0) ?></td></tr>
+<?php    if ($bug['reproduced']) { ?>
+     <tr><th class="details">Same Version:</th><td><?php printf("%d (%.1f%%)",$bug['samever'],($bug['samever']/$bug['reproduced'])*100) ?></td></tr>
+     <tr><th class="details">Same OS:</th><td><?php printf("%d (%.1f%%)",$bug['sameos'],($bug['sameos']/$bug['reproduced'])*100) ?></td></tr>
+<?php    } ?>
+    </table>
+<?php } ?>
 
-if ($bug['modified']) {
-    echo '<td style="white-space: nowrap;">' , format_date($bug['submitted']) , "</td>\n";
-    echo '<th class="details">Modified:</th>' , "\n";
-    echo '<td style="white-space: nowrap;">' , format_date($bug['modified']) , '</td>';
-} else {
-    echo '<td colspan="3">' , format_date($bug['submitted']) , '</td>';
-}
-
-?>
-
+   </td>
   </tr>
+
   <tr id="submitter">
    <th class="details">From:</th>
    <td>
-   <?php
+<?php
     if (!empty($bug['bughandle'])) {
         echo "<a href='/user/{$bug['bughandle']}'>{$bug['bughandle']}</a>";
     } elseif (!empty($bug['handle']) && $bug['showemail'] != '0') {
@@ -634,13 +650,14 @@ if ($bug['modified']) {
     } else {
         echo spam_protect(htmlspecialchars($bug['email']));
     }
-    ?></td>
+?>
+   </td>
    <th class="details">Assigned:</th>
-   <td><?php echo htmlspecialchars($bug['assign']) ?></td>
+   <td><?php echo htmlspecialchars($bug['assign']); ?></td>
   </tr>
   <tr id="categorization">
    <th class="details">Status:</th>
-   <td><?php echo htmlspecialchars($bug['status']) ?></td>
+   <td><?php echo htmlspecialchars($bug['status']); ?></td>
    <th class="details">Package:</th>
    <td>
    <?php echo htmlspecialchars($bug['package_name']); ?>
@@ -675,11 +692,11 @@ if ($bug['modified']) {
                     releases.version=b.roadmap_version',
                     array($db->id));
                 if (isset($links[$db->id])) {
-					$assignedRoadmap[] = '<a href="roadmap.php?package=' .
-				        $db->package . ($released ? '&showold=1' : '') .
-				        '&roadmapdetail=' . $db->roadmap_version .
-						'#a' . $db->roadmap_version . '">' . $db->roadmap_version .
-						'</a>';
+                    $assignedRoadmap[] = '<a href="roadmap.php?package=' .
+                        $db->package . ($released ? '&showold=1' : '') .
+                        '&roadmapdetail=' . $db->roadmap_version .
+                        '#a' . $db->roadmap_version . '">' . $db->roadmap_version .
+                        '</a>';
                 }
             }
         }
@@ -693,32 +710,76 @@ if ($bug['modified']) {
    <th>&nbsp;</th>
    <td>&nbsp;</td>
   </tr>
-
-<?php if ($bug['votes']) { ?>
-  <tr id="votes">
-   <th class="details">Votes:</th><td><?php echo $bug['votes'] ?></td>
-   <th class="details">Avg. Score:</th><td><?php printf("%.1f &plusmn; %.1f", $bug['average'], $bug['deviation']) ?></td>
-   <th class="details">Reproduced:</th><td><?php printf("%d of %d (%.1f%%)",$bug['reproduced'],$bug['tried'],$bug['tried']?($bug['reproduced']/$bug['tried'])*100:0) ?></td>
-  </tr>
-<?php	if ($bug['reproduced']) { ?>
-  <tr id="reproduced">
-   <td colspan="2"></td>
-   <th class="details">Same Version:</th><td><?php printf("%d (%.1f%%)",$bug['samever'],($bug['samever']/$bug['reproduced'])*100) ?></td>
-   <th class="details">Same OS:</th><td><?php printf("%d (%.1f%%)",$bug['sameos'],($bug['sameos']/$bug['reproduced'])*100) ?></td>
-  </tr>
-<?php	} ?>
-<?php } ?>
-</table>
+ </table>
 </div>
 
 <div id="controls">
 <?php
 control(0, 'View');
 control(3, 'Add Comment');
-control(1, 'Edit');
+if ($site == 'php' ) {
+    control(1, 'Developer');
+    control(2, 'Edit');
+} else {
+    control(1, 'Edit');
+}
 ?>
 </div>
-<?php
+
+<?php if (!$edit && canvote($thanks, $bug['status'])) { ?>
+  <form id="vote" method="post" action="vote.php">
+  <div class="sect">
+   <fieldset>
+    <legend>Have you experienced this issue?</legend>
+    <div>
+     <input type="radio" id="rep-y" name="reproduced" value="1" onchange="show('canreproduce')" /> <label for="rep-y">yes</label>
+     <input type="radio" id="rep-n" name="reproduced" value="0" onchange="hide('canreproduce')" /> <label for="rep-n">no</label>
+     <input type="radio" id="rep-d" name="reproduced" value="2" onchange="hide('canreproduce')" checked="checked" /> <label for="rep-d">don't know</label>
+    </div>
+   </fieldset>
+   <fieldset>
+    <legend>Rate the importance of this bug to you:</legend>
+    <div>
+     <label for="score-5">high</label>
+     <input type="radio" id="score-5" name="score" value="2" />
+     <input type="radio" id="score-4" name="score" value="1" />
+     <input type="radio" id="score-3" name="score" value="0" checked="checked" />
+     <input type="radio" id="score-2" name="score" value="-1" />
+     <input type="radio" id="score-1" name="score" value="-2" />
+     <label for="score-1">low</label>
+    </div>
+   </fieldset>
+  </div>
+  <div id="canreproduce" class="sect" style="display: none">
+   <fieldset>
+    <legend>Are you using the same PHP version?</legend>
+    <div>
+     <input type="radio" id="ver-y" name="samever" value="1" /> <label for="ver-y">yes</label>
+     <input type="radio" id="ver-n" name="samever" value="0" checked="checked" /> <label for="ver-n">no</label>
+    </div>
+   </fieldset>
+   <fieldset>
+    <legend>Are you using the same Package version?</legend>
+    <div>
+     <input type="radio" id="ver-y" name="samever" value="1" /> <label for="ver-y">yes</label>
+     <input type="radio" id="ver-n" name="samever" value="0" checked="checked" /> <label for="ver-n">no</label>
+    </div>
+   </fieldset>
+   <fieldset>
+    <legend>Are you using the same operating system?</legend>
+    <div>
+     <input type="radio" id="os-y" name="sameos" value="1" /> <label for="os-y">yes</label>
+     <input type="radio" id="os-n" name="sameos" value="0" checked="checked" /> <label for="os-n">no</label>
+    </div>
+   </fieldset>
+  </div>
+  <div id="submit" class="sect">
+   <input type="hidden" name="id" value="<?php echo $bug_id?>" />
+   <input type="submit" value="Vote" />
+  </div>
+  </form>
+  <br clear="all" />
+<?php } 
 
 if (isset($_POST['preview']) && !empty($ncomment)) {
     $preview = '<div class="comment">';
@@ -737,14 +798,11 @@ if (isset($_POST['preview']) && !empty($ncomment)) {
     $preview = '';
 }
 
-if ($edit == 1 || $edit == 2) {
-    ?>
+if ($edit == 1 || $edit == 2) { ?>
 
     <form id="update" action="bug.php?id=<?php echo $bug_id; ?>&amp;edit=<?php echo $edit; ?>" method="post">
 
-    <?php
-
-    if ($edit == 2) {
+<?php if ($edit == 2) {
         if (!isset($_POST['in']) && $pw && $bug['passwd'] &&
             $pw == $bug['passwd']) {
             ?>
@@ -791,12 +849,12 @@ if ($edit == 1 || $edit == 2) {
                  <a href="?logout=1&amp;id=<?php echo $bug_id; ?>&amp;edit=1">Log out.</a>)
                 </div>
 <?php
-			}
+            }
         } else {
 ?>
             <div class="explain">
 
-<?php		if ($site == 'php' && !isset($_POST['in']) || !is_array($_POST['in'])) { ?>
+<?php        if ($site == 'php' && !isset($_POST['in']) || !is_array($_POST['in'])) { ?>
 
                     Welcome! If you don't have a CVS account, you can't do anything here.
                     You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
@@ -810,7 +868,7 @@ if ($edit == 1 || $edit == 2) {
  <label for="save">Remember:</label>
  <input type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
 </div>
-<?php 		} ?>
+<?php         } ?>
 
             </div>
 
@@ -823,7 +881,6 @@ if ($edit == 1 || $edit == 2) {
     <table>
 
 <?php if ($edit == 1 && $logged_in == 'developer') { // Developer Edit Form ?>
-
         <tr>
          <th class="details">
           <label for="in" accesskey="c">Qui<span class="accesskey">c</span>k Fix:</label>
@@ -963,9 +1020,7 @@ if ($edit == 1 || $edit == 2) {
 <?php } ?>
      <tr>
     </table>
-    <div class="explain">
-     <h1><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a></h1>
-    </div>
+
     <p style="margin-bottom: 0em">
     <label for="ncomment" accesskey="m"><b>New<?php if ($edit==1) echo "/Additional"?> Co<span class="accesskey">m</span>ment:</b></label>
     </p>
@@ -997,7 +1052,7 @@ if ($edit == 1 || $edit == 2) {
          work for you on a different platform? Let us know!<br />
          Just going to say 'Me too!'? Don't clutter the database with that please
 
-<?php
+<?php 
          if (canvote($thanks, $bug['status'])) {
              echo ' &mdash; but make sure to <a href="bug.php?id=' , $bug_id , '">vote on the bug</a>';
          }
@@ -1008,9 +1063,7 @@ if ($edit == 1 || $edit == 2) {
 
 echo $preview;
 
-?>
-
-<?php if (!$logged_in) { ?>
+if (!$logged_in) { ?>
     <table>
      <tr>
       <th class="details">Y<span class="accesskey">o</span>ur email address:<br />
@@ -1035,7 +1088,6 @@ echo $preview;
      </tr>
     </table>
    </div>
-
 <?php } ?>
 
     <div>
@@ -1049,63 +1101,7 @@ echo $preview;
 
 <?php } ?>
 
-
-<?php if (!$edit && canvote($thanks, $bug['status'])) { ?>
-
-  <form id="vote" method="post" action="vote.php">
-  <div class="sect">
-   <fieldset>
-    <legend>Have you experienced this issue?</legend>
-    <div>
-     <input type="radio" id="rep-y" name="reproduced" value="1" onchange="show('canreproduce')" /> <label for="rep-y">yes</label>
-     <input type="radio" id="rep-n" name="reproduced" value="0" onchange="hide('canreproduce')" /> <label for="rep-n">no</label>
-     <input type="radio" id="rep-d" name="reproduced" value="2" onchange="hide('canreproduce')" checked="checked" /> <label for="rep-d">don't know</label>
-    </div>
-   </fieldset>
-   <fieldset>
-    <legend>Rate the importance of this bug to you:</legend>
-    <div>
-     <label for="score-5">high</label>
-     <input type="radio" id="score-5" name="score" value="2" />
-     <input type="radio" id="score-4" name="score" value="1" />
-     <input type="radio" id="score-3" name="score" value="0" checked="checked" />
-     <input type="radio" id="score-2" name="score" value="-1" />
-     <input type="radio" id="score-1" name="score" value="-2" />
-     <label for="score-1">low</label>
-    </div>
-   </fieldset>
-  </div>
-  <div id="canreproduce" class="sect" style="display: none">
-   <fieldset>
-    <legend>Are you using the same PHP version?</legend>
-    <div>
-     <input type="radio" id="ver-y" name="samever" value="1" /> <label for="ver-y">yes</label>
-     <input type="radio" id="ver-n" name="samever" value="0" checked="checked" /> <label for="ver-n">no</label>
-    </div>
-   </fieldset>
-   <fieldset>
-    <legend>Are you using the same Package version?</legend>
-    <div>
-     <input type="radio" id="ver-y" name="samever" value="1" /> <label for="ver-y">yes</label>
-     <input type="radio" id="ver-n" name="samever" value="0" checked="checked" /> <label for="ver-n">no</label>
-    </div>
-   </fieldset>
-   <fieldset>
-    <legend>Are you using the same operating system?</legend>
-    <div>
-     <input type="radio" id="os-y" name="sameos" value="1" /> <label for="os-y">yes</label>
-     <input type="radio" id="os-n" name="sameos" value="0" checked="checked" /> <label for="os-n">no</label>
-    </div>
-   </fieldset>
-  </div>
-  <div id="submit" class="sect">
-   <input type="hidden" name="id" value="<?php echo $bug_id?>" />
-   <input type="submit" value="Vote" />
-  </div>
-  </form>
-  <br clear="all" />
 <?php
-}
 
 // Display original report
 if ($bug['ldesc']) {
@@ -1133,10 +1129,10 @@ foreach ($p as $name => $revisions)
 
 // Display comments
 $query = '
-	SELECT c.id, c.email, c.comment, 
-	       UNIX_TIMESTAMP(c.ts) AS added,
-		   c.reporter_name AS comment_name,
-		   IF(c.handle <> "", u.registered, 1) AS registered,
+    SELECT c.id, c.email, c.comment, 
+           UNIX_TIMESTAMP(c.ts) AS added,
+           c.reporter_name AS comment_name,
+           IF(c.handle <> "", u.registered, 1) AS registered,
            u.showemail, u.handle, c.handle AS bughandle
     FROM bugdb_comments c
     LEFT JOIN users u ON u.handle = c.handle
@@ -1164,7 +1160,7 @@ function output_note($com_id, $ts, $email, $comment, $handle = NULL, $comment_na
     echo '<a name="' , urlencode($ts) , '">&nbsp;</a>';
     echo "<strong>[" , format_date($ts) , "] ";
     if (!$registered) {
-		$handle_out = urlencode($handle);
+        $handle_out = urlencode($handle);
         echo <<< DATA
 User who submitted this comment has not confirmed identity</strong>
 <pre class="note">
@@ -1201,8 +1197,8 @@ function delete_comment($bug_id, $com_id)
 
 function control($num, $desc)
 {
-	global $bug_id, $edit;
-	
+    global $bug_id, $edit;
+
     echo "<span id='control_{$num}' class='control";
     if ($edit == $num) {
         echo ' active\'>';
