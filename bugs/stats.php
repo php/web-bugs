@@ -89,13 +89,14 @@ if ($site != 'php') {
 }
 switch ($site) {
     case 'pecl':
-        $where = ' WHERE p.package_type = ' . $dbh->quoteSmart($site);
+        $where = " WHERE p.package_type = 'pecl'";
         break;
+
     case 'pear':
         if ($pseudo) {
-            $where .= " WHERE (p.package_type = 'pear'"
-                    . " OR b.package_name IN ('"
-                    . implode("', '", $pseudo_pkgs) . "'))";
+            $where = " WHERE (p.package_type = 'pear'"
+                   . " OR b.package_name IN ('"
+                   . implode("', '", $pseudo_pkgs) . "'))";
         } else {
             $where = " WHERE p.package_type = 'pear'";
         }

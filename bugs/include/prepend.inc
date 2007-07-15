@@ -26,7 +26,7 @@ if (get_magic_quotes_gpc()) {
 // FIXME: Configuration should be elsewhere!
 
 // CONFIG START
-$site = 'php'; // This can be one of php, pear or pecl.
+$site = 'pear'; // This can be one of php, pear or pecl.
 
 $site_data = array (
 	'php' => array (
