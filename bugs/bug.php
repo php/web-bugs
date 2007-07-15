@@ -854,7 +854,7 @@ if ($edit == 1 || $edit == 2) { ?>
 ?>
             <div class="explain">
 
-<?php        if ($site == 'php' && !isset($_POST['in']) || !is_array($_POST['in'])) { ?>
+<?php        if ($site == 'php' && (!isset($_POST['in']) || !is_array($_POST['in']))) { ?>
 
                     Welcome! If you don't have a CVS account, you can't do anything here.
                     You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
