@@ -427,7 +427,7 @@ if ($site != 'php' && !package_exists($package)) {
 <p>
  If you aren't sure that what you're about to report is a bug, you should
  ask for help using one of the means for support
- <a href="<?php echo ($site == 'php') ? 'http://www.php.net/support.php' : '/support/'; ?>">listed here</a>.
+ <a href="<?php echo ($site == 'pecl') ? "http://{$site_data['pecl']['url']}/support.php" : '/support/'; ?>">listed here</a>.
 </p>
 
 <p>
@@ -448,22 +448,13 @@ if ($site != 'php' && !package_exists($package)) {
 <p>
  <strong>If you feel this bug concerns a security issue, eg a buffer
  overflow, weak encryption, etc, then email
- <?php
 
-switch ($site)
-{
-	case 'pear':
-		$email = 'pear-group@php.net';
-		break;
+<?php 
 
-	case 'pecl':
-	case 'php':
-		$email = 'security@php.net';
-		break;
-}
-echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $email);
+ $email = $site_data[$site]['security_email']; 
+ echo make_mailto_link("{$email}?subject=%5BSECURITY%5D+possible+new+bug%21", $email);
 
-?>who will assess the situation.</strong>
+?> who will assess the situation.</strong>
 
 </p>
 
