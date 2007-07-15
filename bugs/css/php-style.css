@@ -326,6 +326,48 @@ div.success ul {
     margin-bottom: 0em;
 }
 
+/* ========= Statistics ========= */
+
+.bug_bg0 {
+    background-color: #DDDDDD;
+    font-size: 85%;
+    text-align: center;
+}
+.bug_bg1 {
+    background-color: #EEEEEE;
+    font-size: 85%;
+    text-align: center;
+}
+.bug_head {
+    background-color: #aabbcc;
+    color: #000000;
+    font-size: 80%;
+    font-weight: bold;
+    text-align: right;
+    padding: 0em .2em .2em .2em;
+}
+.bug_header {
+    background-color: #aabbcc;
+    color: #000000;
+    font-size: 80%;
+    font-weight: bold;
+    text-align: center;
+    padding: 0em .2em .2em .2em;
+}
+
+a.bug_stats {
+    color: #000000;
+}
+a.bug_stats_choosen {
+    color: #FFFF00;
+}
+
+.bug_bg_selected {
+    background-color: yellow;
+}
+.bug_bg_selected a {
+    color: #006600;
+}
 
 /* ========= Other ========= */
 
