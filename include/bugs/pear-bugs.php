@@ -23,10 +23,11 @@ class PEAR_Bugs
                 name=? AND
                 bugdb.package_name = packages.name AND
                 status IN ("Open","Feedback","Assigned","Analyzed","Verified","Critical") AND
-                bug_type IN ("Bug","Documentation Problem")
+                bug_type IN ("Bug","Documentation Problem") AND
+                bugdb.registered = 1
             ', array($packageid), DB_FETCHMODE_ASSOC);
         $total = $this->_dbh->getOne('
-            SELECT COUNT(bugdb.id) FROM bugdb WHERE bugdb.package_name=?
+            SELECT COUNT(bugdb.id) FROM bugdb WHERE bugdb.package_name=? AND bugdb.registered = 1
             ', array($packageid));
         return array_merge($info[0], array('total' => $total));
     }
@@ -224,4 +225,3 @@ class PEAR_Bugs
         return $bugs;
     }
 }
-?>

@@ -103,8 +103,7 @@ if (isset($_POST['in'])) {
             list($sql_search, $ignored) = format_search_string($_POST['in']['sdesc']);
 
             $where_clause .= $sql_search;
-
-            $where_clause .= " AND p.package_type= '{$site}'";
+            $where_clause .= " AND p.package_type= '{$site}'" . (($site == 'php') ? '' : ' AND bugdb.registered = 1');
 
             $query = "SELECT bugdb.* from bugdb, packages p $where_clause LIMIT 5";
 
