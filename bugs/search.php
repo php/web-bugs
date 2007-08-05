@@ -295,42 +295,48 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
         $total_rows =& $dbh->getOne('SELECT FOUND_ROWS()');
 
+        /* Selected packages to search in */
+        $package_name_string = '';
+        if (count($package_name) > 0) {
+            foreach ($package_name as $type_str) {
+                $package_name_string.= '&amp;package_name[]=' . urlencode($type_str);
+            }
+        }
+        
+        /* Selected packages NOT to search in */
+        $package_nname_string = '';
+        if (count($package_nname) > 0) {
+            foreach ($package_nname as $type_str) {
+                $package_nname_string.= '&amp;package_nname[]=' . urlencode($type_str);
+            }
+        }
+
+        $link = "search.php?cmd=display{$package_name_string}{$package_nname_string}".
+                '&amp;search_for='  . urlencode($search_for) .
+                '&amp;php_os='      . urlencode($php_os) .
+                '&amp;author_email='. urlencode($author_email) .
+                '&amp;bug_type='    . urlencode($bug_type) .
+                "&amp;boolean=$boolean_search" .
+                "&amp;bug_age=$bug_age" .
+                "&amp;bug_updated=$bug_updated" .
+                "&amp;order_by=$order_by" .
+                "&amp;direction=$direction" .
+                "&amp;limit=$limit" .
+                '&amp;packagever='  . urlencode($packagever) .
+                '&amp;phpver='      . urlencode($phpver) .
+                '&amp;handle='      . urlencode($handle) .
+                '&amp;assign='      . urlencode($assign) .
+                '&amp;maintain='    . urlencode($maintain);
+
         if (!$rows) {
-            show_bugs_menu(@$package_name[0], $status);
+            if (isset($_GET['showmenu'])) {
+                show_bugs_menu($package_name, $status, $link . '&amp;showmenu=1');
+            } else {
+                show_bugs_menu($package_name, $status);
+            }
             $errors[] = 'No bugs were found.';
             display_bug_error($errors, 'warnings', '');
         } else {
-            $package_name_string = '';
-            if (count($package_name) > 0) {
-                foreach ($package_name as $type_str) {
-                    $package_name_string.= '&amp;package_name[]=' . urlencode($type_str);
-                }
-            }
-
-            $package_nname_string = '';
-            if (count($package_nname) > 0) {
-                foreach ($package_nname as $type_str) {
-                    $package_nname_string.= '&amp;package_nname[]=' . urlencode($type_str);
-                }
-            }
-
-            $link = "search.php?cmd=display{$package_name_string}{$package_nname_string}".
-                    '&amp;search_for='  . urlencode($search_for) .
-                    '&amp;php_os='      . urlencode($php_os) .
-                    '&amp;author_email='. urlencode($author_email) .
-                    '&amp;bug_type='    . urlencode($bug_type) .
-                    "&amp;boolean=$boolean_search" .
-                    "&amp;bug_age=$bug_age" .
-                    "&amp;bug_updated=$bug_updated" .
-                    "&amp;order_by=$order_by" .
-                    "&amp;direction=$direction" .
-                    "&amp;limit=$limit" .
-                    '&amp;packagever='  . urlencode($packagever) .
-                    '&amp;phpver='      . urlencode($phpver) .
-                    '&amp;handle='      . urlencode($handle) .
-                    '&amp;assign='      . urlencode($assign) .
-                    '&amp;maintain='    . urlencode($maintain);
-
             display_bug_error($warnings, 'warnings', 'WARNING:');
             if (isset($_GET['showmenu'])) {
                 show_bugs_menu($package_name, $status, $link . '&amp;showmenu=1');
