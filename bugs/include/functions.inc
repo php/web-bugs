@@ -737,10 +737,6 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
             $headers[] = array(' Updated by', $from);
     }
 
-    if (changed('sdesc')) {
-        $headers[] = array('-Summary', $bug['sdesc']);
-    }
-
     $prefix = ' ';
     if (changed('email')) {
         $headers[] = array('-Reported By', spam_protect($bug['email']), 'text');
