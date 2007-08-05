@@ -1225,7 +1225,7 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
         echo make_link("{$basedir}/search.php?package_name[]={$pkgname[0]}", 'New search');
 		if (!$pseudo) {
 	        echo delim();
-	        echo make_link("{$basedir}/roadmap.php?package={$pkgname[0]}", 'Development Road Map');
+	        echo make_link("{$basedir}/roadmap.php?package={$pkgname[0]}", 'Development Roadmap');
 		}
     } else {
         echo make_link("{$basedir}/search.php", 'New search');
