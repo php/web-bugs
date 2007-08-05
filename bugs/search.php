@@ -101,7 +101,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         FROM bugdb
 	';
 
-    if (($site != '' && $site != 'php') || $maintain != '' || $handle != '') {
+    if ($maintain != '' || $handle != '') {
         $query .= '
         	LEFT JOIN packages ON packages.name = bugdb.package_name
 		';
@@ -110,9 +110,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
             	LEFT JOIN maintains ON packages.id = maintains.package
                 	AND maintains.handle = '. ($maintain != '') ? $dbh->quoteSmart($maintain) : $dbh->quoteSmart($handle);
         }
+        $query .= ' AND maintains.active = 1';
     }
 
-    $where_clause = ' WHERE ' . (($site != '' && $site == 'php') ? '1=1' : 'bugdb.registered=1');
+    $where_clause = ' WHERE ' . (($site == 'php') ? '1=1' : 'bugdb.registered=1');
 
     if (!empty($package_name)) {
         $where_clause .= ' AND bugdb.package_name';
