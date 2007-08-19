@@ -36,6 +36,15 @@ session_start();
  */
 require_once './include/prepend.inc';
 
+// Set pseudo_pkgs array
+$pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
+
+// Set edit mode
+$edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
+
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+
 // Handle unsubscription
 if (isset($_GET['unsubscribe'])) {
     $unsubcribe = (int) $_GET['unsubscribe'];
@@ -47,6 +56,7 @@ if (isset($_GET['unsubscribe'])) {
         localRedirect("bug.php?id={$bug_id}");
     }
     unsubscribe($bug_id, $hash);
+    $_GET['thanks'] = 9;
 }
 
 // Subscription / Unsubscription
@@ -65,7 +75,11 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
     }
 
     if (empty($errors)) {
-        $email = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
+        if ($logged_in && $auth_user->registered && !empty($auth_user->email)) {
+            $email = $auth_user->email;
+        } else {
+            $email = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
+        }
         if ($email == '' || !is_valid_email($email)) {
             $errors = 'You must provide a valid email address.';
         } else {
@@ -73,12 +87,14 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
             if (isset($_POST['unsubscribe_to_bug'])) {
                 /* Generate the hash */
                 unsubscribe_hash($bug_id, $email);
+                $thanks = 8;
             }
             else // Subscribe
             {
                 $dbh->query('REPLACE INTO bugdb_subscribe SET bug_id = ?, email = ?', array($bug_id, $email));
+                $thanks = 7;
             }
-            localRedirect("bug.php?id={$bug_id}");
+            localRedirect("bug.php?id={$bug_id}&thanks={$thanks}");
         }
     }
     // If we get here, display errors
@@ -87,15 +103,6 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
     response_footer();
     exit;
 }
-
-// Set pseudo_pkgs array
-$pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
-
-// Set edit mode
-$edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
-
-// Authenticate
-bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
 // Delete comment
 if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
@@ -599,9 +606,17 @@ switch ($thanks)
     case 6:
         display_bug_success('Thanks for voting! Your vote should be reflected in the statistics below.');
         break;
+    case 7:
+        display_bug_success('Your subscribe request has been processed.');
+        break;
+    case 8:
+        display_bug_success('Your unsubscribe request has been processed, please check your email.');
+        break;
+    case 9:
+        display_bug_success('You have successfully unsubscribed.');
+        break;
 
     default:
-        
         break;
 }
 
@@ -1164,17 +1179,17 @@ function output_note($com_id, $ts, $email, $comment, $handle, $comment_name, $re
         echo '
 User who submitted this comment has not confirmed identity</strong>
 <pre class="note">
-		';
-		if ($logged_in != 'developer') {
-			echo <<< DATA
+        ';
+        if ($logged_in != 'developer') {
+            echo <<< DATA
 If you submitted this note, please check your email.
 If you did not receive any message, <a href="resend-request-email.php?handle={$handle_out}">click here to re-send</a>
 MANUAL CONFIRMATION IS NOT POSSIBLE.  Write a message to <a href='mailto:pear-dev@lists.php.net'>pear-dev@lists.php.net</a>
 to request the confirmation link.  All bugs/comments/patches associated with this email address will be deleted within 48 hours 
 if the account request is not confirmed!
 DATA;
-		}
-		echo '</pre></div>';
+        }
+        echo '</pre></div>';
         return;
     }
     if ($site != 'php' && $handle) {
