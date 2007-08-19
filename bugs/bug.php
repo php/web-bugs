@@ -416,9 +416,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         {
             $errors[] = 'The bug is already marked "'.$bug['status'].'". (Submit again to ignore this.)';
         } elseif (!$errors)  {
-            if ($_POST['in']['status'] == $bug['status']) {
-                $_POST['in']['status'] = $RESOLVE_REASONS[$_POST['in']['resolve']]['status'];
-            }
+            $_POST['in']['status'] = $RESOLVE_REASONS[$_POST['in']['resolve']]['status'];
             if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS[$in['resolve']][$bug['package_name']])) {
                 $reason = $FIX_VARIATIONS[$in['resolve']][$bug['package_name']];
             } else {
