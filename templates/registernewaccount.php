@@ -42,7 +42,7 @@ Choose a Use<span class="accesskey">r</span>name:</th>
  <tr>
   <th class="form-label_left">Your Name:</th>
   <td class="form-input"><input size="20" maxlength="100" name="name" type="text" value="<?php
-    echo htmlspecialchars($name) ?>" /></td>
+    echo htmlspecialchars($name) ?>" /> (Firstname Lastname)</td>
  </tr>
 </table>
 <input type="submit" name="confirmdetails" value="Confirm Account" />
