@@ -113,7 +113,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         $query .= ' AND maintains.active = 1';
     }
 
-    $where_clause = ' WHERE ' . (($site == 'php') ? '1=1' : 'bugdb.registered=1');
+    // Show un-registered bugs to developers
+    $where_clause = ' WHERE ' . (($site == 'php' || $logged_in == 'developer') ? '1 = 1' : 'bugdb.registered = 1');
 
     if (!empty($package_name)) {
         $where_clause .= ' AND bugdb.package_name';

@@ -643,7 +643,9 @@ show_bugs_menu(txfield('package_name'));
    <th class="details">From:</th>
    <td>
 <?php
-    if (!empty($bug['bughandle'])) {
+    if (!$bug['registered']) {
+        echo 'Unconfirmed reporter';
+    } elseif (!empty($bug['bughandle'])) {
         echo "<a href='/user/{$bug['bughandle']}'>{$bug['bughandle']}</a>";
     } elseif (!empty($bug['handle']) && $bug['showemail'] != '0') {
         echo "<a href='/user/{$bug['handle']}'>{$bug['handle']}</a>";
@@ -1105,7 +1107,7 @@ if (!$logged_in) { ?>
 
 // Display original report
 if ($bug['ldesc']) {
-    output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], $bug['bughandle'], $bug['reporter_name'], 1);
+    output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], $bug['bughandle'], $bug['reporter_name'], $bug['registered']);
 }
 
 // Display patches
@@ -1152,25 +1154,29 @@ response_footer();
 /** 
  * Helper functions 
  */
-function output_note($com_id, $ts, $email, $comment, $handle = NULL, $comment_name = NULL, $registered)
+function output_note($com_id, $ts, $email, $comment, $handle, $comment_name, $registered)
 {
-    global $site, $edit, $bug_id, $dbh, $is_trusted_developer;
+    global $site, $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
 
     echo '<div class="comment">';
     echo '<a name="' , urlencode($ts) , '">&nbsp;</a>';
     echo "<strong>[" , format_date($ts) , "] ";
     if (!$registered) {
         $handle_out = urlencode($handle);
-        echo <<< DATA
+        echo '
 User who submitted this comment has not confirmed identity</strong>
 <pre class="note">
+		';
+		if ($logged_in != 'developer') {
+			echo <<< DATA
 If you submitted this note, please check your email.
 If you did not receive any message, <a href="resend-request-email.php?handle={$handle_out}">click here to re-send</a>
 MANUAL CONFIRMATION IS NOT POSSIBLE.  Write a message to <a href='mailto:pear-dev@lists.php.net'>pear-dev@lists.php.net</a>
 to request the confirmation link.  All bugs/comments/patches associated with this email address will be deleted within 48 hours 
-if the account request is not confirmed!</pre>
-</div>
+if the account request is not confirmed!
 DATA;
+		}
+		echo '</pre></div>';
         return;
     }
     if ($site != 'php' && $handle) {
@@ -1178,7 +1184,7 @@ DATA;
     } else {
         echo spam_protect(htmlspecialchars($email)) , "</strong>\n";
     }
-    if ($comment_name) {
+    if ($comment_name && $registered) {
         echo '(' , htmlspecialchars($comment_name) , ')';
     }
     // Delete comment action only for trusted developers
