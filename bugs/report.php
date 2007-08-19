@@ -390,6 +390,14 @@ if (isset($_POST['in'])) {
 
 $package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : '';
 
+if (!is_string($package)) {
+    response_header('Report - Problems');
+    $errors[] = 'Invalid package name passed. Please fix it and try again.';
+    display_bug_error($errors);
+    response_footer();
+    exit;
+}
+
 if ($site != 'php' && !package_exists($package)) {
     $errors[] = 'Package "' . htmlspecialchars($package) . '" does not exist.';
     response_header("Report - Invalid bug type");
