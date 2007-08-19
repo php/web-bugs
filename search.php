@@ -266,7 +266,7 @@ if ($warnings) display_warnings($warnings);
   <td><input type="text" name="assign" value="<?php echo htmlspecialchars(stripslashes($assign));?>" />
 <?php
     if (!empty($user)) {
-	$u = stripslashes($user);
+	$u = htmlspecialchars(stripslashes($user), ENT_QUOTES);
         print "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\" />";
     }
 ?>
