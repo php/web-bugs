@@ -96,6 +96,19 @@ class PEAR_Bugs
               b.bug_type \!= "Feature/Change Request" AND
               b.status IN ("Assigned", "Analyzed", "Feedback", "Open", "Critical", "Verified") AND
               (b.assign = ? OR b.assign IS NULL OR b.assign="")', array($handle, $handle));
+        // Fetch all assigned and open reports regardless of package
+        $open_c_assigned = $this->_dbh->getone('SELECT COUNT(*) as c
+                 FROM bugdb b, maintains m, packages p
+                 WHERE
+                  b.assign = ? AND
+                  b.bug_type != "Feature/Change Request" AND
+                  b.status IN ("Assigned", "Analyzed", "Feedback", "Open", "Critical", "Verified") AND
+                  p.package_name = p.name AND
+                  p.id = m.package AND
+                  m.handle = ?
+                 GROUP BY b.id 
+                 ORDER BY c DESC, b.ts2 DESC', array($handle, $handle));
+        $opencount = $opencount + $open_c_assigned;
         $bugrank = $this->_dbh->getAll('SELECT COUNT(*) as c, u.handle
                  FROM bugdb b, users u
                  WHERE
