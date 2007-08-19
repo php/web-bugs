@@ -131,6 +131,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 				$auth_user->email  = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
 				$auth_user->name   = '';
 			}
+			$auth_user->registered = true;
 			// Other authentication is handled per bug report!
 			break;
 
@@ -1275,7 +1276,7 @@ function unsubscribe_hash($bug_id, $email)
     global $dbh, $siteBig, $site_url, $bugEmail;
 
 	$now = time();
-    $hash = crypt($email . $id, $now);
+    $hash = crypt($email . $bug_id, $now);
 
     $query = "
 		UPDATE bugdb_subscribe
