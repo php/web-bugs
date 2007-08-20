@@ -1,3 +1,7 @@
+#
+# This file is for converting bugs.php.net DB to be compatible with the pecl/pear bug db.
+#
+
 # bugdb 
 ALTER TABLE bugdb DROP project;
 ALTER TABLE bugdb DROP severity;
