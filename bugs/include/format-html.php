@@ -892,14 +892,14 @@ function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $bor
 	global $basedir, $main_include_path;
 	
     if (!$dir) {
-        $dir = "{$basedir}/gifs";
-    }
-    if (is_string($dir) && $dir{0} != '/') {
-        $dir = "{$basedir}/{$dir}";
+    	$dir = '/gifs';
+        $img_dir = "{$basedir}/gifs";
+    } else if (is_string($dir) && $dir{0} != '/') {
+        $img_dir = "{$basedir}/{$dir}";
     }
     if ($size = @getimagesize("{$main_include_path}/{$dir}/{$file}")) {
         $image = sprintf('<img src="%s/%s" style="border: %d;%s%s" %s alt="%s" %s />',
-            $dir,
+            $img_dir,
             $file,
             $border,
             ($styles ? ' '.$styles            : ''),
@@ -910,7 +910,7 @@ function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $bor
         );
     } else {
         $image = sprintf('<img src="%s/%s" style="border: %d;%s%s" alt="%s" %s />',
-            $dir,
+            $img_dir,
             $file,
             $border,
             ($styles ? ' '.$styles            : ''),
