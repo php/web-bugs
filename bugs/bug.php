@@ -832,7 +832,7 @@ if ($edit == 1 || $edit == 2) { ?>
                 Welcome back! If you're the original bug submitter, here's
                 where you can edit the bug or add additional notes. If this
                 is not your bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.
-                If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php">you can retrieve your password here</a>.
+                If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php?id=<?php echo $bug_id; ?>">you can retrieve your password here</a>.
             <?php } ?>
 
              <table>

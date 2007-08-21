@@ -25,7 +25,7 @@ require_once './include/prepend.inc';
 
 $errors  = array();
 $success = false;
-$bug_id = isset($_GET['bug_id']) ? (int) $_GET['bug_id'] : 0;
+$bug_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 if (!empty($bug_id)) {
 	// Try to find the email and the password
@@ -79,7 +79,7 @@ in the bug report.
 </p>
 
 <form method="get" action="bug-pwd-finder.php">
-<p><b>Bug Report ID:</b> #<input type="text" size="20" name="bug_id">
+<p><b>Bug Report ID:</b> #<input type="text" size="20" name="id">
 <input type="submit" value="Send"></p>
 </form>
 
