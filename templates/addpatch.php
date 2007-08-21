@@ -1,5 +1,9 @@
 <?php response_header('Add Patch :: ' . htmlspecialchars($package)); ?>
-<h2>Add a Patch to <a href="bug.php?id=<? echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a> for Package <?php echo '<a href="/package/', htmlspecialchars($package), '">', htmlspecialchars($package), '</a>'; ?></h2>
+<h2>Add a Patch to <a href="bug.php?id=<? echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a>
+<?php if ($site != 'php') { ?>
+ for Package <?php echo '<a href="/package/', htmlspecialchars($package), '">', htmlspecialchars($package), '</a>'; ?>
+<?php } ?>
+</h2>
 <ul>
  <li>One problem per patch, please</li>
  <li>Patches must be 20k or smaller</li>
