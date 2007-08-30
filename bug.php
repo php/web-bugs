@@ -54,10 +54,17 @@ if (!$res || !$bug) {
 
 $self = strip_tags($PHP_SELF);
 
+/* Is trusted ? */
+if (in_array($user, $trusted_developers) && verify_password($user,stripslashes($pw))) {
+	$is_trusted = true;
+} else {
+	$is_trusted = true;
+}
+
 # Delete comment
 if ($edit == 1 && isset($delete_comment)) {
 	$addon = '';
-	if (in_array($user, $trusted_developers) && verify_password($user,stripslashes($pw))) {
+	if ($is_trusted) {
 		delete_comment($id, $delete_comment);
 		$addon = '&thanks=1';
 	}
@@ -119,43 +126,49 @@ if ($in && $edit == 3) {
 	$from = stripslashes($in['commentemail']);
 }
 elseif ($in && $edit == 2) {
-	if (!$bug['passwd'] || $bug['passwd'] != stripslashes($pw)) {
-		$errors[] = "The password you supplied was incorrect.";
-	}
+    # Bogus is bogus. No more comments, no re-opening by lusers.
+	if ($bug['status'] == 'Bogus') {
+		$errors[] = "You can not comment bogus reports or change their status.";
+	} else {
 
-	$ncomment = trim($ncomment);
-	if (!$ncomment) {
-		$errors[] = "You must provide a comment.";
-	}
-	if (is_spam($ncomment)) {
-		$errors[] = "Please do not SPAM our bug system.";
-	}
-
-	# check that they aren't being bad and setting a status they
-	# aren't allowed to (oh, the horrors.)
-	if ($in['status'] != $bug['status'] && $state_types[$in['status']] != 2) {
-		$errors[] = "You aren't allowed to change a bug to that state.";
-	}
-
-	# check that they aren't changing the mail to a php.net address
-	# (gosh, somebody might be fooled!)
-	if (preg_match('/^(.+)@php\.net/i', $in['email'], $m)) {
-		if ($user != $m[1] || !verify_password($user,$pass)) {
-			$errors[] = "You have to be logged in as a developer to use your php.net email address.";
+		if (!$bug['passwd'] || $bug['passwd'] != stripslashes($pw)) {
+			$errors[] = "The password you supplied was incorrect.";
 		}
-	}
 
-	$from = ($bug['email'] != $in['email'] && !empty($in['email'])) ? $in['email'] : $bug['email'];
+		$ncomment = trim($ncomment);
+		if (!$ncomment) {
+			$errors[] = "You must provide a comment.";
+		}
+		if (is_spam($ncomment)) {
+			$errors[] = "Please do not SPAM our bug system.";
+		}
 
-	if (!$errors && !($errors = incoming_details_are_valid($in))) {
-		/* update bug record */
-		$query = "UPDATE bugdb SET sdesc='" . $in['sdesc'] . "',status='" . $in['status'] . "', bug_type='" . $in['bug_type'] . "', php_version='" . $in['php_version'] . "', php_os='" . $in['php_os'] . "', ts2=NOW(), email='$from' WHERE id=$id";
-		$success = @mysql_query($query);
-		
-		/* add comment */
-		if ($success && !empty($ncomment)) {
-			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment')";
+		# check that they aren't being bad and setting a status they
+		# aren't allowed to (oh, the horrors.)
+		if ($in['status'] != $bug['status'] && $state_types[$in['status']] != 2) {
+			$errors[] = "You aren't allowed to change a bug to that state.";
+		}
+
+		# check that they aren't changing the mail to a php.net address
+		# (gosh, somebody might be fooled!)
+		if (preg_match('/^(.+)@php\.net/i', $in['email'], $m)) {
+			if ($user != $m[1] || !verify_password($user,$pass)) {
+				$errors[] = "You have to be logged in as a developer to use your php.net email address.";
+			}
+		}
+
+		$from = ($bug['email'] != $in['email'] && !empty($in['email'])) ? $in['email'] : $bug['email'];
+
+		if (!$errors && !($errors = incoming_details_are_valid($in))) {
+			/* update bug record */
+			$query = "UPDATE bugdb SET sdesc='" . $in['sdesc'] . "',status='" . $in['status'] . "', bug_type='" . $in['bug_type'] . "', php_version='" . $in['php_version'] . "', php_os='" . $in['php_os'] . "', ts2=NOW(), email='$from' WHERE id=$id";
 			$success = @mysql_query($query);
+		
+			/* add comment */
+			if ($success && !empty($ncomment)) {
+				$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment')";
+				$success = @mysql_query($query);
+			}
 		}
 	}
 }
@@ -532,12 +545,12 @@ commonFooter("http://bugs.php.net/rss/bug.php?id=$id&format=rss");
 
 function output_note($com_id, $ts, $email, $comment)
 {
-	global $edit, $id, $trusted_developers, $user, $self;
+	global $edit, $id, $is_trusted, $self;
 
 	echo "<a name=\"c$com_id\"></a>";
 	echo "<div class=\"comment\">";
 	echo "<b>[",format_date($ts),"] ", htmlspecialchars(spam_protect($email)), "</b>\n";
-	echo ($edit == 1 && $com_id !== 0 && in_array($user, $trusted_developers)) ? "<a href=\"$self?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
+	echo ($edit == 1 && $com_id !== 0 && $is_trusted) ? "<a href=\"$self?id=$id&amp;edit=1&amp;delete_comment=$com_id\">[delete]</a>\n" : '';
 	echo "<pre class=\"note\">";
 	$note = addlinks(preg_replace("/(\r?\n){3,}/","\n\n",wordwrap($comment,72,"\n",1)));
 	echo preg_replace('/(bug\ *#([0-9]+))/i', "<a href=\"$self?id=\\2\">\\1</a>", $note);
