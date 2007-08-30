@@ -112,7 +112,9 @@ function show_state_options($state, $user_mode=0, $default="")
 	}
 
 	/* regular users can only pick states with type 2 for unclosed bugs */
-	if($state != "All" && $state_types[$state] == 1 && $user_mode == 2) {
+	if ($user_mode == 2 && $state == 'Bogus') {
+		echo "<option>Bogus</option>\n";
+	} else if($state != "All" && $state_types[$state] == 1 && $user_mode == 2) {
 		/* If state was 'Feedback', set state to 'Open' automatically. */
 		if($state == "Feedback" || $state == "No Feedback") {
 			echo "<option>Open</option>\n";
