@@ -55,9 +55,8 @@ if (!$res || !$bug) {
 $self = strip_tags($PHP_SELF);
 
 /* Is trusted ? */
+$is_trusted = false;
 if (in_array($user, $trusted_developers) && verify_password($user,stripslashes($pw))) {
-	$is_trusted = true;
-} else {
 	$is_trusted = true;
 }
 
