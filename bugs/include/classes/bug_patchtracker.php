@@ -1,10 +1,8 @@
 <?php
 
-require_once 'HTTP/Upload.php';
-
 class Bug_Patchtracker
 {
-    var $_upload;
+    var $_init;
     var $_patchdir;
     var $_dbh;
 
@@ -12,12 +10,12 @@ class Bug_Patchtracker
     {
         if (!file_exists(BUG_PATCHTRACKER_TMPDIR)) {
             if (!@mkdir(BUG_PATCHTRACKER_TMPDIR)) {
-                $this->_upload = false;
+                $this->_init = false;
                 $this->_dbh = &$GLOBALS['dbh'];
                 return;
             }
         }
-        $this->_upload = new HTTP_Upload('en');
+        $this->_init = true;
         $this->_dbh = $GLOBALS['dbh'];
     }
 
@@ -86,8 +84,8 @@ class Bug_Patchtracker
         }
         PEAR::popErrorHandling();
         if (PEAR::isError($e)) {
-            return PEAR::raiseError('Could not get unique patch file name for bug #' .
-                $bugid . ', patch "'. $patch . '"');
+        var_dump($e);
+            return PEAR::raiseError("Could not get unique patch file name for bug #{$bugid}, patch \"{$patch}\"");
         }
         return array($id, $this->getPatchFileName($id));
     }
@@ -138,9 +136,8 @@ class Bug_Patchtracker
      */
     function attach($bugid, $patch, $name, $handle, $obsoletes)
     {
-        if (!$this->_upload) {
-            return PEAR::raiseError('Upload directory for patches could not be' .
-                ' initialized');
+        if (!$this->_init) {
+            return PEAR::raiseError('Upload directory for patches could not be initialized');
         }
         if (!preg_match('/^[\w\-\.]+\z/', $name) || strlen($name) > 40) {
             return PEAR::raiseError('Invalid patch name "' . $name . '"');
@@ -164,52 +161,72 @@ class Bug_Patchtracker
         if (PEAR::isError($e = $this->setupPatchDir($bugid, $name))) {
             return $e;
         }
-        $file = $this->_upload->getFiles($patch);
-        if (PEAR::isError($file)) {
-            return $file;
-        }
-        if ($file->isValid()) {
+
+        if (isset($_FILES[$patch]) && !$_FILES[$patch]['error']) {
+	        $file = $_FILES[$patch];
+
             $res = $this->newPatchFileName($bugid, $name, $handle);
             if (PEAR::isError($res)) {
                 return $res;
             }
             list($id, $fname) = $res;
-            $file->setName($fname);
+
             $allowed_mime_types = array('application/x-txt',
                                         'text/plain',
                                         'text/x-diff',
                                         'text/x-patch'
                                        );
-            if (!in_array($file->getProp('type'), $allowed_mime_types)) {
+
+            if (!in_array($file['type'], $allowed_mime_types)) {
                 $this->_dbh->query('DELETE FROM bugdb_patchtracker
                     WHERE bugdb_id = ? and patch = ? and revision = ?',
                     array($bugid, $name, $id));
-                return PEAR::raiseError('Error: uploaded patch file must be text ' .
-                    'file (save as e.g. "patch.txt" or "package.diff")');
+                return PEAR::raiseError('Error: uploaded patch file must be text file (save as e.g. "patch.txt" or "package.diff")');
             }
-            $tmpfile = $file->moveTo($this->patchDir($bugid, $name));
-            if (PEAR::isError($tmpfile)) {
+            if (!move_uploaded_file($file['tmp_name'], $this->patchDir($bugid, $name) . "/{$fname}")) {
                 $this->_dbh->query('DELETE FROM bugdb_patchtracker
                     WHERE bugdb_id = ? and patch = ? and revision = ?',
                     array($bugid, $name, $id));
-                return $tmpfile;
+                return PEAR::raiseError('could not move uploaded file to: ' . $this->patchDir($bugid, $name));
             }
-            if (!$file->getProp('size')) {
+            if (!$file['size']) {
                 $this->detach($bugid, $name, $id);
                 return PEAR::raiseError('zero-length patches not allowed');
             }
-            if ($file->getProp('size') > 10240) {
+            if ($file['size'] > 20480) {
                 $this->detach($bugid, $name, $id);
-                return PEAR::raiseError('Patch files cannot be larger than 10k');
+                return PEAR::raiseError('Patch files cannot be larger than 20k');
             }
             foreach ($newobsoletes as $obsolete) {
                 $this->obsoletePatch($bugid, $name, $id, $obsolete[0], $obsolete[1]);
             }
             return $id;
-        } elseif ($file->isMissing()) {
-            return PEAR::raiseError('No patch has been uploaded.');
-        } elseif ($file->isError()) {
-            return PEAR::raiseError($file->errorMsg());
+        } elseif ($file['error']) {
+        	switch ($file['error'])
+        	{
+               case UPLOAD_ERR_OK:
+                 $msg = 'Upload ok';
+                 break;
+               case UPLOAD_ERR_INI_SIZE:
+                 $msg = 'Uploaded file size exceeds the php.ini upload_max_filesize of ' . ini_get('upload_max_filesize') . ' bytes';
+                 break;
+               case UPLOAD_ERR_FORM_SIZE:
+                 $msg = 'Uploaded file size exceeds the MAX_FILE_SIZE!';
+                 break;
+               case UPLOAD_ERR_PARTIAL:
+                 $msg = 'Partial upload!';
+                 break;
+               case UPLOAD_ERR_NO_FILE:
+                 $msg = 'No file uploaded!';
+                 break;
+               case UPLOAD_ERR_NO_TMP_DIR:
+                 $msg = 'Temporary directory not found!';
+                 break;
+               case UPLOAD_ERR_CANT_WRITE:
+                 $msg = 'Could not write file!';
+                 break;
+            }
+            return PEAR::raiseError($msg);
         }
         return PEAR::raiseError('Unable to attach patch');
     }
@@ -240,10 +257,12 @@ class Bug_Patchtracker
      */
     function getPatch($bugid, $name, $revision)
     {
+    	global $site;
+    	
         if ($this->_dbh->getOne('SELECT bugdb_id FROM bugdb_patchtracker
               WHERE bugdb_id = ? AND patch = ? AND revision = ?',
               array($bugid, $name, $revision))) {
-            if (!$this->_dbh->getOne('SELECT registered FROM users, bugdb_patchtracker
+            if ($site != 'php' && !$this->_dbh->getOne('SELECT registered FROM users, bugdb_patchtracker
                 WHERE bugdb_id=? AND patch=? AND revision=? AND
                 users.handle=bugdb_patchtracker.developer', array($bugid, $name, $revision))) {
                 // user is not registered
@@ -251,13 +270,11 @@ class Bug_Patchtracker
             }
             $contents = @file_get_contents($this->getPatchFullpath($bugid, $name, $revision));
             if (!$contents) {
-                return PEAR::raiseError('Cannot retrieve patch revision "' .
-                    $revision . '" for patch "' . $name . '"');
+                return PEAR::raiseError('Cannot retrieve patch revision "'. $revision . '" for patch "' . $name . '"');
             }
             return $contents;
         }
-        return PEAR::raiseError('No such patch revision "' .
-            $revision . '", or no such patch "' . $name . '"');
+        return PEAR::raiseError('No such patch revision "' . $revision . '", or no such patch "' . $name . '"');
     }
 
     /**
@@ -270,8 +287,8 @@ class Bug_Patchtracker
     {
         return $this->_dbh->getAssoc(
             'SELECT patch, revision, developer
-                FROM bugdb_patchtracker, users
-                WHERE bugdb_id = ? AND users.handle=bugdb_patchtracker.developer
+		     FROM bugdb_patchtracker
+             WHERE bugdb_id = ? 
              ORDER BY revision DESC',
             false, array($bugid),
             DB_FETCHMODE_ORDERED, true

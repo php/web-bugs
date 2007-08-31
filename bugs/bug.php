@@ -1129,18 +1129,18 @@ $patches = new Bug_Patchtracker;
 $p = $patches->listPatches($bug_id);
 ?>
 <h2>Patches</h2>
-<a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a><br />
 <?php
 foreach ($p as $name => $revisions)
 {
     $obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
-    echo '<a href="patch-display.php?bug=', $bug_id,
+    echo '<a href="patch-display.php?bug_id=', $bug_id,
          '&patch=', urlencode($name),
          '&revision=latest',
          (!empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : ''),
          '">', htmlspecialchars($name),
          '</a> (last revision ', format_date($revisions[0][0]), ' by ', $revisions[0][1], ')<br />';
 }
+?><br /><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a><br /><?php 
 
 // Display comments
 $query = '

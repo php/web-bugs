@@ -11,7 +11,7 @@ $canpatch = ($logged_in == 'developer');
 
 if (empty($bug_id)) {
     response_header('Error :: no bug selected');
-    display_bug_error('No bug selected to add a patch to');
+    display_bug_error('No bug id selected');
     response_footer();
     exit;
 }
@@ -38,7 +38,7 @@ if (isset($_GET['patchname']) && isset($_GET['revision'])) {
         response_footer();
         exit;
     }
-    if ($patchinfo->userNotRegistered($bug_id, $_GET['patchname'], $_GET['revision'])) {
+    if ($site != 'php' && $patchinfo->userNotRegistered($bug_id, $_GET['patchname'], $_GET['revision'])) {
         response_header('User has not confirmed identity');
         display_bug_error('The user who submitted this patch has not yet confirmed their email address.');
         echo '<p>If you submitted this patch, please check your email.</p>' .
@@ -48,9 +48,9 @@ if (isset($_GET['patchname']) && isset($_GET['revision'])) {
         response_footer();
         exit;
     }
-    require_once 'HTTP.php';
     if (isset($_GET['download'])) {
-        header('Last-modified: ' . HTTP::date(filemtime($path)));
+    	$tmp = filemtime($path);
+        header('Last-modified: ' . date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC');
         header('Content-type: application/octet-stream');
         header("Content-disposition: attachment; filename=\"{$_GET['patchname']}.patch.txt\"");
         header('Content-length: '.filesize($path));

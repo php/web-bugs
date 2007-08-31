@@ -81,32 +81,39 @@ if (isset($_POST['addpatch'])) {
                 throw new Exception('');
             }
             // user doesn't exist yet
-            require_once 'include/classes/bug_accountrequest.php';
-            $buggie = new Bug_Accountrequest;
-            $salt = $buggie->addRequest($email);
-            if (is_array($salt)) {
-                $errors = $salt;
-                response_header('Add patch - Problems');
-                throw new Exception('');
-            }
-            if (PEAR::isError($salt)) {
-                $errors[] = $salt;
-                response_header('Add patch - Problems');
-                throw new Exception('');
-            }
-            if ($salt === false) {
-                $errors[] = 'Your account cannot be added to the queue.'
-                     . ' Please write a mail message to the '
-                     . ' <i>pear-dev</i> mailing list.';
-                response_header('Add patch - Problems');
-                throw new Exception('');
+            if ($site != 'php') {
+	            require_once 'include/classes/bug_accountrequest.php';
+	            $buggie = new Bug_Accountrequest;
+	            $salt = $buggie->addRequest($email);
+	            if (is_array($salt)) {
+               		$errors = $salt;
+               		response_header('Add patch - Problems');
+               		throw new Exception('');
+				}
+				if (PEAR::isError($salt)) {
+            	    $errors[] = $salt;
+            	    response_header('Add patch - Problems');
+            	    throw new Exception('');
+                }
+                if ($salt === false) {
+                    $errors[] = 'Your account cannot be added to the queue.'
+							  . ' Please write a mail message to the '
+                              . ' <i>pear-dev</i> mailing list.';
+                    response_header('Add patch - Problems');
+                    throw new Exception('');
+                }
+                $handle = $buggie->handle;
+            } else {
+            	$handle = $email;
             }
 
             PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-            $e = $patchinfo->attach($bug_id, 'patch', $patchname, $buggie->handle, $obsoleted);
+            $e = @$patchinfo->attach($bug_id, 'patchfile', $patchname, $handle, $obsoleted);
             PEAR::popErrorHandling();
             if (PEAR::isError($e)) {
-                $buggie->deleteRequest();
+            	if (isset($buggie)) {
+	                $buggie->deleteRequest();
+				}
                 $patches = $patchinfo->listPatches($bug_id);
                 $errors[] = $e->getMessage();
                 $errors[] = 'Could not attach patch "' . htmlspecialchars($patchname) . '" to Bug #' . $bug_id;
@@ -115,14 +122,16 @@ if (isset($_POST['addpatch'])) {
                 include $templates_path . '/templates/addpatch.php';
                 exit;
             }
-            try {
-                $buggie->sendEmail();
-            } catch (Exception $e) {
-                response_header('Error sending confirmation email');
-                report_error(array('Patch was successfully attached, but account confirmation email not sent, please report to pear-core@lists.php.net', $e));
-                response_footer();
-                exit;
-            }
+            if ($site != 'php') {
+	            try {
+	                $buggie->sendEmail();
+	            } catch (Exception $e) {
+	                response_header('Error sending confirmation email');
+	                report_error(array('Patch was successfully attached, but account confirmation email not sent, please report to pear-core@lists.php.net', $e));
+	                response_footer();
+	                exit;
+	            }
+			}
             localRedirect("patch-display.php?bug_id={$bug_id}&patch=" . urlencode($patchname) . '&revision=' . $e);
             exit;
         } catch (Exception $e) {
@@ -134,7 +143,7 @@ if (isset($_POST['addpatch'])) {
         }
     }
     PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-    $e = $patchinfo->attach($bug_id, 'patch', $patchname, $auth_user->handle, $obsoleted);
+    $e = $patchinfo->attach($bug_id, 'patchfile', $patchname, $auth_user->handle, $obsoleted);
     PEAR::popErrorHandling();
     if (PEAR::isError($e)) {
         $patches = $patchinfo->listPatches($bug_id);
@@ -175,6 +184,8 @@ if (isset($_POST['addpatch'])) {
 
         if (!DEVBOX) {
             $res = $mailer->send($additionalHeaders);
+        } else {
+        	var_dump($mailData, $additionalHeaders); 
         }
 
         if (PEAR::isError($res)) {
