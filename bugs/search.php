@@ -378,7 +378,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 echo '  <td align="center">'.format_date(strtotime($row['ts1'])).'</td>' . "\n";
                 $pck = htmlspecialchars($row['package_name']);
                 echo '  <td><a href="/package/'.$pck.'">'.$pck.'</a></td>' . "\n";
-                echo '  <td>', htmlspecialchars(@$types[$row['bug_type']]), '</td>' . "\n";
+                $type_idx = !empty($row['bug_type']) ? $row['bug_type'] : 'Bug';
+                echo '  <td>', htmlspecialchars($bug_types[$type_idx]), '</td>' . "\n";
                 echo '  <td>', htmlspecialchars($row['status']);
                 if ($row['status'] == 'Feedback' && $row['unchanged'] > 0) {
                     printf ("<br />%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
