@@ -540,7 +540,7 @@ function get_bugtype_mail($bug_type)
 		return array("systems@php.net","systems@php.net");
 	}
 	elseif (eregi("website", $bug_type)) {
-		return array("php-mirrors@lists.php.net","php-mirrors@lists.php.net");
+		return array("php-webmaster@lists.php.net","php-webmaster@lists.php.net");
 	}
 	elseif (eregi("pear", $bug_type)) {
 		return array("pear-dev@lists.php.net","pear-dev@lists.php.net");
