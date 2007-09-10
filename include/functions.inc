@@ -525,13 +525,13 @@ function get_bugtype_mail($bug_type)
 	global $mail_bugs_to;
 
 	if (eregi("documentation", $bug_type)) {
-		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
+		return array("doc-bugs@lists.php.net", "doc-bugs@lists.php.net");
 	}
 	elseif (eregi("translation", $bug_type)) {
-		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
+		return array("doc-bugs@lists.php.net", "doc-bugs@lists.php.net");
 	}
 	elseif (eregi("livedocs", $bug_type)) {
-		return array("phpdoc@lists.php.net", "phpdoc@lists.php.net");
+		return array("doc-bugs@lists.php.net", "doc-bugs@lists.php.net");
 	}
 	elseif (eregi("docweb", $bug_type)) {
 		return array("doc-web@lists.php.net", "doc-web@lists.php.net");
