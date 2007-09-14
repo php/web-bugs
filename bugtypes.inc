@@ -1,4 +1,5 @@
 <?php
+// See the list of removed categories at the end of this file.
 $items = array (
 	'Any' => 'Any (except Feature Requests)',
 
@@ -6,7 +7,7 @@ $items = array (
 	'Feature/Change Request'   => '&nbsp;&nbsp;&nbsp;&nbsp;Feature/Change Request',
 	'Documentation problem'    => '&nbsp;&nbsp;&nbsp;&nbsp;Documentation problem',
 	'Translation problem'      => '&nbsp;&nbsp;&nbsp;&nbsp;Documentation translation problem',
-	'Livedocs problem'         => '&nbsp;&nbsp;&nbsp;&nbsp;Livedocs problem',
+	'Doc Build problem'        => '&nbsp;&nbsp;&nbsp;&nbsp;Doc Build (PhD) problem',
 	'Website problem'          => '&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem',
 	'Systems problem'          => '&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Systems Operation problem',
 	'Output Control'           => '&nbsp;&nbsp;&nbsp;&nbsp;Output Control',
@@ -170,3 +171,15 @@ $items = array (
 
 	'Unknown/Other Function' => 'Unknown/Other Function',
 );
+
+/*
+Removed categories:
+ - Livedocs problem : Replaced with a new doc build system named PhD
+
+ Previously when we removed categories from bugsweb, we would re-categorize them as "Unknown/Other Function" 
+ but rather than lose category information this has changed... the categories are now kept. 
+ 
+ Perhaps in the future we can add the ability to search (but not add/comment) the removed categories via the 
+ form instead of manually typing the category name as done currently. But, in theory, people don't care about 
+ these "orphaned" bugs. Later let's discuss this for the new bug system.
+*/

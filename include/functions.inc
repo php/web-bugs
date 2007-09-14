@@ -514,7 +514,7 @@ function incoming_details_are_valid ($in, $initial=0)
 
 function is_phpversion_irrelevant($bugtype)
 {
-	if (in_array($bugtype, array('Documentation problem','Translation problem','Livedocs problem','DocWeb problem','Website problem','Systems problem'))) {
+	if (in_array($bugtype, array('Documentation problem','Translation problem','Doc Build problem','DocWeb problem','Website problem','Systems problem'))) {
 		return true;
 	}
 	return false;
@@ -530,7 +530,7 @@ function get_bugtype_mail($bug_type)
 	elseif (eregi("translation", $bug_type)) {
 		return array("doc-bugs@lists.php.net", "doc-bugs@lists.php.net");
 	}
-	elseif (eregi("livedocs", $bug_type)) {
+	elseif (eregi("doc build", $bug_type)) {
 		return array("doc-bugs@lists.php.net", "doc-bugs@lists.php.net");
 	}
 	elseif (eregi("docweb", $bug_type)) {
