@@ -347,16 +347,30 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
             }
 
             $link .= '&amp;status='      . urlencode($status);
+            $package_count = count($package_name);
 ?>
 
 <table border="0" cellspacing="2" width="100%">
 
 <?php show_prev_next($begin, $rows, $total_rows, $link, $limit);?>
 
+<?php if ($package_count === 1) { ?>
+ <tr>
+  <td class="search-prev_next" style="text-align: center;" colspan="9">
+<?php
+   $pck = htmlspecialchars($package_name[0]);
+   echo " Bugs for <a href='/package/{$pck}'>{$pck}</a>\n";
+?>
+  </td>
+ </tr>
+<?php } ?>
+
  <tr>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=ts1">Date</a></th>
+<?php if ($package_count !== 1) { ?>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=package_name">Package</a></th>
+<?php } ?>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=package_version">Package Version</a></th>
@@ -376,8 +390,12 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
                 /* Date */
                 echo '  <td align="center">'.format_date(strtotime($row['ts1'])).'</td>' . "\n";
-                $pck = htmlspecialchars($row['package_name']);
-                echo '  <td><a href="/package/'.$pck.'">'.$pck.'</a></td>' . "\n";
+
+                if ($package_count !== 1) {
+                    $pck = htmlspecialchars($row['package_name']);
+                    echo "<td><a href='/package/{$pck}'>{$pck}</a></td>\n";
+                }
+
                 $type_idx = !empty($row['bug_type']) ? $row['bug_type'] : 'Bug';
                 echo '  <td>', htmlspecialchars($bug_types[$type_idx]), '</td>' . "\n";
                 echo '  <td>', htmlspecialchars($row['status']);
