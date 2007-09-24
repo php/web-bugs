@@ -645,7 +645,7 @@ class PEAR_Bug_Accountrequest
         if (DEVBOX == false) {
             // mail to package developers
             @mail($mailto, "[PEAR-BUG] $buginfo[bug_type] #$buginfo[id] [NEW]: $sdesc",
-                  $ascii_report . "1\n-- \n$dev_extra", $extra_headers,
+                  $ascii_report . "1\n-- \n", $extra_headers,
                   '-f bounce-no-user@php.net');
             // mail to reporter
             @mail($email, "[PEAR-BUG] $buginfo[bug_type] #$buginfo[id]: $sdesc",

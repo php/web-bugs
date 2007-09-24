@@ -28,5 +28,8 @@ if ($account->pending()) {
 response_header('PEAR :: email re-sent'); ?>
 
 <h1>Verification email resent</h1>
+<p>
+The verification email has been sent to your email address.
+</p>
 
 <?php response_footer();

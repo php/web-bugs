@@ -174,7 +174,8 @@ class Bug_Patchtracker
             $allowed_mime_types = array('application/x-txt',
                                         'text/plain',
                                         'text/x-diff',
-                                        'text/x-patch'
+                                        'text/x-patch',
+                                        'text/x-c++',
                                        );
 
             if (!in_array($file['type'], $allowed_mime_types)) {
@@ -228,7 +229,7 @@ class Bug_Patchtracker
             }
             return PEAR::raiseError($msg);
         }
-        return PEAR::raiseError('Unable to attach patch');
+        return PEAR::raiseError('Unable to attach patch (try renaming the file with .txt extension)');
     }
 
     /**
