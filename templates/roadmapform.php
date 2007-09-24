@@ -10,11 +10,13 @@
 <?php endforeach; ?>
  <li><a href="roadmap.php?package=<?php echo urlencode($this->package) ?>&new=1">New roadmap</a></li>
 </ul>
-<?php if ($this->errors) {
+<?php
+if ($this->errors) {
     foreach ($this->errors as $error) {
         echo '<div class="errors">', htmlspecialchars($error), '</div>';
     }
-} ?>
+}
+?>
 <h2><?php if ($this->isnew) { echo 'Create new'; } else { echo 'Edit'; } ?> Roadmap</h2>
 <form name="roadmapform" method="post" action="roadmap.php?<?php
     if ($this->isnew) {
@@ -52,6 +54,21 @@
        } ?>" />
   </td>
  </tr>
+<?php
+// Check if there has been a release before
+if ($this->isnew && !empty($this->lastRelease)) {
+?>
+ <tr>
+  <th class="form-label_left">
+   Import closed bugs since last release (<?php echo $this->lastRelease; ?>)
+  </th>
+  <td class="form-input">
+   <input type="checkbox" name="importbugs" <?php if ($this->import) { echo 'checked="checked"'; } ?> />
+  </td>
+ </tr>
+<?php
+}
+?>
 </table>
 <input type="submit" name="go" value="Save" />
 </form>
