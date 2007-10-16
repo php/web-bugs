@@ -31,6 +31,23 @@ For Windows (installer):
   http://snaps.php.net/win32/php5.2-win32-installer-latest.msi',
   ),
 
+  'trysnapshot53' => array(
+    'status' => 'Feedback',
+    'desc' => 'Try a CVS snapshot (PHP 5.3)',
+    'message' =>
+'Please try using this CVS snapshot:
+
+  http://snaps.php.net/php5.3-latest.tar.gz
+ 
+For Windows (zip):
+ 
+  http://snaps.php.net/win32/php5.3-win32-latest.zip
+
+For Windows (installer):
+
+  http://snaps.php.net/win32/php5.3-win32-installer-latest.msi',
+  ),
+
   'trysnapshot60' => array(
     'status' => 'Feedback',
     'desc' => 'Try a CVS snapshot (PHP 6.0)',
