@@ -303,6 +303,13 @@ to get updated, we would like to ask you to be a bit patient.
 
 Thank you for the report, and for helping us make our documentation better.',
 
+    'Doc Build problem' =>
+'This bug has been fixed in CVS. Since the websites are not directly
+updated from the CVS server, the fix might need some time to spread
+across the globe to all mirror sites, including PHP.net itself.
+
+Thank you for the report, and for helping us make PHP.net better.',
+
     'DocWeb problem' =>
 'This bug has been fixed in CVS. Since the PHP Documentation Tools website
 is updated from the CVS repository at a regular interval, the fix might need
