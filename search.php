@@ -160,7 +160,9 @@ if (isset($cmd) && $cmd == "display") {
 				"&amp;php_os="     . urlencode(stripslashes($php_os)) .
 				"&amp;boolean="    . BOOLEAN_SEARCH .
 				"&amp;author_email=". urlencode(stripslashes($author_email)) .
-				"&amp;bug_age=$bug_age&amp;by=$by&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
+				"&amp;bug_age=$bug_age" .
+				"&amp;by="         . urlencode(stripslashes($by)) .
+				"&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
 
 		commonHeader("Search", true, "http://bugs.php.net/rss".$link);
 ?>
