@@ -330,9 +330,13 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 '&amp;assign='      . urlencode($assign) .
                 '&amp;maintain='    . urlencode($maintain);
 
+        if (isset($_GET['showmenu'])) {
+            $link .= '&amp;showmenu=1';
+        }
+
         if (!$rows) {
             if (isset($_GET['showmenu'])) {
-                show_bugs_menu($package_name, $status, $link . '&amp;showmenu=1');
+                show_bugs_menu($package_name, $status, $link);
             } else {
                 show_bugs_menu($package_name, $status);
             }
@@ -341,12 +345,12 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         } else {
             display_bug_error($warnings, 'warnings', 'WARNING:');
             if (isset($_GET['showmenu'])) {
-                show_bugs_menu($package_name, $status, $link . '&amp;showmenu=1');
+                show_bugs_menu($package_name, $status, $link);
             } else {
                 show_bugs_menu($package_name, $status);
             }
 
-            $link .= '&amp;status='      . urlencode($status);
+            $link .= '&amp;status=' . urlencode($status);
             $package_count = count($package_name);
 ?>
 
