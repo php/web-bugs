@@ -98,6 +98,10 @@ as a feature request.)</p>
   can be found <a href="bugs-generating-backtrace.php">here for *NIX users</a> and
    <a href="bugs-generating-backtrace-win32.php">here for Windows users</a>.
  </li>
+ <li> 
+  <a href="http://valgrind.org">Valgrind</a> log can be also very useful.
+  See <a href="bugs-getting-valgrind-log.php">instructions how to generate it</a>.
+ </li>
 </ul>
 
 <h2>Use English.</h2>
