@@ -260,6 +260,7 @@ statistics below.
   </tr>
   <tr id="submitter">
    <th>From:</th><td><?php echo htmlspecialchars(spam_protect($bug['email']))?></td>
+   <th>Assigned to:</th><td><?php echo htmlspecialchars($bug['assign'])?></td>
   </tr>
   <tr id="categorization">
    <th>Status:</th><td><?php echo htmlspecialchars($bug['status'])?></td>
