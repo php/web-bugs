@@ -246,7 +246,7 @@ includes writing a floating point value in your script and directly
 printing it without any mathematical operations.
 
 If you would like to know more about "floats" and what IEEE
-754 is read this:
+754 is, read this:
 http://docs.sun.com/source/806-3568/ncg_goldberg.html
  
 Thank you for your interest in PHP.',
