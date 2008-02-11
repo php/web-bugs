@@ -217,6 +217,9 @@ our <a href="http://www.php.net/mailing-lists.php">internals</a> list.</p>
 
 if (!isset($in)) {
     commonHeader("Report - New");
+
+    // Allow passing in a default bug_type (e.g., report.php?bug_type=Documentation+problem)
+    $default_bug_type = isset($_GET['bug_type']) ? clean($_GET['bug_type']) : '';
 ?>
 
 <p>Before you report a bug, make sure to search for similar bugs using the form
@@ -263,7 +266,7 @@ if ($errors) display_errors($errors);
  </tr><tr>
   <th align="right">Type of bug:</th>
   <td colspan="2">
-    <select name="in[bug_type]"><?php show_types($in['bug_type'],0);?></select>
+    <select name="in[bug_type]"><?php show_types($in['bug_type'],0,$default_bug_type);?></select>
   </td>
  </tr><tr>
   <th align="right">Operating system:</th>
