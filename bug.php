@@ -125,49 +125,43 @@ if ($in && $edit == 3) {
 	$from = stripslashes($in['commentemail']);
 }
 elseif ($in && $edit == 2) {
-    # Bogus is bogus. No more comments, no re-opening by lusers.
-	if ($bug['status'] == 'Bogus') {
-		$errors[] = "You can not comment bogus reports or change their status.";
-	} else {
+	if (!$bug['passwd'] || $bug['passwd'] != stripslashes($pw)) {
+		$errors[] = "The password you supplied was incorrect.";
+	}
 
-		if (!$bug['passwd'] || $bug['passwd'] != stripslashes($pw)) {
-			$errors[] = "The password you supplied was incorrect.";
+	$ncomment = trim($ncomment);
+	if (!$ncomment) {
+		$errors[] = "You must provide a comment.";
+	}
+	if (is_spam($ncomment)) {
+		$errors[] = "Please do not SPAM our bug system.";
+	}
+
+	# check that they aren't being bad and setting a status they
+	# aren't allowed to (oh, the horrors.)
+	if ($in['status'] != $bug['status'] && $state_types[$in['status']] != 2) {
+		$errors[] = "You aren't allowed to change a bug to that state.";
+	}
+
+	# check that they aren't changing the mail to a php.net address
+	# (gosh, somebody might be fooled!)
+	if (preg_match('/^(.+)@php\.net/i', $in['email'], $m)) {
+		if ($user != $m[1] || !verify_password($user,$pass)) {
+			$errors[] = "You have to be logged in as a developer to use your php.net email address.";
 		}
+	}
 
-		$ncomment = trim($ncomment);
-		if (!$ncomment) {
-			$errors[] = "You must provide a comment.";
-		}
-		if (is_spam($ncomment)) {
-			$errors[] = "Please do not SPAM our bug system.";
-		}
+	$from = ($bug['email'] != $in['email'] && !empty($in['email'])) ? $in['email'] : $bug['email'];
 
-		# check that they aren't being bad and setting a status they
-		# aren't allowed to (oh, the horrors.)
-		if ($in['status'] != $bug['status'] && $state_types[$in['status']] != 2) {
-			$errors[] = "You aren't allowed to change a bug to that state.";
-		}
-
-		# check that they aren't changing the mail to a php.net address
-		# (gosh, somebody might be fooled!)
-		if (preg_match('/^(.+)@php\.net/i', $in['email'], $m)) {
-			if ($user != $m[1] || !verify_password($user,$pass)) {
-				$errors[] = "You have to be logged in as a developer to use your php.net email address.";
-			}
-		}
-
-		$from = ($bug['email'] != $in['email'] && !empty($in['email'])) ? $in['email'] : $bug['email'];
-
-		if (!$errors && !($errors = incoming_details_are_valid($in))) {
-			/* update bug record */
-			$query = "UPDATE bugdb SET sdesc='" . $in['sdesc'] . "',status='" . $in['status'] . "', bug_type='" . $in['bug_type'] . "', php_version='" . $in['php_version'] . "', php_os='" . $in['php_os'] . "', ts2=NOW(), email='$from' WHERE id=$id";
+	if (!$errors && !($errors = incoming_details_are_valid($in))) {
+		/* update bug record */
+		$query = "UPDATE bugdb SET sdesc='" . $in['sdesc'] . "',status='" . $in['status'] . "', bug_type='" . $in['bug_type'] . "', php_version='" . $in['php_version'] . "', php_os='" . $in['php_os'] . "', ts2=NOW(), email='$from' WHERE id=$id";
+		$success = @mysql_query($query);
+	
+		/* add comment */
+		if ($success && !empty($ncomment)) {
+			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment')";
 			$success = @mysql_query($query);
-		
-			/* add comment */
-			if ($success && !empty($ncomment)) {
-				$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment')";
-				$success = @mysql_query($query);
-			}
 		}
 	}
 }
