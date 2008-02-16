@@ -185,7 +185,7 @@ part of our efforts to make PHP scripting more secure and portable.',
     'desc' => 'PHP 4 support discontinued',
     'message' =>
 'We are sorry, but we can not support PHP 4 related problems anymore.
-Momentum is gathering for PHP 6, and we think supporting PHP 5 will
+Momentum is gathering for PHP 6, and we think supporting PHP 4 will
 lead to a waste of resources which we want to put into getting PHP 6
 ready.',
   ),
