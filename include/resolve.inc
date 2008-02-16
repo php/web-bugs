@@ -1,19 +1,6 @@
 <?php
 
 $RESOLVE_REASONS = array(
-  'trysnapshot44' => array(
-    'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (PHP 4.4)',
-    'message' =>
-'Please try using this CVS snapshot:
-
-  http://snaps.php.net/php4-STABLE-latest.tar.gz
- 
-For Windows:
- 
-  http://snaps.php.net/win32/php4-win32-STABLE-latest.zip',
-  ),
-
   'trysnapshot52' => array(
     'status' => 'Feedback',
     'desc' => 'Try a CVS snapshot (PHP 5.2)',
@@ -193,15 +180,14 @@ Thank you for your interest in PHP.',
 We are sorry about the inconvenience, but this change was a necessary
 part of our efforts to make PHP scripting more secure and portable.',
   ),
-  'php3' => array(
+  'php4' => array(
     'status' => 'Wont Fix',
-    'desc' => 'PHP 3 support discontinued',
+    'desc' => 'PHP 4 support discontinued',
     'message' =>
-'We are sorry, but we can not support PHP 3 related problems anymore.
-Momentum is gathering for PHP 5, and we think supporting PHP 3 will
-lead to a waste of resources which we want to put into getting PHP 5
-ready. Of course PHP 4 will continue to be supported for the
-forseeable future.',
+'We are sorry, but we can not support PHP 4 related problems anymore.
+Momentum is gathering for PHP 6, and we think supporting PHP 5 will
+lead to a waste of resources which we want to put into getting PHP 6
+ready.',
   ),
   'dst' => array(
     'status' => 'Bogus',
