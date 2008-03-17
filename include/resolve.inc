@@ -181,7 +181,7 @@ We are sorry about the inconvenience, but this change was a necessary
 part of our efforts to make PHP scripting more secure and portable.',
   ),
   'php4' => array(
-    'status' => 'Wont Fix',
+    'status' => 'Wont fix',
     'desc' => 'PHP 4 support discontinued',
     'message' =>
 'We are sorry, but we can not support PHP 4 related problems anymore.
