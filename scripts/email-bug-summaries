@@ -38,7 +38,7 @@
 		while(list($k,$v)=each($ass)) {
 			while(list($kk,$vv)=each($v)) {
 				$body .= "$k\t\t$kk: $vv\n";
-				$send[$k] .= "$kk:\t$vv\n";
+				$send[$k] .= "http://bugs.php.net/$kk\t: $vv\n";
 			}
 		}
 		while(list($k,$v)=each($send)) {
