@@ -298,8 +298,12 @@ if ($warnings) display_warnings($warnings);
 commonFooter();
 
 function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
-	if($limit=='All') return;
 	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"8\">";
+	if ($limit === 'All') {
+		echo "Showing all $total_rows";
+		echo "</td></tr>";
+		return;
+	}
     echo '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr>';
 	if ($begin > 0) {
 		echo "<td align=\"left\" width=\"33%\"><a href=\"$link&amp;begin=",max(0,$begin-$limit),"\">&laquo; Show Previous $limit Entries</a></td>";
