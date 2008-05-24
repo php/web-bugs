@@ -13,6 +13,7 @@ if ($search_for && !preg_match("/\\D/",trim($search_for))) {
 
 $errors = array();
 $warnings = array();
+$count_only = empty($_REQUEST['count_only']) ? false : true;
 
 $boolean = isset($_REQUEST['boolean']) ? (int) $_REQUEST['boolean'] : 1;
 define('BOOLEAN_SEARCH', $boolean);
@@ -137,6 +138,12 @@ if (isset($cmd) && $cmd == "display") {
 		$errors[] = "No bugs with the specified criteria were found.";
 	}
 	else {
+		
+		// Sometimes people only want to know how many bugs meet the condition
+		if ($count_only) {
+			echo $total_rows;
+			exit;
+		}
 
 		$bug_type_string = '';
 		if (count($bug_type) > 0) {
