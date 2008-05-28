@@ -62,7 +62,7 @@ options.
       type.  Here are a few explanations:
       <ul>
        <li><strong>Open</strong> : This also includes <i>assigned</i>, <i>analyzed</i>, 
-           <i>critical</i>, and <i>verified</i> bugs. (default) </li>
+           <i>critical</i>, and <i>verified</i> bugs.</li>
        <li><strong>Feedback</strong> : Bugs requesting feedback.  Typically a bug that
            requests feedback will be marked as <i>No Feedback</i> if no feedback transpires
            after 15 days.</li>
@@ -74,7 +74,7 @@ options.
        <li><strong>Stale</strong> : Bugs last commented on at least 30 days ago that are not 
            closed, duplicates, or bogus.  Only developers and the original author can affect 
            this date as public comments do not count.</li>
-       <li><strong>All</strong> : All types, even bogus.</li>
+       <li><strong>All</strong> : (default) All types, even bogus.</li>
       </ul>
   </td>
   <td>If you're only interested in critical bugs, or want to see which have been verified,
@@ -133,7 +133,13 @@ options.
       will limit the search to all bugs reported in the last 30 days.</td>
  </tr>
 </table>
-       
+
+<h3>Other Notes</h3>
+
+<p>
+If you're only interested in the bug count for a search, then pass in <i>count_only=1</i> to the query.
+</p>
+
 <h1>Bug System Statistics</h1>
 
 <p>
