@@ -8,9 +8,9 @@
 	if (!in_array($version, array(4,5,6,'Irrelevant'))) {
 		$version = '4';
 	}
-	mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server\n");
-	mysql_select_db("phpbugdb");
-	$result = mysql_query("select id,bug_type,status,sdesc,assign from bugdb where status not in ('Closed', 'Bogus', 'Duplicate', 'No Feedback', 'Wont fix') and php_version like '$version%' order by bug_type,id");
+	$conn = mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server\n");
+	mysql_select_db("phpbugdb", $conn);
+	$result = mysql_query("select id,bug_type,status,sdesc,assign from bugdb where status not in ('Closed', 'Bogus', 'Duplicate', 'No Feedback', 'Wont fix') and php_version like '$version%' order by bug_type,id", $conn);
 	if (!is_numeric($version)) {
 		$version = '';
 	}
@@ -38,6 +38,8 @@
 			$body .= " ".$row['sdesc']."\n";
 		}
 		mysql_free_result($result);
+		mysql_close($conn);
+
 		$body .= "\nAssigned bugs and feature requests (reminders sent):\n";
 
 		$body_header  = " PHP $version Bug Database summary - http://bugs.php.net/\n\n";
