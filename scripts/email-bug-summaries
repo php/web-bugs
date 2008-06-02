@@ -15,12 +15,16 @@
 		$version = '';
 	}
 	if($num=mysql_num_rows($result)) {
-		$body = " PHP $version Bug Database summary - http://bugs.php.net\n\n";
-		$body .= " Num Status     Summary ($num total including feature requests)\n";
+		$body = "";
 		$last_group = "";
+		$feature_count = 0;
 		while($row = mysql_fetch_assoc($result)) {
 			if($row['status']=='Assigned') {
 				$ass[$row['assign']][$row['id']] = $row['sdesc'];
+			}
+			if ($row['bug_type'] === 'Feature/Change Request') {
+				++$feature_count;
+				continue;
 			}
 			if($last_group!=$row['bug_type']) {
 				$last_group = $row['bug_type'];
@@ -34,7 +38,11 @@
 			$body .= " ".$row['sdesc']."\n";
 		}
 		mysql_free_result($result);
-		$body .= "\nAssigned bugs: (reminders sent)\n";
+		$body .= "\nAssigned bugs and feature requests (reminders sent):\n";
+
+		$body_header  = " PHP $version Bug Database summary - http://bugs.php.net/\n\n";
+		$body_header .= " Num Status     Summary ($num total -- which includes $feature_count feature requests)\n";
+
 		while(list($k,$v)=each($ass)) {
 			while(list($kk,$vv)=each($v)) {
 				$body .= "$k\t\t$kk: $vv\n";
@@ -49,7 +57,7 @@
 			}
 		}
 		if ($version) {
-			mail("internals@lists.php.net","PHP $version Bug Summary Report",$body,"From: internals@lists.php.net");
+			mail("internals@lists.php.net","PHP $version Bug Summary Report",$body_header . $body,"From: internals@lists.php.net");
 		}
 	}	
 ?>
