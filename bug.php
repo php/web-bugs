@@ -95,12 +95,17 @@ if ($in && $edit == 3) {
 		$errors[] = "You must provide a valid email address.";
 	}
 
+/*
+	Disable this check until the new bug system is born.
+	- http://bugs.php.net/bug.php?id=45171
+
 	# Don't allow comments by the original report submitter
 	if (stripslashes($in['commentemail']) == $bug['email']) {
 		header("Location: $self?id=$id&edit=2");
 		exit();
 	}
-	
+*/
+
 	# check that they aren't using a php.net mail address without
 	# being authenticated (oh, the horror!)
 	if (preg_match('/^(.+)@php\.net/i', stripslashes($in['commentemail']), $m)) {
