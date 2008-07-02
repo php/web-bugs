@@ -21,6 +21,7 @@ $items = array (
 	'Streams related'          => '&nbsp;&nbsp;&nbsp;&nbsp;Streams related',
 	'PHP-GTK related'          => '&nbsp;&nbsp;&nbsp;&nbsp;PHP-GTK related',
 	'PDO related'              => '&nbsp;&nbsp;&nbsp;&nbsp;PDO related',
+	'PHAR related'             => '&nbsp;&nbsp;&nbsp;&nbsp;PHAR related',
 
 	'*Compile Issues' => '&nbsp;&nbsp;&nbsp;&nbsp;Compile Issues',
 	'Compile Failure' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Compile Failure',
@@ -116,6 +117,7 @@ $items = array (
 
 	'*Math Functions' => '&nbsp;&nbsp;&nbsp;&nbsp;Math Functions',
 	'BC math related' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BC math related',
+	'GNU MP related'  => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GNU MP related',
 	'Math related'    => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Math related',
 
 	'*Encryption and hash functions' => '&nbsp;&nbsp;&nbsp;&nbsp;Encryption and hash functions',
