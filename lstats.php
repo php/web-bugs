@@ -14,14 +14,14 @@ function get_status_count ($status, $category='')
 	$query = "SELECT count(id) from bugdb WHERE";
 
 	if ($phpver > 0) {
-		$query .= " php_version LIKE '" . $phpver . "%' AND";
+		$query .= " php_version LIKE '" . mysql_real_escape_string($phpver) . "%' AND";
 	}
 
 	/* Categories which are excluded from bug count */
 	$excluded = "'Feature/Change Request', 'Systems problem', 'Website Problem', 'PEAR related', 'PECL related', 'Documentation problem', 'Translation problem', 'PHP-GTK related'";
 
 	if ($category != '') {
-		$query.= " $status AND bug_type='$category' ";
+		$query.= " $status AND bug_type='" . mysql_real_escape_string($category). "' ";
 	} else {
 		$query.= " status='$status' ";
 	}
@@ -49,7 +49,7 @@ $statuses = array (
 if(!isset($phpver)) {
 	echo "<h3>Bug stats for both <a href='lstats.php?phpver=4'>PHP 4</a> and <a href='lstats.php?phpver=5'>PHP 5</a>:</h3>\n<pre>\n";	
 } else {
-	$phpver = htmlspecialchars($phpver);
+	$phpver = htmlspecialchars($phpver, ENT_QUOTES);
 	echo "<h3>Bug stats for PHP $phpver:</h3>\n<pre>\n";	
 }
 
