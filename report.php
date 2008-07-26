@@ -230,7 +230,8 @@ that someone will want to help fix</a>.</p>
 <p>If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support 
 <a href="http://www.php.net/support.php">listed here</a>.</p>
 
-<p style="color: red"><strong>Always disable any Zend or other 3rd party extensions (Turck MMCache, ionCube loader, Xdebug, APC)
+<p style="color: red"><strong>Always disable any Zend or other 3rd party
+extensions (APC, eAccelerator, Turck MMCache, ionCube loader, Xcache, Xdebug)
 before submitting a *PHP* bug.</strong></p>
 
 <p>Do not report compile errors in HEAD versions (currently 6CVS). If a compile error persists, please drop a mail
