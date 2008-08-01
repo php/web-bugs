@@ -53,7 +53,7 @@ function mysql_get_one($query)
 	}
 	return false;
 }
-               
+
 function show_byage_options($current)
 {
 	$opts = array(
@@ -80,10 +80,10 @@ function show_limit_options($limit=30)
 }
 
 $state_types = 	array (
-	"Open" => 2, 
+	"Open" => 2,
 	"Closed" => 2,
 	"Duplicate" => 0,
-	"Critical" => 1, 
+	"Critical" => 1,
 	"Assigned" => 1,
 	"Analyzed" => 1,
 	"Verified" => 1,
@@ -99,8 +99,8 @@ $state_types = 	array (
 );
 
 $no_comments_allowed = array('Closed', 'Duplicate', 'Wont fix', 'Bogus', 'Stale');
-	
-function show_state_options($state, $user_mode=0, $default="") 
+
+function show_state_options($state, $user_mode=0, $default="")
 {
 	global $state_types;
 
@@ -133,11 +133,12 @@ function show_state_options($state, $user_mode=0, $default="")
 	}
 }
 
-function show_version_options($current,$default="") 
+function show_version_options($current,$default="")
 {
 	$date = date("Y-m-d");
 	$versions = array(
 		"5.2.6",
+		"5.3.0alpha1",
 		"4.4.9RC1",
 		"4.4.8",
 		"4CVS-{$date} (snap)",
@@ -158,7 +159,7 @@ function show_version_options($current,$default="")
 }
 
 function display_errors($errors)
-{ 
+{
 	echo '<div class="errors">';
 	if (count($errors) > 1) {
 		echo "You need to do the following before your submission will be accepted:<ul>";
@@ -174,7 +175,7 @@ function display_errors($errors)
 }
 
 function display_warnings($warnings)
-{ 
+{
 	echo '<div class="warnings">';
 	if (count($warnings) > 1) {
 		echo "Please notice the following:<ul>\n";
@@ -189,7 +190,7 @@ function display_warnings($warnings)
 	echo '</div>';
 }
 
-function show_types($current,$show_any,$default="") 
+function show_types($current,$show_any,$default="")
 {
 	include 'bugtypes.inc';
 
@@ -249,9 +250,9 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		'Suspended'   => 'Sus',
 		'Closed'      => 'Csd',
 	);
-    
+
     $headers[] = array(" ID", $bug['id']);
-    
+
 	switch ($edit) {
 	case 3:
 		$from_addr = spam_protect(rinse($in['commentemail']));
@@ -271,7 +272,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 	if (changed('sdesc')) {
 		$headers[] = array("-Summary", $bug['sdesc']);
 	}
-	
+
 	$prefix = " ";
 	if (changed('email')) {
 		$headers[] = array("-Reported By", spam_protect($bug['email']));
@@ -300,7 +301,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 			$headers[] = array($prefix.$desc, $f);
         }
 	}
-    
+
     # make header output aligned
     $maxlength = 0;
     $actlength = 0;
@@ -308,7 +309,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
         $actlength = strlen($v[0]) + 1;
         $maxlength = (($maxlength < $actlength) ? $actlength : $maxlength);
     }
-    
+
     # align header content with headers (if a header contains
     # more than one line, wrap it intelligently)
     $header_text = "";
@@ -322,7 +323,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 	if ($ncomment) {
 		$text[] = " New Comment:\n\n".stripslashes($ncomment);
 	}
-	
+
 	$text[] = get_old_comments($bug['id'], empty($ncomment));
 
 	/* format mail so it looks nice, use 72 to make piners happy */
@@ -336,7 +337,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
                   $wrapped_text;
 
 	/* developer text with headers, previous messages, and edit link */
-	$dev_text = $header_text . 
+	$dev_text = $header_text .
                 $wrapped_text .
                 "\n-- \nEdit this bug report at " .
                 "http://bugs.php.net/?id=$bug[id]&edit=1\n";
@@ -424,7 +425,7 @@ function txfield($n)
 	             $GLOBALS['bug'][$n]);
 }
 
-function get_old_comments ($bug_id, $all = 0) 
+function get_old_comments ($bug_id, $all = 0)
 {
 	$divider = str_repeat("-", 72);
 	$max_message_length = 10 * 1024;
@@ -434,7 +435,7 @@ function get_old_comments ($bug_id, $all = 0)
 	$res = @mysql_query("SELECT ts, email, comment FROM bugdb_comments WHERE bug=$bug_id ORDER BY ts DESC");
 
     if (!$res) return "";
-    
+
     # skip the most recent unless the caller wanted all comments
     if (!$all) {
         $row = mysql_fetch_row($res);
@@ -459,7 +460,7 @@ function get_old_comments ($bug_id, $all = 0)
     return "";
 }
 
-function addlinks($text) 
+function addlinks($text)
 {
 	$text = htmlspecialchars($text);
     $text = preg_replace("/((mailto|http|ftp|nntp|news):.+?)(&gt;|\\s|\\)|\\.\\s|$)/i","<a rel=\"nofollow\" href=\"\\1\">\\1</a>\\3",$text);
@@ -523,7 +524,7 @@ function is_phpversion_irrelevant($bugtype)
 	return false;
 }
 
-function get_bugtype_mail($bug_type) 
+function get_bugtype_mail($bug_type)
 {
 	global $mail_bugs_to;
 
@@ -559,7 +560,7 @@ function get_bugtype_mail($bug_type)
 	}
 }
 
-function get_row_color($row) 
+function get_row_color($row)
 {
 	if ($row["bug_type"]=="Feature/Change Request") {
 		return "#aaaaaa";
@@ -605,11 +606,11 @@ function format_search_string($search)
 {
 	// Function will be updated to make results more relevant.
 	// Quick hack for indicating ignored words.
-	
+
 	global $mysql4;
 
 	$min_word_len=3;
-	
+
 	$words = preg_split("/\s+/", stripslashes($search));
 	$ignored = $used = array();
 	foreach($words AS $match) {
@@ -619,7 +620,7 @@ function format_search_string($search)
 		        array_push($used, $match);
 		}
 	}
-	
+
 	if ($mysql4 && BOOLEAN_SEARCH) {
 		// require all used words (all)
 		if (BOOLEAN_SEARCH === 1) {
