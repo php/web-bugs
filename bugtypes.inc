@@ -123,6 +123,7 @@ $items = array (
 
 	'*Encryption and hash functions' => '&nbsp;&nbsp;&nbsp;&nbsp;Encryption and hash functions',
 	'mcrypt related'                 => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mcrypt related',
+	'hash related'                   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hash related',
 	'mhash related'                  => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mhash related',
 	'OpenSSL related'                => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OpenSSL related',
 
