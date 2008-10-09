@@ -9,13 +9,9 @@ $RESOLVE_REASONS = array(
 
   http://snaps.php.net/php5.2-latest.tar.gz
  
-For Windows (zip):
- 
-  http://snaps.php.net/win32/php5.2-win32-latest.zip
+For Windows:
 
-For Windows (installer):
-
-  http://snaps.php.net/win32/php5.2-win32-installer-latest.msi',
+  http://windows.php.net/snapshots/',
   ),
 
   'trysnapshot53' => array(
@@ -26,13 +22,9 @@ For Windows (installer):
 
   http://snaps.php.net/php5.3-latest.tar.gz
  
-For Windows (zip):
- 
-  http://snaps.php.net/win32/php5.3-win32-latest.zip
+For Windows:
 
-For Windows (installer):
-
-  http://snaps.php.net/win32/php5.3-win32-installer-latest.msi',
+  http://windows.php.net/snapshots/',
   ),
 
   'trysnapshot60' => array(
@@ -44,8 +36,8 @@ For Windows (installer):
   http://snaps.php.net/php6.0-latest.tar.gz
  
 For Windows:
- 
-  http://snaps.php.net/win32/php6.0-win32-latest.zip',
+
+  http://windows.php.net/snapshots/',
   ),
 
   'fixedcvs' => array(

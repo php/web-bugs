@@ -7,7 +7,7 @@ commonHeader("Generating a backtrace on Win32");
 
 <p>You'll need to install MSVC6 and you'll also need to</p>
 <ul>
-	<li>either download the debug-pack for your PHP version from <a href="http://snaps.php.net">http://snaps.php.net</a></li>
+	<li>either download the debug-pack for your PHP version from <a href="http://windows.php.net/snapshots/">http://windows.php.net/snapshots/</a></li>
 	<li>or compile your own PHP with <code>--enable-dbg-pack</code> or <code>--enable-debug</code></li>
 </ul>
 
@@ -42,8 +42,8 @@ KERNEL32! 77e81af6()
 <h1>Generating backtrace, <u>without</u> compiler, on Win32</h1>
 <p>You'll need:</p>
 <ul>
-<li>A PHP <a href="http://snaps.php.net/">snapshot</a> or <a href="http://www.php.net/downloads.php">stable</a> release</li>
-<li>PHP Debug pack (<a href="http://snaps.php.net/">snapshot</a> or stable <a href="http://php.net/get/php-debug-pack-5-LATEST-Win32.zip/from/a/mirror">thread safe</a> or <a href="http://php.net/get/php-debug-pack-5-LATEST-nts-Win32.zip/from/a/mirror">non thread safe</a></li>
+<li>A PHP <a href="http://windows.php.net/snapshots/">snapshot</a> or <a href="http://www.php.net/downloads.php">stable</a> release</li>
+<li>PHP Debug pack (<a href="http://windows.php.net/snapshots/">snapshot</a> or stable <a href="http://php.net/get/php-debug-pack-5-LATEST-Win32.zip/from/a/mirror">thread safe</a> or <a href="http://php.net/get/php-debug-pack-5-LATEST-nts-Win32.zip/from/a/mirror">non thread safe</a></li>
 <li>Microsoft <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=28bd5941-c458-46f1-b24d-f60151d875a3&amp;displaylang=en">Debug Diagnostic Tools</a></li>
 <li>Evil script to crash PHP</li>
 </ul>
