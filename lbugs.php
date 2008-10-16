@@ -46,7 +46,7 @@ if ($id) {
 				for($i=0;$i<$len; $i++) $s.= "=";
 				echo "$s</b>\n";
 			}
-			printf("<a href=\"%s?id=%d\">%4d</a>",strip_tags($PHP_SELF),$row['id'],$row['id']);
+			printf("<a href=\"%s?id=%d\">%4d</a>",htmlspecialchars($_SERVER["PHP_SELF"], ENT_QUOTES),$row['id'],$row['id']);
 			printf(" %-9s ",$row['status']);
 			echo " ".htmlspecialchars($row['sdesc'])."\n";
 		}

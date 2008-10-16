@@ -251,7 +251,7 @@ simply being marked as "bogus".</strong></p>
 
 if ($errors) display_errors($errors);
 ?>
-<form method="post" action="<?php echo htmlspecialchars($PHP_SELF, ENT_QUOTES);?>">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"], ENT_QUOTES);?>">
 <input type="hidden" name="in[did_luser_search]" value="<?php echo $in['did_luser_search'] ? 1 : 0; ?>" />
 <table>
  <tr>

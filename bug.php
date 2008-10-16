@@ -52,7 +52,7 @@ if (!$res || !$bug) {
   exit;
 }
 
-$self = strip_tags($PHP_SELF);
+$self = htmlspecialchars($_SERVER["PHP_SELF"], ENT_QUOTES);
 
 /* Is trusted ? */
 $is_trusted = false;
