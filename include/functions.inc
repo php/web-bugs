@@ -95,6 +95,7 @@ $state_types = 	array (
 	"Stale" => 0,
 	"Fresh" => 0,
 	"Bogus" => 2,
+	"To be documented" => 1,
 	"All" => 0
 );
 
@@ -246,6 +247,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		'Verified'    => 'Ver',
 		'Suspended'   => 'Sus',
 		'Closed'      => 'Csd',
+		'To be documented' => 'Tbd'
 	);
 
     $headers[] = array(" ID", $bug['id']);
@@ -363,11 +365,19 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		    	  "X-PHP-Bug: $bug[id]\n".
 		    	  "In-Reply-To: <bug-$bug[id]@bugs.php.net>",
 		    	  "-fbounces-ignored@php.net");
+				 
+			$Cc = ''; 
+			if ($in['status'] == 'To be documented' || 
+				($in['status'] == 'Closed' && $bug['status'] == 'To be documented')) {
+				$Cc = "Cc: doc-bugs@lists.php.net\n";
+			}
+			
 			# but we go ahead and let the default sender get used for the list
 			@mail($mailto,
 		      	rinse($subj) . txfield('sdesc'),
 		      	$dev_text,
 		      	"From: $from\n".
+				$Cc.
 		      	"X-PHP-Bug: $bug[id]\n".
 		      	"X-PHP-Version: "    . stripslashes((($edit != 3) ? $in['php_version'] : $bug['php_version'])) . "\n" .
 		      	"X-PHP-Category: "   . stripslashes((($edit != 3) ? $in['bug_type']    : $bug['bug_type']))    . "\n" .
@@ -592,6 +602,9 @@ function get_row_color($row)
 			break;
 		case "Duplicate":
 			return "#bbbbbb";
+			break;
+		case "To be documented":
+			return "#cdb26e";
 			break;
 		default:
 			return "#aaaaaa";

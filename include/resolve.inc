@@ -52,6 +52,20 @@ http://snaps.php.net/.
  
 Thank you for the report, and for helping us make PHP better.',
   ),
+  
+  'needdocs' => array(
+    'status' => 'To be documented',
+    'desc' => 'Fixed in CVS and need be documented',
+    'message' =>
+'This bug has been fixed in CVS.
+
+Snapshots of the sources are packaged every three hours; this change
+will be in the next snapshot. You can grab the snapshot at
+http://snaps.php.net/.
+ 
+Thank you for the report, and for helping us make PHP better.',
+  ),
+  
   'alreadyfixed' => array(
     'status' => 'Closed',
     'desc' => 'Fixed in release',

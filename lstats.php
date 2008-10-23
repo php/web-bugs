@@ -61,7 +61,7 @@ if (isset($per_category)) {
 
 	$totals = array();
 	foreach ($items as $category => $name) {
-		$count = get_status_count ("status NOT IN('closed', 'bogus', 'duplicate', 'wont fix', 'no feedback')", $category);
+		$count = get_status_count ("status NOT IN('to be documented', 'closed', 'bogus', 'duplicate', 'wont fix', 'no feedback')", $category);
 		if ($count > 0) {
 			$totals[$category] = $count;
 		}
