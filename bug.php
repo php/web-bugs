@@ -189,7 +189,7 @@ elseif ($in && $edit == 1) {
 			 * as more probably the developer (which was marked as assigned) won't document 
 			 * the fix.
 			 */
-			$in['assign'] == '';
+			$in['assign'] = '';
 		}
 	} elseif ($in['resolve']) {
 		if (!$trytoforce && $RESOLVE_REASONS[$in['resolve']]['status'] == $bug['status']) {
