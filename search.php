@@ -265,7 +265,7 @@ if ($warnings) display_warnings($warnings);
   <td nowrap="nowrap">Return bugs with <b>operating system</b></td>
   <td>
   	<input type="text" name="php_os"     value="<?php echo htmlspecialchars(stripslashes($php_os));?>" />
-  	<input type="text" name="php_os_not" value="1" <?php echo ((int) $php_os_not) ? 'checked="checked"' : ''; ?> /> NOT
+  	<input type="checkbox" name="php_os_not" value="1" <?php echo ((int) $php_os_not) ? 'checked="checked"' : ''; ?> /> NOT
   </td>
  </tr>
  <tr>
