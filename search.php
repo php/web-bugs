@@ -66,13 +66,13 @@ if (isset($cmd) && $cmd == "display") {
 		}
 	}
 
-	$bug_age = (int)$bug_age;
+	$bug_age = (int) $bug_age;
 	if ($bug_age) {
 		$where_clause .= " AND ts1 >= DATE_SUB(NOW(), INTERVAL $bug_age DAY)";
 	}
 
 	if ($php_os) {
-		$where_clause .= " AND php_os like '%$php_os%'";
+		$where_clause .= " AND php_os " . (((int) $php_os_not) ? 'NOT' : '') . " like '%$php_os%'";
 	}
 
 	if (!empty($phpver)) {
@@ -165,6 +165,7 @@ if (isset($cmd) && $cmd == "display") {
 				"&amp;status="     . urlencode(stripslashes($status)) .
 				"&amp;search_for=" . urlencode(stripslashes($search_for)) .
 				"&amp;php_os="     . urlencode(stripslashes($php_os)) .
+				"&amp;php_os_not=" . (int) $php_os_not .
 				"&amp;boolean="    . BOOLEAN_SEARCH .
 				"&amp;author_email=". urlencode(stripslashes($author_email)) .
 				"&amp;bug_age=$bug_age" .
@@ -174,7 +175,7 @@ if (isset($cmd) && $cmd == "display") {
 		commonHeader("Search", true, "http://bugs.php.net/rss".$link);
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
- <?php show_prev_next($begin,$rows,$total_rows,$link,$limit);?>
+ <?php show_prev_next($begin, $rows, $total_rows, $link, $limit); ?>
  <tr bgcolor="#aaaaaa">
   <th><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=id">Date</a></th>
@@ -262,7 +263,10 @@ if ($warnings) display_warnings($warnings);
  <tr>
   <th>OS</th>
   <td nowrap="nowrap">Return bugs with <b>operating system</b></td>
-  <td><input type="text" name="php_os" value="<?php echo htmlspecialchars(stripslashes($php_os));?>" /></td>
+  <td>
+  	<input type="text" name="php_os"     value="<?php echo htmlspecialchars(stripslashes($php_os));?>" />
+  	<input type="text" name="php_os_not" value="1" <?php echo ((int) $php_os_not) ? 'checked="checked"' : ''; ?> /> NOT
+  </td>
  </tr>
  <tr>
   <th>Version</th>
@@ -297,7 +301,8 @@ if ($warnings) display_warnings($warnings);
 <?php
 commonFooter();
 
-function show_prev_next($begin,$rows,$total_rows,$link,$limit) {
+function show_prev_next ($begin, $rows, $total_rows, $link, $limit)
+{
 	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"8\">";
 	if ($limit === 'All') {
 		echo "Showing all $total_rows";
