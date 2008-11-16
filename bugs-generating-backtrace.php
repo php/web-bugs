@@ -43,9 +43,10 @@ PHP-enabled httpd, has write permissions for the user who's running PHP.</li>
 
 <ul>
 <li>Run gdb with the path to the PHP or PHP-enabled httpd binary, and
-path to the core file, for example:
+path to the core file. Some examples:
   <ul>
   <li><code>gdb /usr/local/apache/sbin/httpd /usr/local/apache/sbin/core</code></li>
+  <li><code>gdb /home/user/dev/php-snaps/sapi/cli/php /home/user/dev/testing/core</code></li>
   </ul>
 </li>  
 <li>At the gdb prompt, run:
