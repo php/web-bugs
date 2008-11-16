@@ -71,7 +71,19 @@ path to the core file. Some examples:
   <ul>
   <li><code>(gdb) bt</code></li>
   </ul>
-</li>
+  <ul>
+   <li>or, running from the commandline
+    <ul>
+     <li>gdb /home/user/dev/php-snaps/sapi/cli/php
+      <ul>
+       <li><code>(gdb) run /path/to/script.php</code></li>
+       <li><code>(gdb) bt</code></li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
 </ul>
 
 <p>This should generate a backtrace, that you should submit in
