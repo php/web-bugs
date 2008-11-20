@@ -87,7 +87,7 @@ if ($in && $edit == 3) {
 		$errors[] = "You can not add comments for bugs with the statuses:" . join(', ', $no_comments_allowed);
 	}
 
-    if (!validate_captcha()) {
+    if (!is_cvs_user() && !validate_captcha()) {
         $errors[] = 'Incorrect CAPTCHA';
     }
 

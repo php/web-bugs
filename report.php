@@ -258,12 +258,6 @@ if ($errors) display_errors($errors);
   <th align="right">Your email address:</th>
   <td colspan="2">
    <input type="text" size="20" maxlength="50" name="in[email]" value="<?php echo clean($in['email']);?>" />
-   <?php
-   // Temporary test code (tm)
-   if (is_cvs_user($_COOKIE['MAGIC_COOKIE'])) {
-       echo " (logged in)";
-   }
-   ?>
   </td>
  </tr><tr>
   <th align="right">PHP version:</th>
@@ -297,11 +291,24 @@ if ($errors) display_errors($errors);
   </font></td>
  </tr>
  <tr>
-  <th align="right">CAPTCHA:</th>
+ <?php
+ if (is_cvs_user()) {
+ ?>
+ <th align="right">User:</th>
+   <td colspan="2">
+    <?php echo $user; ?>
+   </td>
+ <?php
+ } else {
+ ?>
+ <th align="right">CAPTCHA:</th>
    <td colspan="2"><font size="-1">
     <?php echo generate_captcha(); ?>
    </font></td>
- </tr>
+ <?php
+ }
+ ?>
+  </tr>
 </table>
 
 <table>

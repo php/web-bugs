@@ -516,7 +516,7 @@ function incoming_details_are_valid ($in, $initial=0)
 		$errors[] = "You must supply a password for this bug report.";
 	}
 
-    if ($initial && !validate_captcha()) {
+    if ($initial && !is_cvs_user() && !validate_captcha()) {
         $errors[] = 'Incorrect CAPTCHA';
     }
 
