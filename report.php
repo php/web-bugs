@@ -258,6 +258,12 @@ if ($errors) display_errors($errors);
   <th align="right">Your email address:</th>
   <td colspan="2">
    <input type="text" size="20" maxlength="50" name="in[email]" value="<?php echo clean($in['email']);?>" />
+   <?php
+   // Temporary test code (tm)
+   if (is_cvs_user($_COOKIE['MAGIC_COOKIE'])) {
+       echo " (logged in)";
+   }
+   ?>
   </td>
  </tr><tr>
   <th align="right">PHP version:</th>

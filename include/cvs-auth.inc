@@ -34,4 +34,18 @@ function verify_password($user, $pass) {
 	return false;
 }
 
-?>
+function is_cvs_user ($MC) {
+
+	if (empty($MC)) {
+		return false;
+	}
+	
+	// 0 = username, 1 = password
+	$c = explode(':', base64_decode($MC));
+	
+	if (!verify_password($c[0], $c[1])) {
+		return false;
+	}
+
+	return true;
+}
