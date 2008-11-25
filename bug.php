@@ -179,7 +179,8 @@ elseif ($in && $edit == 1) {
 	if ($in['status'] == 'Bogus' && !in_array($bug['status'], array ('Bogus', 'Closed', 'Duplicate', 'No feedback', 'Wont fix'))
 			&& strlen(trim($ncomment)) == 0) {
 		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
-	} elseif ($in['status'] == 'To be documented' || ($in['resolve'] && $RESOLVE_REASONS[$in['resolve']]['status'] == 'To be documented')) {
+	} elseif (($in['status'] == 'To be documented' && $bug['status'] != $in['status']) ||
+		($in['resolve'] && $RESOLVE_REASONS[$in['resolve']]['status'] == 'To be documented')) {
 		/* Require explanation */
 		if (strlen(trim($ncomment)) == 0) {
 			$errors[] = "You must provide a comment to help in the feature/issue documentation";
