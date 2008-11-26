@@ -192,6 +192,7 @@ elseif ($in && $edit == 1) {
 			 */
 			$in['assign'] = '';
 		}
+		$in['status'] = 'To be documented';
 	} elseif ($in['resolve']) {
 		if (!$trytoforce && $RESOLVE_REASONS[$in['resolve']]['status'] == $bug['status']) {
 			$errors[] = "The bug is already marked '" . $bug['status'] . "'. (Submit again to ignore this.)";
