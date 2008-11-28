@@ -205,6 +205,8 @@ function commonHeader($title = false, $showsearch = true, $rss = false) {
 	print_link('search-howto.php', 'search howto', false, 'class="menuWhite"');
 	echo delim();
 	print_link('bugstats.php', 'statistics', false, 'class="menuWhite"');
+	echo delim();
+	print_link('http://master.php.net/login.php', 'login', false, 'class="menuWhite"');
       ?>
       <?php spacer(2,2); ?><br>
     </td>
