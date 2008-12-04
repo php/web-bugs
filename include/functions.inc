@@ -138,7 +138,7 @@ function show_version_options($current,$default="")
 {
 	$date = date("Y-m-d");
 	$versions = array(
-		"5.3.0alpha2",
+		"5.3.0alpha3",
 		"5.2.7RC5",
 		"5.2.6",
 		"5.2CVS-{$date} (snap)",
@@ -365,13 +365,13 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		    	  "X-PHP-Bug: $bug[id]\n".
 		    	  "In-Reply-To: <bug-$bug[id]@bugs.php.net>",
 		    	  "-fbounces-ignored@php.net");
-				 
-			$Cc = ''; 
-			if ($in['status'] == 'To be documented' || 
+
+			$Cc = '';
+			if ($in['status'] == 'To be documented' ||
 				($in['status'] == 'Closed' && $bug['status'] == 'To be documented')) {
 				$Cc = "Cc: doc-bugs@lists.php.net\n";
 			}
-			
+
 			# but we go ahead and let the default sender get used for the list
 			@mail($mailto,
 		      	rinse($subj) . txfield('sdesc'),
