@@ -40,7 +40,7 @@
  * @category  php-bugs-web
  * @package   php-bugs-web
  * @author    Daniel Convissor <danielc@php.net>
- * @copyright Copyright (c) 2004-2005 The PHP Group
+ * @copyright Copyright (c) 2004-2009 The PHP Group
  * @license   http://www.php.net/license/3_0.txt  PHP License
  * @version   $Id$
  * @see       generate_captcha(), validate_captcha()
