@@ -1,6 +1,6 @@
 <?php 
 
-response_header('Patch Added :: ' . htmlspecialchars($package) . " :: Bug #{$bug_id}";
+response_header('Patch Added :: ' . htmlspecialchars($package) . " :: Bug #{$bug_id}");
 
 ?>
 
