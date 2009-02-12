@@ -511,7 +511,7 @@ function incoming_details_are_valid ($in, $initial=0)
 		$errors[] = "You must supply a long description of the bug you are reporting.";
 	}
 
-	if ($initial && empty($in['passwd'])) {
+	if ($initial && !is_cvs_user() && empty($in['passwd'])) {
 		$errors[] = "You must supply a password for this bug report.";
 	}
 

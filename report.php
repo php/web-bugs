@@ -286,7 +286,11 @@ if ($errors) display_errors($errors);
   <td colspan="2">
    <input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo clean($in['sdesc']);?>" />
   </td></tr>
- </tr><tr>
+ </tr>
+ <?php
+ if (!is_cvs_user()) {
+ ?>
+ <tr>
   <th align="right">Password:</th>
   <td>
    <input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo clean($in['passwd']);?>" />
@@ -297,6 +301,9 @@ if ($errors) display_errors($errors);
     at a later date. [<a href="/bug-pwd-finder.php">Lost a bug password?</a>]
   </font></td>
  </tr>
+ <?php
+ }
+ ?>
  <tr>
  <?php
  if (is_cvs_user()) {
