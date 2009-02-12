@@ -182,17 +182,19 @@ our <a href="http://www.php.net/mailing-lists.php">internals</a> list.</p>
 			$extra_headers.= "X-PHP-Status: Open\n";
 			$extra_headers.= "Message-ID: <bug-$cid@bugs.php.net>";
 			
+			if (DEVBOX || $cid === 46928) {
+				header("Location: http://bugs.php.net/bug.php?id=$cid&thanks=4&devbox=1");
+				exit;
+			}
+			
 			// mail to appropriate mailing lists
-			if (!DEVBOX && mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", $extra_headers)) {
+			if (mail($mailto, "#$cid [NEW]: $sdesc", $ascii_report."1\n-- \n$dev_extra", $extra_headers)) {
 				// mail to reporter
 				@mail($email, "Bug #$cid: $sdesc", $ascii_report."2\n", "From: PHP Bug Database <$mailfrom>\nX-PHP-Bug: $cid\nMessage-ID: <bug-$cid@bugs.php.net>");
 
 				header("Location: bug.php?id=$cid&thanks=4");
 				exit;
 
-			} elseif(DEVBOX) {
-				header("Location: bug.php?id=$cid&thanks=4");
-				exit;
 			} else {
 				commonHeader("Report - Error");
 				echo "<pre>\n";

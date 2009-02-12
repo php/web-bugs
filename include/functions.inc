@@ -355,7 +355,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 			$subj = "#{$bug['id']} [{$tla[$bug['status']]}]: ";
 		}
 
-		if (!DEVBOX) {
+		if (!DEVBOX && $bug['id'] != '46928') {
 			# the user gets sent mail with an envelope sender that ignores bounces
 			@mail($bug['email'],
 		    	  "Bug " . rinse($subj) . txfield('sdesc'),
