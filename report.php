@@ -222,6 +222,11 @@ if (!isset($in)) {
 
     // Allow passing in a default bug_type (e.g., report.php?bug_type=Documentation+problem)
     $default_bug_type = isset($_GET['bug_type']) ? clean($_GET['bug_type']) : '';
+
+    // Allow passing in manpage to repcode (e.g., report.php?manpage=/manual/en/foo.php)
+    if (isset($_GET['manpage'])) {
+        $in['repcode'] .= "\n---\nFrom manual page: " . clean($_GET['manpage']) . "\n---\n";
+    }
 ?>
 
 <p>Before you report a bug, make sure to search for similar bugs using the form
