@@ -135,10 +135,10 @@ options.
 </table>
 
 <h3>Other Notes</h3>
-
-<p>
-If you're only interested in the bug count for a search, then pass in <i>count_only=1</i> to the query.
-</p>
+<ul>
+ <li>Simply php.net/42 (numeric) will redirect to bug #42 in the bug database</li>
+ <li>To retrieve a simple numeric bug count for a search, pass in <i>count_only=1</i> to the query</li>
+</ul>
 
 <h1>Bug System Statistics</h1>
 
