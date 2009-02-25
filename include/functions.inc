@@ -710,7 +710,7 @@ function generate_captcha()
         }
         $_SESSION['captcha_time'] = time();
     }
-    return 'Type <img src="/captcha-image.php?x=' . time()
+    return 'Type <img src="/captcha-image.php?x=' . time() . '&' . htmlspecialchars(SID)
            . '" alt="If you are unable to'
            . ' read this image, click the help link to the right of'
            . ' the input box" align="top" /> into this box...'
