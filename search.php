@@ -116,6 +116,9 @@ if (isset($cmd) && $cmd == "display") {
     }
 
 	$begin = (int)$begin;
+	if ($limit != 'All') {
+		$limit = (int)$limit;
+	}
 	if (($limit != 'All' && !(int)$limit) || (int)$limit < 0 ) $limit = 30;
 
 	if($limit!='All' && $limit > 0) $query .= " LIMIT $begin,".(int)$limit;
