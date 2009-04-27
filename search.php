@@ -95,7 +95,7 @@ if (isset($cmd) && $cmd == "display") {
 
     $query .= "$where_clause ";
 
-	$allowed_order = array("id", "bug_type", "status", "php_version", "php_os", "sdesc", "assign");
+	$allowed_order = array("id", "ts1", "ts2", "bug_type", "status", "php_version", "php_os", "sdesc", "assign");
 
 	/* we avoid adding an order by clause if using the full text search */
     if ($order_by || $reorder_by || !strlen($search_for)) {
@@ -162,9 +162,7 @@ if (isset($cmd) && $cmd == "display") {
 			}
 		}
 		
-		$link = $_SERVER['SCRIPT_NAME'] . '?cmd=display' . 
-				$bug_type_string   .
-				$bug_ntype_string  .
+		$link_params =
 				"&amp;status="     . urlencode(stripslashes($status)) .
 				"&amp;search_for=" . urlencode(stripslashes($search_for)) .
 				"&amp;php_os="     . urlencode(stripslashes($php_os)) .
@@ -175,13 +173,21 @@ if (isset($cmd) && $cmd == "display") {
 				"&amp;by="         . urlencode(stripslashes($by)) .
 				"&amp;order_by=$order_by&amp;direction=$direction&amp;phpver=$phpver&amp;limit=$limit&amp;assign=$assign";
 
+		$link = $_SERVER['SCRIPT_NAME'] . '?cmd=display' . 
+				$bug_type_string   .
+				$bug_ntype_string  .
+				$link_params;
+
+		$clean_link = "{$_SERVER['SCRIPT_NAME']}?cmd=display{$link_params}";
+
 		commonHeader("Search", true, "http://bugs.php.net/rss".$link);
 ?>
 <table align="center" border="0" cellspacing="2" width="95%">
  <?php show_prev_next($begin, $rows, $total_rows, $link, $limit); ?>
  <tr bgcolor="#aaaaaa">
   <th><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
-  <th><a href="<?php echo $link;?>&amp;reorder_by=id">Date</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=ts1">Date</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=ts2">Last Modified</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
   <th><a href="<?php echo $link;?>&amp;reorder_by=php_version">Version</a></th>
@@ -199,17 +205,33 @@ if (isset($cmd) && $cmd == "display") {
 			echo "<br /><a href=\"bug.php?id=$row[id]&amp;edit=1\">(edit)</a></td>";
 
 			/* Date */
-			echo "<td align=\"center\">".date ("Y-m-d H:i:s", strtotime($row['ts1']))."</td>";
-			echo "<td>", htmlspecialchars($row['bug_type']), "</td>";
+			echo "<td align=\"center\">", date ("Y-m-d H:i:s", strtotime($row['ts1'])), "</td>";
+
+			/* Modified */
+			echo "<td align=\"center\">", date ("Y-m-d H:i:s", strtotime($row['ts2'])), "</td>";
+			
+			/* Category */
+			echo "<td><a href=\"{$clean_link}&amp;bug_type[]=", urlencode($row['bug_type']), '">', htmlspecialchars($row['bug_type']), "</a></td>";
+
+			/* Status */
 			echo "<td>", htmlspecialchars($row['status']);
 			if ($row[status] == "Feedback" && $row['unchanged'] > 0) {
 				printf ("<br>%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? "s" : "");
 			}
 			echo "</td>";
+
+			/* Version */
 			echo "<td>", htmlspecialchars($row['php_version']), "</td>";
+			
+			/* OS */
 			echo "<td>", $row['php_os'] ? htmlspecialchars($row['php_os']) : "&nbsp;", "</td>";
+			
+			/* Short description */
 			echo "<td>", $row['sdesc']  ? htmlspecialchars($row['sdesc']) : "&nbsp;",  "</td>";
-			echo "<td>", $row['assign'] ? htmlspecialchars($row['assign']) : "&nbsp;", "</td>";
+
+			/* Assigned to */
+			echo "<td>", $row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=" . urlencode($row['assign']) . '">' . htmlspecialchars($row['assign']) . '</a>') : "&nbsp;", "</td>";
+
 			echo "</tr>\n";
 		}
 
