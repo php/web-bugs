@@ -208,7 +208,8 @@ if (isset($cmd) && $cmd == "display") {
 			echo "<td align=\"center\">", date ("Y-m-d H:i:s", strtotime($row['ts1'])), "</td>";
 
 			/* Modified */
-			echo "<td align=\"center\">", date ("Y-m-d H:i:s", strtotime($row['ts2'])), "</td>";
+			$ts = strtotime($row['ts2']);
+			echo "<td align=\"center\">", ($ts ? date ("Y-m-d H:i:s", $ts) : 'Not modified'), "</td>";
 			
 			/* Category */
 			echo "<td><a href=\"{$clean_link}&amp;bug_type[]=", urlencode($row['bug_type']), '">', htmlspecialchars($row['bug_type']), "</a></td>";
@@ -328,7 +329,7 @@ commonFooter();
 
 function show_prev_next ($begin, $rows, $total_rows, $link, $limit)
 {
-	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"8\">";
+	echo "<tr bgcolor=\"#cccccc\"><td align=\"center\" colspan=\"9\">";
 	if ($limit === 'All') {
 		echo "Showing all $total_rows";
 		echo "</td></tr>";
