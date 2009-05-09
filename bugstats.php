@@ -48,7 +48,7 @@ if ($phpver > 0) {
 	echo "<p>Currently displaying <strong>all</strong> bugs."; 
 }
 echo '<p>Display either <a href="bugstats.php?phpver=0">all</a> bugs or optionally choose a specific PHP Version: ';
-echo '<a href="bugstats.php?phpver=4">4</a> or <a href="bugstats.php?phpver=5">5</a> or <a href="bugstats.php?phpver=6">6</a></p>';
+echo '<a href="bugstats.php?phpver=5">5</a> or <a href="bugstats.php?phpver=6">6</a></p>';
 
 echo '<p>See also bug statistics for <a href="http://pecl.php.net/bugs/stats.php">PECL</a> or <a href="http://pear.php.net/bugs/stats.php">PEAR</a></p>';
 

@@ -169,10 +169,10 @@ $items = array (
 	'cURL related'   => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cURL related',
 	'URL related'    => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; URL related',
 
-	'*Unicode Issues'                   => 'Unicode Issues',
-	'Unicode Function Upgrades related' => '&nbsp;&nbsp;&nbsp;&nbsp;Unicode Function Upgrades related',
-	'I18N and L10N related'             => '&nbsp;&nbsp;&nbsp;&nbsp;I18N and L10N related',
-	'Unicode Engine related'            => '&nbsp;&nbsp;&nbsp;&nbsp;Unicode Engine related',
+	'*Unicode Issues'                   => '&nbsp;&nbsp;&nbsp;&nbsp;Unicode Issues',
+	'Unicode Function Upgrades related' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unicode Function Upgrades related',
+	'I18N and L10N related'             => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I18N and L10N related',
+	'Unicode Engine related'            => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unicode Engine related',
 
 	'Unknown/Other Function' => 'Unknown/Other Function',
 );
