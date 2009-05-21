@@ -129,12 +129,6 @@ INSERT INTO bugdb_pseudo_packages SET id = '2', parent = '1', name = 'Bug System
 INSERT INTO bugdb_pseudo_packages SET id = '3', parent = '1', name = 'PEPr', long_name = 'PEPr', project = 'pear';
 INSERT INTO bugdb_pseudo_packages SET id = '4', parent = '0', name = 'Documentation', long_name = 'Documentation', project = 'pear';
 
-# Populate pseudo packages from existing bugs 
-# - NOTE: Use only to import any package_name which is not mentioned in bugtypes.inc, run convert_bugtypes_to_db.php first!!!
-INSERT IGNORE INTO bugdb_pseudo_packages (name, long_name, parent, project, disabled) 
-	SELECT package_name as name, package_name as long_name, 0 AS parent, 'php' AS project, 1 AS disabled FROM bugdb GROUP BY package_name;
-
-
 #
 # This table is copy of pearweb/sql/package.sql
 #
@@ -190,4 +184,3 @@ CREATE TABLE users (
   KEY email (email(25)),
   UNIQUE KEY email_u (email)
 );
-

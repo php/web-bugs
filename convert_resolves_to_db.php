@@ -1,17 +1,10 @@
 <?php
 
-include './resolve.inc';
+include './php-bugs-web/include/resolve.inc';
 
 mysql_connect('localhost', 'nobody', '') or die('Unable to connect to SQL server.');
 mysql_select_db('phpbugsdb') or die('Unable to select database.');
                                                 
-$res = mysql_query("SELECT id from bugdb_resolves");
-
-$i = 0;
-
-if ($res)
-	while ($row = mysql_fetch_row($res)) $i++;
-
 foreach ($RESOLVE_REASONS as $key => $r)
 {
 	$key = mysql_escape_string($key);

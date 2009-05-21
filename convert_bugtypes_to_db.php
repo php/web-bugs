@@ -1,16 +1,9 @@
 <?php
 
-include './bugtypes.inc';
+include './php-bugs-web/bugtypes.inc';
 
 mysql_connect('localhost', 'nobody', '') or die('Unable to connect to SQL server.');
 mysql_select_db('phpbugsdb') or die('Unable to select database.');
-
-$res = mysql_query('SELECT id from bugdb_pseudo_packages');
-
-$i = 0;
-
-if ($res)
-	while ($row = mysql_fetch_row($res)) $i++;
 
 foreach ($items as $key => $name)
 {
@@ -28,6 +21,8 @@ foreach ($items as $key => $name)
 	} else {
 		mysql_query("$sql, parent = '$parent'");
 	}
-	$i++;
-
 }
+
+mysql_query("INSERT IGNORE INTO bugdb_pseudo_packages (name, long_name, parent, project, disabled)
+	SELECT package_name as name, package_name as long_name, 0 AS parent, 'php' AS project, 1 AS disabled FROM bugdb GROUP BY package_name;
+");

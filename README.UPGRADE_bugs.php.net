@@ -1,0 +1,30 @@
+Commands to upgrade bugs.php.net to new tracker:
+------------------------------------------------
+
+0. Checkout php-bugs-web code:
+
+  cvs co php-bugs-web
+
+1. Alter database tables:
+
+  mysql -u nobody phpbugsdb < phpbugsdb_upgrade.sql
+
+2. Convert bugtypes.inc into database entries:
+
+  php -n convert_bugtypes_to_db.php
+
+3. Convert quick resolves into database entries:
+
+  php -n convert_resolves_to_db.php
+
+
+Required PEAR packages:
+-----------------------
+
+DB
+DB_DataObject
+Net_URL2
+Text_CAPTCHA_Numeral
+Tree
+
+And one 3rd party package: http://phpsavant.com/Savant2-2.4.3.tgz

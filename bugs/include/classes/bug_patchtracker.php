@@ -178,12 +178,16 @@ class Bug_Patchtracker
                                         'text/x-c++',
                                        );
 
+
+/* FIXME: This does not work. Some browsers do not send the file type at all! Should use fileinfo instead to check the type!!
             if (!in_array($file['type'], $allowed_mime_types)) {
                 $this->_dbh->query('DELETE FROM bugdb_patchtracker
                     WHERE bugdb_id = ? and patch = ? and revision = ?',
                     array($bugid, $name, $id));
-                return PEAR::raiseError('Error: uploaded patch file must be text file (save as e.g. "patch.txt" or "package.diff")');
+                return PEAR::raiseError('Error: uploaded patch file must be text file (save as e.g. "patch.txt" or "package.diff").');
             }
+*/
+
             if (!move_uploaded_file($file['tmp_name'], $this->patchDir($bugid, $name) . "/{$fname}")) {
                 $this->_dbh->query('DELETE FROM bugdb_patchtracker
                     WHERE bugdb_id = ? and patch = ? and revision = ?',
