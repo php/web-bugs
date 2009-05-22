@@ -84,7 +84,6 @@ class Bug_Patchtracker
         }
         PEAR::popErrorHandling();
         if (PEAR::isError($e)) {
-        var_dump($e);
             return PEAR::raiseError("Could not get unique patch file name for bug #{$bugid}, patch \"{$patch}\"");
         }
         return array($id, $this->getPatchFileName($id));
