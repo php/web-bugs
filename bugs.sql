@@ -1,15 +1,16 @@
+
+CREATE TABLE bug_account_request (
+  id int(11) NOT NULL auto_increment,
+  created_on date NOT NULL,
+  handle varchar(20) NOT NULL,
+  salt char(32) NOT NULL,
+  email varchar(65) NOT NULL,
+  PRIMARY KEY  (id)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 -- ts1     bug created date
 -- ts2     bug last updated date
 -- passwd  user password
-
-CREATE TABLE bug_account_request (
-  id INT NOT NULL AUTO_INCREMENT,
-  created_on DATE NOT NULL,
-  handle VARCHAR(20) NOT NULL,
-  salt CHAR(32) NOT NULL,
-  email VARCHAR(65) NOT NULL,
-  PRIMARY KEY(id)
-) ENGINE=MyISAM;
 
 CREATE TABLE bugdb (
   id int(8) NOT NULL auto_increment,
@@ -28,13 +29,14 @@ CREATE TABLE bugdb (
   ts2 datetime default NULL,
   assign varchar(20) default NULL,
   passwd varchar(20) default NULL,
-  registered tinyint(1) NOT NULL default 0,
+  registered tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY php_version (php_version(1)),
+  KEY status (status),
   KEY package_version (package_version(1)),
-  KEY package_name(package_name),
+  KEY package_name (package_name),
   FULLTEXT KEY email (email,sdesc,ldesc)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 PACK_KEYS=1;
 
 CREATE TABLE bugdb_comments (
   id int(8) NOT NULL auto_increment,
@@ -45,9 +47,9 @@ CREATE TABLE bugdb_comments (
   ts datetime NOT NULL default '0000-00-00 00:00:00',
   comment text NOT NULL,
   PRIMARY KEY  (id),
-  FULLTEXT KEY comment (comment),
-  INDEX bug (bug, id, ts)
-) ENGINE=MyISAM;
+  KEY bug (bug,id,ts),
+  FULLTEXT KEY comment (comment)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 PACK_KEYS=1;
 
 CREATE TABLE bugdb_obsoletes_patches (
   bugdb_id int(8) NOT NULL,
@@ -55,75 +57,124 @@ CREATE TABLE bugdb_obsoletes_patches (
   revision int(8) NOT NULL,
   obsolete_patch varchar(40) NOT NULL,
   obsolete_revision int(8) NOT NULL,
-  PRIMARY KEY (bugdb_id, patch, revision, obsolete_patch, obsolete_revision)
-) ENGINE=MyISAM;
+  PRIMARY KEY  (bugdb_id,patch,revision,obsolete_patch,obsolete_revision)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE bugdb_patchtracker (
   bugdb_id int(8) NOT NULL,
   patch varchar(40) NOT NULL,
   revision int(8) NOT NULL,
   developer varchar(20) NOT NULL,
-  PRIMARY KEY (bugdb_id, patch, revision)
-) ENGINE=MyISAM;
+  PRIMARY KEY  (bugdb_id,patch,revision)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE bugdb_pseudo_packages (
-  id INT NOT NULL AUTO_INCREMENT,
-  parent INT NOT NULL default '0',
+  id int(11) NOT NULL auto_increment,
+  parent int(11) NOT NULL default '0',
   name varchar(80) NOT NULL default '',
   long_name varchar(100) NOT NULL default '',
   project varchar(40) NOT NULL default '',
-  disabled tinyint(1) NOT NULL default 0, # Disabled == read-only (no new reports in these!)
-  PRIMARY KEY (id),
-  UNIQUE KEY (name, project)
-) ENGINE=MyISAM;
+  disabled tinyint(1) NOT NULL default '0', # Disabled == read-only (no new reports in these!)
+  PRIMARY KEY  (id),
+  UNIQUE KEY name (name,project)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE bugdb_resolves (
-  id INT NOT NULL AUTO_INCREMENT,
+  id int(11) NOT NULL auto_increment,
   name varchar(100) NOT NULL,
   status varchar(16) default NULL,
   title varchar(100) NOT NULL,
   message text NOT NULL,
-  project varchar(40) NOT NULL default '', # if empty, common for all projects
-  PRIMARY KEY (id)
-) ENGINE=MyISAM;
-
-CREATE TABLE bugdb_roadmap_link (
-  id int(8) NOT NULL auto_increment,
-  roadmap_id int(8) NOT NULL default 0,
-  PRIMARY KEY  (id, roadmap_id)
-) ENGINE=MyISAM;
+  project varchar(40) NOT NULL default '',
+  PRIMARY KEY  (id)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE bugdb_roadmap (
   id int(8) NOT NULL auto_increment,
   package varchar(80) NOT NULL default '',
   roadmap_version varchar(100) NOT NULL,
-  releasedate datetime NOT NULL default '0000-00-00',
+  releasedate datetime NOT NULL default '0000-00-00 00:00:00',
   description text NOT NULL,
   PRIMARY KEY  (id),
-  UNIQUE KEY (package, roadmap_version)
-) ENGINE=MyISAM;
+  UNIQUE KEY package (package,roadmap_version)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE bugdb_roadmap_link (
+  id int(8) NOT NULL auto_increment,
+  roadmap_id int(8) NOT NULL default '0',
+  PRIMARY KEY  (id,roadmap_id)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE bugdb_subscribe (
   bug_id int(8) NOT NULL default '0',
   email varchar(40) NOT NULL default '',
   unsubscribe_date int(11) default NULL,
   unsubscribe_hash varchar(80) default '',
-  PRIMARY KEY  (bug_id, email),
-  KEY (unsubscribe_hash)
-) ENGINE=MyISAM;
+  PRIMARY KEY  (bug_id,email),
+  KEY unsubscribe_hash (unsubscribe_hash)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- score's value can be 1 through 5
-
 CREATE TABLE bugdb_votes (
   bug int(8) NOT NULL default '0',
-  ts timestamp(14) NOT NULL,
+  ts timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   ip int(10) unsigned NOT NULL default '0',
   score int(3) NOT NULL default '0',
   reproduced int(1) NOT NULL default '0',
   tried int(1) NOT NULL default '0',
   sameos int(1) default NULL,
   samever int(1) default NULL
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE packages (
+  id int(11) NOT NULL default '0',
+  name varchar(80) NOT NULL default '',
+  category int(11) default NULL,
+  stablerelease varchar(20) default NULL,
+  develrelease varchar(20) default NULL,
+  license varchar(50) default NULL,
+  summary text,
+  description text,
+  homepage varchar(255) default NULL,
+  package_type enum('pear','pecl') NOT NULL default 'pear',
+  doc_link varchar(255) default NULL,
+  cvs_link varchar(255) default NULL,
+  approved tinyint(4) NOT NULL default '0',
+  wiki_area tinyint(1) NOT NULL default '0',
+  blocktrackbacks tinyint(1) NOT NULL default '0',
+  unmaintained tinyint(1) NOT NULL default '0',
+  newpk_id int(11) default NULL,
+  newpackagename varchar(100) default NULL,
+  newchannel varchar(255) default NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY name (name),
+  KEY category (category)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE users (
+  handle varchar(20) NOT NULL default '',
+  password varchar(64) default NULL,
+  name varchar(100) default NULL,
+  email varchar(100) default NULL,
+  homepage varchar(255) default NULL,
+  created datetime default NULL,
+  createdby varchar(20) default NULL,
+  lastlogin datetime default NULL,
+  showemail tinyint(1) default NULL,
+  registered tinyint(1) default NULL,
+  admin tinyint(1) default NULL,
+  userinfo text,
+  pgpkeyid varchar(20) default NULL,
+  pgpkey text,
+  wishlist varchar(255) NOT NULL default '',
+  active tinyint(1) NOT NULL default '1',
+  from_site varchar(4) NOT NULL default '',
+  PRIMARY KEY  (handle),
+  UNIQUE KEY email_u (email),
+  KEY handle (handle,registered),
+  KEY pgpkeyid (pgpkeyid),
+  KEY email (email(25))
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 # Default pseudo packages (common for all projects)
 INSERT INTO bugdb_pseudo_packages SET id = '1', parent = '0', name = 'Web Site',   long_name = 'Web Site',   project = '';
