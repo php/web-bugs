@@ -2,6 +2,15 @@
 -- ts2     bug last updated date
 -- passwd  user password
 
+CREATE TABLE bug_account_request (
+  id INT NOT NULL AUTO_INCREMENT,
+  created_on DATE NOT NULL,
+  handle VARCHAR(20) NOT NULL,
+  salt CHAR(32) NOT NULL,
+  email VARCHAR(65) NOT NULL,
+  PRIMARY KEY(id)
+) ENGINE=MyISAM;
+
 CREATE TABLE bugdb (
   id int(8) NOT NULL auto_increment,
   package_name varchar(80) default NULL,
@@ -25,7 +34,7 @@ CREATE TABLE bugdb (
   KEY package_version (package_version(1)),
   KEY package_name(package_name),
   FULLTEXT KEY email (email,sdesc,ldesc)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 CREATE TABLE bugdb_comments (
   id int(8) NOT NULL auto_increment,
@@ -38,7 +47,70 @@ CREATE TABLE bugdb_comments (
   PRIMARY KEY  (id),
   FULLTEXT KEY comment (comment),
   INDEX bug (bug, id, ts)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
+
+CREATE TABLE bugdb_obsoletes_patches (
+  bugdb_id int(8) NOT NULL,
+  patch varchar(40) NOT NULL,
+  revision int(8) NOT NULL,
+  obsolete_patch varchar(40) NOT NULL,
+  obsolete_revision int(8) NOT NULL,
+  PRIMARY KEY (bugdb_id, patch, revision, obsolete_patch, obsolete_revision)
+) ENGINE=MyISAM;
+
+CREATE TABLE bugdb_patchtracker (
+  bugdb_id int(8) NOT NULL,
+  patch varchar(40) NOT NULL,
+  revision int(8) NOT NULL,
+  developer varchar(20) NOT NULL,
+  PRIMARY KEY (bugdb_id, patch, revision)
+) ENGINE=MyISAM;
+
+CREATE TABLE bugdb_pseudo_packages (
+  id INT NOT NULL AUTO_INCREMENT,
+  parent INT NOT NULL default '0',
+  name varchar(80) NOT NULL default '',
+  long_name varchar(100) NOT NULL default '',
+  project varchar(40) NOT NULL default '',
+  disabled tinyint(1) NOT NULL default 0, # Disabled == read-only (no new reports in these!)
+  PRIMARY KEY (id),
+  UNIQUE KEY (name, project)
+) ENGINE=MyISAM;
+
+CREATE TABLE bugdb_resolves (
+  id INT NOT NULL AUTO_INCREMENT,
+  name varchar(100) NOT NULL,
+  status varchar(16) default NULL,
+  title varchar(100) NOT NULL,
+  message text NOT NULL,
+  project varchar(40) NOT NULL default '', # if empty, common for all projects
+  PRIMARY KEY (id)
+) ENGINE=MyISAM;
+
+CREATE TABLE bugdb_roadmap_link (
+  id int(8) NOT NULL auto_increment,
+  roadmap_id int(8) NOT NULL default 0,
+  PRIMARY KEY  (id, roadmap_id)
+) ENGINE=MyISAM;
+
+CREATE TABLE bugdb_roadmap (
+  id int(8) NOT NULL auto_increment,
+  package varchar(80) NOT NULL default '',
+  roadmap_version varchar(100) NOT NULL,
+  releasedate datetime NOT NULL default '0000-00-00',
+  description text NOT NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY (package, roadmap_version)
+) ENGINE=MyISAM;
+
+CREATE TABLE bugdb_subscribe (
+  bug_id int(8) NOT NULL default '0',
+  email varchar(40) NOT NULL default '',
+  unsubscribe_date int(11) default NULL,
+  unsubscribe_hash varchar(80) default '',
+  PRIMARY KEY  (bug_id, email),
+  KEY (unsubscribe_hash)
+) ENGINE=MyISAM;
 
 -- score's value can be 1 through 5
 
@@ -51,80 +123,7 @@ CREATE TABLE bugdb_votes (
   tried int(1) NOT NULL default '0',
   sameos int(1) default NULL,
   samever int(1) default NULL
-) TYPE=MyISAM;
-
-CREATE TABLE `bugdb_subscribe` (
-  bug_id int(8) NOT NULL default '0',
-  email varchar(40) NOT NULL default '',
-  unsubscribe_date int(11) default NULL,
-  unsubscribe_hash varchar(80) default '',
-  PRIMARY KEY  (bug_id, email),
-  KEY (unsubscribe_hash)
-) TYPE=MyISAM;
-
-CREATE TABLE bugdb_roadmap_link (
-  id int(8) NOT NULL auto_increment,
-  roadmap_id int(8) NOT NULL default 0,
-  PRIMARY KEY  (id, roadmap_id)
-);
-
-CREATE TABLE bugdb_roadmap (
-  id int(8) NOT NULL auto_increment,
-  package varchar(80) NOT NULL default '',
-  roadmap_version varchar(100) NOT NULL,
-  releasedate datetime NOT NULL default '0000-00-00',
-  description text NOT NULL,
-  PRIMARY KEY  (id),
-  UNIQUE KEY (package, roadmap_version)
-);
-
-CREATE TABLE bugdb_patchtracker (
-  bugdb_id int(8) NOT NULL,
-  patch varchar(40) NOT NULL,
-  revision int(8) NOT NULL,
-  developer varchar(20) NOT NULL,
-  PRIMARY KEY (bugdb_id, patch, revision)
-);
-
-CREATE TABLE bugdb_obsoletes_patches (
-  bugdb_id int(8) NOT NULL,
-  patch varchar(40) NOT NULL,
-  revision int(8) NOT NULL,
-  obsolete_patch varchar(40) NOT NULL,
-  obsolete_revision int(8) NOT NULL,
-  PRIMARY KEY (bugdb_id, patch, revision,
-               obsolete_patch, obsolete_revision)
-);
-
-CREATE TABLE bug_account_request (
-  id INT NOT NULL AUTO_INCREMENT,
-  created_on DATE NOT NULL,
-  handle VARCHAR(20) NOT NULL,
-  salt CHAR(32) NOT NULL,
-  email VARCHAR(65) NOT NULL,
-  PRIMARY KEY(id)
-);
-
-CREATE TABLE bugdb_resolves (
-  id INT NOT NULL AUTO_INCREMENT,
-  name varchar(100) NOT NULL,
-  status varchar(16) default NULL,
-  title varchar(100) NOT NULL,
-  message text NOT NULL,
-  project varchar(40) NOT NULL default '', # if empty, common for all projects
-  PRIMARY KEY (id)
-);
-
-CREATE TABLE bugdb_pseudo_packages (
-  id INT NOT NULL AUTO_INCREMENT,
-  parent INT NOT NULL default '0',
-  name varchar(80) NOT NULL default '',
-  long_name varchar(100) NOT NULL default '',
-  project varchar(40) NOT NULL default '',
-  disabled tinyint(1) NOT NULL default 0, # Disabled == read-only (no new reports in these!)
-  PRIMARY KEY (id),
-  UNIQUE KEY (name, project)
-);
+) ENGINE=MyISAM;
 
 # Default pseudo packages (common for all projects)
 INSERT INTO bugdb_pseudo_packages SET id = '1', parent = '0', name = 'Web Site',   long_name = 'Web Site',   project = '';
