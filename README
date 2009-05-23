@@ -1,7 +1,32 @@
-This is a collaboration between PEAR, PECL and PHP core to create a unified bug tracker,
-and is not part of the PEAR project officially, although this has not been precluded.
+=== Welcome to the official php.net bug tracking system ===
 
-If the project will be proposed as a PEAR package, it will go through official channels.
+This is a collaboration between PEAR, PECL and PHP core to create a unified bug tracker.
 
-On initial import, this is just the files from pearweb/bugs, and is non-working.
+=== Status ===
 
+ - Alpha
+ - Likely implementation date: Q4 2009
+
+=== Progress ===
+
+This system is based off pearweb/bugs/ and php-bugs-web.
+
+=== Installation ===
+
+Configuration:
+ - bugs/include/prepend.inc
+
+Required PEAR packages:
+ # pear install DB DB_DataObject Text_CAPTCHA_Numeral Tree-beta Net_URL2-beta
+ - DB
+ - DB_DataObject
+ - Net_URL2
+ - Text_CAPTCHA_Numeral
+ - Tree
+
+Required external packages:
+ - Savant:  http://phpsavant.com/Savant2-2.4.3.tgz
+ - Damblan: ???
+
+Database:
+ - See README.UPGRADE_bugs.php.net

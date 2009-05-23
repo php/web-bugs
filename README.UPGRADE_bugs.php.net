@@ -1,44 +1,39 @@
 
-DATABASE
-========
+=== DATABASE ===
 
-0. Checkout php-bugs-web code:
+Two different routes are possible, so you can either
+start fresh (A) OR import the old bugs database (B).
 
-1. Convert/Create database tables:
-
-  Convert existing phpbugsdb:
-
-    mysql -u nobody phpbugsdb < phpbugsdb_upgrade.sql
-
-OR
+==== (A) Starting fresh ====
 
   Create initial empty phpbugsdb:
 
     mysql -u root -p < phpbugsdb_create.sql
     mysql -u nobody phpbugsdb < bugs.sql
 
-2. Convert bugtypes.inc into database entries:
+==== (B) Importing from old php-bugs-web ====
 
-  php -n convert_bugtypes_to_db.php
+  Download and import a dump from this database:
 
-3. Convert quick resolves into database entries:
+    wget http://bugs.php.net/~rasmus/bugs-db-dump.sql.gz
+    gunzip bugs-db-dump.sql.gz
+    mysql -u nobody phpbugsdb < bugs-db-dump.sql
 
-  php -n convert_resolves_to_db.php
+  Upgrade/convert to the new DB schema
 
+    mysql -u nobody phpbugsdb < phpbugsdb_upgrade.sql
 
-Required PEAR packages
-======================
+==== For either, add some additional data ====
 
-DB
-DB_DataObject
-Net_URL2
-Text_CAPTCHA_Numeral
-Tree
+  Checkout php-bugs-web code:
 
-And one 3rd party package: http://phpsavant.com/Savant2-2.4.3.tgz
+    cvs co php-bugs-web
 
+  Convert bugtypes.inc into database entries:
 
-PHP bugs db dump
-================
+    php -n convert_bugtypes_to_db.php
 
-http://bugs.php.net/~rasmus/bugs-db-dump.sql.gz
+  Convert quick resolves into database entries:
+
+    php -n convert_resolves_to_db.php
+
