@@ -19,15 +19,12 @@
 */
 
 
-include_once 'DB.php';
+include_once 'MDB2.php';
 
 if (empty($dbh))
 {
-    $options = array(
-        'persistent' => false,
-        'portability' => DB_PORTABILITY_ALL,
-    );
-    $dbh =& DB::connect(PEAR_DATABASE_DSN, $options);
+    $dbh = MDB2::factory(PEAR_DATABASE_DSN);
+    $dbh->loadModule('Extended');
 }
 
 /**
@@ -666,7 +663,7 @@ function html_category_urhere($id, $link_lastest = false)
                             AND c.cat_right >= cat.cat_right");
         $nrows = $res->numRows();
         $i = 0;
-        while ($res->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+        foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
             if (!$link_lastest && $i >= $nrows -1) {
                 break;
             }

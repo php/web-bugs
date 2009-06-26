@@ -337,7 +337,7 @@ if (stristr($query, ';')) {
     $res  = $dbh->query($query);
     $rows =  $res->numRows();
 
-    $total_rows = $dbh->getOne('SELECT FOUND_ROWS()');
+    $total_rows = $dbh->queryOne('SELECT FOUND_ROWS()');
     if ($total_rows > $rows) {
         $warnings[] = 'The search was too general, only ' . MAX_BUGS_RETURN .
             ' bugs will be returned';
@@ -371,7 +371,7 @@ echo '    <items>
 if ($total_rows > 0) {
     $i = 0;
     $items = array();
-    while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
+    foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
         $i++;
         echo "      <rdf:li rdf:resource=\"http://" . $_SERVER['HTTP_HOST'] . "/bug/{$row['id']}\" />\n";
         $items[$i] = "    <item rdf:about=\"http://" . $_SERVER['HTTP_HOST'] . "/bug/{$row['id']}\">\n";

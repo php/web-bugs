@@ -31,7 +31,7 @@ $site = 'php'; // This can be one of php, pear or pecl.
 $site_data = array (
 	'php' => array (
 		'url' => 'bugs.php.net',
-		'basedir' => '/bugs',
+		'basedir' => '/~felipe/bugtracker/bugs',
 		'email' => 'php-bugs@lists.php.net',
 		'security_email' => 'security@php.net',
 		'db' => 'phpbugsdb',
@@ -68,6 +68,8 @@ define('DEVBOX', true);
 
 if (!defined('PEAR_CHANNELNAME'))
 	define ('PEAR_CHANNELNAME', 'pear.php.net');
+
+date_default_timezone_set('America/Sao_Paulo');
 
 // CONFIG END
 

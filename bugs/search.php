@@ -295,7 +295,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         $res = $dbh->query($query);
         $rows = $res->numRows();
 
-        $total_rows =& $dbh->getOne('SELECT FOUND_ROWS()');
+        $total_rows =& $dbh->queryOne('SELECT FOUND_ROWS()');
 
         /* Selected packages to search in */
         $package_name_string = '';
@@ -385,7 +385,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
  </tr>
             <?php
 
-            while ($row =& $res->fetchRow(DB_FETCHMODE_ASSOC)) {
+            while ($row =& $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
                 echo ' <tr valign="top" class="' . $tla[$row['status']] . '">' . "\n";
 
                 /* Bug ID */

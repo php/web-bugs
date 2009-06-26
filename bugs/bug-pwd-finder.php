@@ -32,7 +32,7 @@ if (!empty($bug_id)) {
 	$query = "SELECT email, passwd FROM bugdb WHERE id = '{$bug_id}'";
 
 	// Run the query
-	$row = $dbh->getRow($query, null, DB_FETCHMODE_ASSOC);
+	$row = $dbh->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
 
 	if (is_null($row)) {
 		$errors[] = "Invalid bug id provided: #{$bug_id}";

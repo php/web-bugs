@@ -25,7 +25,7 @@ require_once './include/prepend.inc';
 
 response_header('Bugs Stats');
 
-$dbh->setFetchMode(DB_FETCHMODE_ASSOC);
+$dbh->setFetchMode(MDB2_FETCHMODE_ASSOC);
 
 $titles = array(
     'Closed'      => 'Closed',
@@ -221,7 +221,7 @@ if ($site != 'php') {
 echo '>All</option>' . "\n";
 
 if ($site != 'php') {
-	while ($u = $users->fetchRow(DB_FETCHMODE_ASSOC)) {
+	foreach ($users->fetchAll(MDB2_FETCHMODE_ASSOC) as $u) {
 	    echo '    <option value="' . $u['handle'] . '"';
 	    if ($developer == $u['handle']) {
 	        echo ' selected="selected"';

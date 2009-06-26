@@ -141,9 +141,9 @@ if (isset($_POST['in'])) {
 
 <?php
 
-                while ($row =& $res->fetchRow(DB_FETCHMODE_ASSOC)) {
+                foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
 
-                    $resolution =& $dbh->getOne("
+                    $resolution =& $dbh->queryOne("
 						SELECT comment 
 						FROM bugdb_comments
 						WHERE bug = {$row['id']}
@@ -585,7 +585,7 @@ DATA;
     }
     if ($db->find(false)) {
         while ($db->fetch()) {
-            $released = $dbh->getOne('
+            $released = $dbh->queryOne('
             	SELECT releases.id
                 FROM packages, releases, bugdb_roadmap b
                 WHERE b.id = ? AND

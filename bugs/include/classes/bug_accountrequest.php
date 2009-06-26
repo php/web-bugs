@@ -25,7 +25,7 @@ class Bug_Accountrequest
         if (!$this->handle) {
             return false;
         }
-        $request = $this->dbh->getOne('
+        $request = $this->dbh->queryOne('
             SELECT handle
             FROM bug_account_request
             WHERE handle=?
@@ -42,7 +42,7 @@ class Bug_Accountrequest
         if (!$this->handle) {
             throw new Exception('Internal fault: user was not set when sending email, please report to pear-core@lists.php.net');
         }
-        $salt = $this->dbh->getOne('
+        $salt = $this->dbh->queryOne('
             SELECT salt
             FROM bug_account_request
             WHERE handle=?
@@ -51,7 +51,7 @@ class Bug_Accountrequest
             throw new Exception('No such handle ' . 
             $this->handle . ' found, cannot send confirmation email');
         }
-        $email = $this->dbh->getOne('
+        $email = $this->dbh->queryOne('
             SELECT email
             FROM bug_account_request
             WHERE salt=?
@@ -87,11 +87,12 @@ class Bug_Accountrequest
         if (!$salt) {
             return false;
         }
-        $request = $this->dbh->getRow('
+        $request = $this->dbh->prepare('
             SELECT id, created_on, salt, handle, email
             FROM bug_account_request
             WHERE salt=?
-        ', array($salt), DB_FETCHMODE_ASSOC);
+        ')->execute(array($salt))->fetchRow(MDB2_FETCHMODE_ASSOC);
+        
 
         if (count($request) > 0) {
             foreach ($request as $field => $value) {
@@ -113,15 +114,15 @@ class Bug_Accountrequest
         $handle = '#' . substr($salt, 0, 19);
         $created_on = gmdate('Y-m-d H:i:s');
 
-        $test = $this->dbh->getOne('SELECT email from users where email=?', array($email));
+        $test = $this->dbh->queryOne('SELECT email from users where email=?', array($email));
         if ($test === $email) {
             return PEAR::raiseError('Email is already in use for an existing account');
         }
-        $test = $this->dbh->getOne('SELECT email from bug_account_request where email=?',
+        $test = $this->dbh->queryOne('SELECT email from bug_account_request where email=?',
             array($email));
         if ($test === $email) {
             // re-use existing request
-            $salt = $this->dbh->getOne('SELECT salt FROM bug_account_request WHERE email=?',
+            $salt = $this->dbh->queryOne('SELECT salt FROM bug_account_request WHERE email=?',
                 array($email));
             $this->find($salt);
             return $salt;
@@ -132,11 +133,11 @@ class Bug_Accountrequest
 
         $res = $this->dbh->query($query, array($created_on, $handle, $email, $salt));
 
-        if (DB::isError($res)) {
+        if (PEAR::isError($res)) {
             return $res;
         }
 
-        $this->handle = $this->dbh->getOne('SELECT handle FROM bug_account_request WHERE salt=?', array($salt));
+        $this->handle = $this->dbh->queryOne('SELECT handle FROM bug_account_request WHERE salt=?', array($salt));
         return $salt;
     }
 
@@ -198,7 +199,7 @@ class Bug_Accountrequest
     {
     	global $siteBig, $bugEmail;
     	
-        if ($handle == $this->dbh->getOne('SELECT handle FROM users WHERE
+        if ($handle == $this->dbh->queryOne('SELECT handle FROM users WHERE
               handle=?', array($handle))) {
             $id = $this->dbh->nextId("karma");
 
@@ -227,7 +228,7 @@ class Bug_Accountrequest
             return $useradd;
         }
 
-        $temphandle = $this->dbh->getOne('SELECT handle from bug_account_request WHERE salt=?', array($this->salt));
+        $temphandle = $this->dbh->queryOne('SELECT handle from bug_account_request WHERE salt=?', array($this->salt));
         // update all relevant records to the new handle
         $this->dbh->query('UPDATE bugdb_comments set reporter_name=? WHERE handle=?', array($name, $temphandle));
         $this->dbh->query('UPDATE bugdb set reporter_name=? WHERE handle=?', array($name, $temphandle));
@@ -271,29 +272,28 @@ class Bug_Accountrequest
         $id = $this->dbh->nextId("karma");
         $sth = $this->dbh->query($query, array($id, $this->handle, 'pear.voter', 'pearweb'));
 
-        if (!DB::isError($sth)) {
+        if (!PEAR::isError($sth)) {
             note::add("uid", $this->handle, "Account opened", 'pearweb');
-            $bugs = $this->dbh->getAll('SELECT * FROM bugdb WHERE handle=?',
-                array($this->handle), DB_FETCHMODE_ASSOC);
+            $bugs = $this->dbh->prepare('SELECT * FROM bugdb WHERE handle=?')->execute(array($this->handle))->fetchAll(MDB2_FETCHMODE_ASSOC);
+            //FIXME check!
             foreach ($bugs as $bug) {
                 $this->sendBugEmail($bug);
             }
-            $patches = $this->dbh->getAll('SELECT bugdb.package_name,bugdb_patchtracker.*
+            $patches = $this->dbh->prepare('SELECT bugdb.package_name,bugdb_patchtracker.*
                 FROM bugdb_patchtracker, bugdb
                 WHERE bugdb_patchtracker.developer=?
-                    AND bugdb.id=bugdb_patchtracker.bugdb_id', array($this->handle),
-                    DB_FETCHMODE_ASSOC);
+                    AND bugdb.id=bugdb_patchtracker.bugdb_id')->execute(array($this->handle))->fetchAll(
+                    MDB2_FETCHMODE_ASSOC);
             foreach ($patches as $patch) {
                 $this->sendPatchEmail($patch);
             }
-            $bugs = $this->dbh->getAll('SELECT bugdb_comments.email,bugdb_comments.comment,
+            $bugs = $this->dbh->prepare('SELECT bugdb_comments.email,bugdb_comments.comment,
                     bugdb_comments.reporter_name, bugdb.id,
                     bugdb.bug_type,bugdb.package_name,bugdb.sdesc,
                     bugdb.ldesc,bugdb.php_version, bugdb.php_os,bugdb.status,
                     bugdb.assign,bugdb.package_version
                  FROM bugdb_comments,bugdb WHERE bugdb.id=bugdb_comments.bug AND
-                 bugdb_comments.handle=?',
-                array($this->handle), DB_FETCHMODE_ASSOC);
+                 bugdb_comments.handle=?')->execute(array($this->handle))->fetchAll(MDB2_FETCHMODE_ASSOC);
             foreach ($bugs as $bug) {
                 $this->sendBugCommentEmail($bug);
             }
@@ -346,15 +346,15 @@ class Bug_Accountrequest
         if ($bug_id) {
             $bug_id = (int)$bug_id;
 
-            $assigned = $dbh->getOne("SELECT assign FROM bugdb WHERE id = {$bug_id}");
+            $assigned = $dbh->queryOne("SELECT assign FROM bugdb WHERE id = {$bug_id}");
             if ($assigned) {
-                $assigned = $dbh->getOne("SELECT email FROM users WHERE handle = '{$assigned}'");
+                $assigned = $dbh->queryOne("SELECT email FROM users WHERE handle = '{$assigned}'");
                 if ($assigned && !in_array($assigned, $to)) {
                     // assigned is not a maintainer
                     $to[] = $assigned;
                 }
             }
-            $bcc = $dbh->getCol("SELECT email FROM bugdb_subscribe WHERE bug_id = {$bug_id}");
+            $bcc = $dbh->queryOne("SELECT email FROM bugdb_subscribe WHERE bug_id = {$bug_id}");
             $bcc = array_diff($bcc, $to);
             $bcc = array_unique($bcc);
             return array(implode(', ', $to), $bugEmail, implode(', ', $bcc));
@@ -484,7 +484,7 @@ class Bug_Accountrequest
             'date'       => date('Y-m-d H:i:s'),
             'name'       => $patch['patch'],
             'package'    => $patch['package_name'],
-            'summary'    => $GLOBALS['dbh']->getOne('SELECT sdesc from bugdb
+            'summary'    => $GLOBALS['dbh']->queryOne('SELECT sdesc from bugdb
                 WHERE id=?', array($patch['bugdb_id'])),
             'packageUrl' => 'http://' . PEAR_CHANNELNAME .
                             '/bugs/bug.php?id=' . $patch['bugdb_id'],
@@ -517,13 +517,13 @@ class Bug_Accountrequest
 
         # skip the most recent unless the caller wanted all comments
         if (!$all) {
-            $row =& $res->fetchRow(DB_FETCHMODE_ORDERED);
+            $row =& $res->fetchRow(MDB2_FETCHMODE_ORDERED);
             if (!$row) {
                 return '';
             }
         }
 
-        while (($row =& $res->fetchRow(DB_FETCHMODE_ORDERED)) &&
+        while (($row =& $res->fetchRow(MDB2_FETCHMODE_ORDERED)) &&
                 strlen($output) < $max_message_length && $count++ < $max_comments) {
             $email = $row[3] ?
                 $row[3] :
@@ -536,7 +536,7 @@ class Bug_Accountrequest
             if (!$res) {
                 return $output;
             }
-            $row =& $res->fetchRow(DB_FETCHMODE_ORDERED);
+            $row =& $res->fetchRow(MDB2_FETCHMODE_ORDERED);
             if (!$row) {
                 return $output;
             }
@@ -639,7 +639,7 @@ class Bug_Accountrequest
     {
         $old = gmdate('Y-m-d H:i:s', time() - 604800);
         $findquery = 'select handle from bug_account_request where created_on < ?';
-        $all = $this->dbh->getAll($findquery, array($old));
+        $all = $this->dbh->prepare($findquery)->execute(array($old))->fetchAll(MDB2_FETCHMODE_DEFAULT);
         require_once 'include/classes/bug_patchtracker.php';
         $p = new Bug_Patchtracker;
         // purge reserved usernames as well as their account requests
@@ -654,8 +654,8 @@ class Bug_Accountrequest
                 $this->dbh->query('
                     DELETE FROM bugdb_comments WHERE handle=?
                 ', array($data[0]));
-                $patches = $this->dbh->getAll('SELECT * FROM bugdb_patchtracker
-                    WHERE developer=?', array($data[0]), DB_FETCHMODE_ASSOC);
+                $patches = $this->dbh->prepare('SELECT * FROM bugdb_patchtracker
+                    WHERE developer=?')->execute(array($data[0]))->fetchAll(MDB2_FETCHMODE_ASSOC);
                 foreach ($patches as $patch) {
                     $p->detach($patch['bugdb_id'], $patch['patch'], $patch['revision']);
                 }
@@ -663,6 +663,6 @@ class Bug_Accountrequest
         }
         $query = 'delete from bug_account_request where created_on < ?';
         // purge out-of-date account requests
-        return $this->dbh->query($query, array($old));
+        return $this->dbh->prepare($query)->execute(array($old));
     }
 }

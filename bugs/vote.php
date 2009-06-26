@@ -19,7 +19,7 @@ $reproduced = (int) $_POST['reproduced'];
 $samever = isset($_POST['samever']) ? (int) $_POST['samever'] : 0;
 $sameos  = isset($_POST['sameos'])  ? (int) $_POST['sameos']  : 0;
 
-if (!$dbh->getOne("SELECT id FROM bugdb WHERE id={$id} LIMIT 1")) {
+if (!$dbh->queryOne("SELECT id FROM bugdb WHERE id={$id} LIMIT 1")) {
   response_header('No such bug.');
   display_bug_error("No such bug #{$id}");
   response_footer();

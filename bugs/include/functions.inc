@@ -175,9 +175,8 @@ function get_pseudo_packages ($project, $return_disabled = true)
 		$where.= " AND disabled = 0";
 
 	$pseudo_pkgs = array();
-
 	$tree = Tree::setup (
-		'Memory_DBsimple',
+		'Memory_MDB2simple',
 		PEAR_DATABASE_DSN,
 		array (
 			'order' => 'id',
@@ -250,11 +249,11 @@ function escapeSQL($in)
     if (is_array($in)) {
         $out = array();
         foreach ($in as $key => $value) {
-            $out[$key] = $dbh->escapeSimple($value);
+            $out[$key] = $dbh->escape($value);
         }
         return $out;
     } else {
-        return $dbh->escapeSimple($in);
+        return $dbh->escape($in);
     }
 }
 
@@ -485,16 +484,16 @@ function show_package_version_options($package_name, $current)
         echo '<input type="text" size="20" maxlength="100" name="in[package_version]" value="' . htmlspecialchars($current) . '" />';
         return;
     }
-    $pid = $dbh->getOne('SELECT id from packages where name = ?', array($package_name));
+    $pid = $dbh->queryOne('SELECT id from packages where name = ?', array($package_name));
     if (!$pid) {
         echo '<input type="text" size="20" maxlength="100" name="in[package_version]"
     value="' . htmlspecialchars($current) . '" />';
         return;
     }
-    $candidates = $dbh->getAll('
+    $candidates = $dbh->prepare('
         SELECT releases.version, releases.state
             FROM releases, packages
-            WHERE packages.name = ? and releases.package = packages.id ORDER BY releases.releasedate DESC', array($package_name));
+            WHERE packages.name = ? and releases.package = packages.id ORDER BY releases.releasedate DESC')->execute(array($package_name))->fetchAll(MDB2_FETCHMODE_ASSOC);
     $newest = count($candidates) ? $candidates[0] : false;
     if ($newest) {
         $stable = null;
@@ -589,7 +588,7 @@ function show_types($current, $show_any, $default = '')
 	            SELECT name FROM packages
 	            WHERE approved = 1 AND package_type = '$site'
 	            ORDER BY name";
-	        $list = $dbh->getCol($sql);
+	        $list = $dbh->queryCol($sql);
 
 	        foreach ($list as $name) {
 	            $bug_items[$name] = $name;
@@ -935,13 +934,13 @@ function get_old_comments($bug_id, $all = 0)
 
 	// skip the most recent unless the caller wanted all comments
     if (!$all) {
-        $row =& $res->fetchRow(DB_FETCHMODE_ORDERED);
+        $row =& $res->fetchRow(MDB2_FETCHMODE_ORDERED);
         if (!$row) {
             return '';
         }
     }
 
-    while (($row =& $res->fetchRow(DB_FETCHMODE_ORDERED)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
+    while (($row =& $res->fetchRow(MDB2_FETCHMODE_ORDERED)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
         $email = ($row[3]) ? $row[3] : spam_protect($row[1], 'text');
         $output .= "[{$row[0]}] {$email}\n\n{$row[2]}\n\n{$divider}\n\n";
     }
@@ -951,7 +950,7 @@ function get_old_comments($bug_id, $all = 0)
         if (!$res) {
             return $output;
         }
-        $row =& $res->fetchRow(DB_FETCHMODE_ORDERED);
+        $row =& $res->fetchRow(MDB2_FETCHMODE_ORDERED);
         if (!$row) {
             return $output;
         }
@@ -998,7 +997,7 @@ function package_exists($package_name)
     if (isset($pseudo_pkgs[$package_name])) {
         return true;
     }
-    $found = $dbh->getOne('SELECT count(name) FROM packages WHERE name = ?', array($package_name));
+    $found = $dbh->queryOne('SELECT count(name) FROM packages WHERE name = ?', array($package_name));
     return ($found == 1) ? true : false;
 }
 
@@ -1113,15 +1112,15 @@ function get_package_mail($package_name, $bug_id = false)
     if ($bug_id) {
         $bug_id = (int) $bug_id;
 
-        $assigned = $dbh->getOne("SELECT assign FROM bugdb WHERE id={$bug_id}");
+        $assigned = $dbh->queryOne("SELECT assign FROM bugdb WHERE id={$bug_id}");
         if ($assigned) {
-            $assigned = $dbh->getOne("SELECT email FROM users WHERE handle='{$assigned}'");
+            $assigned = $dbh->queryOne("SELECT email FROM users WHERE handle='{$assigned}'");
             if ($assigned && !in_array($assigned, $to)) {
                 // assigned is not a maintainer
                 $to[] = $assigned;
             }
         }
-        $bcc = $dbh->getCol("SELECT email FROM bugdb_subscribe WHERE bug_id={$bug_id}");
+        $bcc = $dbh->queryCol("SELECT email FROM bugdb_subscribe WHERE bug_id={$bug_id}");
         $bcc = array_diff($bcc, $to);
         $bcc = array_unique($bcc);
         return array(implode(', ', $to), $bugEmail, implode(', ', $bcc));
@@ -1332,7 +1331,7 @@ function unsubscribe($bug_id, $hash)
 		WHERE bug_id = {$bug_id} AND unsubscribe_hash = '{$hash}' LIMIT 1
 	";
 
-    $sub = $dbh->getRow($query, DB_FETCHMODE_ASSOC);
+    $sub = $dbh->query($query, MDB2_FETCHMODE_ASSOC);
 
     if (!$sub) {
         return false;
@@ -1367,6 +1366,6 @@ function get_resolve_reasons ($project = false)
 	if ($project !== false)
 		$where = "WHERE project = '{$project}' OR project = ''";
 
-	return $dbh->getAll("SELECT * FROM bugdb_resolves $where");
+	return $dbh->queryAll("SELECT * FROM bugdb_resolves $where");
 }
 

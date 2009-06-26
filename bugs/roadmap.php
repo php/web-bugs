@@ -173,7 +173,7 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
 
         $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
         $res =& $dbh->query($query);
-        while ($row =& $res->fetchRow(DB_FETCHMODE_ASSOC)) {
+        foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
             $link->id = $row['id'];
             $link->delete();
             $link->id = $row['id'];
@@ -468,7 +468,7 @@ while ($allroadmaps->fetch()) {
         $features->joinAdd($roadmaps);
         $features->bug_type = 'Feature/Change Request';
         $rows = $features->find(false);
-        $total_rows = $dbh->getOne('SELECT FOUND_ROWS()');
+        $total_rows = $dbh->queryOne('SELECT FOUND_ROWS()');
 
         if ($rows) {
             $package_string = '';
@@ -501,7 +501,7 @@ while ($allroadmaps->fetch()) {
         $bugs->joinAdd($roadmaps);
         $bugs->whereAdd('bugdb.bug_type IN("Bug", "Documentation Problem")');
         $rows = $bugs->find(false);
-        $total_rows = $dbh->getOne('SELECT FOUND_ROWS()');
+        $total_rows = $dbh->queryOne('SELECT FOUND_ROWS()');
 
         if ($rows) {
             $package_string = '';
@@ -541,9 +541,9 @@ while ($allroadmaps->fetch()) {
         $featurequery = 'SELECT COUNT(bugdb.id) FROM bugdb_roadmap_link r, bugdb
             WHERE r.roadmap_id = ? AND bugdb.id = r.id AND bugdb.bug_type =
                 "Feature/Change Request"';
-        if ($savant->totalbugs[$allroadmaps->roadmap_version] = $dbh->getOne($bugquery,
+        if ($savant->totalbugs[$allroadmaps->roadmap_version] = $dbh->queryOne($bugquery,
               array($allroadmaps->id))) {
-            $savant->closedbugs[$allroadmaps->roadmap_version] = $dbh->getOne('
+            $savant->closedbugs[$allroadmaps->roadmap_version] = $dbh->queryOne('
                 SELECT COUNT(bugdb.id) FROM bugdb, bugdb_roadmap_link r
                 WHERE
                     bugdb.id = r.id AND
@@ -551,9 +551,9 @@ while ($allroadmaps->fetch()) {
                     bugdb.bug_type IN ("Bug", "Documentation Problem") AND
                     bugdb.status = "Closed"', array($allroadmaps->id));
         }
-        if ($savant->totalfeatures[$allroadmaps->roadmap_version] = $dbh->getOne($featurequery,
+        if ($savant->totalfeatures[$allroadmaps->roadmap_version] = $dbh->queryOne($featurequery,
               array($allroadmaps->id))) {
-            $savant->closedfeatures[$allroadmaps->roadmap_version] = $dbh->getOne('
+            $savant->closedfeatures[$allroadmaps->roadmap_version] = $dbh->queryOne('
                 SELECT COUNT(bugdb.id) FROM bugdb, bugdb_roadmap_link r
                 WHERE
                     bugdb.id = r.id AND

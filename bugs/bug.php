@@ -91,7 +91,7 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
             }
             else // Subscribe
             {
-                $dbh->query('REPLACE INTO bugdb_subscribe SET bug_id = ?, email = ?', array($bug_id, $email));
+                $dbh->prepare('REPLACE INTO bugdb_subscribe SET bug_id = ?, email = ?')->execute(array($bug_id, $email));
                 $thanks = 7;
             }
             localRedirect("bug.php?id={$bug_id}&thanks={$thanks}");
@@ -134,7 +134,7 @@ if ($logged_in) {
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
 
 // fetch info about the bug into $bug
-if ($dbh->getOne('SELECT handle FROM bugdb WHERE id=?', array($bug_id))) {
+if ($dbh->prepare('SELECT handle FROM bugdb WHERE id=?')->execute(array($bug_id))->fetchOne()) {
     $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
         b.passwd, b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
         b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
@@ -170,7 +170,7 @@ if ($dbh->getOne('SELECT handle FROM bugdb WHERE id=?', array($bug_id))) {
         GROUP BY bug';
 }
 
-$bug =& $dbh->getRow($query, array($bug_id), DB_FETCHMODE_ASSOC);
+$bug =& $dbh->prepare($query)->execute(array($bug_id))->fetchRow(MDB2_FETCHMODE_ASSOC);
 
 // DB error
 if (is_object($bug)) {
@@ -361,7 +361,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 
     if (!$errors && !($errors = incoming_details_are_valid($_POST['in'], false))) {
-        $dbh->query("
+        $dbh->prepare("
             UPDATE bugdb
             SET
                 sdesc = ?,
@@ -374,7 +374,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                 email = ?,
                 ts2 = NOW()
             WHERE id={$bug_id}
-        " , array(
+        ")->execute(array(
             $_POST['in']['sdesc'],
             $_POST['in']['status'],
             $_POST['in']['package_name'],
@@ -388,7 +388,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         if (!empty($ncomment)) {
             $query = "INSERT INTO bugdb_comments (bug, email, ts, comment)
                       VALUES ({$bug_id}, ?, NOW(), ?)";
-            $dbh->query($query, array($from, $ncomment));
+            $dbh->prepare($query)->execute(array($from, $ncomment));
         }
     }
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
@@ -487,7 +487,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             $_POST['in']['package_version'] = '';
         }
 
-        $dbh->query($query .= "
+        $dbh->prepare($query .= "
             sdesc = ?, 
             status = ?, 
             package_name = ?,
@@ -497,7 +497,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             php_version = ?,
             php_os = ?,
             ts2=NOW() WHERE id = {$bug_id}
-        ", array (
+        ")->execute(array (
             $_POST['in']['sdesc'],
             $status,
             $_POST['in']['package_name'],
@@ -507,7 +507,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             $_POST['in']['php_version'],
             $_POST['in']['php_os'],
         ));
-        $previous = $dbh->getAll("
+        $previous = $dbh->queryAll("
             SELECT roadmap_version
             FROM bugdb_roadmap_link l, bugdb_roadmap b
             WHERE l.id = {$bug_id} AND b.id=l.roadmap_id
@@ -525,7 +525,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                     $link->insert();
                 }
             }
-            $current = $dbh->getAll("
+            $current = $dbh->queryAll("
                 SELECT roadmap_version
                 FROM bugdb_roadmap_link l, bugdb_roadmap b
                 WHERE l.id = {$bug_id} AND b.id = l.roadmap_id
@@ -535,10 +535,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         }
 
         if (!empty($ncomment)) {
-            $dbh->query('
+            $dbh->prepare('
                 INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle)
                 VALUES (?, ?, NOW(), ?, ?, ?)
-            ', array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
+            ')->execute(array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
         }
     }
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 1) {
@@ -699,13 +699,13 @@ show_bugs_menu(txfield('package_name'));
         $assignedRoadmap = array();
         if ($db->find(false)) {
             while ($db->fetch()) {
-                $released = $dbh->getOne('SELECT releases.id
+                $released = $dbh->prepare('SELECT releases.id
                  FROM packages, releases, bugdb_roadmap b
                  WHERE
                     b.id=? AND
                     packages.name=b.package AND releases.package=packages.id AND
-                    releases.version=b.roadmap_version',
-                    array($db->id));
+                    releases.version=b.roadmap_version')->execute(
+                    array($db->id))->fetchOne();
                 if (isset($links[$db->id])) {
                     $assignedRoadmap[] = '<a href="roadmap.php?package=' .
                         $db->package . ($released ? '&showold=1' : '') .
@@ -1007,13 +1007,12 @@ if ($edit == 1 || $edit == 2) { ?>
         $db->orderBy('releasedate DESC');
         if ($db->find(false)) {
             while ($db->fetch()) {
-                $released = $dbh->getOne('SELECT releases.id
+                $released = $dbh->prepare('SELECT releases.id
                  FROM packages, releases, bugdb_roadmap b
                  WHERE
                     b.id=? AND
                     packages.name=b.package AND releases.package=packages.id AND
-                    releases.version=b.roadmap_version',
-                    array($db->id));
+                    releases.version=b.roadmap_version')->execute(array($db->id))->fetchOne();
                 if ($released) {
                     echo '<span class="headerbottom">';
                 }
@@ -1154,10 +1153,10 @@ $query = '
     WHERE c.bug = ?
     GROUP BY c.id ORDER BY c.ts
 ';
-$res =& $dbh->query($query, array($bug_id));
+$res =& $dbh->prepare($query)->execute(array($bug_id))->fetchOne();
 if ($res) {
     echo '<h2>Comments</h2>';
-    while ($row =& $res->fetchRow(DB_FETCHMODE_ASSOC)) {
+    foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
         output_note($row['id'], $row['added'], $row['email'], $row['comment'], ($row['bughandle'] ? $row['bughandle'] : $row['handle']), $row['comment_name'], $row['registered']);
     }
 }

@@ -116,7 +116,7 @@ class Bug_Patchtracker
 
     function userNotRegistered($bugid, $name, $revision)
     {
-        $user = $this->_dbh->getOne('SELECT registered from bugdb_patchtracker, users
+        $user = $this->_dbh->queryOne('SELECT registered from bugdb_patchtracker, users
             WHERE bugdb_id=? AND patch=? AND revision=?
                 AND users.handle=bugdb_patchtracker.developer',
             array($bugid, $name, $revision));
@@ -263,10 +263,10 @@ class Bug_Patchtracker
     {
     	global $site;
     	
-        if ($this->_dbh->getOne('SELECT bugdb_id FROM bugdb_patchtracker
+        if ($this->_dbh->queryOne('SELECT bugdb_id FROM bugdb_patchtracker
               WHERE bugdb_id = ? AND patch = ? AND revision = ?',
               array($bugid, $name, $revision))) {
-            if ($site != 'php' && !$this->_dbh->getOne('SELECT registered FROM users, bugdb_patchtracker
+            if ($site != 'php' && !$this->_dbh->queryOne('SELECT registered FROM users, bugdb_patchtracker
                 WHERE bugdb_id=? AND patch=? AND revision=? AND
                 users.handle=bugdb_patchtracker.developer', array($bugid, $name, $revision))) {
                 // user is not registered
@@ -295,7 +295,7 @@ class Bug_Patchtracker
              WHERE bugdb_id = ? 
              ORDER BY revision DESC',
             false, array($bugid),
-            DB_FETCHMODE_ORDERED, true
+            MDB2_FETCHMODE_ORDERED, true
         );
     }
 
@@ -308,13 +308,13 @@ class Bug_Patchtracker
      */
     function listRevisions($bugid, $patch)
     {
-        return $this->_dbh->getAll(
+        return $this->_dbh->queryAll(
             'SELECT revision FROM bugdb_patchtracker, users
                 WHERE bugdb_id = ? AND
              patch = ? AND users.handle=bugdb_patchtracker.developer AND
              users.registered=1
              ORDER BY revision DESC', array($bugid, $patch),
-            DB_FETCHMODE_ORDERED
+            MDB2_FETCHMODE_ORDERED
         );
     }
 
@@ -329,36 +329,36 @@ class Bug_Patchtracker
     function getDeveloper($bugid, $patch, $revision = false)
     {
         if ($revision) {
-            return $this->_dbh->getOne(
+            return $this->_dbh->queryOne(
                 'SELECT developer FROM bugdb_patchtracker
                  WHERE bugdb_id=? AND patch=? AND revision=?
                 ', array($bugid, $patch, $revision));
         }
-        return $this->_dbh->getAll(
+        return $this->_dbh->queryAll(
             'SELECT developer,revision FROM bugdb_patchtracker
              WHERE bugdb_id=? AND patch=? ORDER BY revision DESC',
-            array($bugid, $patch), DB_FETCHMODE_ASSOC
+            array($bugid, $patch), MDB2_FETCHMODE_ASSOC
         );
     }
 
     function getObsoletingPatches($bugid, $patch, $revision)
     {
-        return $this->_dbh->getAll('SELECT bugdb_id, patch, revision
+        return $this->_dbh->queryAll('SELECT bugdb_id, patch, revision
             FROM bugdb_obsoletes_patches
                 WHERE bugdb_id=? AND
                       obsolete_patch=? AND
                       obsolete_revision=?', array($bugid, $patch, $revision),
-         DB_FETCHMODE_ASSOC);
+         MDB2_FETCHMODE_ASSOC);
     }
 
     function getObsoletePatches($bugid, $patch, $revision)
     {
-        return $this->_dbh->getAll('SELECT bugdb_id, obsolete_patch, obsolete_revision
+        return $this->_dbh->queryAll('SELECT bugdb_id, obsolete_patch, obsolete_revision
             FROM bugdb_obsoletes_patches
                 WHERE bugdb_id=? AND
                       patch=? AND
                       revision=?', array($bugid, $patch, $revision),
-         DB_FETCHMODE_ASSOC);
+         MDB2_FETCHMODE_ASSOC);
     }
 
     /**
@@ -386,8 +386,8 @@ class Bug_Patchtracker
     function getBugInfo($bugid)
     {
         $bugid = (int) $bugid;
-        $info = $this->_dbh->getAll('SELECT * FROM bugdb WHERE id=?', array($bugid),
-            DB_FETCHMODE_ASSOC);
+        $info = $this->_dbh->queryAll('SELECT * FROM bugdb WHERE id=?', array($bugid),
+            MDB2_FETCHMODE_ASSOC);
         if (!is_array($info) || !count($info)) {
             return PEAR::raiseError('No such bug "' . $bugid . '"');
         }

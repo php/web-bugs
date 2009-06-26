@@ -20,7 +20,7 @@ $query  = "SELECT id,package_name,bug_type,email,sdesc,ldesc,php_version,
                   WHERE id=?
                   AND registered=1";
 
-$res = $dbh->getAll($query, array($id), DB_FETCHMODE_ASSOC);
+$res = $dbh->prepare($query)->execute(array($id))->fetchAll(MDB2_FETCHMODE_ASSOC);
 
 if (count($res)) {
     $bug = $res[0];
@@ -36,7 +36,7 @@ outputHeader($bug, $format);
 
 $query  = "SELECT c.email,comment,ts,UNIX_TIMESTAMP(ts) as added, IF(c.handle <> \"\",u.registered,1) as registered, u.handle,c.handle as bughandle"
         . " FROM bugdb_comments c LEFT JOIN users u ON u.handle = c.handle WHERE bug=? ORDER BY ts DESC";
-$res = $dbh->getAll($query, array($id), DB_FETCHMODE_ASSOC);
+$res = $dbh->prepare($query)->execute(array($id))->fetchAll(MDB2_FETCHMODE_ASSOC);
 if ($res) {
     outputbug($bug, $res, $format);
 }
