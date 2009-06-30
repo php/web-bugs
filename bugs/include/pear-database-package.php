@@ -410,12 +410,12 @@ class package
             $info =
                  $dbh->queryRow($pkg_sql, array($pkg), MDB2_FETCHMODE_ASSOC);
             $info['releases'] =
-                 $dbh->getAssoc($rel_sql, false, array($info['packageid']),
+                 $dbh->getAssoc($rel_sql, false, array($info['packageid']),null,
                  MDB2_FETCHMODE_ASSOC);
             $rels = sizeof($info['releases']) ? array_keys($info['releases']) : array('');
             $info['stable'] = $rels[0];
             $info['notes'] =
-                 $dbh->getAssoc($notes_sql, false, array(@$info['packageid']),
+                 $dbh->getAssoc($notes_sql, false, array(@$info['packageid']),null,
                  MDB2_FETCHMODE_ASSOC);
             $deps =
                  $dbh->queryAll($deps_sql, array(@$info['packageid']),
@@ -443,10 +443,10 @@ class package
                     $pid = $pkg;
                 }
                 if ($field == 'releases') {
-                    $info = $dbh->getAssoc($rel_sql, false, array($pid),
+                    $info = $dbh->getAssoc($rel_sql, false, array($pid),null,
                     MDB2_FETCHMODE_ASSOC);
                 } elseif ($field == 'notes') {
-                    $info = $dbh->getAssoc($notes_sql, false, array($pid),
+                    $info = $dbh->getAssoc($notes_sql, false, array($pid),null,
                     MDB2_FETCHMODE_ASSOC);
                 }
             } elseif ($field == 'category') {
@@ -561,13 +561,13 @@ class package
             " c.id = p.category ".
             "  AND p.id = m.package ".
             "  AND m.role = 'lead' ".
-            "ORDER BY p.name", false, null, MDB2_FETCHMODE_ASSOC);
+            "ORDER BY p.name", false, null,null, MDB2_FETCHMODE_ASSOC);
         $allreleases = $dbh->getAssoc(
             "SELECT p.name, r.id AS rid, r.version AS stable, r.state AS state ".
             "FROM packages p, releases r ".
             "WHERE " . $package_type .
             ' p.id = r.package ' .
-            "ORDER BY r.releasedate ASC ", false, null, MDB2_FETCHMODE_ASSOC);
+            "ORDER BY r.releasedate ASC ", false, null,null, MDB2_FETCHMODE_ASSOC);
         if ($released_only) {
             $stablereleases = $dbh->getAssoc(
                 "SELECT p.name, r.id AS rid, r.version AS stable, r.state AS state ".
@@ -575,7 +575,7 @@ class package
                 "WHERE " . $package_type .
                 "p.id = r.package ".
                 "AND r.state = 'stable' " .
-                "ORDER BY r.releasedate ASC ", false, null, MDB2_FETCHMODE_ASSOC);
+                "ORDER BY r.releasedate ASC ", false, null, null, MDB2_FETCHMODE_ASSOC);
         } else {
             $stablereleases = $allreleases;
         }
@@ -724,7 +724,7 @@ class package
         }
         $query .= " ORDER BY p.name";
         $sortfunc = "version_compare_firstelem";
-        $res = $dbh->getAssoc($query, false, null, MDB2_FETCHMODE_ASSOC, true);
+        $res = $dbh->getAssoc($query, false, null, null, MDB2_FETCHMODE_ASSOC, true);
         foreach ($res as $pkg => $ver) {
             if (sizeof($ver) > 1) {
                 usort($ver, $sortfunc);
@@ -771,7 +771,7 @@ class package
             $conditions[] = "(package = '$package' AND state = '$state')";
         }
         $query .= implode(" OR ", $conditions) . ")";
-        return $dbh->getAssoc($query, false, null, MDB2_FETCHMODE_ASSOC);
+        return $dbh->getAssoc($query, false, null, null, MDB2_FETCHMODE_ASSOC);
     }
 
     // }}}

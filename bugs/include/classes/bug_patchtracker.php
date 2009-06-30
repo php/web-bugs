@@ -294,7 +294,7 @@ class Bug_Patchtracker
 		     FROM bugdb_patchtracker
              WHERE bugdb_id = ? 
              ORDER BY revision DESC',
-            false, array($bugid),
+            null, array($bugid),null,
             MDB2_FETCHMODE_ORDERED, true
         );
     }

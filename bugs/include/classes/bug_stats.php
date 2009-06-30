@@ -193,7 +193,7 @@ class Bug_Stats
                   u.registered = 1 AND
                   b.status NOT IN ("Spam", "Bogus")
                  GROUP BY u.handle
-                 ORDER BY u.handle', false, array(), MDB2_FETCHMODE_ASSOC);
+                 ORDER BY u.handle', false, array(), null, MDB2_FETCHMODE_ASSOC);
         $comments = $this->_dbh->getAssoc('SELECT u.handle, COUNT(*) as c
                  FROM bugdb_comments b, bugdb d, users u
                  WHERE
@@ -202,7 +202,7 @@ class Bug_Stats
                   d.id = b.bug AND
                   d.status NOT IN ("Spam", "Bogus")
                  GROUP BY u.handle
-                 ORDER BY u.handle', false, array(), MDB2_FETCHMODE_ASSOC);
+                 ORDER BY u.handle', false, array(), null, MDB2_FETCHMODE_ASSOC);
         $patches = $this->_dbh->getAssoc('SELECT u.handle, COUNT(*) as c
                  FROM bugdb_patchtracker p, bugdb b, users u
                  WHERE
@@ -211,7 +211,7 @@ class Bug_Stats
                   b.id = p.bugdb_id AND
                   b.status NOT IN ("Spam", "Bogus")
                  GROUP BY u.handle
-                 ORDER BY u.handle', false, array(), MDB2_FETCHMODE_ASSOC);
+                 ORDER BY u.handle', false, array(), null, MDB2_FETCHMODE_ASSOC);
         foreach ($comments as $handle => $count) {
             if (!isset($bugs[$handle])) {
                 $bugs[$handle] = 0;
