@@ -924,7 +924,7 @@ class package
 
         $query = 'UPDATE packages
                     SET blocktrackbacks=' . ((int) !$allow) . '
-                WHERE name=' . $dbh->quoteSmart($name);
+                WHERE name=' . $dbh->quote($name);
         $res = $dbh->query($query);
     }
     // }}}

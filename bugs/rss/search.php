@@ -61,9 +61,9 @@ if (!empty($_GET['maintain']) || !empty($_GET['handle'])) {
     $query .= ' LEFT JOIN maintains ON packages.id = maintains.package';
     $query .= ' AND maintains.handle = ';
     if (!empty($_GET['maintain'])) {
-        $query .= $dbh->quoteSmart($_GET['maintain']);
+        $query .= $dbh->quote($_GET['maintain']);
     } else {
-        $query .= $dbh->quoteSmart($_GET['handle']);
+        $query .= $dbh->quote($_GET['handle']);
     }
 }
 
@@ -78,7 +78,7 @@ if (empty($_GET['package_name']) || !is_array($_GET['package_name'])) {
                        . "')";
     } else {
         $where_clause .= ' = '
-                           . $dbh->quoteSmart($_GET['package_name'][0]);
+                           . $dbh->quote($_GET['package_name'][0]);
     }
 }
 
@@ -92,7 +92,7 @@ if (empty($_GET['package_nname']) || !is_array($_GET['package_nname'])) {
                        . "')";
     } else {
         $where_clause .= ' <> '
-                       . $dbh->quoteSmart($_GET['package_nname'][0]);
+                       . $dbh->quote($_GET['package_nname'][0]);
     }
 }
 
@@ -187,7 +187,7 @@ if (empty($_GET['bug_type']) || $_GET['bug_type'] == 'All') {
     if ($bug_type == 'Bugs') {
         $where_clause .= ' AND (bugdb.bug_type = "Bug" OR bugdb.bug_type="Documentation Problem")';
     } else {
-        $where_clause .= ' AND bugdb.bug_type = ' . $dbh->quoteSmart($bug_type);
+        $where_clause .= ' AND bugdb.bug_type = ' . $dbh->quote($bug_type);
     }
 }
 
@@ -238,34 +238,34 @@ if (empty($_GET['handle'])) {
     } else {
         $assign = $_GET['assign'];
         $where_clause .= ' AND bugdb.assign = '
-                       . $dbh->quoteSmart($assign);
+                       . $dbh->quote($assign);
     }
     if (empty($_GET['maintain'])) {
         $maintain = '';
     } else {
         $maintain = $_GET['maintain'];
         $where_clause .= ' AND maintains.handle = '
-                       . $dbh->quoteSmart($maintain);
+                       . $dbh->quote($maintain);
     }
 } else {
     $handle = $_GET['handle'];
     $where_clause .= ' AND (maintains.handle = '
-                   . $dbh->quoteSmart($handle)
+                   . $dbh->quote($handle)
                    . ' OR bugdb.assign = '
-                   . $dbh->quoteSmart($handle). ')';
+                   . $dbh->quote($handle). ')';
 }
 
 if (empty($_GET['author_email'])) {
     $author_email = '';
 } else {
     $author_email = $_GET['author_email'];
-    $qae = $dbh->quoteSmart($author_email);
+    $qae = $dbh->quote($author_email);
     $where_clause .= ' AND (bugdb.email = '
                    . $qae . ' OR bugdb.handle=' . $qae . ')';
 }
 
 $where_clause .= ' AND (packages.package_type = '
-               . $dbh->quoteSmart($site);
+               . $dbh->quote($site);
 
 if ($pseudo = array_intersect($pseudo_pkgs, $_GET['package_name'])) {
     $where_clause .= " OR bugdb.package_name";

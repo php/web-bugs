@@ -165,7 +165,7 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
             FROM bugdb
             LEFT JOIN packages ON packages.name = bugdb.package_name
             WHERE bugdb.registered IN(1,0)
-            AND bugdb.package_name = ' . $dbh->quoteSmart(rinse($_GET['package'])) . '
+            AND bugdb.package_name = ' . $dbh->quote(rinse($_GET['package'])) . '
             AND bugdb.status IN' .
             " ('Closed', 'Duplicate', 'Bogus', 'Wont Fix', 'Suspended')
             AND (UNIX_TIMESTAMP('" . $releaseDate[0]['releasedate'] . "') < UNIX_TIMESTAMP(bugdb.ts2))" .

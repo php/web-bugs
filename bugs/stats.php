@@ -79,12 +79,12 @@ if ($site != 'php') {
 	if ($category) {
 	    $pseudo = false;
 	    $from .= ' JOIN categories AS c ON c.id = p.category';
-	    $from .= ' AND c.name = ' .  $dbh->quoteSmart($category);
+	    $from .= ' AND c.name = ' .  $dbh->quote($category);
 	}
 	if ($developer) {
 	    $pseudo = false;
 	    $from .= ' JOIN maintains AS m ON m.package = p.id';
-	    $from .= ' AND m.handle = ' .  $dbh->quoteSmart($developer);
+	    $from .= ' AND m.handle = ' .  $dbh->quote($developer);
 	}
 }
 switch ($site) {
@@ -113,7 +113,7 @@ if (empty($_GET['bug_type']) || $_GET['bug_type'] == 'All') {
     $bug_type = 'All';
 } else {
     $bug_type = $_GET['bug_type'];
-    $where .= ' AND bug_type = ' . $dbh->quoteSmart($bug_type);
+    $where .= ' AND bug_type = ' . $dbh->quote($bug_type);
 }
 
 $query .= $from . $where;
