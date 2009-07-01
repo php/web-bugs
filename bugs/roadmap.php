@@ -6,6 +6,7 @@
 require_once './include/prepend.inc';
 
 Bug_DataObject::init();
+define('TEMPLATES_DIR',dirname(__FILE__)."/../templates");
 
 if (isset($_GET['packagexml'])) {
     $roadmap = Bug_DataObject::bugDB('bugdb_roadmap');
@@ -44,11 +45,11 @@ if (isset($_GET['packagexml'])) {
             }
         }
     }
-    $savant = Bug_DataObject::getSavant();
-    $savant->xml = $xml;
-    $savant->package = $_GET['package'];
-    $savant->roadmap = $_GET['roadmap'];
-    $savant->display('roadmap_packagexml.php');
+    $templateData = new stdClass();
+    $templateData->xml = $xml;
+    $templateData->package = $_GET['package'];
+    $templateData->roadmap = $_GET['roadmap'];
+    include(TEMPLATES_DIR."/roadmap_packagexml.php");
     exit;
 }
 if (isset($_GET['showornew'])) {
@@ -98,25 +99,25 @@ if (isset($_GET['edit']) || isset($_GET['new']) || isset($_GET['delete'])) {
 if (isset($_GET['new']) && isset($_POST['go'])) {
     $bugdb = Bug_DataObject::bugDB('bugdb_roadmap');
 
-    $savant = Bug_DataObject::getSavant();
-    $savant->package = $_GET['package'];
+    $templateData = new stdClass();
+    $templateData->package = $_GET['package'];
     $allroadmaps = Bug_DataObject::bugDB('bugdb_roadmap');
     $allroadmaps->package = $_GET['package'];
 
     $allroadmaps->orderBy('releasedate ASC');
     $allroadmaps->find(false);
-    $savant->roadmap = array();
+    $templateData->roadmap = array();
     $roadmap_v = array();
     while ($allroadmaps->fetch()) {
         $a = $allroadmaps->toArray();
-        $savant->roadmap[] = $a;
+        $templateData->roadmap[] = $a;
         $roadmap_v[] = $a['roadmap_version'];
     }
 
     if (isset($_POST['releasedate']) && $_POST['releasedate'] != 'future') {
         $_POST['releasedate'] = date('Y-m-d', strtotime($_POST['releasedate']));
     }
-    $savant->info = array(
+    $templateData->info = array(
         'package' => htmlspecialchars($_GET['package']),
         'releasedate' => isset($_POST['releasedate']) ?
             $_POST['releasedate'] : '',
@@ -125,21 +126,21 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
         'description' => isset($_POST['description']) ? htmlspecialchars($_POST['description']) :
             '',
         );
-    $savant->isnew = true;
-    $savant->import = isset($_POST['importbugs']) ? true : false;
+    $templateData->isnew = true;
+    $templateData->import = isset($_POST['importbugs']) ? true : false;
     $releases = package::info(htmlspecialchars($_GET['package']), 'releases');
-    $savant->lastRelease = count($releases) ? key($releases) : '';
+    $templateData->lastRelease = count($releases) ? key($releases) : '';
 
     if (empty($_POST['roadmap_version'])) {
-        $savant->errors = array('Roadmap version cannot be empty');
-        $savant->display('roadmapform.php');
+        $templateData->errors = array('Roadmap version cannot be empty');
+        include(TEMPLATES_DIR."/roadmapform.php");
         exit;
     }
 
     // Check if the roadmap already exists
     if (in_array($_POST['roadmap_version'], $roadmap_v)) {
-        $savant->errors = array('Roadmap version ' . htmlspecialchars($_POST['roadmap_version']) . ' already exists');
-        $savant->display('roadmapform.php');
+        $templateData->errors = array('Roadmap version ' . htmlspecialchars($_POST['roadmap_version']) . ' already exists');
+        include(TEMPLATES_DIR."/roadmapform.php");
         exit;
     }
 
@@ -172,7 +173,7 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
             'AND (bugdb.bug_type = "Bug" OR bugdb.bug_type="Documentation Problem")';
 
         $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
-        $res =& $dbh->query($query);
+        $res =& $dbh->prepare($query)->execute();
         foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
             $link->id = $row['id'];
             $link->delete();
@@ -189,20 +190,20 @@ if (isset($_GET['edit']) && isset($_POST['go'])) {
     $bugdb = Bug_DataObject::bugDB('bugdb_roadmap');
     $bugdb->id = $_GET['edit'];
     if (empty($_POST['roadmap_version'])) {
-        $savant = Bug_DataObject::getSavant();
-        $savant->package = $_GET['package'];
+        $templateData = new stdClass();
+        $templateData->package = $_GET['package'];
         $allroadmaps = Bug_DataObject::bugDB('bugdb_roadmap');
         $allroadmaps->package = $_GET['package'];
         $allroadmaps->orderBy('releasedate ASC');
         $allroadmaps->find(false);
-        $savant->roadmap = array();
+        $templateData->roadmap = array();
         while ($allroadmaps->fetch()) {
-            $savant->roadmap[] = $allroadmaps->toArray();
+            $templateData->roadmap[] = $allroadmaps->toArray();
         }
         if (isset($_POST['releasedate']) && $_POST['releasedate'] != 'future') {
             $_POST['releasedate'] = date('Y-m-d', strtotime($_POST['releasedate']));
         }
-        $savant->info = array(
+        $templateData->info = array(
             'package' => htmlspecialchars($_GET['package']),
             'releasedate' => isset($_POST['releasedate']) ?
                 $_POST['releasedate'] : '',
@@ -211,9 +212,9 @@ if (isset($_GET['edit']) && isset($_POST['go'])) {
             'description' => isset($_POST['description']) ? htmlspecialchars($_POST['description']) :
                 '',
             );
-        $savant->isnew = true;
-        $savant->errors = array('Roadmap version cannot be empty');
-        $savant->display('roadmapform.php');
+        $templateData->isnew = true;
+        $templateData->errors = array('Roadmap version cannot be empty');
+        include(TEMPLATES_DIR.'/roadmapform.php');
         exit;
     }
     if ($bugdb->find(false)) {
@@ -359,14 +360,14 @@ if (isset($_GET['addbugs'])) {
             $allf[$features->id]['inroadmap'] = true;
         }
     }
-    $savant = Bug_DataObject::getSavant();
-    $savant->saved = isset($_POST['saveaddbugs']);
-    $savant->package = $_GET['package'];
-    $savant->roadmap = $_GET['roadmap'];
-    $savant->bugs = $allb;
-    $savant->features = $allf;
-    $savant->tla = $tla;
-    $savant->display('roadmapadd.php');
+    $templateData = new stdClass();
+    $templateData->saved = isset($_POST['saveaddbugs']);
+    $templateData->package = $_GET['package'];
+    $templateData->roadmap = $_GET['roadmap'];
+    $templateData->bugs = $allb;
+    $templateData->features = $allf;
+    $templateData->tla = $tla;
+    include(TEMPLATES_DIR.'/roadmapadd.php');
     exit;
 }
 $order_options = array(
@@ -383,7 +384,7 @@ $order_options = array(
     'assign'       => 'assignment',
 );
 $bugdb = Bug_DataObject::bugDb('bugdb');
-$savant = Bug_DataObject::getSavant();
+$templateData = new stdClass();
 
 $bugdb->selectAdd('SQL_CALC_FOUND_ROWS');
 $bugdb->selectAdd('TO_DAYS(NOW())-TO_DAYS(bugb.ts2) AS unchanged');
@@ -439,17 +440,17 @@ if (empty($_GET['limit']) || !(int)$_GET['limit']) {
 
 include_once 'pear-database-package.php';
 $releases = package::info($_GET['package'], 'releases');
-$savant->showold = isset($_GET['showold']);
-$savant->releases = array_keys($releases);
+$templateData->showold = isset($_GET['showold']);
+$templateData->releases = array_keys($releases);
 $allroadmaps = Bug_DataObject::bugDB('bugdb_roadmap');
 $allroadmaps->package = $_GET['package'];
 $allroadmaps->orderBy('releasedate ASC');
 $allroadmaps->find(false);
 $roadmaps = Bug_DataObject::bugDB('bugdb_roadmap_link');
 $roadmaps->selectAs();
-$savant->bugs = $savant->features = $savant->roadmap = $savant->totalbugs =
-    $savant->closedbugs = $savant->totalfeatures = $savant->closedfeatures =
-    $savant->summary = array();
+$templateData->bugs = $templateData->features = $templateData->roadmap = $templateData->totalbugs =
+    $templateData->closedbugs = $templateData->totalfeatures = $templateData->closedfeatures =
+    $templateData->summary = array();
 $peardb = Bug_DataObject::pearDB('releases');
 $peardb->package = $_GET['package'];
 while ($allroadmaps->fetch()) {
@@ -468,7 +469,7 @@ while ($allroadmaps->fetch()) {
         $features->joinAdd($roadmaps);
         $features->bug_type = 'Feature/Change Request';
         $rows = $features->find(false);
-        $total_rows = $dbh->queryOne('SELECT FOUND_ROWS()');
+        $total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
 
         if ($rows) {
             $package_string = '';
@@ -480,19 +481,22 @@ while ($allroadmaps->fetch()) {
                     '&amp;direction='   . $direction .
                     '&amp;limit='       . $limit;
 
-            $savant->begin = $begin;
-            $savant->rows = $rows;
-            $savant->total_rows = $total_rows;
-            $savant->link = $link;
-            $savant->limit = $limit;
+            $templateData->begin = $begin;
+            $templateData->rows = $rows;
+            $templateData->total_rows = $total_rows;
+            $templateData->link = $link;
+            $templateData->limit = $limit;
             $results = array();
             while ($features->fetch()) {
                 $results[] = $features->toArray();
             }
-            $savant->results = $results;
-            $savant->tla = $tla;
-            $savant->types = $bug_types;
-            $features = $savant->fetch('searchresults.php');
+            $templateData->results = $results;
+            $templateData->tla = $tla;
+            $templateData->types = $bug_types;
+            ob_start();
+        	include TEMPLATES_DIR . '/searchresults.php';
+        	$features = ob_get_contents();
+        	ob_end_clean();
         } else {
             $features = 'No features';
         }
@@ -501,7 +505,7 @@ while ($allroadmaps->fetch()) {
         $bugs->joinAdd($roadmaps);
         $bugs->whereAdd('bugdb.bug_type IN("Bug", "Documentation Problem")');
         $rows = $bugs->find(false);
-        $total_rows = $dbh->queryOne('SELECT FOUND_ROWS()');
+        $total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
 
         if ($rows) {
             $package_string = '';
@@ -513,58 +517,61 @@ while ($allroadmaps->fetch()) {
                     '&amp;direction='   . $direction .
                     '&amp;limit='       . $limit;
 
-            $savant->begin = $begin;
-            $savant->rows = $rows;
-            $savant->total_rows = $total_rows;
-            $savant->link = $link;
-            $savant->limit = $limit;
+            $templateData->begin = $begin;
+            $templateData->rows = $rows;
+            $templateData->total_rows = $total_rows;
+            $templateData->link = $link;
+            $templateData->limit = $limit;
             $results = array();
             while ($bugs->fetch()) {
                 $results[] = $bugs->toArray();
             }
-            $savant->results = $results;
-            $savant->tla = $tla;
-            $savant->types = $bug_types;
-            $bugs = $savant->fetch('searchresults.php');
+            $templateData->results = $results;
+            $templateData->tla = $tla;
+            $templateData->types = $bug_types;
+            ob_start();
+        	include TEMPLATES_DIR . '/searchresults.php';
+        	$bugs = ob_get_contents();
+        	ob_end_clean();
         } else {
             $bugs = 'No bugs';
         }
-        $savant->bugs[$allroadmaps->roadmap_version] = $bugs;
-        $savant->feature_requests[$allroadmaps->roadmap_version] = $features;
-        $savant->summary[$allroadmaps->roadmap_version] = false;
+        $templateData->bugs[$allroadmaps->roadmap_version] = $bugs;
+        $templateData->feature_requests[$allroadmaps->roadmap_version] = $features;
+        $templateData->summary[$allroadmaps->roadmap_version] = false;
     } else {
         // this just shows a summary of closed bugs and a percentage fixed
-        $savant->summary[$allroadmaps->roadmap_version] = true;
+        $templateData->summary[$allroadmaps->roadmap_version] = true;
         $bugquery = 'SELECT COUNT(bugdb.id) FROM bugdb_roadmap_link r, bugdb
             WHERE r.roadmap_id = ? AND bugdb.id = r.id AND bugdb.bug_type IN
                 ("Bug", "Documentation Problem")';
         $featurequery = 'SELECT COUNT(bugdb.id) FROM bugdb_roadmap_link r, bugdb
             WHERE r.roadmap_id = ? AND bugdb.id = r.id AND bugdb.bug_type =
                 "Feature/Change Request"';
-        if ($savant->totalbugs[$allroadmaps->roadmap_version] = $dbh->queryOne($bugquery,
-              array($allroadmaps->id))) {
-            $savant->closedbugs[$allroadmaps->roadmap_version] = $dbh->queryOne('
+        if ($templateData->totalbugs[$allroadmaps->roadmap_version] = $dbh->prepare($bugquery)->execute(
+              array($allroadmaps->id))->fetchOne()) {
+            $templateData->closedbugs[$allroadmaps->roadmap_version] = $dbh->prepare('
                 SELECT COUNT(bugdb.id) FROM bugdb, bugdb_roadmap_link r
                 WHERE
                     bugdb.id = r.id AND
                     r.roadmap_id = ? AND
                     bugdb.bug_type IN ("Bug", "Documentation Problem") AND
-                    bugdb.status = "Closed"', array($allroadmaps->id));
+                    bugdb.status = "Closed"')->execute(array($allroadmaps->id))->fetchOne();
         }
-        if ($savant->totalfeatures[$allroadmaps->roadmap_version] = $dbh->queryOne($featurequery,
-              array($allroadmaps->id))) {
-            $savant->closedfeatures[$allroadmaps->roadmap_version] = $dbh->queryOne('
+        if ($templateData->totalfeatures[$allroadmaps->roadmap_version] = $dbh->prepare($featurequery)->execute(
+              array($allroadmaps->id))->fetchOne()) {
+            $templateData->closedfeatures[$allroadmaps->roadmap_version] = $dbh->prepare('
                 SELECT COUNT(bugdb.id) FROM bugdb, bugdb_roadmap_link r
                 WHERE
                     bugdb.id = r.id AND
                     r.roadmap_id = ? AND
                     bugdb.bug_type = "Feature/Change Request" AND
-                    bugdb.status = "Closed"', array($allroadmaps->id));
+                    bugdb.status = "Closed"')->execute( array($allroadmaps->id))->fetchOne();
         }
     }
-    $savant->roadmap[] = $allroadmaps->toArray();
+    $templateData->roadmap[] = $allroadmaps->toArray();
 }
-$savant->package = $_GET['package'];
+$templateData->package = $_GET['package'];
 if (isset($_GET['edit'])) {
     $bugdb = Bug_DataObject::bugDB('bugdb_roadmap');
     $bugdb->id = $_GET['edit'];
@@ -574,14 +581,14 @@ if (isset($_GET['edit'])) {
         response_footer();
         exit;
     }
-    $savant->info = $bugdb->toArray();
-    $savant->isnew = false;
-    $savant->errors = false;
-    $savant->display('roadmapform.php');
+    $templateData->info = $bugdb->toArray();
+    $templateData->isnew = false;
+    $templateData->errors = false;
+    include(TEMPLATES_DIR.'/roadmapform.php');
     exit;
 }
 if (isset($_GET['new'])) {
-    $savant->errors = false;
+    $templateData->errors = false;
     if (isset($_POST['go'])) {
         if ($_POST['releasedate'] == 'future') {
             // my birthday will represent the future ;)
@@ -593,7 +600,7 @@ if (isset($_GET['new'])) {
         $bugdb->package = $_GET['package'];
         $bugdb->roadmap_version = $_POST['roadmap_version'];
         if (empty($_POST['roadmap_version'])) {
-            $savant->errors = array('Roadmap version cannot be empty');
+            $templateData->errors = array('Roadmap version cannot be empty');
         } else {
             $bugdb->insert();
         }
@@ -601,7 +608,7 @@ if (isset($_GET['new'])) {
     if (isset($_POST['releasedate']) && $_POST['releasedate'] != 'future') {
         $_POST['releasedate'] = date('Y-m-d', strtotime($_POST['releasedate']));
     }
-    $savant->info = array(
+    $templateData->info = array(
         'package' => htmlspecialchars($_GET['package']),
         'releasedate' => isset($_POST['releasedate']) ?
             $_POST['releasedate'] : '',
@@ -610,12 +617,12 @@ if (isset($_GET['new'])) {
         'description' => isset($_POST['description']) ? htmlspecialchars($_POST['description']) :
             '',
         );
-    $savant->isnew = true;
-    $savant->import = isset($_POST['importbugs']) ? true : false;
+    $templateData->isnew = true;
+    $templateData->import = isset($_POST['importbugs']) ? true : false;
     $releases = package::info(htmlspecialchars($_GET['package']), 'releases');
-    $savant->lastRelease = count($releases) ? key($releases) : '';
-    $savant->display('roadmapform.php');
+    $templateData->lastRelease = count($releases) ? key($releases) : '';
+    include(TEMPLATES_DIR.'/roadmapform.php');
     exit;
 }
-$savant->display('roadmap.php');
+include(TEMPLATES_DIR.'/roadmap.php');
 
