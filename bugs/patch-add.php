@@ -170,7 +170,7 @@ if (isset($_POST['addpatch'])) {
             'id'         => $bug_id,
             'url'        => "http://{$site_url}{$basedir}/patch-display.php?bug_id={$bug_id}&patch={$patchName}&revision={$rev}&display=1",
             'package'    => $package,
-            'summary'    => $dbh->queryOne("SELECT sdesc from bugdb WHERE id = {$bug_id}"),
+            'summary'    => $dbh->prepare("SELECT sdesc from bugdb WHERE id = ?")->execute(array($bug_id))->fetchOne(),
             'date'       => date('Y-m-d H:i:s'),
             'name'       => $patchname,
             'packageUrl' => "http://{$site_url}{$basedir}/bug.php?id={$bug_id}",

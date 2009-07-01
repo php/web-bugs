@@ -72,14 +72,14 @@ class Bug_Patchtracker
     {
         $id = time();
         PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-        $e = $this->_dbh->query('INSERT INTO bugdb_patchtracker
-            (bugdb_id, patch, revision, developer) VALUES(?, ?, ?, ?)',
+        $e = $this->_dbh->prepare('INSERT INTO bugdb_patchtracker
+            (bugdb_id, patch, revision, developer) VALUES(?, ?, ?, ?)')->execute(
             array($bugid, $patch, $id, $handle));
         if (PEAR::isError($e)) {
             // try with another timestamp
             $id++;
-            $e = $this->_dbh->query('INSERT INTO bugdb_patchtracker
-                (bugdb_id, patch, revision, developer) VALUES(?, ?, ?, ?)',
+            $e = $this->_dbh->prepare('INSERT INTO bugdb_patchtracker
+                (bugdb_id, patch, revision, developer) VALUES(?, ?, ?, ?)')->execute(
                 array($bugid, $patch, $id, $handle));
         }
         PEAR::popErrorHandling();
@@ -116,10 +116,10 @@ class Bug_Patchtracker
 
     function userNotRegistered($bugid, $name, $revision)
     {
-        $user = $this->_dbh->queryOne('SELECT registered from bugdb_patchtracker, users
+        $user = $this->_dbh->prepare('SELECT registered from bugdb_patchtracker, users
             WHERE bugdb_id=? AND patch=? AND revision=?
-                AND users.handle=bugdb_patchtracker.developer',
-            array($bugid, $name, $revision));
+                AND users.handle=bugdb_patchtracker.developer')->execute(
+            array($bugid, $name, $revision))->fetchOne();
         return !$user;
     }
 
@@ -180,16 +180,16 @@ class Bug_Patchtracker
 
 /* FIXME: This does not work. Some browsers do not send the file type at all! Should use fileinfo instead to check the type!!
             if (!in_array($file['type'], $allowed_mime_types)) {
-                $this->_dbh->query('DELETE FROM bugdb_patchtracker
-                    WHERE bugdb_id = ? and patch = ? and revision = ?',
+                $this->_dbh->prepare('DELETE FROM bugdb_patchtracker
+                    WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
                     array($bugid, $name, $id));
                 return PEAR::raiseError('Error: uploaded patch file must be text file (save as e.g. "patch.txt" or "package.diff").');
             }
 */
 
             if (!move_uploaded_file($file['tmp_name'], $this->patchDir($bugid, $name) . "/{$fname}")) {
-                $this->_dbh->query('DELETE FROM bugdb_patchtracker
-                    WHERE bugdb_id = ? and patch = ? and revision = ?',
+                $this->_dbh->prepare('DELETE FROM bugdb_patchtracker
+                    WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
                     array($bugid, $name, $id));
                 return PEAR::raiseError('could not move uploaded file to: ' . $this->patchDir($bugid, $name));
             }
@@ -244,8 +244,8 @@ class Bug_Patchtracker
      */
     function detach($bugid, $name, $revision)
     {
-        $this->_dbh->query('DELETE FROM bugdb_patchtracker
-            WHERE bugdb_id = ? and patch = ? and revision = ?',
+        $this->_dbh->prepare('DELETE FROM bugdb_patchtracker
+            WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
             array($bugid, $name, $revision));
         @unlink($this->patchDir($bugid, $name) . DIRECTORY_SEPARATOR .
             $this->getPatchFileName($revision));
@@ -263,12 +263,12 @@ class Bug_Patchtracker
     {
     	global $site;
     	
-        if ($this->_dbh->queryOne('SELECT bugdb_id FROM bugdb_patchtracker
-              WHERE bugdb_id = ? AND patch = ? AND revision = ?',
-              array($bugid, $name, $revision))) {
-            if ($site != 'php' && !$this->_dbh->queryOne('SELECT registered FROM users, bugdb_patchtracker
+        if ($this->_dbh->prepare('SELECT bugdb_id FROM bugdb_patchtracker
+              WHERE bugdb_id = ? AND patch = ? AND revision = ?')->execute(
+              array($bugid, $name, $revision))->fetchOne()) {
+            if ($site != 'php' && !$this->_dbh->prepare('SELECT registered FROM users, bugdb_patchtracker
                 WHERE bugdb_id=? AND patch=? AND revision=? AND
-                users.handle=bugdb_patchtracker.developer', array($bugid, $name, $revision))) {
+                users.handle=bugdb_patchtracker.developer')->execute(array($bugid, $name, $revision))->fetchOne()) {
                 // user is not registered
                 throw new Exception('User who submitted this patch has not registered');
             }
@@ -308,12 +308,12 @@ class Bug_Patchtracker
      */
     function listRevisions($bugid, $patch)
     {
-        return $this->_dbh->queryAll(
+        return $this->_dbh->prepare(
             'SELECT revision FROM bugdb_patchtracker, users
                 WHERE bugdb_id = ? AND
              patch = ? AND users.handle=bugdb_patchtracker.developer AND
              users.registered=1
-             ORDER BY revision DESC', array($bugid, $patch),
+             ORDER BY revision DESC')->execute(array($bugid, $patch))->fetchAll(
             MDB2_FETCHMODE_ORDERED
         );
     }
@@ -329,35 +329,35 @@ class Bug_Patchtracker
     function getDeveloper($bugid, $patch, $revision = false)
     {
         if ($revision) {
-            return $this->_dbh->queryOne(
+            return $this->_dbh->prepare(
                 'SELECT developer FROM bugdb_patchtracker
                  WHERE bugdb_id=? AND patch=? AND revision=?
-                ', array($bugid, $patch, $revision));
+                ')->execute(array($bugid, $patch, $revision))->fetchOne();
         }
-        return $this->_dbh->queryAll(
+        return $this->_dbh->prepare(
             'SELECT developer,revision FROM bugdb_patchtracker
-             WHERE bugdb_id=? AND patch=? ORDER BY revision DESC',
-            array($bugid, $patch), MDB2_FETCHMODE_ASSOC
+             WHERE bugdb_id=? AND patch=? ORDER BY revision DESC')->execute(
+            array($bugid, $patch))->fetchAll(MDB2_FETCHMODE_ASSOC
         );
     }
 
     function getObsoletingPatches($bugid, $patch, $revision)
     {
-        return $this->_dbh->queryAll('SELECT bugdb_id, patch, revision
+        return $this->_dbh->prepare('SELECT bugdb_id, patch, revision
             FROM bugdb_obsoletes_patches
                 WHERE bugdb_id=? AND
                       obsolete_patch=? AND
-                      obsolete_revision=?', array($bugid, $patch, $revision),
+                      obsolete_revision=?')->execute(array($bugid, $patch, $revision))->fetchAll(
          MDB2_FETCHMODE_ASSOC);
     }
 
     function getObsoletePatches($bugid, $patch, $revision)
     {
-        return $this->_dbh->queryAll('SELECT bugdb_id, obsolete_patch, obsolete_revision
+        return $this->_dbh->prepare('SELECT bugdb_id, obsolete_patch, obsolete_revision
             FROM bugdb_obsoletes_patches
                 WHERE bugdb_id=? AND
                       patch=? AND
-                      revision=?', array($bugid, $patch, $revision),
+                      revision=?')->execute(array($bugid, $patch, $revision))->fetchAll(
          MDB2_FETCHMODE_ASSOC);
     }
 
@@ -372,8 +372,8 @@ class Bug_Patchtracker
      */
     function obsoletePatch($bugid, $name, $revision, $obsoletename, $obsoleterevision)
     {
-        $this->_dbh->query('INSERT INTO bugdb_obsoletes_patches
-            VALUES(?,?,?,?,?)', array($bugid, $name, $revision, $obsoletename,
+        $this->_dbh->prepare('INSERT INTO bugdb_obsoletes_patches
+            VALUES(?,?,?,?,?)')->execute(array($bugid, $name, $revision, $obsoletename,
                                       $obsoleterevision));
     }
 
@@ -386,7 +386,7 @@ class Bug_Patchtracker
     function getBugInfo($bugid)
     {
         $bugid = (int) $bugid;
-        $info = $this->_dbh->queryAll('SELECT * FROM bugdb WHERE id=?', array($bugid),
+        $info = $this->_dbh->prepare('SELECT * FROM bugdb WHERE id=?')->execute(array($bugid))->fetchAll(
             MDB2_FETCHMODE_ASSOC);
         if (!is_array($info) || !count($info)) {
             return PEAR::raiseError('No such bug "' . $bugid . '"');

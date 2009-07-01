@@ -120,7 +120,7 @@ $query .= $from . $where;
 $query .= ' GROUP BY b.package_name, b.status';
 $query .= ' ORDER BY b.package_name, b.status';
 
-$result =& $dbh->query($query);
+$result =& $dbh->prepare($query)->execute();
 
 while ($result->fetchInto($row)) {
     $pkg_tmp[$row['status']][$row['package_name']]  = $row['quant'];
@@ -208,10 +208,10 @@ foreach ($res as $row) {
  * Fetch list of developers
  */
 if ($site != 'php') {
-	$users =& $dbh->query('SELECT u.handle AS handle, u.name AS name'
+	$users =& $dbh->prepare('SELECT u.handle AS handle, u.name AS name'
                       . ' FROM users u, maintains m'
                       . ' WHERE u.handle = m.handle'
-                      . ' GROUP BY handle ORDER BY u.name');
+                      . ' GROUP BY handle ORDER BY u.name')->execute();
 
 	if (!$developer) {
 	    echo ' selected="selected"';

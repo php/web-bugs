@@ -292,10 +292,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
     if (stristr($query, ';')) {
         $errors[] = 'BAD HACKER!! No database cracking for you today!';
     } else {
-        $res = $dbh->query($query);
+        $res = $dbh->prepare($query)->execute();
         $rows = $res->numRows();
 
-        $total_rows =& $dbh->queryOne('SELECT FOUND_ROWS()');
+        $total_rows =& $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
 
         /* Selected packages to search in */
         $package_name_string = '';

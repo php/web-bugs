@@ -66,28 +66,15 @@ class PEAR_Bugs
         {
             $total += $buginfo;
         }
-        $assigned = $this->_dbh->queryOne('SELECT COUNT(b.status)
+        $assigned = $this->_dbh->prepare('SELECT COUNT(b.status)
              FROM bugdb b, maintains m, packages p
              WHERE
               m.handle = ? AND
               p.id = m.package AND
               b.package_name = p.name AND
               b.bug_type \!= "Feature/Change Request" AND
-              b.assign = ?', array($handle, $handle));
-        $openage = $this->_dbh->queryOne('SELECT ROUND(AVG(TO_DAYS(NOW()) - TO_DAYS(b.ts1)))
-             FROM bugdb b, maintains m, packages p
-             WHERE
-              m.handle = ? AND
-              p.id = m.package AND
-              b.package_name = p.name AND
-              b.bug_type \!= "Feature/Change Request" AND
-              b.status IN ("Assigned", "Analyzed", "Feedback", "Open", "Critical", "Verified") AND
-              (b.assign = ? OR b.assign IS NULL OR b.assign="")', array($handle, $handle));
-        $opened = $this->_dbh->queryOne('SELECT COUNT(*) FROM bugdb WHERE
-            handle=?', array($handle));
-        $commented = $this->_dbh->queryOne('SELECT COUNT(*) FROM bugdb_comments WHERE
-            handle=?', array($handle));
-        $opencount = $this->_dbh->queryOne('SELECT COUNT(*)
+              b.assign = ?')->execute(array($handle, $handle))->fetchOne();
+        $openage = $this->_dbh->prepare('SELECT ROUND(AVG(TO_DAYS(NOW()) - TO_DAYS(b.ts1)))
              FROM bugdb b, maintains m, packages p
              WHERE
               m.handle = ? AND
@@ -95,9 +82,22 @@ class PEAR_Bugs
               b.package_name = p.name AND
               b.bug_type \!= "Feature/Change Request" AND
               b.status IN ("Assigned", "Analyzed", "Feedback", "Open", "Critical", "Verified") AND
-              (b.assign = ? OR b.assign IS NULL OR b.assign="")', array($handle, $handle));
+              (b.assign = ? OR b.assign IS NULL OR b.assign="")')->execute(array($handle, $handle))->fetchOne();
+        $opened = $this->_dbh->prepare('SELECT COUNT(*) FROM bugdb WHERE
+            handle=?')->execute(array($handle))->fetchOne();
+        $commented = $this->_dbh->prepare('SELECT COUNT(*) FROM bugdb_comments WHERE
+            handle=?')->execute(array($handle))->fetchOne();
+        $opencount = $this->_dbh->prepare('SELECT COUNT(*)
+             FROM bugdb b, maintains m, packages p
+             WHERE
+              m.handle = ? AND
+              p.id = m.package AND
+              b.package_name = p.name AND
+              b.bug_type \!= "Feature/Change Request" AND
+              b.status IN ("Assigned", "Analyzed", "Feedback", "Open", "Critical", "Verified") AND
+              (b.assign = ? OR b.assign IS NULL OR b.assign="")')->execute( array($handle, $handle))->fetchOne();
         // Fetch all assigned and open reports regardless of package
-        $open_c_assigned = $this->_dbh->queryOne('SELECT COUNT(*) as c
+        $open_c_assigned = $this->_dbh->prepare('SELECT COUNT(*) as c
                  FROM bugdb b, maintains m, packages p
                  WHERE
                   b.assign = ? AND
@@ -107,7 +107,7 @@ class PEAR_Bugs
                   p.id = m.package AND
                   m.handle = ?
                  GROUP BY b.id 
-                 ORDER BY c DESC, b.ts2 DESC', array($handle, $handle));
+                 ORDER BY c DESC, b.ts2 DESC')->execute(array($handle, $handle))->fetchOne();
         $opencount = $opencount + $open_c_assigned;
         $bugrank = $this->_dbh->prepare('SELECT COUNT(*) as c, u.handle
                  FROM bugdb b, users u

@@ -5,7 +5,6 @@ class Bug_DataObject
     function init()
     {
         require_once 'DB/DataObject.php';
-        require_once 'Savant2.php';
         $options = &PEAR::getStaticProperty('DB_DataObject','options');
         $type = extension_loaded('mysqli') ? 'mysqli' : 'mysql';
         $options = array(
@@ -145,10 +144,4 @@ class Bug_DataObject
         return 'bugs'; // this will be more customizable very shortly
     }
 
-    function getSavant()
-    {
-        return new Savant2(array(
-            'template_path' => dirname(dirname(dirname(dirname(__FILE__)))) . '/templates/' . Bug_DataObject::template(),
-        ));
-    }
 }

@@ -484,7 +484,7 @@ function show_package_version_options($package_name, $current)
         echo '<input type="text" size="20" maxlength="100" name="in[package_version]" value="' . htmlspecialchars($current) . '" />';
         return;
     }
-    $pid = $dbh->queryOne('SELECT id from packages where name = ?', array($package_name));
+    $pid = $dbh->prepare('SELECT id from packages where name = ?')->execute(array($package_name))->fetchOne();
     if (!$pid) {
         echo '<input type="text" size="20" maxlength="100" name="in[package_version]"
     value="' . htmlspecialchars($current) . '" />';
@@ -586,9 +586,9 @@ function show_types($current, $show_any, $default = '')
 		{
 	        $sql = "
 	            SELECT name FROM packages
-	            WHERE approved = 1 AND package_type = '$site'
+	            WHERE approved = 1 AND package_type = ?
 	            ORDER BY name";
-	        $list = $dbh->queryCol($sql);
+	        $list = $dbh->prepare($sql)->execute(array($site))->fetchCol();
 
 	        foreach ($list as $name) {
 	            $bug_items[$name] = $name;
@@ -930,7 +930,7 @@ function get_old_comments($bug_id, $all = 0)
     $output = '';
 	$count = 0;
 
-    $res =& $dbh->query("SELECT ts, email, comment, handle FROM bugdb_comments WHERE bug = {$bug_id} ORDER BY ts DESC");
+    $res =& $dbh->prepare("SELECT ts, email, comment, handle FROM bugdb_comments WHERE bug = ? ORDER BY ts DESC")->execute(array($bug_id));
 
 	// skip the most recent unless the caller wanted all comments
     if (!$all) {
@@ -946,7 +946,7 @@ function get_old_comments($bug_id, $all = 0)
     }
 
     if (strlen($output) < $max_message_length && $count < $max_comments) {
-        $res =& $dbh->query("SELECT ts1, email, ldesc, handle FROM bugdb WHERE id = {$bug_id}");
+        $res =& $dbh->prepare("SELECT ts1, email, ldesc, handle FROM bugdb WHERE id = ?")->execute(array($bug_id));
         if (!$res) {
             return $output;
         }
@@ -997,7 +997,7 @@ function package_exists($package_name)
     if (isset($pseudo_pkgs[$package_name])) {
         return true;
     }
-    $found = $dbh->queryOne('SELECT count(name) FROM packages WHERE name = ?', array($package_name));
+    $found = $dbh->prepare('SELECT count(name) FROM packages WHERE name = ?')->execute(array($package_name))->fetchOne();
     return ($found == 1) ? true : false;
 }
 
@@ -1112,15 +1112,15 @@ function get_package_mail($package_name, $bug_id = false)
     if ($bug_id) {
         $bug_id = (int) $bug_id;
 
-        $assigned = $dbh->queryOne("SELECT assign FROM bugdb WHERE id={$bug_id}");
+        $assigned = $dbh->prepare("SELECT assign FROM bugdb WHERE id= ? ")->execute(array($bug_id))->fetchOne();
         if ($assigned) {
-            $assigned = $dbh->queryOne("SELECT email FROM users WHERE handle='{$assigned}'");
+            $assigned = $dbh->prepare("SELECT email FROM users WHERE handle= ? ")->execute(array($assigned))->fetchOne();
             if ($assigned && !in_array($assigned, $to)) {
                 // assigned is not a maintainer
                 $to[] = $assigned;
             }
         }
-        $bcc = $dbh->queryCol("SELECT email FROM bugdb_subscribe WHERE bug_id={$bug_id}");
+        $bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute(array($bug_id))->fetchCol();
         $bcc = array_diff($bcc, $to);
         $bcc = array_unique($bcc);
         return array(implode(', ', $to), $bugEmail, implode(', ', $bcc));
@@ -1281,10 +1281,10 @@ function unsubscribe_hash($bug_id, $email)
 		UPDATE bugdb_subscribe
 		SET unsubscribe_date = '{$now}',
 			unsubscribe_hash = ?
-		WHERE bug_id = {$bug_id} AND email = ?
+		WHERE bug_id = ? AND email = ?
     ";
 
-    $res = $dbh->query($query, array($hash, $email));
+    $res = $dbh->prepare($query)->execute(array($hash,$bug_id, $email));
 
     $affected = $dbh->affectedRows($res);
 
@@ -1328,10 +1328,10 @@ function unsubscribe($bug_id, $hash)
     $query = "
 		SELECT bug_id, email, unsubscribe_date, unsubscribe_hash
 		FROM bugdb_subscribe
-		WHERE bug_id = {$bug_id} AND unsubscribe_hash = '{$hash}' LIMIT 1
+		WHERE bug_id = ? AND unsubscribe_hash = ? LIMIT 1
 	";
 
-    $sub = $dbh->query($query, MDB2_FETCHMODE_ASSOC);
+    $sub = $dbh->prepare($query)->execute(array($bug_id,$hash))->fetch(MDB2_FETCHMODE_ASSOC);
 
     if (!$sub) {
         return false;
@@ -1346,9 +1346,9 @@ function unsubscribe($bug_id, $hash)
 
     $query = "
 		DELETE FROM bugdb_subscribe
-		WHERE bug_id = {$bug_id} AND unsubscribe_hash = '{$hash}' AND email = '{$sub['email']}'
+		WHERE bug_id = ? AND unsubscribe_hash = ? AND email = ?
 	";
-    $dbh->query($query);
+    $dbh->prepare($query)->execute(array($bug_id,$hash,$sub['email']));
     return true;
 }
 
@@ -1366,6 +1366,6 @@ function get_resolve_reasons ($project = false)
 	if ($project !== false)
 		$where = "WHERE project = '{$project}' OR project = ''";
 
-	return $dbh->queryAll("SELECT * FROM bugdb_resolves $where");
+	return $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array())->fetchAll();
 }
 

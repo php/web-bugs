@@ -334,10 +334,10 @@ if (empty($_GET['limit']) || !(int)$_GET['limit']) {
 if (stristr($query, ';')) {
     die('BAD HACKER!! No database cracking for you today!');
 } else {
-    $res  = $dbh->query($query);
+    $res  = $dbh->prepare($query)->execute();
     $rows =  $res->numRows();
 
-    $total_rows = $dbh->queryOne('SELECT FOUND_ROWS()');
+    $total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
     if ($total_rows > $rows) {
         $warnings[] = 'The search was too general, only ' . MAX_BUGS_RETURN .
             ' bugs will be returned';

@@ -107,7 +107,7 @@ if (isset($_POST['in'])) {
 
             $query = "SELECT bugdb.* from bugdb, packages p $where_clause LIMIT 5";
 
-            $res =& $dbh->query($query);
+            $res =& $dbh->prepare($query)->execute();
 
             if ($res->numRows() == 0) {
                 $ok_to_submit_report = true;
@@ -143,13 +143,13 @@ if (isset($_POST['in'])) {
 
                 foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
 
-                    $resolution =& $dbh->queryOne("
+                    $resolution =& $dbh->prepare("
 						SELECT comment 
 						FROM bugdb_comments
-						WHERE bug = {$row['id']}
+						WHERE bug = ?
 						ORDER BY id DESC
 						LIMIT 1
-					");
+					")->execute(array($row['id']))->fetchOne();
 
                     if ($resolution) {
                         $resolution = htmlspecialchars($resolution);
@@ -256,7 +256,7 @@ if (isset($_POST['in'])) {
                     $_POST['in']['package_name'] = 'pearweb';
                 }
 
-                $dbh->query('INSERT INTO bugdb (
+                $dbh->prepare('INSERT INTO bugdb (
                           registered,
                           package_name,
                           bug_type,
@@ -271,7 +271,7 @@ if (isset($_POST['in'])) {
                           reporter_name,
                           status,
                           ts1
-                         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())', array (
+                         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())')->execute(array (
                           $registereduser,
                           $_POST['in']['package_name'],
                           $_POST['in']['bug_type'],
@@ -585,14 +585,14 @@ DATA;
     }
     if ($db->find(false)) {
         while ($db->fetch()) {
-            $released = $dbh->queryOne('
+            $released = $dbh->prepare('
             	SELECT releases.id
                 FROM packages, releases, bugdb_roadmap b
                 WHERE b.id = ? AND
                       packages.name = b.package AND
                       releases.package = packages.id AND
                       releases.version = b.roadmap_version
-			', array($db->id));
+			')->execute(array($db->id))->fetchOne();
             if ($released) {
                 $content .= '<span class="headerbottom">';
             }

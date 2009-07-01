@@ -50,8 +50,8 @@ class package
             $license = "PHP License";
         }
         if (!empty($category) && (int)$category == 0) {
-            $category = $dbh->queryOne("SELECT id FROM categories WHERE name = ?",
-                                     array($category));
+            $category = $dbh->prepare("SELECT id FROM categories WHERE name = ?")->execute(
+                                     array($category))->fetchOne();
         }
         if (empty($category)) {
             return PEAR::raiseError("package::add: invalid `category' field");
@@ -61,13 +61,13 @@ class package
         }
         $query = "INSERT INTO packages (id,name,package_type,category,license,summary,description,homepage,cvs_link) VALUES(?,?,?,?,?,?,?,?,?)";
         $id = $dbh->nextId("packages");
-        $err = $dbh->query($query, array($id, $name, $type, $category, $license, $summary, $description, $homepage, $cvs_link));
+        $err = $dbh->prepare($query)->execute(array($id, $name, $type, $category, $license, $summary, $description, $homepage, $cvs_link));
         if (PEAR::isError($err)) {
             return $err;
         }
         $sql = "UPDATE categories SET npackages = npackages + 1
-                WHERE id = $category";
-        if (PEAR::isError($err = $dbh->query($sql))) {
+                WHERE id = ?";
+        if (PEAR::isError($err = $dbh->prepare($sql)->execute(array($category)))) {
             return $err;
         }
         include_once 'pear-database-maintainer.php';
@@ -408,7 +408,7 @@ class package
         $newpk_sql = "SELECT name FROM packages WHERE id=?";
         if ($field == null) {
             $info =
-                 $dbh->queryRow($pkg_sql, array($pkg), MDB2_FETCHMODE_ASSOC);
+                 $dbh->prepare($pkg_sql)->execute(array($pkg))->fetchRow(MDB2_FETCHMODE_ASSOC);
             $info['releases'] =
                  $dbh->getAssoc($rel_sql, false, array($info['packageid']),null,
                  MDB2_FETCHMODE_ASSOC);
@@ -418,7 +418,7 @@ class package
                  $dbh->getAssoc($notes_sql, false, array(@$info['packageid']),null,
                  MDB2_FETCHMODE_ASSOC);
             $deps =
-                 $dbh->queryAll($deps_sql, array(@$info['packageid']),
+                 $dbh->prepare($deps_sql)->execute(array(@$info['packageid']))->fetchAll(
                  MDB2_FETCHMODE_ASSOC);
             foreach($deps as $dep) {
                 $rel_version = null;
@@ -437,8 +437,8 @@ class package
             // get a single field
             if ($field == 'releases' || $field == 'notes') {
                 if ($what == "name") {
-                    $pid = $dbh->queryOne("SELECT p.id FROM packages p ".
-                                        "WHERE " . $package_type . " p.name = ?", array($pkg));
+                    $pid = $dbh->prepare("SELECT p.id FROM packages p ".
+                                        "WHERE " . $package_type . " p.name = ?")->execute(array($pkg))->fetchOne();
                 } else {
                     $pid = $pkg;
                 }
@@ -452,10 +452,10 @@ class package
             } elseif ($field == 'category') {
                 $sql = "SELECT c.name FROM categories c, packages p ".
                      "WHERE c.id = p.category AND " . $package_type . " p.{$what} = ?";
-                $info = $dbh->queryOne($sql, array($pkg));
+                $info = $dbh->prepare($sql)->execute(array($pkg))->fetchOne();
             } elseif ($field == 'description') {
                 $sql = "SELECT description FROM packages p WHERE " . $package_type . " p.{$what} = ?";
-                $info = $dbh->query($sql, array($pkg));
+                $info = $dbh->prepare($sql)->execute(array($pkg))->fetch();
             } elseif ($field == 'authors') {
                 $sql = "SELECT u.handle, u.name, u.email, u.showemail, m.active, m.role
                         FROM maintains m, users u, packages p
@@ -472,7 +472,7 @@ class package
                     $dbfield = $field;
                 }
                 $sql = "SELECT $dbfield FROM packages p WHERE " . $package_type ." p.{$what} = ?";
-                $info = $dbh->queryOne($sql, array($pkg));
+                $info = $dbh->prepare($sql)->execute(array($pkg))->fetchOne();
             }
         }
         return $info;
@@ -668,7 +668,7 @@ class package
                   FROM packages p, releases r
                   WHERE p.package_type = 'pear' AND p.approved = 1 AND p.id = r.package
                   ORDER BY p.name, r.version DESC";
-        $sth = $dbh->query($query);
+        $sth = $dbh->prepare($query)->execute();
 
         if (PEAR::isError($sth)) {
             return $sth;
@@ -816,7 +816,7 @@ class package
         $GLOBALS['pear_rest']->saveAllPackagesREST();
         $GLOBALS['pear_rest']->savePackageREST($row);
         $GLOBALS['pear_rest']->savePackagesCategoryREST(package::info($pkgid, 'category'));
-        return $dbh->query($sql, $prep);
+        return $dbh->prepare($sql)->execute($prep);
     }
 
     // }}}
@@ -887,7 +887,7 @@ class package
     {
         global $dbh;
         $query = "SELECT id FROM packages WHERE package_type = 'pear' AND approved = 1 AND name = ?";
-        $sth = $dbh->query($query, array($package));
+        $sth = $dbh->prepare($query)->execute(array($package));
         return ($sth->numRows() > 0);
     }
 
@@ -925,7 +925,7 @@ class package
         $query = 'UPDATE packages
                     SET blocktrackbacks=' . ((int) !$allow) . '
                 WHERE name=' . $dbh->quote($name);
-        $res = $dbh->query($query);
+        $res = $dbh->prepare($query)->execute();
     }
     // }}}
 

@@ -294,9 +294,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                 $_POST['in']['name'] = $auth_user->name;
             }
 
-            $dbh->query('
+            $dbh->prepare('
                 INSERT INTO bugdb_comments (bug, email, handle, ts, comment, reporter_name)
-                VALUES (?, ?, ?, NOW(), ?, ?)', array (
+                VALUES (?, ?, ?, NOW(), ?, ?)')->execute(array (
                     $bug_id,
                     $_POST['in']['commentemail'],
                     $_POST['in']['handle'],
@@ -507,11 +507,11 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             $_POST['in']['php_version'],
             $_POST['in']['php_os'],
         ));
-        $previous = $dbh->queryAll("
+        $previous = $dbh->prepare("
             SELECT roadmap_version
             FROM bugdb_roadmap_link l, bugdb_roadmap b
             WHERE l.id = {$bug_id} AND b.id=l.roadmap_id
-        ");
+        ")->execute()->fetchAll();
 
         // don't change roadmap assignments for non-devs editing a bug
         if ($logged_in == 'developer') {
@@ -525,11 +525,11 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                     $link->insert();
                 }
             }
-            $current = $dbh->queryAll("
+            $current = $dbh->prepare("
                 SELECT roadmap_version
                 FROM bugdb_roadmap_link l, bugdb_roadmap b
                 WHERE l.id = {$bug_id} AND b.id = l.roadmap_id
-            ");
+            ")->execute()->fetchAll();
         } else {
             $current = $previous;
         }
@@ -1210,7 +1210,7 @@ function delete_comment($bug_id, $com_id)
 {
     global $dbh;
     
-    $res =& $dbh->query("DELETE FROM bugdb_comments WHERE bug='{$bug_id}' AND id='{$com_id}'");
+    $res =& $dbh->prepare("DELETE FROM bugdb_comments WHERE bug='{$bug_id}' AND id='{$com_id}'")->execute();
 }
 
 function control($num, $desc)

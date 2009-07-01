@@ -656,11 +656,11 @@ function html_category_urhere($id, $link_lastest = false)
     $html = '<a href="/packages.php">Top Level</a>';
     if ($id !== null) {
         global $dbh;
-        $res = $dbh->query("SELECT c.id, c.name
+        $res = $dbh->prepare("SELECT c.id, c.name
                             FROM categories c, categories cat
-                            WHERE cat.id = $id
+                            WHERE cat.id = ?
                             AND c.cat_left <= cat.cat_left
-                            AND c.cat_right >= cat.cat_right");
+                            AND c.cat_right >= cat.cat_right")->execute(array($id));
         $nrows = $res->numRows();
         $i = 0;
         foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {

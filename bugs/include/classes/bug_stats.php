@@ -16,7 +16,7 @@ class Bug_Stats
 
     function packageBugStats($packageid)
     {
-        $info = $this->_dbh->queryAll('
+        $info = $this->_dbh->prepare('
             SELECT
                 COUNT(bugdb.id) as count,
                 AVG(TO_DAYS(NOW()) - TO_DAYS(ts1)) as average,
@@ -28,10 +28,10 @@ class Bug_Stats
                 status IN ("Open","Feedback","Assigned","Analyzed","Verified","Critical") AND
                 bug_type IN ("Bug","Documentation Problem") AND
                 package_type=?
-            ', array($packageid, $this->project), MDB2_FETCHMODE_ASSOC);
-        $total = $this->_dbh->queryOne('
+            ')->execute(array($packageid, $this->project))->fetchAll(MDB2_FETCHMODE_ASSOC);
+        $total = $this->_dbh->prepare('
             SELECT COUNT(bugdb.id) FROM bugdb WHERE bugdb.package_name=?
-            ', array($packageid));
+            ')->execute(array($packageid))->fetchOne();
         return array_merge($info[0], array('total' => $total));
     }
 
@@ -68,28 +68,15 @@ class Bug_Stats
         {
             $total += $buginfo;
         }
-        $assigned = $this->_dbh->queryOne('SELECT COUNT(b.status)
+        $assigned = $this->_dbh->prepare('SELECT COUNT(b.status)
              FROM bugdb b, maintains m, packages p
              WHERE
               m.handle = ? AND
               p.id = m.package AND
               b.package_name = p.name AND
               b.bug_type \!= "Feature/Change Request" AND
-              b.assign = ?', array($handle, $handle));
-        $openage = $this->_dbh->queryOne('SELECT ROUND(AVG(TO_DAYS(NOW()) - TO_DAYS(b.ts1)))
-             FROM bugdb b, maintains m, packages p
-             WHERE
-              m.handle = ? AND
-              p.id = m.package AND
-              b.package_name = p.name AND
-              b.bug_type \!= "Feature/Change Request" AND
-              b.status IN ("Assigned", "Analyzed", "Feedback", "Open", "Critical", "Verified") AND
-              (b.assign = ? OR b.assign IS NULL OR b.assign="")', array($handle, $handle));
-        $opened = $this->_dbh->queryOne('SELECT COUNT(*) FROM bugdb WHERE
-            handle=?', array($handle));
-        $commented = $this->_dbh->queryOne('SELECT COUNT(*) FROM bugdb_comments WHERE
-            handle=?', array($handle));
-        $opencount = $this->_dbh->queryOne('SELECT COUNT(*)
+              b.assign = ?')->execute(array($handle, $handle))->fetchOne();
+        $openage = $this->_dbh->prepare('SELECT ROUND(AVG(TO_DAYS(NOW()) - TO_DAYS(b.ts1)))
              FROM bugdb b, maintains m, packages p
              WHERE
               m.handle = ? AND
@@ -97,7 +84,20 @@ class Bug_Stats
               b.package_name = p.name AND
               b.bug_type \!= "Feature/Change Request" AND
               b.status IN ("Assigned", "Analyzed", "Feedback", "Open", "Critical", "Verified") AND
-              (b.assign = ? OR b.assign IS NULL OR b.assign="")', array($handle, $handle));
+              (b.assign = ? OR b.assign IS NULL OR b.assign="")')->execute(array($handle, $handle))->fetchOne();
+        $opened = $this->_dbh->prepare('SELECT COUNT(*) FROM bugdb WHERE
+            handle=?')->execute(array($handle))->fetchOne();
+        $commented = $this->_dbh->prepare('SELECT COUNT(*) FROM bugdb_comments WHERE
+            handle=?')->execute(array($handle))->fetchOne();
+        $opencount = $this->_dbh->prepare('SELECT COUNT(*)
+             FROM bugdb b, maintains m, packages p
+             WHERE
+              m.handle = ? AND
+              p.id = m.package AND
+              b.package_name = p.name AND
+              b.bug_type \!= "Feature/Change Request" AND
+              b.status IN ("Assigned", "Analyzed", "Feedback", "Open", "Critical", "Verified") AND
+              (b.assign = ? OR b.assign IS NULL OR b.assign="")')->execute(array($handle, $handle))->fetchOne();
         $bugrank = $this->_dbh->prepare('SELECT COUNT(*) as c, u.handle
                  FROM bugdb b, users u
                  WHERE

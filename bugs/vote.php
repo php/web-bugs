@@ -19,7 +19,7 @@ $reproduced = (int) $_POST['reproduced'];
 $samever = isset($_POST['samever']) ? (int) $_POST['samever'] : 0;
 $sameos  = isset($_POST['sameos'])  ? (int) $_POST['sameos']  : 0;
 
-if (!$dbh->queryOne("SELECT id FROM bugdb WHERE id={$id} LIMIT 1")) {
+if (!$dbh->prepare("SELECT id FROM bugdb WHERE id= ? LIMIT 1")->execute(array($id))->fetchOne()) {
   response_header('No such bug.');
   display_bug_error("No such bug #{$id}");
   response_footer();
@@ -61,14 +61,14 @@ $ip = ip2long(get_real_ip());
 //       never need to be implemented.
 
 // add the vote
-$dbh->query ("INSERT INTO bugdb_votes (bug,ip,score,reproduced,tried,sameos,samever) VALUES (
+$dbh->prepare ("INSERT INTO bugdb_votes (bug,ip,score,reproduced,tried,sameos,samever) VALUES (
 		$id, $ip, $score, "
        . ($reproduced == 1 ? "1," : "0,")
        . ($reproduced != 2 ? "1," : "0,")
        . ($reproduced ? "$sameos," : "NULL,")
        . ($reproduced ? "$samever" : "NULL")
        . ')'
-);
+)->execute();
 
 // redirect to the bug page (which will display the success message)
 header("Location: bug.php?id=$id&thanks=6");
