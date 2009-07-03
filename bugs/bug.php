@@ -1153,7 +1153,7 @@ $query = '
     WHERE c.bug = ?
     GROUP BY c.id ORDER BY c.ts
 ';
-$res =& $dbh->prepare($query)->execute(array($bug_id))->fetchOne();
+$res = $dbh->prepare($query)->execute(array($bug_id));
 if ($res) {
     echo '<h2>Comments</h2>';
     foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
