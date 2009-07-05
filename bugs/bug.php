@@ -299,7 +299,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                 VALUES (?, ?, ?, NOW(), ?, ?)')->execute(array (
                     $bug_id,
                     $_POST['in']['commentemail'],
-                    $_POST['in']['handle'],
+                    (empty($_POST['in']['handle'])?" ":$_POST['in']['handle']),
                     $ncomment,
                     $_POST['in']['name']
                 )

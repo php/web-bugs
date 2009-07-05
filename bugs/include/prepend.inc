@@ -69,7 +69,6 @@ define('DEVBOX', true);
 if (!defined('PEAR_CHANNELNAME'))
 	define ('PEAR_CHANNELNAME', 'pear.php.net');
 
-date_default_timezone_set('America/Sao_Paulo');
 
 // CONFIG END
 

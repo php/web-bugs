@@ -256,7 +256,7 @@ if (isset($_POST['in'])) {
                     $_POST['in']['package_name'] = 'pearweb';
                 }
 
-                $dbh->prepare('INSERT INTO bugdb (
+				$dbh->prepare('INSERT INTO bugdb (
                           registered,
                           package_name,
                           bug_type,
@@ -276,7 +276,7 @@ if (isset($_POST['in'])) {
                           $_POST['in']['package_name'],
                           $_POST['in']['bug_type'],
                           $_POST['in']['email'],
-                          $_POST['in']['handle'],
+                          empty($_POST['in']['handle'])?" ":$_POST['in']['handle'],
                           $_POST['in']['sdesc'],
                           $fdesc,
                           $_POST['in']['package_version'],
@@ -290,11 +290,7 @@ if (isset($_POST['in'])) {
     /*
      * Need to move the insert ID determination to DB eventually...
      */
-                if ($dbh->phptype == 'mysql') {
-                    $cid = mysql_insert_id();
-                } else {
-                    $cid = mysqli_insert_id($dbh->connection);
-                }
+                $cid = $dbh->lastInsertId();
 
                 Bug_DataObject::init();
                 $link = Bug_DataObject::bugDB('bugdb_roadmap_link');

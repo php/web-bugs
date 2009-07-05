@@ -128,7 +128,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 				$auth_user->name   = $user;
 			} else {
 				$auth_user->handle = '';
-				$auth_user->email  = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
+				$auth_user->email  = isset($_POST['in']['email']) ? $_POST['in']['email'] : '';
 				$auth_user->name   = '';
 			}
 			$auth_user->registered = true;
