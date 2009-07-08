@@ -17,14 +17,15 @@ Configuration:
  - bugs/include/prepend.inc
 
 Required PEAR packages:
- # pear install DB DB_DataObject Text_CAPTCHA_Numeral Tree-beta Net_URL2-beta
- - DB
+ # pear install MDB2 DB_DataObject Text_CAPTCHA_Numeral Tree-beta Net_URL2-beta
+ - MDB2
  - DB_DataObject
  - Net_URL2
  - Text_CAPTCHA_Numeral
  - Tree
 
 Required external packages:
+ - TODO: These requirements are being removed
  - Savant:  http://phpsavant.com/Savant2-2.4.3.tgz
  - Damblan: ???
 
