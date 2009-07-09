@@ -26,7 +26,6 @@ Required PEAR packages:
 
 Required external packages:
  - TODO: These requirements are being removed
- - Savant:  http://phpsavant.com/Savant2-2.4.3.tgz
  - Damblan: ???
 
 Database:
