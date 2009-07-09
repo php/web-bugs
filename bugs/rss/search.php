@@ -42,7 +42,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sy="http://purl.org/rss/1.0/mo
 xmlns:admin="http://webns.net/mvcb/" xmlns:content="http://purl.org/rss/1.0/modules/content/">';
 echo "\n  <channel rdf:about=\"http://{$site_url}{$basedir}/rss/search.php\">\n";
 echo "    <title>{$siteBig} Bug Search Results</title>\n";
-echo "    <link>http://{$site_url}{$basedir}/rss/search.php?" , http_build_query($_GET) , "</link>\n";
+echo "    <link>http://{$site_url}{$basedir}/rss/search.php?" , htmlspecialchars(http_build_query($_GET)) , "</link>\n";
 echo "    <description>Search Results</description>\n";
 echo "    <dc:language>en-us</dc:language>\n";
 echo "    <dc:creator>{$site}-webmaster@lists.php.net</dc:creator>\n";
@@ -61,16 +61,16 @@ if ($total_rows > 0) {
     foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
         $i++;
 
-        $desc = "{$row['package_name']} {$row['bug_type']}\nReported by ";
+        $desc = "{$row['package_name']} ({$row['bug_type']})\nReported by ";
         if ($row['handle']) {
         	$desc .= "{$row['handle']}\n";
        	} else {
        		$desc .= substr($row['email'], 0, strpos($row['email'], '@')) . "@...\n";
 		}
 		$desc .= date(DATE_ATOM, $row['ts1a']) . "\n";
-		$desc .= "PHP: {$row['php_version']} OS: {$row['php_os']} Package Version: {$row['package_version']}\n\n";
+		$desc .= "PHP: {$row['php_version']}, OS: {$row['php_os']}, Package Version: {$row['package_version']}\n\n";
 		$desc .= $row['ldesc'];
-		$desc = utf8_encode(htmlspecialchars($desc));
+		$desc = '<pre>' . utf8_encode(htmlspecialchars($desc)) . '</pre>';
 
 		echo "      <rdf:li rdf:resource=\"http://{$site_url}{$basedir}/{$row['id']}\" />\n";
         $items .= "  <item rdf:about=\"http://{$site_url}{$basedir}/{$row['id']}\">\n";
