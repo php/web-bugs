@@ -47,7 +47,7 @@ response_header(
 	'Bugs :: Search',
 	" <link rel='alternate'
 			type='application/rdf+xml'
-			title='RSS feed' href='http://{$site_url}{$basedir}/rss/search.php?" . http_build_query($newrequest) . "' />");
+			title='RSS feed' href='rss/search.php?" . http_build_query($newrequest) . "' />");
 
 $errors = array();
 $warnings = array();
@@ -55,6 +55,7 @@ $order_options = array(
     ''             => 'relevance',
     'id'           => 'ID',
     'ts1'          => 'date',
+    'ts2'          => 'last modified',
     'package_name' => 'package',
     'bug_type'     => 'bug_type',
     'status'       => 'status',
@@ -76,6 +77,7 @@ $bug_type = (!empty($_GET['bug_type']) && $_GET['bug_type'] != 'All') ? $_GET['b
 $bug_age = (int) (isset($_GET['bug_age'])) ? $_GET['bug_age'] : 0;
 $bug_updated = (int) (isset($_GET['bug_updated'])) ? $_GET['bug_updated'] : 0;
 $php_os = !empty($_GET['php_os']) ? $_GET['php_os'] : '';
+$php_os_not = !empty($_GET['php_os_not']) ? 'not' : '';
 $phpver = !empty($_GET['phpver']) ? $_GET['phpver'] : '';
 $packagever = !empty($_GET['packagever']) ? $_GET['packagever'] : '';
 $begin = (int) !empty($_GET['begin']) ? $_GET['begin'] : 0;
@@ -93,7 +95,7 @@ $author_email = (!empty($_GET['author_email']) && is_valid_email($_GET['author_e
 $package_name  = (isset($_GET['package_name'])  && is_array($_GET['package_name']))  ? $_GET['package_name']  : array();
 $package_nname = (isset($_GET['package_nname']) && is_array($_GET['package_nname'])) ? $_GET['package_nname'] : array();
 
-    
+
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 {
     $query = '
@@ -224,35 +226,35 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
     }
 
     if ($php_os != '') {
-        $where_clause .= " AND bugdb.php_os LIKE '%" . $dbh->escapeSimple($php_os) . "%'";
+        $where_clause .= " AND bugdb.php_os {$php_os_not} LIKE '%" . $dbh->escape($php_os) . "%'";
     }
 
     if ($phpver != '') {
-        $where_clause .= " AND bugdb.php_version LIKE '" . $dbh->escapeSimple($phpver) . "%'";
+        $where_clause .= " AND bugdb.php_version LIKE '" . $dbh->escape($phpver) . "%'";
     }
 
     if ($packagever != '') {
-        $where_clause .= " AND bugdb.package_version LIKE '" . $dbh->escapeSimple($packagever) . "%'";
+        $where_clause .= " AND bugdb.package_version LIKE '" . $dbh->escape($packagever) . "%'";
     }
 
     if ($handle == '') {
         if ($assign != '') {
-            $where_clause .= ' AND bugdb.assign = ' . $dbh->quote($assign);
+            $where_clause .= ' AND bugdb.assign = ' . $dbh->escape($assign);
         }
         if ($maintain != '') {
-            $where_clause .= ' AND maintains.handle = ' . $dbh->quote($maintain);
+            $where_clause .= ' AND maintains.handle = ' . $dbh->escape($maintain);
         }
     } else {
-        $where_clause .= ' AND (maintains.handle = ' . $dbh->quote($handle)
-                       . ' OR bugdb.assign = ' . $dbh->quote($handle). ')';
+        $where_clause .= ' AND (maintains.handle = ' . $dbh->escape($handle)
+                       . ' OR bugdb.assign = ' . $dbh->escape($handle). ')';
     }
 
 	if ($author_email != '') {
-        $qae = $dbh->quote($author_email);
+        $qae = $dbh->escape($author_email);
         $where_clause .= " AND (bugdb.email = $qae OR bugdb.handle = $qae)";
     }
 
-    $where_clause .= ($site != 'php') ? ' AND (packages.package_type = ' . $dbh->quote($site) : ' AND (1=1';
+    $where_clause .= ($site != 'php') ? ' AND (packages.package_type = ' . $dbh->escape($site) : ' AND (1=1';
 
     if ($pseudo = array_intersect(array_keys($pseudo_pkgs), $package_name)) {
         $where_clause .= " OR bugdb.package_name";
@@ -294,8 +296,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
     } else {
         $res = $dbh->prepare($query)->execute();
         $rows = $res->numRows();
-
-        $total_rows =& $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
+        $total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
 
         /* Selected packages to search in */
         $package_name_string = '';
@@ -304,7 +305,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 $package_name_string.= '&amp;package_name[]=' . urlencode($type_str);
             }
         }
-        
+
         /* Selected packages NOT to search in */
         $package_nname_string = '';
         if (count($package_nname) > 0) {
@@ -313,7 +314,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
             }
         }
 
-        $link = "search.php?cmd=display{$package_name_string}{$package_nname_string}".
+        $link_params =
                 '&amp;search_for='  . urlencode($search_for) .
                 '&amp;php_os='      . urlencode($php_os) .
                 '&amp;author_email='. urlencode($author_email) .
@@ -329,6 +330,9 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 '&amp;handle='      . urlencode($handle) .
                 '&amp;assign='      . urlencode($assign) .
                 '&amp;maintain='    . urlencode($maintain);
+
+        $link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params}";
+        $clean_link = "search.php?cmd=display{$link_params}";
 
         if (isset($_GET['showmenu'])) {
             $link .= '&amp;showmenu=1';
@@ -360,10 +364,11 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
 <?php if ($package_count === 1) { ?>
  <tr>
-  <td class="search-prev_next" style="text-align: center;" colspan="9">
+  <td class="search-prev_next" style="text-align: center;" colspan="10">
 <?php
    $pck = htmlspecialchars($package_name[0]);
-   echo " Bugs for <a href='/package/{$pck}'>{$pck}</a>\n";
+   $pck_url = urlencode($pck);
+   echo " Bugs for <a href='/package/{$pck_url}'>{$pck}</a>\n";
 ?>
   </td>
  </tr>
@@ -372,6 +377,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
  <tr>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=ts1">Date</a></th>
+  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=ts2">Last Modified</a></th>
 <?php if ($package_count !== 1) { ?>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=package_name">Package</a></th>
 <?php } ?>
@@ -393,24 +399,46 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 echo '<br /><a href="bug.php?id='.$row['id'].'&amp;edit=1">(edit)</a></td>' . "\n";
 
                 /* Date */
-                echo '  <td align="center">'.format_date(strtotime($row['ts1'])).'</td>' . "\n";
+                echo '  <td align="center">' . format_date(strtotime($row['ts1'])) . "</td>\n";
 
+                /* Last Modified */
+                echo '  <td align="center">' . format_date(strtotime($row['ts2'])) . "</td>\n";
+
+				/* Package */
                 if ($package_count !== 1) {
                     $pck = htmlspecialchars($row['package_name']);
-                    echo "<td><a href='/package/{$pck}'>{$pck}</a></td>\n";
+					$pck_url = urlencode($pck);
+					if ($site != 'php') {
+	                    echo "<td><a href='/package/{$pck_url}'>{$pck}</a></td>\n";
+					} else {
+	                    echo "<td><a href='{$clean_link}&amp;package_name[]={$pck_url}'>{$pck}</a></td>\n";
+					}
                 }
 
+                /* Bug type */
                 $type_idx = !empty($row['bug_type']) ? $row['bug_type'] : 'Bug';
                 echo '  <td>', htmlspecialchars($bug_types[$type_idx]), '</td>' . "\n";
+
+                /* Status */
                 echo '  <td>', htmlspecialchars($row['status']);
                 if ($row['status'] == 'Feedback' && $row['unchanged'] > 0) {
                     printf ("<br />%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
                 }
                 echo '</td>' . "\n";
+
+                /* Package version */
                 echo '  <td>', htmlspecialchars($row['package_version']), '</td>';
+
+                /* PHP version */
                 echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
+
+                /* OS */
                 echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>' . "\n";
-                echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc'])             : '&nbsp;', '</td>' . "\n";
+
+                /* Short description */
+                echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</td>' . "\n";
+
+				/* Assigned to */
                 echo '  <td>', $row['assign'] ? htmlspecialchars($row['assign']) : '&nbsp;', '</td>' . "\n";
                 echo " </tr>\n";
             }
@@ -485,7 +513,10 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>OS</th>
   <td style="white-space: nowrap">Return bugs with <b>operating system</b></td>
-  <td><input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os);?>" /></td>
+  <td>
+  	<input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os);?>" />
+  	<input type="checkbox" name="php_os_not" value="1" <?php echo ($php_os_not == 'not') ? 'checked="checked"' : ''; ?>" />
+  </td>
 </tr>
 <tr valign="top">
   <th>Version</th>
@@ -552,7 +583,7 @@ function show_prev_next($begin, $rows, $total_rows, $link, $limit)
 {
     echo "<!-- BEGIN PREV/NEXT -->\n";
     echo " <tr>\n";
-    echo '  <td class="search-prev_next" colspan="10">' . "\n";
+    echo '  <td class="search-prev_next" colspan="11">' . "\n";
 
     if ($limit=='All') {
         echo "$total_rows Bugs</td></tr>\n";
