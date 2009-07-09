@@ -170,7 +170,7 @@ if ($dbh->prepare('SELECT handle FROM bugdb WHERE id=?')->execute(array($bug_id)
         GROUP BY bug';
 }
 
-$bug =& $dbh->prepare($query)->execute(array($bug_id))->fetchRow(MDB2_FETCHMODE_ASSOC);
+$bug = $dbh->prepare($query)->execute(array($bug_id))->fetchRow(MDB2_FETCHMODE_ASSOC);
 
 // DB error
 if (is_object($bug)) {
@@ -578,7 +578,7 @@ switch ($bug['bug_type'])
 response_header(
     "{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']),
     " 
-      <link rel='alternate' type='application/rdf+xml' title='RSS feed' href='http://{$site_url}{$basedir}/feeds/bug_{$bug_id}.rss' />
+      <link rel='alternate' type='application/rdf+xml' title='RSS feed' href='rss/bug.php?id={$bug_id}' />
       <script type='text/javascript' src='js/util.js'></script>    
     "
 );
@@ -1210,7 +1210,7 @@ function delete_comment($bug_id, $com_id)
 {
     global $dbh;
     
-    $res =& $dbh->prepare("DELETE FROM bugdb_comments WHERE bug='{$bug_id}' AND id='{$com_id}'")->execute();
+    $res = $dbh->prepare("DELETE FROM bugdb_comments WHERE bug='{$bug_id}' AND id='{$com_id}'")->execute();
 }
 
 function control($num, $desc)
