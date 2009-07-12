@@ -34,7 +34,7 @@ function verify_password($user, $pass)
 	return true;
 }
 
-function is_cvs_user ()
+function is_developer()
 {
 	if (empty($_COOKIE['MAGIC_COOKIE'])) {
 		return false;

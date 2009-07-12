@@ -131,7 +131,7 @@ $14 = 0x80fa6fa "pg_result_error"
 (gdb) print (char *)executor_globals.active_op_array->function_name
 $15 = 0x816cfc4 "result_error"
 (gdb) print (char *)executor_globals.active_op_array->filename
-$16 = 0x816afbc "/home/yohgaki/cvs/php/DEV/segfault.php"
+$16 = 0x816afbc "/home/yohgaki/php/DEV/segfault.php"
 (gdb) 
   </code></pre>
 </ul>

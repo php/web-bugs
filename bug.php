@@ -10,7 +10,7 @@ $edit = (int)$edit;
 session_start();
 
 require_once 'prepend.inc';
-require_once 'cvs-auth.inc';
+require_once 'auth.inc';
 require_once 'trusted-devs.inc';
 
 $mail_bugs_to = 'php-bugs@lists.php.net';
@@ -87,7 +87,7 @@ if ($in && $edit == 3) {
 		$errors[] = "You can not add comments for bugs with the statuses:" . join(', ', $no_comments_allowed);
 	}
 
-    if (!is_cvs_user() && !validate_captcha()) {
+    if (!is_developer() && !validate_captcha()) {
         $errors[] = 'Incorrect CAPTCHA';
     }
 
@@ -202,7 +202,7 @@ elseif ($in && $edit == 1) {
 				$in['status'] = $RESOLVE_REASONS[$in['resolve']]['status'];
 			}
 			if ($in['status'] == 'Closed' && $bug['status'] == 'To be documented') {
-				$resolve_message = $FIX_VARIATIONS['fixedcvs']['Documentation problem'];
+				$resolve_message = $FIX_VARIATIONS['fixed']['Documentation problem'];
 			} elseif (isset($FIX_VARIATIONS[$in['resolve']][$bug['bug_type']])) {
 			  $resolve_message = $FIX_VARIATIONS[$in['resolve']][$bug['bug_type']];
 			} else {
@@ -390,16 +390,16 @@ Welcome back, <?php echo $user?>! (Not <?php echo $user?>? <a href="logout.php">
 	else {?>
 <div class="explain">
 <?php if (!$in) {?>
-Welcome! If you don't have a CVS account, you can't do anything here. You can
+Welcome! If you don't have a SVN account, you can't do anything here. You can
 <a href="<?php echo "$self?id=$id&amp;edit=3"?>">add a comment by following
 this link</a> or if you reported this bug, you can <a href="<?php echo
 "$self?id=$id&amp;edit=2"?>">edit this bug over here</a>.
 <?php }?>
 <table>
  <tr>
-  <th>CVS Username:</th>
+  <th>SVN Username:</th>
   <td><input type="text" name="user" value="<?php echo clean($user)?>" size="10" maxlength="20" /></td>
-  <th>CVS Password:</th>
+  <th>SVN Password:</th>
   <td><input type="password" name="pw" value="<?php echo clean($pw)?>" size="10" maxlength="20" /></td>
   <th>
    <label for="save">Remember:</label>

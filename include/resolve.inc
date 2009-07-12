@@ -3,9 +3,9 @@
 $RESOLVE_REASONS = array(
   'trysnapshot52' => array(
     'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (PHP 5.2)',
+    'desc' => 'Try a snapshot (PHP 5.2)',
     'message' =>
-'Please try using this CVS snapshot:
+'Please try using this snapshot:
 
   http://snaps.php.net/php5.2-latest.tar.gz
  
@@ -16,9 +16,9 @@ For Windows:
 
   'trysnapshot53' => array(
     'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (PHP 5.3)',
+    'desc' => 'Try a snapshot (PHP 5.3)',
     'message' =>
-'Please try using this CVS snapshot:
+'Please try using this snapshot:
 
   http://snaps.php.net/php5.3-latest.tar.gz
  
@@ -29,9 +29,9 @@ For Windows:
 
   'trysnapshot60' => array(
     'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (PHP 6.0)',
+    'desc' => 'Try a snapshot (PHP 6.0)',
     'message' =>
-'Please try using this CVS snapshot:
+'Please try using this snapshot:
 
   http://snaps.php.net/php6.0-latest.tar.gz
  
@@ -40,11 +40,11 @@ For Windows:
   http://windows.php.net/snapshots/',
   ),
 
-  'fixedcvs' => array(
+  'fixed' => array(
     'status' => 'Closed',
-    'desc' => 'Fixed in CVS',
+    'desc' => 'Fixed in SVN',
     'message' =>
-'This bug has been fixed in CVS.
+'This bug has been fixed in SVN.
 
 Snapshots of the sources are packaged every three hours; this change
 will be in the next snapshot. You can grab the snapshot at
@@ -55,9 +55,9 @@ Thank you for the report, and for helping us make PHP better.',
   
   'needdocs' => array(
     'status' => 'To be documented',
-    'desc' => 'Fixed in CVS and need be documented',
+    'desc' => 'Fixed in SVN and need be documented',
     'message' =>
-'This bug has been fixed in CVS.
+'This bug has been fixed in SVN.
 
 Snapshots of the sources are packaged every three hours; this change
 will be in the next snapshot. You can grab the snapshot at
@@ -272,11 +272,11 @@ your configure settings should be
 );
 
 $FIX_VARIATIONS = array(
-  'fixedcvs' => array(
+  'fixed' => array(
     
     'Website problem' =>
-'This bug has been fixed in CVS. Since the websites are not directly
-updated from the CVS server, the fix might need some time to spread
+'This bug has been fixed in SVN. Since the websites are not directly
+updated from the SVN server, the fix might need some time to spread
 across the globe to all mirror sites, including PHP.net itself.
 
 Thank you for the report, and for helping us make PHP.net better.',
@@ -296,15 +296,15 @@ to get updated, we would like to ask you to be a bit patient.
 Thank you for the report, and for helping us make our documentation better.',
 
     'Doc Build problem' =>
-'This bug has been fixed in CVS. Since the websites are not directly
-updated from the CVS server, the fix might need some time to spread
+'This bug has been fixed in SVN. Since the websites are not directly
+updated from the SVN server, the fix might need some time to spread
 across the globe to all mirror sites, including PHP.net itself.
 
 Thank you for the report, and for helping us make PHP.net better.',
 
     'DocWeb problem' =>
-'This bug has been fixed in CVS. Since the PHP Documentation Tools website
-is updated from the CVS repository at a regular interval, the fix might need
+'This bug has been fixed in SVN. Since the PHP Documentation Tools website
+is updated from the SVN repository at a regular interval, the fix might need
 some time to take effect.
 
 Thank you for the report, and for helping us make DocWeb better.',

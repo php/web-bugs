@@ -6,7 +6,7 @@ if (!$id) {
 }
 
 require_once 'prepend.inc';
-require_once 'cvs-auth.inc';
+require_once 'auth.inc';
 
 $mail_bugs_to = 'php-bugs@lists.php.net';
 
@@ -43,9 +43,9 @@ if ($errors) {
 <input type="hidden" name="id" value="<?php echo $id?>" />
 <table>
  <tr>
-  <th>CVS Username:</th>
+  <th>SVN Username:</th>
   <td><input type="text" name="user" value="<?php echo clean($user)?>" size="10" maxlength="20" /></td>
-  <th>CVS Password:</th>
+  <th>SVN Password:</th>
   <td><input type="password" name="pw" value="<?php echo clean($pw)?>" size="10" maxlength="20" /></td>
   <th>
    <label for="save">Remember:</label>

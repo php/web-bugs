@@ -139,13 +139,13 @@ function show_version_options($current,$default="")
 	$date = date("Y-m-d");
 	$versions = array(
 		"5.3.0",
-		"5.3CVS-{$date} (snap)",
-		"5.3CVS-{$date} (CVS)",
+		"5.3SVN-{$date} (snap)",
+		"5.3SVN-{$date} (SVN)",
 		"5.2.10",
-		"5.2CVS-{$date} (snap)",
-		"5.2CVS-{$date} (CVS)",
-		"6CVS-{$date} (snap)",
-		"6CVS-{$date} (CVS)",
+		"5.2SVN-{$date} (snap)",
+		"5.2SVN-{$date} (SVN)",
+		"6SVN-{$date} (snap)",
+		"6SVN-{$date} (SVN)",
 		"Irrelevant",
 	);
 	echo "<option value=\"\">--Please Select--</option>\n";
@@ -511,11 +511,11 @@ function incoming_details_are_valid ($in, $initial=0)
 		$errors[] = "You must supply a long description of the bug you are reporting.";
 	}
 
-	if ($initial && !is_cvs_user() && empty($in['passwd'])) {
+	if ($initial && !is_developer() && empty($in['passwd'])) {
 		$errors[] = "You must supply a password for this bug report.";
 	}
 
-    if ($initial && !is_cvs_user() && !validate_captcha()) {
+    if ($initial && !is_developer() && !validate_captcha()) {
         $errors[] = 'Incorrect CAPTCHA';
     }
 

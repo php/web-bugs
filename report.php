@@ -6,7 +6,7 @@
 session_start();
 
 require_once 'prepend.inc';
-require_once 'cvs-auth.inc';
+require_once 'auth.inc';
 
 /* When user submits a report, do a search and display the results before allowing
  * them to continue */
@@ -67,7 +67,7 @@ before submitting the report as they might contain the solution you are looking 
 <p>If you're sure that your report is a genuine bug that has not been reported before,
 you can scroll down and click the submit button to really enter the details into our database.
 </p>
-<p>Please do not report compile errors for HEAD snapshots (currently 6CVS) via our bug
+<p>Please do not report compile errors for HEAD snapshots (currently 6SVN) via our bug
 tracking system. If the same compile error persists for some time, please drop a mail to
 our <a href="http://www.php.net/mailing-lists.php">internals</a> list.</p>
 
@@ -241,7 +241,7 @@ that someone will want to help fix</a>.</p>
 extensions (APC, eAccelerator, Turck MMCache, ionCube loader, Xcache, Xdebug)
 before submitting a *PHP* bug.</strong></p>
 
-<p>Do not report compile errors in HEAD versions (currently 6CVS). If a compile error persists, please drop a mail
+<p>Do not report compile errors in HEAD versions (currently 6SVN). If a compile error persists, please drop a mail
 to our <a href="http://www.php.net/mailing-lists.php">internals mailing list</a>.</p>
 
 <p><strong>Failure to follow these instructions may result in your bug
@@ -288,7 +288,7 @@ if ($errors) display_errors($errors);
   </td></tr>
  </tr>
  <?php
- if (!is_cvs_user()) {
+ if (!is_developer()) {
  ?>
  <tr>
   <th align="right">Password:</th>
@@ -306,7 +306,7 @@ if ($errors) display_errors($errors);
  ?>
  <tr>
  <?php
- if (is_cvs_user()) {
+ if (is_developer()) {
  ?>
  <th align="right">User:</th>
    <td colspan="2">
