@@ -1,41 +1,41 @@
 <?php
 /* $Id$ */
 
-$ignore_password = false;
-$passwd_file = "/repository/CVSROOT/passwd";
+function verify_password($user, $pass)
+{
+	$post = http_build_query(
+		array(
+			"token" => getenv("TOKEN"),
+			"username" => $user,
+			"password" => $pass,
+		)
+	);
 
-function find_password($user) {
-	global $passwd_file, $ignore_password;
-	if ($ignore_password) return " "; // can't be ""
-	$fp=fopen($passwd_file,"r");
-	if (!$fp) {
-		return ("");
+	$opts = array(
+		"method"  => "POST",
+		"header"  => "Content-type: application/x-www-form-urlencoded",
+		"content" => $post,
+	);
+
+	$ctx = stream_context_create(array("http" => $opts));
+
+	$s = file_get_contents("https://master.php.net/fetch/cvsauth.php", false, $ctx);
+
+	$a = @unserialize($s);
+	if (!is_array($a)) {
+		echo "Unknown authentication error\n";
+		exit;
 	}
-	while(!feof($fp)) {
-		$line=fgets($fp,120);
-		list($luser,$passwd,$junk) = explode(":",$line);
-		if($user==$luser) {
-			fclose($fp);
-			return($passwd);
-		}
+	if (isset($a["errno"])) {
+		echo "Authentication failed: ", $a["errstr"], "\n";
+		return false;
 	}
-	fclose($fp);
-	return("");
+
+	return true;
 }
 
-function verify_password($user, $pass) {
-	global $ignore_password;
-	$psw = find_password($user);
-	if (strlen($psw) > 0) {
-		if ($ignore_password || crypt($pass,substr($psw,0,2)) == $psw) {
-			return true;
-		}
-	}
-	return false;
-}
-
-function is_cvs_user () {
-
+function is_cvs_user ()
+{
 	if (empty($_COOKIE['MAGIC_COOKIE'])) {
 		return false;
 	}
