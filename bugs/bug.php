@@ -578,7 +578,8 @@ switch ($bug['bug_type'])
 response_header(
     "{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']),
     " 
-      <link rel='alternate' type='application/rdf+xml' title='RSS feed' href='rss/bug.php?id={$bug_id}' />
+      <link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}' />
+      <link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2' />
       <script type='text/javascript' src='js/util.js'></script>    
     "
 );

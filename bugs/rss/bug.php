@@ -11,7 +11,7 @@
 require_once '../include/prepend.inc';
 
 $bug_id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
-$format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'rss';
+$format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'rss2';
 
 $query  = "SELECT id,package_name,bug_type,email,sdesc,ldesc,php_version,
                   php_os,status,ts1,ts2,assign,package_version,handle,
@@ -43,13 +43,19 @@ $query = 'SELECT
 $comments = $dbh->prepare($query)->execute(array($bug_id))->fetchAll(MDB2_FETCHMODE_ASSOC);
 if ($format == 'xml') {
     header('Content-type: text/xml; charset=utf-8');
-
 	include './xml.php';
 	exit;
+} elseif ($format == "rss2") {
+	header('Content-type: application/rss+xml; charset=utf-8');
+
+	$uri = "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
+	include './rss.php';
+	exit;
+		
 } else {
     header('Content-type: application/rdf+xml; charset=utf-8');
 
-	$uri = "http://{$site_url}{$basedir}/{$bug['id']}";
+	$uri = "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
 	include './rdf.php';
 	exit;
 }
