@@ -46,7 +46,7 @@ if (!$res || !$bug) {
 
 if(!empty($_POST['ncomment'])) {
     $ncomment = trim($_POST['ncomment']);
-    $query = "INSERT INTO bugdb_comments (bug,email,ts,comment) VALUES ('$id','$user@php.net',NOW(),'".mysql_real_escape_string($ncomment)."')";
+    $query = "INSERT INTO bugdb_comments (bug,email,ts,comment) VALUES ('$id','$user@php.net',NOW(),'$ncomment')";
     $success = @mysql_query($query);
     if($success) {
         echo json_encode(array('result'=>array('status'=>$bug)));
