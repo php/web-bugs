@@ -50,6 +50,7 @@ if(!empty($_POST['ncomment'])) {
     $success = @mysql_query($query);
     if($success) {
         echo json_encode(array('result'=>array('status'=>$bug)));
+        exit;
     } else {
         echo json_encode(array('result'=>array('error'=>mysql_error())));
         exit;
