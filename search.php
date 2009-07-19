@@ -2,7 +2,7 @@
 require_once 'prepend.inc';
 
 if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
-  list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
+  list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE),2);
 }
 
 if ($search_for && !preg_match("/\\D/",trim($search_for))) {

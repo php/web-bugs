@@ -9,7 +9,7 @@ if (!$id) {
 require './include/auth.inc';
 
 if (isset($_POST['MAGIC_COOKIE'])) {
-  list($user,$pw) = explode(":", base64_decode($_POST['MAGIC_COOKIE']));
+  list($user,$pw) = explode(":", base64_decode($_POST['MAGIC_COOKIE']),2);
 } else {
   echo json_encode(array('result'=>array('error'=>'Missing credentials')));
   exit;

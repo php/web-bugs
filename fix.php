@@ -17,7 +17,7 @@ if (isset($save) && isset($pw)) { # non-developers don't have $user set
 	          '/','.php.net');
 }
 if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
-  list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
+  list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE),2);
 }
 
 $errors = array();

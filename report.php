@@ -15,7 +15,7 @@ if (isset($save) && isset($pw)) { # non-developers don't have $user set
 	setcookie("MAGIC_COOKIE",base64_encode("$user:$pw"),time()+3600*24*12,'/','.php.net');
 }
 if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
-	list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE));
+	list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE),2);
 }
 
 /* See bugs.sql for the table layout. */
