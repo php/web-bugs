@@ -124,7 +124,7 @@ if ($in && $edit == 3) {
 
 	if (!$errors) {
 		$query = "INSERT INTO bugdb_comments (bug,email,ts,comment) VALUES"
-		       . " ('$id','" . $in['commentemail'] . "',NOW(),'$ncomment')";
+		       . " ('$id','" . mysql_real_escape_string($in['commentemail']) . "',NOW(),'".mysql_real_escape_string($ncomment)."')";
 		$success = @mysql_query($query);
 	}
 	$from = stripslashes($in['commentemail']);
@@ -160,12 +160,12 @@ elseif ($in && $edit == 2) {
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		/* update bug record */
-		$query = "UPDATE bugdb SET sdesc='" . $in['sdesc'] . "',status='" . $in['status'] . "', bug_type='" . $in['bug_type'] . "', php_version='" . $in['php_version'] . "', php_os='" . $in['php_os'] . "', ts2=NOW(), email='$from' WHERE id=$id";
+		$query = "UPDATE bugdb SET sdesc='" . mysql_real_escape_string($in['sdesc']) . "',status='" . mysql_real_escape_string($in['status']) . "', bug_type='" . mysql_real_escape_string($in['bug_type']) . "', php_version='" . mysql_real_escape_string($in['php_version']) . "', php_os='" . mysql_real_escape_string($in['php_os']) . "', ts2=NOW(), email='".mysql_real_escape_string($from)."' WHERE id=$id";
 		$success = @mysql_query($query);
 	
 		/* add comment */
 		if ($success && !empty($ncomment)) {
-			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment')";
+			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'".mysql_real_escape_string($from)."',NOW(),'".mysql_real_escape_string($ncomment)."')";
 			$success = @mysql_query($query);
 		}
 	}
@@ -215,11 +215,11 @@ elseif ($in && $edit == 1) {
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		$query = 'UPDATE bugdb SET ';
-		$query.= ($bug['email'] != $in['email'] && !empty($in['email'])) ? "email='" . $in['email'] . "', " : '';
-		$query.= "sdesc='$in[sdesc]', status='$in[status]', bug_type='$in[bug_type]', assign='$in[assign]', php_version='$in[php_version]', php_os='$in[php_os]', ts2=NOW() WHERE id=$id";
+		$query.= ($bug['email'] != $in['email'] && !empty($in['email'])) ? "email='" . mysql_real_escape_string($in['email']) . "', " : '';
+		$query.= "sdesc='".mysql_real_escape_string($in[sdesc])."', status='".mysql_real_escape_string($in[status])."', bug_type='".mysql_real_escape_string($in[bug_type])."', assign='".mysql_real_escape_string($in[assign])."', php_version='".mysql_real_escape_string($in[php_version])."', php_os='".mysql_real_escape_string($in[php_os])."', ts2=NOW() WHERE id=$id";
 		$success = @mysql_query($query);
 		if ($success && !empty($ncomment)) {
-			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'$ncomment')";
+			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'".mysql_real_escape_string($ncomment)."')";
 			$success = @mysql_query($query);
 		}
 	
