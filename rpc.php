@@ -22,6 +22,7 @@ if (!verify_password($user,$pw)) {
 
 @mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server.");
 @mysql_select_db("phpbugdb");
+@mysql_query("SET NAMES utf8");
 
 # fetch info about the bug into $bug
 $query = "SELECT id,bug_type,email,sdesc,ldesc,php_version,php_os,status,ts1,ts2,assign,"
@@ -55,6 +56,9 @@ if(!empty($_POST['ncomment'])) {
         echo json_encode(array('result'=>array('error'=>mysql_error())));
         exit;
     }
+} else if (!empty($_POST['getbug'])) {
+    echo json_encode(array('result'=>array('status'=>$bug)));
+    exit;
 }
 
 echo json_encode(array('result'=>array('error'=>'Nothing to do')));
