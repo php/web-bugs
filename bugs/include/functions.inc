@@ -1377,7 +1377,7 @@ function bugs_get_bug ($bug_id)
 
 	if ($dbh->prepare('SELECT handle FROM bugdb WHERE id=?')->execute(array($bug_id))->fetchOne()) {
 	    $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
-	        b.passwd, b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
+	        b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
 	        b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
 	        users.registered,
 	        UNIX_TIMESTAMP(b.ts2) AS modified,
@@ -1394,7 +1394,7 @@ function bugs_get_bug ($bug_id)
 	        GROUP BY bug';
 	} else {
 	    $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
-	        b.passwd, b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
+	        b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
 	        b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
 	        1 as registered,
 	        UNIX_TIMESTAMP(b.ts2) AS modified,
