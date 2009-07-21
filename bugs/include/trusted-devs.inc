@@ -18,8 +18,6 @@
  * @version   $Id$
  */
 
-
-
 if ($site == 'pear') 
 {
 	/**
@@ -35,12 +33,13 @@ if ($site == 'pear')
 	}
 } else {
 	$trusted_developers = array(
-        'tony2001',
-        'derick',
-        'iliaa',
-        'sniper',
-        'wez',
-        'magnus',
-        'jacques',
+		'tony2001',
+		'derick',
+		'iliaa',
+		'jani',
+		'magnus',
+		'jacques',
+		'johannes',
+		'bjori',
 	);
 }
