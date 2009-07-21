@@ -43,9 +43,10 @@ PHP-enabled httpd, has write permissions for the user who's running PHP.</li>
 
 <ul>
 <li>Run gdb with the path to the PHP or PHP-enabled httpd binary, and
-path to the core file, for example:
+path to the core file. Some examples:
   <ul>
   <li><code>gdb /usr/local/apache/sbin/httpd /usr/local/apache/sbin/core</code></li>
+  <li><code>gdb /home/user/dev/php-snaps/sapi/cli/php /home/user/dev/testing/core</code></li>
   </ul>
 </li>  
 <li>At the gdb prompt, run:
@@ -70,7 +71,19 @@ path to the core file, for example:
   <ul>
   <li><code>(gdb) bt</code></li>
   </ul>
-</li>
+  <ul>
+   <li>or, running from the commandline
+    <ul>
+     <li>gdb /home/user/dev/php-snaps/sapi/cli/php
+      <ul>
+       <li><code>(gdb) run /path/to/script.php</code></li>
+       <li><code>(gdb) bt</code></li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
 </ul>
 
 <p>This should generate a backtrace, that you should submit in
@@ -118,7 +131,7 @@ $14 = 0x80fa6fa "pg_result_error"
 (gdb) print (char *)executor_globals.active_op_array->function_name
 $15 = 0x816cfc4 "result_error"
 (gdb) print (char *)executor_globals.active_op_array->filename
-$16 = 0x816afbc "/home/yohgaki/cvs/php/DEV/segfault.php"
+$16 = 0x816afbc "/home/yohgaki/php/DEV/segfault.php"
 (gdb) 
   </code></pre>
 </ul>
@@ -137,4 +150,4 @@ and to the PHP source for the internal data structure.</p>
 <p>You may not see <b><code>execute</code></b> if the segfault happens
 without calling any functions.</p>
 
-<?php response_footer(); ?>
+<?php response_footer();
