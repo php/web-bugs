@@ -83,6 +83,15 @@ $templates_path = realpath(dirname(__FILE__).'/../../');
 define('BUG_PATCHTRACKER_TMPDIR', $site_data[$site]['patch_tmp']);
 define('PEAR_DATABASE_DSN', "mysqli://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
 
+// Database connection (required always?)
+include_once 'MDB2.php';
+
+if (empty($dbh))
+{
+    $dbh = MDB2::factory(PEAR_DATABASE_DSN);
+    $dbh->loadModule('Extended');
+}
+
 // Last Updated..
 $tmp = filectime($_SERVER['SCRIPT_FILENAME']);
 $LAST_UPDATED = date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC';

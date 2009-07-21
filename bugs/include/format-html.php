@@ -18,15 +18,6 @@
    $Id$
 */
 
-
-include_once 'MDB2.php';
-
-if (empty($dbh))
-{
-    $dbh = MDB2::factory(PEAR_DATABASE_DSN);
-    $dbh->loadModule('Extended');
-}
-
 /**
  * Adds extra CSS files to be loaded
  *
