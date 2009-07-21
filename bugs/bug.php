@@ -134,7 +134,7 @@ if ($logged_in) {
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
 
 // fetch info about the bug into $bug
-$bug = bugs_get_bug($bug_id);
+$bug = bugs_get_bug($bug_id, true);
 
 // DB error
 if (is_object($bug)) {
@@ -263,7 +263,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                 VALUES (?, ?, ?, NOW(), ?, ?)')->execute(array (
                     $bug_id,
                     $_POST['in']['commentemail'],
-                    (empty($_POST['in']['handle'])?" ":$_POST['in']['handle']),
+                    (empty($_POST['in']['handle']) ? '' : $_POST['in']['handle']),
                     $ncomment,
                     $_POST['in']['name']
                 )
@@ -285,7 +285,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
     // Edits submitted by original reporter for old bugs
 
-    if (!$bug['passwd'] || $bug['passwd'] != $pw) {
+    if (!verify_bug_passwd($bug_id, $pw)) {
         $errors[] = 'The password you supplied was incorrect.';
     }
 
@@ -372,7 +372,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 
     /* Fetch RESOLVE_REASONS array */
-    $RESOLVE_REASONS = get_resolve_reasons();
+    $RESOLVE_REASONS = get_resolve_reasons($site);
 
     if (isset($_POST['in']) && is_array($_POST['in']) &&
           (($_POST['in']['status'] == 'Bogus' && $bug['status'] != 'Bogus') ||
@@ -564,7 +564,7 @@ switch ($thanks)
         display_bug_success("
             Thank you for your help!
             If the status of the bug report you submitted changes, you will be notified.
-            You may return here and check the status or update your report at any time.
+            You may return here and check the status or update your report at any time.<br />
             The URL for your bug report is: <a href='{$bug_url}'>{$bug_url}</a>.
         ");
         break;
@@ -621,7 +621,7 @@ show_bugs_menu(txfield('package_name'));
    <th class="details">From:</th>
    <td>
 <?php
-    if (!$bug['registered']) {
+	if (!$bug['registered']) {
         echo 'Unconfirmed reporter';
     } elseif (!empty($bug['bughandle'])) {
         echo "<a href='/user/{$bug['bughandle']}'>{$bug['bughandle']}</a>";
@@ -650,7 +650,7 @@ show_bugs_menu(txfield('package_name'));
    <th class="details">OS:</th>
    <td><?php echo htmlspecialchars($bug['php_os']) ?></td>
   </tr>
-<?php
+<?php if ($site != 'php') {
         $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
         $link->id = $bug_id;
         $link->find(false);
@@ -683,13 +683,14 @@ show_bugs_menu(txfield('package_name'));
         if (!count($assignedRoadmap)) {
             $assignedRoadmap[] = '(Not assigned)';
         }
-        ?>
+?>
   <tr id="roadmap">
    <th class="details">Roadmaps: </th>
    <td><?php echo implode(', ', $assignedRoadmap); ?></td>
    <th>&nbsp;</th>
    <td>&nbsp;</td>
   </tr>
+<?php } ?>
  </table>
 </div>
 
@@ -783,9 +784,7 @@ if ($edit == 1 || $edit == 2) { ?>
     <form id="update" action="bug.php?id=<?php echo $bug_id; ?>&amp;edit=<?php echo $edit; ?>" method="post">
 
 <?php if ($edit == 2) {
-        if (!isset($_POST['in']) && $pw && $bug['passwd'] &&
-            $pw == $bug['passwd']) {
-            ?>
+       if (!isset($_POST['in']) && $pw && verify_bug_passwd($bug['id'], $pw)) { ?>
             <div class="explain">
              Welcome back! Since you opted to store your bug's password in a
              cookie, you can just go ahead and add more information to this
@@ -802,17 +801,17 @@ if ($edit == 1 || $edit == 2) { ?>
 
              <table>
               <tr>
-               <th class="details">Passw<span class="accesskey">o</span>rd:</th>
+               <td class="details">Passw<span class="accesskey">o</span>rd:</td>
                <td>
                 <input type="password" name="pw"
                  value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20"
                  accesskey="o" />
                </td>
-               <th class="details">
+               <td class="details">
                 <label for="save">
                  Check to remember your password for next time:
                 </label>
-               </th>
+               </td>
                <td>
                 <input type="checkbox" id="save" name="save" <?php echo (isset($_POST['save'])) ? ' checked="checked"' : ''; ?> />
                </td>
@@ -826,7 +825,7 @@ if ($edit == 1 || $edit == 2) { ?>
 ?>
                 <div class="explain">
                  Welcome back, <?php echo $user; ?>! (Not <?php echo $user; ?>?
-                 <a href="?logout=1&amp;id=<?php echo $bug_id; ?>&amp;edit=1">Log out.</a>)
+                 <a href="logout.php">Log out.</a>)
                 </div>
 <?php
             }
@@ -836,7 +835,7 @@ if ($edit == 1 || $edit == 2) { ?>
 
 <?php        if ($site == 'php' && (!isset($_POST['in']) || !is_array($_POST['in']))) { ?>
 
-                    Welcome! If you don't have a SVN account, you can't do anything here.
+                    Welcome! If you don't have a SVN account, you can't do anything here.<br />
                     You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
                     or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
 
@@ -845,8 +844,7 @@ if ($edit == 1 || $edit == 2) { ?>
  <input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
  <label for="svnpw">SVN Password:</label>
  <input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20" />
- <label for="save">Remember:</label>
- <input type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
+ <label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
 </div>
 <?php         } ?>
 
@@ -944,18 +942,20 @@ if ($edit == 1 || $edit == 2) { ?>
        <input type="text" size="20" maxlength="100" name="in[php_version]"
         value="<?php echo field('php_version') ?>" />
       </td>
+<?php if ($site != 'php') { ?>
       <th class="details">Package Version:</th>
       <td>
        <input type="text" size="20" maxlength="100" name="in[package_version]"
         value="<?php echo field('package_version') ?>" />
       </td>
+<?php } ?>
       <th class="details">OS:</th>
       <td>
        <input type="text" size="20" maxlength="32" name="in[php_os]"
         value="<?php echo field('php_os') ?>" />
       </td>
      </tr>
-<?php if ($logged_in == 'developer') { ?>
+<?php if ($site != 'php' && $logged_in == 'developer') { ?>
      <tr>
       <th class="details">Assigned to <br />Roadmap Version(s):<br />
       (<span class="headerbottom">Already released</span>)</th>
@@ -1031,7 +1031,7 @@ if ($edit == 1 || $edit == 2) { ?>
          work for you on a different platform? Let us know!<br />
          Just going to say 'Me too!'? Don't clutter the database with that please
 
-<?php 
+<?php
          if (canvote($thanks, $bug['status'])) {
              echo ' &mdash; but make sure to <a href="bug.php?id=' , $bug_id , '">vote on the bug</a>';
          }
@@ -1131,8 +1131,8 @@ function output_note($com_id, $ts, $email, $comment, $handle, $comment_name, $re
         $handle_out = urlencode($handle);
         echo '
 User who submitted this comment has not confirmed identity</strong>
-<pre class="note">
-        ';
+<pre class="note">';
+
         if ($logged_in != 'developer') {
             echo <<< DATA
 If you submitted this note, please check your email.

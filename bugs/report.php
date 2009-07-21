@@ -69,8 +69,8 @@ if (isset($_POST['in'])) {
     }
 
     // try to verify the user
-	$_POST['in']['handle'] = $auth_user->handle;
-	$_POST['in']['email'] = $auth_user->email;
+    $_POST['in']['handle'] = $auth_user->handle;
+    $_POST['in']['email']  = $auth_user->email;
 
     if (!$errors) {
 
@@ -210,6 +210,7 @@ if (isset($_POST['in'])) {
 
                     $_POST['in']['handle'] =
                     $_POST['in']['reporter_name'] = $buggie->handle;
+
                     try {
                         $buggie->sendEmail();
                     } catch (Exception $e) {
@@ -271,10 +272,10 @@ if (isset($_POST['in'])) {
                           $_POST['in']['package_name'],
                           $_POST['in']['bug_type'],
                           $_POST['in']['email'],
-                          empty($_POST['in']['handle'])?" ":$_POST['in']['handle'],
+                          empty($_POST['in']['handle']) ? '' : $_POST['in']['handle'],
                           $_POST['in']['sdesc'],
                           $fdesc,
-                          $_POST['in']['package_version'],
+                          empty($_POST['in']['package_version']) ? '' : $_POST['in']['package_version'],
                           $_POST['in']['php_version'],
                           $_POST['in']['php_os'],
                           $_POST['in']['passwd'],

@@ -21,7 +21,7 @@
 $RESOLVE_REASONS = array(
   'fixedsvn' => array(
     'status' => 'Closed',
-    'desc' => 'Fixed in SVN',
+    'title' => 'Fixed in SVN',
     'message' =>
 'This bug has been fixed in SVN.
 
@@ -35,7 +35,7 @@ Thank you for the report and for helping us make PEAR better.',
   ),
   'alreadyfixed' => array(
     'status' => 'Closed',
-    'desc' => 'Fixed in release',
+    'title' => 'Fixed in release',
     'message' =>
 'Thank you for your bug report. This issue has been fixed
 in the latest released version of the package, which you can download at
@@ -43,7 +43,7 @@ http://' . PEAR_CHANNELNAME . '/get/' . urlencode(@txfield('package_name')),
   ),
   'needtrace' => array(
     'status' => 'Feedback',
-    'desc' => 'Need backtrace',
+    'title' => 'Need backtrace',
     'message' =>
 'Thank you for this bug report. To properly diagnose the problem, we
 need a backtrace to see what is happening behind the scenes. To
@@ -56,7 +56,7 @@ us make PEAR better.',
   ),
   'oldversion' => array(
     'status' => 'Feedback',
-    'desc' => 'Try newer package version',
+    'title' => 'Try newer package version',
     'message' =>
 'Thank you for taking the time to report a problem with the package.
 Unfortunately you are not using a current version of the package -- 
@@ -70,7 +70,7 @@ Again, thank you for your continued support of PEAR.',
   ),
   'trysvn' => array(
     'status' => 'Feedback',
-    'desc' => 'Try current SVN of package',
+    'title' => 'Try current SVN of package',
     'message' =>
 'Thank you for taking the time to report a problem with the package.
 This problem may have been already fixed by a previous change that
@@ -91,7 +91,7 @@ Again, thank you for your continued support of PEAR.',
   ),
   'oldphpversion' => array(
     'status' => 'Bogus',
-    'desc' => 'Try newer PHP version',
+    'title' => 'Try newer PHP version',
     'message' =>
 'Thank you for taking the time to report a problem with PHP.
 Unfortunately you are not using a current version of PHP -- 
@@ -105,7 +105,7 @@ Again, thank you for your continued support of PEAR.'
   ),
   'support' => array(
     'status' => 'Bogus',
-    'desc' => 'Not developer issue',
+    'title' => 'Not developer issue',
     'message' =>
 'Sorry, but your problem does not imply a bug in PEAR itself.  For a
 list of more appropriate places to ask for help using PEAR, please
@@ -116,7 +116,7 @@ Thank you for your interest in PEAR.',
   ),
   'nofeedback' => array(
     'status' => 'No Feedback',
-    'desc' => 'No feedback',
+    'title' => 'No feedback',
     'webonly' => 1,
     'message' =>
 'No feedback was provided. The bug is being suspended because
@@ -127,14 +127,14 @@ change the status of the bug back to "Open". Thank you.',
   ),
   'notwrong' => array(
     'status' => 'Bogus',
-    'desc' => 'Expected behavior',
+    'title' => 'Expected behavior',
     'message' =>
 'Thank you for taking the time to write to us, but this is not
 a bug.'
   ),
   'notenoughinfo' => array(
     'status' => 'Feedback',
-    'desc' => 'Not enough info',
+    'title' => 'Not enough info',
     'message' =>
 'Not enough information was provided for us to be able
 to handle this bug. Please re-read the instructions at
@@ -147,7 +147,7 @@ Thank you for your interest in PEAR.
 '),
   'needreproducescript' => array(
     'status' => 'Feedback',
-    'desc' => 'Need Reproduce Script',
+    'title' => 'Need Reproduce Script',
     'message' =>
 'We are unable to reproduce the bug as reported.
 Please provide a simple script (10 lines or less)
@@ -161,7 +161,7 @@ Thank you for your interest in PEAR.
 '),
   'submittedtwice' => array(
     'status' => 'Bogus',
-    'desc' => 'Submitted twice',
+    'title' => 'Submitted twice',
     'message' =>
 'Please do not submit the same bug more than once. An existing
 bug report already describes this very problem. Even if you feel

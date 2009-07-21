@@ -60,8 +60,11 @@ span.control {
 td#summary {
     font-weight: bold;
 }
+div.details {
+	margin:5px;
+}
 th.details {
-    vertical-align: top;
+    vertical-align: middle;
     text-align: right;
 }
 th.results {

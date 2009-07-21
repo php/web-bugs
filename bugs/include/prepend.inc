@@ -135,5 +135,9 @@ require_once "{$main_include_path}/include/functions.inc";
 /**
  * Obtain the $RESOLVE_REASONS array (project specific!)
  */
-require_once "{$main_include_path}/include/resolve-{$site}.inc";
-
+if ($site != 'php')
+{
+	require_once "{$main_include_path}/include/resolve-{$site}.inc";
+} else {
+	$RESOLVE_REASONS = get_resolve_reasons($site);
+}

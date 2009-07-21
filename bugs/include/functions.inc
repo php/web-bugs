@@ -293,7 +293,9 @@ function oneof()
  */
 function field($n)
 {
-    return oneof(isset($_POST['in']) ? htmlspecialchars($_POST['in'][$n]) : null, htmlspecialchars($GLOBALS['bug'][$n]));
+    return oneof(isset($_POST['in']) ? 
+		htmlspecialchars($_POST['in'][$n]) : null,
+			htmlspecialchars($GLOBALS['bug'][$n]));
 }
 
 /**
@@ -467,12 +469,14 @@ function show_reason_types($current = '', $expanded = 0)
     }
 	foreach ($RESOLVE_REASONS as $key => $val)
 	{
-		$sel = ($current == $key) ? " selected='selected'" : '';
-        echo "<option value='{$key}' {$sel} >{$val['desc']}";
-        if ($expanded) {
-            echo " ({$val['status']})";
-        }
-        echo "</option>\n";
+		if (empty($val['package_name'])) {
+			$sel = ($current == $key) ? " selected='selected'" : '';
+	        echo "<option value='{$key}' {$sel} >{$val['title']}";
+	        if ($expanded) {
+	            echo " ({$val['status']})";
+	        }
+	        echo "</option>\n";
+		}
     }
 }
 
@@ -1360,10 +1364,11 @@ function get_resolve_reasons ($project = false)
 	global $dbh;
 
 	$where = '';
-	if ($project !== false)
-		$where = "WHERE project = '{$project}' OR project = ''";
 
-	return $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array())->fetchAll();
+	if ($project !== false)
+		$where.= "WHERE (project = '{$project}' OR project = '')";
+
+	return $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array())->fetchAll(MDB2_FETCHMODE_ASSOC);
 }
 
 /**
@@ -1375,7 +1380,7 @@ function bugs_get_bug ($bug_id)
 {
 	global $dbh;
 
-	if ($dbh->prepare('SELECT handle FROM bugdb WHERE id=?')->execute(array($bug_id))->fetchOne()) {
+	if ($dbh->prepare('SELECT handle FROM bugdb WHERE id = ? and handle != ""')->execute(array($bug_id))->fetchOne()) {
 	    $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
 	        b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
 	        b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
@@ -1435,4 +1440,17 @@ function bugs_get_bug_comments ($bug_id)
 	    GROUP BY c.id ORDER BY c.ts
 	';
 	return $dbh->prepare($query)->execute(array($bug_id))->fetchAll(MDB2_FETCHMODE_ASSOC);
+}
+
+/**
+ * Verify bug password
+ *
+ * @return bool
+ */
+
+function verify_bug_passwd($bug_id, $passwd)
+{
+	global $dbh;
+
+	return (bool) $dbh->prepare('SELECT 1 FROM bugdb WHERE id = ? AND passwd = ?')->execute(array($bug_id, $passwd))->fetchOne();
 }

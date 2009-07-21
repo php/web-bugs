@@ -128,6 +128,8 @@ if ($site == 'php') {
         print_link('search-howto.php', 'search howto', false, 'class="menuWhite"');
         echo delim();
         print_link('stats.php', 'statistics', false, 'class="menuWhite"');
+        echo delim();
+        print_link('http://master.php.net/login.php', 'login', false, 'class="menuWhite"');
 } else { 
 
     if (!$logged_in) {

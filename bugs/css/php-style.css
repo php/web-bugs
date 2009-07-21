@@ -316,6 +316,7 @@ div.success {
     border: 1px dashed #000066;
     background-color: #CCFF99;
     color: #000066;
+	padding:10px;
 }
 
 div.errors ul,
