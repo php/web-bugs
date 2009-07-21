@@ -142,7 +142,9 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 <?php } ?>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
+<?php if ($site != 'php') { ?>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=package_version">Package Version</a></th>
+<?php } ?>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=php_version">PHP Version</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=sdesc">Summary</a></th>
@@ -151,17 +153,18 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
             <?php
 
             while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
-                echo ' <tr valign="top" class="' . $tla[$row['status']] . '">' . "\n";
+                echo ' <tr valign="top" class="' , $tla[$row['status']], '">' , "\n";
 
                 /* Bug ID */
-                echo '  <td align="center"><a href="bug.php?id='.$row['id'].'">'.$row['id'].'</a>';
-                echo '<br /><a href="bug.php?id='.$row['id'].'&amp;edit=1">(edit)</a></td>' . "\n";
+                echo '  <td align="center"><a href="bug.php?id=', $row['id'], '">', $row['id'], '</a>';
+                echo '<br /><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a></td>', "\n";
 
                 /* Date */
-                echo '  <td align="center">' . format_date(strtotime($row['ts1'])) . "</td>\n";
+                echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
 
                 /* Last Modified */
-                echo '  <td align="center">' . format_date(strtotime($row['ts2'])) . "</td>\n";
+				$ts2 = strtotime($row['ts2']);
+                echo '  <td align="center">' , ($ts2 ? format_date($ts2) : 'Not modified') , "</td>\n";
 
 				/* Package */
                 if ($package_count !== 1) {
@@ -176,29 +179,31 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
                 /* Bug type */
                 $type_idx = !empty($row['bug_type']) ? $row['bug_type'] : 'Bug';
-                echo '  <td>', htmlspecialchars($bug_types[$type_idx]), '</td>' . "\n";
+                echo '  <td>', htmlspecialchars($bug_types[$type_idx]), '</td>', "\n";
 
                 /* Status */
                 echo '  <td>', htmlspecialchars($row['status']);
                 if ($row['status'] == 'Feedback' && $row['unchanged'] > 0) {
                     printf ("<br />%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
                 }
-                echo '</td>' . "\n";
+                echo '</td>', "\n";
 
                 /* Package version */
-                echo '  <td>', htmlspecialchars($row['package_version']), '</td>';
+				if ($site != 'php') {
+	                echo '  <td>', htmlspecialchars($row['package_version']), '</td>';
+				}
 
                 /* PHP version */
                 echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
 
                 /* OS */
-                echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>' . "\n";
+                echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>', "\n";
 
                 /* Short description */
-                echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</td>' . "\n";
+                echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</td>', "\n";
 
 				/* Assigned to */
-                echo '  <td>', $row['assign'] ? htmlspecialchars($row['assign']) : '&nbsp;', '</td>' . "\n";
+				echo '  <td>', $row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=", urlencode($row['assign']), '">', htmlspecialchars($row['assign']), '</a>') : '&nbsp;', '</td>';
                 echo " </tr>\n";
             }
 
@@ -274,14 +279,16 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">Return bugs with <b>operating system</b></td>
   <td>
   	<input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os);?>" />
-  	<input type="checkbox" name="php_os_not" value="1" <?php echo ($php_os_not == 'not') ? 'checked="checked"' : ''; ?>" />
+  	<input style="vertical-align:middle;" type="checkbox" name="php_os_not" value="1" <?php echo ($php_os_not == 'not') ? 'checked="checked"' : ''; ?>" /> NOT
   </td>
 </tr>
+<?php if ($site != 'php') { ?>
 <tr valign="top">
   <th>Version</th>
   <td style="white-space: nowrap">Return bugs reported with <b>Package version</b></td>
   <td><input type="text" name="packagever" value="<?php echo htmlspecialchars($packagever);?>" /></td>
 </tr>
+<?php } ?>
 <tr valign="top">
   <th>PHP Version</th>
   <td style="white-space: nowrap">Return bugs reported with <b>PHP version</b></td>

@@ -64,7 +64,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         if ($maintain != '' || $handle != '') {
             $query .= '
             	LEFT JOIN maintains ON packages.id = maintains.package
-                	AND maintains.handle = '. ($maintain != '') ? $dbh->quote($maintain) : $dbh->quote($handle);
+                	AND maintains.handle = '. (($maintain != '') ? $dbh->quote($maintain) : $dbh->quote($handle));
         }
         $query .= ' AND maintains.active = 1';
     }
@@ -193,22 +193,22 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
     if ($handle == '') {
         if ($assign != '') {
-            $where_clause .= ' AND bugdb.assign = ' . $dbh->escape($assign);
+            $where_clause .= ' AND bugdb.assign = ' . $dbh->quote($assign);
         }
         if ($maintain != '') {
-            $where_clause .= ' AND maintains.handle = ' . $dbh->escape($maintain);
+            $where_clause .= ' AND maintains.handle = ' . $dbh->quote($maintain);
         }
     } else {
-        $where_clause .= ' AND (maintains.handle = ' . $dbh->escape($handle)
-                       . ' OR bugdb.assign = ' . $dbh->escape($handle). ')';
+        $where_clause .= ' AND (maintains.handle = ' . $dbh->quote($handle)
+                       . ' OR bugdb.assign = ' . $dbh->quote($handle). ')';
     }
 
 	if ($author_email != '') {
-        $qae = $dbh->escape($author_email);
+        $qae = $dbh->quote($author_email);
         $where_clause .= " AND (bugdb.email = $qae OR bugdb.handle = $qae)";
     }
 
-    $where_clause .= ($site != 'php') ? ' AND (packages.package_type = ' . $dbh->escape($site) : ' AND (1=1';
+    $where_clause .= ($site != 'php') ? ' AND (packages.package_type = ' . $dbh->quote($site) : ' AND (1=1';
 
     if ($pseudo = array_intersect(array_keys($pseudo_pkgs), $package_name)) {
         $where_clause .= " OR bugdb.package_name";
@@ -249,9 +249,13 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         $errors[] = 'BAD HACKER!! No database cracking for you today!';
     } else {
         $res = $dbh->prepare($query)->execute();
-        $rows = $res->numRows();
-        $total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
-        
+        if (!PEAR::isError($res)) {
+	        $rows = $res->numRows();
+	        $total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
+		} else {
+			$error = MDB2::errorMessage($res);
+			$errors[] = $error;
+		}        
         if (defined('MAX_BUGS_RETURN') && $total_rows > $rows) {
         	$warnings[] = 'The search was too general, only ' . MAX_BUGS_RETURN . ' bugs will be returned';
 		}
