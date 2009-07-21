@@ -96,7 +96,7 @@ function response_header($title, $extraHeaders = '')
 echo $extraHeaders;
 ?>
  <title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
- <link rel="shortcut icon" href="gifs/<?php echo $site; ?>-favicon.ico" />
+ <link rel="shortcut icon" href="images/<?php echo $site; ?>-favicon.ico" />
  <link rel="stylesheet" href="css/<?php echo $site; ?>-style.css" />
 <?php
 
@@ -193,7 +193,7 @@ if ($site == 'php') {
       <input type="hidden" name="cmd" value="display" />
       <small>go to bug id or search bugs for</small>
       <input class="small" type="text" name="search_for" value="" size="30" />
-      <input type="image" src="gifs/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
+      <input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
      </p>
     </form>
    </td>
@@ -220,7 +220,7 @@ if ($site == 'php') {
         <option value="pecl-cvs">CVS commits mailing list</option>
 <?php } ?>
     </select>
-    <input type="image" src="gifs/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
+    <input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
     </p>
    </form>
   </td>
@@ -862,7 +862,7 @@ function make_mailto_link($email, $linktext = '', $extras = '')
  */
 function spacer($width = 1, $height = 1, $align = '', $extras = '')
 {
-    printf('<img src="gifs/spacer.gif" width="%d" height="%d" style="border: 0px;" alt="" %s%s />',
+    printf('<img src="images/spacer.gif" width="%d" height="%d" style="border: 0px;" alt="" %s%s />',
         $width,
         $height,
         ($align ? 'align="'.$align.'" ' : ''),
@@ -889,8 +889,8 @@ function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $bor
 	global $basedir, $main_include_path;
 	
     if (!$dir) {
-    	$dir = '/gifs';
-        $img_dir = "{$basedir}/gifs";
+    	$dir = '/images';
+        $img_dir = "{$basedir}/images";
     } else if (is_string($dir) && $dir{0} != '/') {
         $img_dir = "{$basedir}/{$dir}";
     }

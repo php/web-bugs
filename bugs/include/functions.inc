@@ -120,8 +120,8 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 	{
 		case 'php':
 			// Only used for bugs.php.net
-			require_once 'cvs-auth.inc';
-			if ($user != '' && $pw != '' && verify_cvs_password($user, $pw)) {
+			require_once 'master-auth.inc';
+			if ($user != '' && $pw != '' && verify_password($user, $pw)) {
 				$logged_in = 'developer';  
 				$auth_user->handle = $user;
 				$auth_user->email  = "{$user}@php.net";
