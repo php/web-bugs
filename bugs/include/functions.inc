@@ -1366,3 +1366,71 @@ function get_resolve_reasons ($project = false)
 	return $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array())->fetchAll();
 }
 
+/**
+ * Fetch bug data
+ *
+ * @return mixed array of bug data or object with error info
+ */
+function bugs_get_bug ($bug_id)
+{
+	global $dbh;
+
+	if ($dbh->prepare('SELECT handle FROM bugdb WHERE id=?')->execute(array($bug_id))->fetchOne()) {
+	    $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
+	        b.passwd, b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
+	        b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
+	        users.registered,
+	        UNIX_TIMESTAMP(b.ts2) AS modified,
+	        COUNT(bug=b.id) AS votes,
+	        SUM(reproduced) AS reproduced,SUM(tried) AS tried,
+	        SUM(sameos) AS sameos, SUM(samever) AS samever,
+	        AVG(score)+3 AS average,STD(score) AS deviation,
+	        users.showemail, users.handle, p.package_type
+	        FROM bugdb b
+	        LEFT JOIN bugdb_votes ON b.id = bug
+	        LEFT JOIN users ON users.handle = b.handle
+	        LEFT JOIN packages p ON b.package_name = p.name
+	        WHERE b.id = ?
+	        GROUP BY bug';
+	} else {
+	    $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
+	        b.passwd, b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
+	        b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
+	        1 as registered,
+	        UNIX_TIMESTAMP(b.ts2) AS modified,
+	        COUNT(bug=b.id) AS votes,
+	        SUM(reproduced) AS reproduced,SUM(tried) AS tried,
+	        SUM(sameos) AS sameos, SUM(samever) AS samever,
+	        AVG(score)+3 AS average,STD(score) AS deviation,
+	        users.showemail, users.handle, p.package_type
+	        FROM bugdb b
+	        LEFT JOIN bugdb_votes ON b.id = bug
+	        LEFT JOIN users ON users.email = b.email
+	        LEFT JOIN packages p ON b.package_name = p.name
+	        WHERE b.id = ?
+	        GROUP BY bug';
+	}
+	return $dbh->prepare($query)->execute(array($bug_id))->fetchRow(MDB2_FETCHMODE_ASSOC);
+}
+
+/**
+ * Fetch bug comments
+ *
+ * @return mixed array of bug comments or object with error info
+ */
+
+function bugs_get_bug_comments ($bug_id)
+{
+	$query = '
+	    SELECT c.id, c.email, c.comment, 
+           UNIX_TIMESTAMP(c.ts) AS added,
+           c.reporter_name AS comment_name,
+           IF(c.handle <> "", u.registered, 1) AS registered,
+           u.showemail, u.handle, c.handle AS bughandle
+	    FROM bugdb_comments c
+	    LEFT JOIN users u ON u.handle = c.handle
+	    WHERE c.bug = ?
+	    GROUP BY c.id ORDER BY c.ts
+	';
+	return $dbh->prepare($query)->execute(array($bug_id))->fetchAll(MDB2_FETCHMODE_ASSOC);
+}
