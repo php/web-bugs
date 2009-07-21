@@ -213,11 +213,11 @@ if ($site == 'php') {
         <option value="users">Developers</option>
         <option value="pear-dev">Developer mailing list</option>
         <option value="pear-general">General mailing list</option>
-        <option value="pear-cvs">CVS commits mailing list</option>
+        <option value="pear-cvs">Commits mailing list</option>
 <?php } else { ?>
         <option value="developers">Developers</option>
         <option value="pecl-dev">Developer mailing list</option>
-        <option value="pecl-cvs">CVS commits mailing list</option>
+        <option value="pecl-cvs">Commits mailing list</option>
 <?php } ?>
     </select>
     <input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />

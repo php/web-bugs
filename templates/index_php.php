@@ -6,9 +6,9 @@
 <li>Used the form above or our <a href="search.php">advanced search page</a> 
 to make sure nobody has reported the bug already.</li>
 
-<li>Made sure you are using the latest stable version or a build from CVS, if
-similar bugs have recently been fixed and committed. You can download CVS
-snapshots at <a href="http://snaps.php.net/">http://snaps.php.net</a></li>  
+<li>Made sure you are using the latest stable version or a build from SVN, if
+similar bugs have recently been fixed and committed. You can download snapshots at
+<a href="http://snaps.php.net/">http://snaps.php.net</a></li>
 
 <li>Read our tips on <a href="how-to-report.php">how to report
 a bug that someone will want to help fix</a>.</li>

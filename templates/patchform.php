@@ -13,7 +13,7 @@
   <th class="form-label_left">
    Patch file:
    <p class="cell_note">
-    A patch file created using <kbd>cvs diff -u</kbd> (unified diff format)
+    A patch file created using <kbd>svn diff</kbd> (unified diff format)
    </p>
   </th>
   <td class="form-input">

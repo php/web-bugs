@@ -27,7 +27,7 @@ start fresh (A) OR import the old bugs database (B).
 
   Checkout php-bugs-web code:
 
-    cvs co php-bugs-web
+    svn co http://svn.php.net/repository/web/php-bugs/trunk php-bugs-web
 
   Convert bugtypes.inc into database entries:
 
