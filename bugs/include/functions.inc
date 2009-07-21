@@ -1421,6 +1421,8 @@ function bugs_get_bug ($bug_id)
 
 function bugs_get_bug_comments ($bug_id)
 {
+	global $dbh;
+
 	$query = '
 	    SELECT c.id, c.email, c.comment, 
            UNIX_TIMESTAMP(c.ts) AS added,
