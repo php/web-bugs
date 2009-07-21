@@ -252,22 +252,23 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                     $_POST['in']['handle'] =
                     $_POST['in']['name'] = $buggie->handle;
                 }
+                $_POST['in']['name'] = '';
             } else {
                 $_POST['in']['commentemail'] = $auth_user->email;
                 $_POST['in']['handle'] = $auth_user->handle;
                 $_POST['in']['name'] = $auth_user->name;
             }
 
-            $dbh->prepare('
-                INSERT INTO bugdb_comments (bug, email, handle, ts, comment, reporter_name)
-                VALUES (?, ?, ?, NOW(), ?, ?)')->execute(array (
-                    $bug_id,
-                    $_POST['in']['commentemail'],
-                    (empty($_POST['in']['handle']) ? '' : $_POST['in']['handle']),
-                    $ncomment,
-                    $_POST['in']['name']
-                )
-            );
+// FIXME: MDB2 changes '' into null? Need to pass handle like this because of it..
+            $handle = $dbh->escape($_POST['in']['handle']);
+            $query = "INSERT INTO bugdb_comments (bug, email, handle, ts, comment, reporter_name)
+                      VALUES (?, ?, '{$handle}', NOW(), ?, ?)";
+            $res = $dbh->prepare($query)->execute(array(
+            	$bug_id,
+                $_POST['in']['commentemail'],
+                $ncomment,
+                $_POST['in']['name'],
+            ));
         } while (false);
 
         if (isset($auth_user) && $auth_user) {
@@ -382,6 +383,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     {
         $errors[] = "You must provide a comment when marking a bug 'Bogus'";
     } elseif (isset($_POST['in']) && is_array($_POST['in']) && !empty($_POST['in']['resolve'])) {
+
+// FIXME: $FIX_VARIATIONS does not exist!
+
         if (!$trytoforce && isset($RESOLVE_REASONS[$_POST['in']['resolve']]) &&
             $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == $bug['status'])
         {
