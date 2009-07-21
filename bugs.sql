@@ -176,6 +176,14 @@ CREATE TABLE users (
   KEY email (email(25))
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+CREATE TABLE maintains (
+  handle varchar(20) NOT NULL default '',
+  package int(11) NOT NULL default '0',
+  role enum('lead','developer','contributor','helper') NOT NULL default 'lead',
+  active tinyint(4) NOT NULL default '1',
+  PRIMARY KEY  (handle,package)
+);
+
 # Default pseudo packages (common for all projects)
 INSERT INTO bugdb_pseudo_packages SET id = '1', parent = '0', name = 'Web Site',   long_name = 'Web Site',   project = '';
 INSERT INTO bugdb_pseudo_packages SET id = '2', parent = '1', name = 'Bug System', long_name = 'Bug System', project = '';
