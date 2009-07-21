@@ -19,11 +19,11 @@
  */
 
 $RESOLVE_REASONS = array(
-  'fixedcvs' => array(
+  'fixedsvn' => array(
     'status' => 'Closed',
-    'desc' => 'Fixed in CVS',
+    'desc' => 'Fixed in SVN',
     'message' =>
-'This bug has been fixed in CVS.
+'This bug has been fixed in SVN.
 
 If this was a documentation problem, the fix will appear on ' . PEAR_CHANNELNAME . ' by the end of next Sunday (CET).
 
@@ -68,26 +68,24 @@ versions, please change the package version on this bug report
 to the version you tested and change the status back to "Open".
 Again, thank you for your continued support of PEAR.',
   ),
-  'trycvs' => array(
+  'trysvn' => array(
     'status' => 'Feedback',
-    'desc' => 'Try current CVS of package',
+    'desc' => 'Try current SVN of package',
     'message' =>
 'Thank you for taking the time to report a problem with the package.
 This problem may have been already fixed by a previous change that
-is in the CVS of the package.  Please log into CVS with:
+is in the SVN of the package. 
 
-cvs -d :pserver:cvsread@cvs.php.net:/repository login
+Please check out the SVN repository of this package and upgrade
 
-and check out the CVS repository of this package and upgrade
-
-cvs -d :pserver:cvsread@cvs.php.net:/repository co @cvs@
-pear upgrade @cvs@/package2.xml
+svn co http://svn.php.net/repository/pear/packages/@svn@/trunk @svn@
+pear upgrade @svn@/package2.xml
 
 or
 
-pear upgrade @cvs@/package.xml
+pear upgrade @svn@/package.xml
 
-If you are able to reproduce the bug with the latest CVS,
+If you are able to reproduce the bug with the latest SVN,
 please change the status back to "Open".
 Again, thank you for your continued support of PEAR.',
   ),

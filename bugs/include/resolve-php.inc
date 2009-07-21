@@ -1,54 +1,50 @@
 <?php
 
 $RESOLVE_REASONS = array(
-  'trysnapshot44' => array(
-    'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (PHP 4.4)',
-    'message' =>
-'Please try using this CVS snapshot:
-
-  http://snaps.php.net/php4-STABLE-latest.tar.gz
- 
-For Windows:
- 
-  http://snaps.php.net/win32/php4-win32-STABLE-latest.zip',
-  ),
-
   'trysnapshot52' => array(
     'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (PHP 5.2)',
+    'desc' => 'Try a snapshot (PHP 5.2)',
     'message' =>
-'Please try using this CVS snapshot:
+'Please try using this snapshot:
 
   http://snaps.php.net/php5.2-latest.tar.gz
  
-For Windows (zip):
+For Windows:
+
+  http://windows.php.net/snapshots/',
+  ),
+
+  'trysnapshot53' => array(
+    'status' => 'Feedback',
+    'desc' => 'Try a snapshot (PHP 5.3)',
+    'message' =>
+'Please try using this snapshot:
+
+  http://snaps.php.net/php5.3-latest.tar.gz
  
-  http://snaps.php.net/win32/php5.2-win32-latest.zip
+For Windows:
 
-For Windows (installer):
-
-  http://snaps.php.net/win32/php5.2-win32-installer-latest.msi',
+  http://windows.php.net/snapshots/',
   ),
 
   'trysnapshot60' => array(
     'status' => 'Feedback',
-    'desc' => 'Try a CVS snapshot (PHP 6.0)',
+    'desc' => 'Try a snapshot (PHP 6.0)',
     'message' =>
-'Please try using this CVS snapshot:
+'Please try using this snapshot:
 
   http://snaps.php.net/php6.0-latest.tar.gz
  
 For Windows:
- 
-  http://snaps.php.net/win32/php6.0-win32-latest.zip',
+
+  http://windows.php.net/snapshots/',
   ),
 
-  'fixedcvs' => array(
+  'fixedsvn' => array(
     'status' => 'Closed',
-    'desc' => 'Fixed in CVS',
+    'desc' => 'Fixed in SVN',
     'message' =>
-'This bug has been fixed in CVS.
+'This bug has been fixed in SVN.
 
 Snapshots of the sources are packaged every three hours; this change
 will be in the next snapshot. You can grab the snapshot at
@@ -56,6 +52,20 @@ http://snaps.php.net/.
  
 Thank you for the report, and for helping us make PHP better.',
   ),
+  
+  'needdocs' => array(
+    'status' => 'To be documented',
+    'desc' => 'Fixed in SVN and need be documented',
+    'message' =>
+'This bug has been fixed in SVN.
+
+Snapshots of the sources are packaged every three hours; this change
+will be in the next snapshot. You can grab the snapshot at
+http://snaps.php.net/.
+ 
+Thank you for the report, and for helping us make PHP better.',
+  ),
+  
   'alreadyfixed' => array(
     'status' => 'Closed',
     'desc' => 'Fixed in release',
@@ -176,15 +186,14 @@ Thank you for your interest in PHP.',
 We are sorry about the inconvenience, but this change was a necessary
 part of our efforts to make PHP scripting more secure and portable.',
   ),
-  'php3' => array(
-    'status' => 'Wont Fix',
-    'desc' => 'PHP 3 support discontinued',
+  'php4' => array(
+    'status' => 'Wont fix',
+    'desc' => 'PHP 4 support discontinued',
     'message' =>
-'We are sorry, but we can not support PHP 3 related problems anymore.
-Momentum is gathering for PHP 5, and we think supporting PHP 3 will
-lead to a waste of resources which we want to put into getting PHP 5
-ready. Of course PHP 4 will continue to be supported for the
-forseeable future.',
+'We are sorry, but we can not support PHP 4 related problems anymore.
+Momentum is gathering for PHP 6, and we think supporting PHP 4 will
+lead to a waste of resources which we want to put into getting PHP 6
+ready.',
   ),
   'dst' => array(
     'status' => 'Bogus',
@@ -229,7 +238,7 @@ includes writing a floating point value in your script and directly
 printing it without any mathematical operations.
 
 If you would like to know more about "floats" and what IEEE
-754 is read this:
+754 is, read this:
 http://docs.sun.com/source/806-3568/ncg_goldberg.html
  
 Thank you for your interest in PHP.',
@@ -263,11 +272,11 @@ your configure settings should be
 );
 
 $FIX_VARIATIONS = array(
-  'fixedcvs' => array(
+  'fixedsvn' => array(
     
     'Website problem' =>
-'This bug has been fixed in CVS. Since the websites are not directly
-updated from the CVS server, the fix might need some time to spread
+'This bug has been fixed in SVN. Since the websites are not directly
+updated from the SVN server, the fix might need some time to spread
 across the globe to all mirror sites, including PHP.net itself.
 
 Thank you for the report, and for helping us make PHP.net better.',
@@ -286,12 +295,18 @@ to get updated, we would like to ask you to be a bit patient.
 
 Thank you for the report, and for helping us make our documentation better.',
 
+    'Doc Build problem' =>
+'This bug has been fixed in SVN. Since the websites are not directly
+updated from the SVN server, the fix might need some time to spread
+across the globe to all mirror sites, including PHP.net itself.
+
+Thank you for the report, and for helping us make PHP.net better.',
+
     'DocWeb problem' =>
-'This bug has been fixed in CVS. Since the PHP Documentation Tools website
-is updated from the CVS repository at a regular interval, the fix might need
+'This bug has been fixed in SVN. Since the PHP Documentation Tools website
+is updated from the SVN repository at a regular interval, the fix might need
 some time to take effect.
 
 Thank you for the report, and for helping us make DocWeb better.',
   )
 );
-
