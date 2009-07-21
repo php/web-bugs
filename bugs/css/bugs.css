@@ -90,6 +90,7 @@ div#bugheader table#details th#number {
 }
 div#bugheader table#details td#summary {
     font-weight: bold;
+	vertical-align:middle;
 }
 
 .diffheader {

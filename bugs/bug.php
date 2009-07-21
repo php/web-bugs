@@ -593,7 +593,7 @@ show_bugs_menu(txfield('package_name'));
 <div id="bugheader">
  <table id="details">
   <tr id="title">
-   <th class="details" id="number"><?php echo $bug_type , '&nbsp;#' , $bug_id; ?></th>
+   <th class="details" id="number"><a href="bug.php?id=<?php echo $bug_id, '">', $bug_type , '</a>&nbsp;#' , $bug_id; ?></th>
    <td id="summary" colspan="5"><?php echo htmlspecialchars($bug['sdesc']); ?></td>
   </tr>
   <tr id="submission">
