@@ -98,9 +98,9 @@ echo <<< DATA
     </items>
   </channel>
 
-  <image rdf:about="http://{$site_url}{$basedir}/gifs/{$site}-logo.gif">
+  <image rdf:about="http://{$site_url}{$basedir}/images/{$site}-logo.gif">
     <title>{$siteBig} Bugs</title>
-    <url>http://{$site_url}{$basedir}/gifs/{$site}-logo.gif</url>
+    <url>http://{$site_url}{$basedir}/images/{$site}-logo.gif</url>
     <link>http://{$site_url}{$basedir}</link>
   </image>
 

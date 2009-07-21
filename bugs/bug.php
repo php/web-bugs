@@ -430,21 +430,21 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                 $reason = isset($RESOLVE_REASONS[$_POST['in']['resolve']]) ? $RESOLVE_REASONS[$_POST['in']['resolve']]['message'] : '';
             }
 
-            // do a replacement on @cvs@ to the likely location of CVS for this package
-            if ($_POST['in']['resolve'] == 'trycvs') {
+            // do a replacement on @svn@ to the likely location of SVN for this package
+            if ($_POST['in']['resolve'] == 'trysvn') {
                 switch ($bug['package_name']) {
                     case 'Documentation' :
                     case 'Web Site' :
                     case 'Bug System' :
                     case 'PEPr' :
-                        $errors[] = 'Cannot use "try cvs" with ' . $bug['package_name'];
+                        $errors[] = 'Cannot use "try svn" with ' . $bug['package_name'];
                         break;
                     case 'PEAR' :
-                        $reason = str_replace('@cvs@', 'pear-core', $reason);
+                        $reason = str_replace('@svn@', 'pear-core', $reason);
                         $ncomment = "$reason\n\n$ncomment";
                         break;
                     default :
-                        $reason = str_replace('@cvs@', 'pear/' . $bug['package_name'], $reason);
+                        $reason = str_replace('@svn@', 'pear/' . $bug['package_name'], $reason);
                         $ncomment = "$reason\n\n$ncomment";
                         break;
                 }
@@ -872,15 +872,15 @@ if ($edit == 1 || $edit == 2) { ?>
 
 <?php        if ($site == 'php' && (!isset($_POST['in']) || !is_array($_POST['in']))) { ?>
 
-                    Welcome! If you don't have a CVS account, you can't do anything here.
+                    Welcome! If you don't have a SVN account, you can't do anything here.
                     You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
                     or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
 
 <div class="details">
- <label for="cvsuser">CVS Username:</label>
- <input type="text" id="cvsuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
- <label for="cvspw">CVS Password:</label>
- <input type="password" id="cvspw" name="pw" value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20" />
+ <label for="svnuser">SVN Username:</label>
+ <input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
+ <label for="svnpw">SVN Password:</label>
+ <input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20" />
  <label for="save">Remember:</label>
  <input type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
 </div>
