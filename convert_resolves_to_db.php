@@ -19,4 +19,22 @@ foreach ($RESOLVE_REASONS as $key => $r)
 			message = '$message',
 			project = 'php'
 	") or die (mysql_error());
+
+	if (isset($FIX_VARIATIONS[$key]))
+	{
+		foreach ($FIX_VARIATIONS[$key] as $package_name => $message)
+		{
+			$package_name = mysql_escape_string($package_name);
+			$message = mysql_escape_string($message);
+			mysql_query("
+				INSERT INTO bugdb_resolves
+				SET name = '$key',
+					status = '$status',
+					title = '$title',
+					message = '$message',
+					project = 'php',
+					package_name = '$package_name'
+				") or die (mysql_error());
+		}
+	}
 }

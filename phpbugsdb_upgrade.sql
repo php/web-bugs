@@ -107,6 +107,7 @@ CREATE TABLE bugdb_resolves (
   title varchar(100) NOT NULL,
   message text NOT NULL,
   project varchar(40) NOT NULL default '',
+  package_name varchar(80) default NULL,
   PRIMARY KEY (id)
 );
 
