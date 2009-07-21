@@ -203,7 +203,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</td>', "\n";
 
 				/* Assigned to */
-				echo '  <td>', $row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=", urlencode($row['assign']), '">', htmlspecialchars($row['assign']), '</a>') : '&nbsp;', '</td>';
+				echo '  <td>',  ($row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=" . urlencode($row['assign']) . '">' . htmlspecialchars($row['assign']) . '</a>') : '&nbsp;'), '</td>';
                 echo " </tr>\n";
             }
 
