@@ -4,9 +4,11 @@ This is a collaboration between PEAR, PECL and PHP core to create a unified bug 
 
 === Status ===
 
- - Alpha
- - Likely implementation date: Q4 2009
-
+ - Beta
+ - Likely implementation date: Q3 2009
+ 
+  Note: All existing functionality from pear.php.net/bugs/ works already.
+ 
 === Progress ===
 
 This system is based off pearweb/bugs/ and php-bugs-web.
