@@ -16,7 +16,7 @@ This system is based off pearweb/bugs/ and php-bugs-web.
 === Installation ===
 
 Configuration:
- - bugs/include/prepend.inc
+ - ./include/prepend.inc
 
 Required PEAR packages:
  # pear install MDB2 DB_DataObject Text_CAPTCHA_Numeral Tree-beta Net_URL2-beta

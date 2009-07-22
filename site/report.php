@@ -28,7 +28,7 @@ session_start();
 /**
  * Obtain common includes
  */
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 // Init variables
 $errors              = array();
@@ -187,7 +187,7 @@ if (isset($_POST['in'])) {
                 if ($site != 'php' && !$logged_in) {
                     $registereduser = 0;
                     // user doesn't exist yet
-                    require_once 'include/classes/bug_accountrequest.php';
+                    require_once "{$ROOT_DIR}/include/classes/bug_accountrequest.php";
                     $buggie = new Bug_Accountrequest;
                     $salt = $buggie->addRequest($_POST['in']['email']);
                     if (is_array($salt)) {
@@ -302,7 +302,7 @@ if (isset($_POST['in'])) {
 
                 $redirectToPatchAdd = false;
                 if (!empty($_POST['in']['patchname']) && $_POST['in']['patchname']) {
-                    require_once 'include/classes/bug_patchtracker.php';
+                    require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
                     $tracker = new Bug_Patchtracker;
                     PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
                     $patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $_POST['in']['handle'], array());
@@ -366,7 +366,7 @@ if (isset($_POST['in'])) {
                 	$patchemail= urlencode($_POST['in']['email']);
                     localRedirect("patch-add.php?bug_id={$cid}&patchname={$patchname}&email={$patchemail}");
                 } elseif (!isset($buggie) && !empty($_POST['in']['patchname'])) {
-                    require_once 'include/classes/bug_accountrequest.php';
+                    require_once "{$ROOT_DIR}/include/classes/bug_accountrequest.php";
                     $r = new Bug_Accountrequest();
                     $info = $r->sendPatchEmail($cid, $patchrevision, $_POST['in']['package_name'], $auth_user->handle);
                 }

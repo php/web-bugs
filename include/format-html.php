@@ -879,7 +879,7 @@ function resize_image($img, $width = 1, $height = 1)
  */
 function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $border = 0, $styles = '')
 {
-	global $basedir, $main_include_path;
+	global $basedir, $ROOT_DIR;
 	
     if (!$dir) {
     	$dir = '/images';
@@ -887,7 +887,7 @@ function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $bor
     } else if (is_string($dir) && $dir{0} != '/') {
         $img_dir = "{$basedir}/{$dir}";
     }
-    if ($size = @getimagesize("{$main_include_path}/{$dir}/{$file}")) {
+    if ($size = @getimagesize("{$ROOT_DIR}/{$dir}/{$file}")) {
         $image = sprintf('<img src="%s/%s" style="border: %d;%s%s" %s alt="%s" %s />',
             $img_dir,
             $file,

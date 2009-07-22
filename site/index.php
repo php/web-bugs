@@ -18,7 +18,7 @@
  * @version   $Id$
  */
 
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 /* If 'id' is passed redirect to the bug page */
 $id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -28,6 +28,6 @@ if ($id) {
 
 response_header('Bugs');
 
-include $templates_path . "/templates/index_{$site}.php";
+include "{$ROOT_DIR}/templates/index_{$site}.php";
 
 response_footer();

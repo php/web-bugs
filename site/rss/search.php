@@ -19,8 +19,8 @@ define ('MAX_BUGS_RETURN', 150);
 /**
  * Obtain common includes
  */
-require_once '../include/prepend.inc';
-require '../include/query.php';
+require_once '../../include/prepend.inc';
+require "{$ROOT_DIR}/include/query.php";
 
 if (!$res) {
     die('Invalid query');

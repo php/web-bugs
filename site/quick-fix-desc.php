@@ -21,7 +21,7 @@
 /**
  * Obtain common includes
  */
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 response_header('Quick Fix Descriptions'); 
 

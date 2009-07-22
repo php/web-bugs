@@ -34,7 +34,7 @@ session_start();
 /**
  * Obtain common includes
  */
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 // Set pseudo_pkgs array
 $pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
@@ -216,7 +216,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
                 if ($site != 'php') {
                     // user doesn't exist yet
-                    require_once 'include/classes/bug_accountrequest.php';
+                    require_once "{$ROOT_DIR}/include/classes/bug_accountrequest.php";
                     $buggie = new Bug_Accountrequest;
                     $salt = $buggie->addRequest($_POST['in']['commentemail']);
                     if (is_array($salt)) {
@@ -1092,7 +1092,7 @@ if ($bug['ldesc']) {
 }
 
 // Display patches
-require_once './include/classes/bug_patchtracker.php';
+require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patches = new Bug_Patchtracker;
 $p = $patches->listPatches($bug_id);
 ?>

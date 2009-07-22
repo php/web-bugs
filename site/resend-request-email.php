@@ -7,7 +7,7 @@ if (!isset($_GET['handle'])) {
     exit;
 }
 
-require_once 'include/classes/bug_accountrequest.php';
+require_once "{$ROOT_DIR}/include/classes/bug_accountrequest.php";
 $account = new Bug_Accountrequest($_GET['handle']);
 
 if ($account->pending()) {

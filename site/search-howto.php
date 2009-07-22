@@ -1,5 +1,5 @@
 <?php
-require './include/prepend.inc';
+require '../include/prepend.inc';
 response_header("How to search the {$siteBig} Bugs database");
 ?>
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 setcookie("MAGIC_COOKIE","",time()-3600,'/','.php.net');
 setcookie("MAGIC_COOKIE","",time()-3600,'/');

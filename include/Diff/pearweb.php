@@ -8,8 +8,11 @@
  *
  * @package Text_Diff
  */
+
+require_once 'Text/Diff.php';
 require_once 'Text/Diff/Renderer.php';
-class Text_Diff_Renderer_Bugtracker extends Text_Diff_Renderer {
+
+class Bugtracker_Diff_Renderer extends Text_Diff_Renderer {
 
     /**
      * Number of leading context "lines" to preserve.

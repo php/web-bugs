@@ -3,7 +3,7 @@
 session_start();
 $canpatch = true;
 
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 /* Input vars */
 $bug_id = isset ($_REQUEST['bug_id']) ? (int) $_REQUEST['bug_id'] : 0;
@@ -38,7 +38,7 @@ if (isset($auth_user) && $auth_user->registered) {
 /**
  * Bug Patch tracker class 
  */
-require_once 'include/classes/bug_patchtracker.php';
+require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patchinfo = new Bug_Patchtracker;
 
 if (PEAR::isError($buginfo = $patchinfo->getBugInfo($bug_id))) {
@@ -82,7 +82,7 @@ if (isset($_POST['addpatch'])) {
             }
             // user doesn't exist yet
             if ($site != 'php') {
-	            require_once 'include/classes/bug_accountrequest.php';
+	            require_once "{$ROOT_DIR}/include/classes/bug_accountrequest.php";
 	            $buggie = new Bug_Accountrequest;
 	            $salt = $buggie->addRequest($email);
 	            if (is_array($salt)) {
@@ -196,7 +196,7 @@ if (isset($_POST['addpatch'])) {
 
     $patches = $patchinfo->listPatches($bug_id);
     $errors = array();
-    include $templates_path . '/templates/patchadded.php';
+    include "{$ROOT_DIR}/templates/patchadded.php";
     exit;
 }
 
@@ -205,4 +205,4 @@ $patches = $patchinfo->listPatches($bug_id);
 $captcha = $numeralCaptcha->getOperation();
 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
 
-include $templates_path . '/templates/addpatch.php';
+include "{$ROOT_DIR}/templates/addpatch.php";

@@ -1,6 +1,6 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 if (empty($id)) {

@@ -1,6 +1,6 @@
 <?php
 
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 /* Input vars */
 $bug_id = !empty($_GET['bug_id']) ? (int) $_GET['bug_id'] : 0;
@@ -16,7 +16,7 @@ if (empty($bug_id)) {
     exit;
 }
 
-require 'include/classes/bug_patchtracker.php';
+require "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patchinfo = new Bug_Patchtracker;
 
 if (PEAR::isError($buginfo = $patchinfo->getBugInfo($bug_id))) {
@@ -73,7 +73,7 @@ if (isset($_GET['patchname']) && isset($_GET['revision'])) {
     $obsoletedby = $patchinfo->getObsoletingPatches($bug_id, $_GET['patchname'], $_GET['revision']);
     $obsoletes = $patchinfo->getObsoletePatches($bug_id, $_GET['patchname'], $_GET['revision']);
     $patches = $patchinfo->listPatches($bug_id);
-    include $templates_path . '/templates/listpatches.php';
+    include "{$ROOT_DIR}/templates/listpatches.php";
     $revisions = $patchinfo->listRevisions($bug_id, $_GET['patchname']);
     $revision = $_GET['revision'];
     if (isset($_GET['diff']) && $_GET['diff'] && isset($_GET['old']) && is_numeric($_GET['old'])) {
@@ -85,20 +85,19 @@ if (isset($_GET['patchname']) && isset($_GET['revision'])) {
             response_footer();
             exit;
         }
-        require_once 'Text/Diff.php';
-        require_once 'bugs/Diff/pearweb.php';
+        require_once "{$ROOT_DIR}/include/Diff/pearweb.php";
         assert_options(ASSERT_WARNING, 0);
         $d = new Text_Diff($orig = file($old), $now = file($new));
-        $diff = new Text_Diff_Renderer_Bugtracker($d);
-        include $templates_path . '/templates/patchdiff.php';
+        $diff = new Bugtracker_Diff_Renderer($d);
+        include "{$ROOT_DIR}/templates/patchdiff.php";
         response_footer();
         exit;
     }
-    include $templates_path . '/templates/patchdisplay.php';
+    include "{$ROOT_DIR}/templates/patchdisplay.php";
     response_footer();
     exit;
 }
 response_header("Bug #{$bug_id} :: Patches");
 $patches = $patchinfo->listPatches($bug_id);
-include $templates_path . '/templates/listpatches.php';
+include "{$ROOT_DIR}/templates/listpatches.php";
 response_footer();

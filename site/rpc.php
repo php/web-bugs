@@ -10,7 +10,7 @@ if (!$bug_id) {
 /**
  * Obtain common includes
  */
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 // Authenticate
 if ($_POST['token'] != md5(getenv('TOKEN'))) {

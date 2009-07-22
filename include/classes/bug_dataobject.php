@@ -4,13 +4,16 @@ class Bug_DataObject
 {
     function init()
     {
+    	global $ROOT_DIR;
+
         require_once 'DB/DataObject.php';
+
         $options = &PEAR::getStaticProperty('DB_DataObject','options');
         $type = extension_loaded('mysqli') ? 'mysqli' : 'mysql';
         $options = array(
             'database'         => PEAR_DATABASE_DSN,
-            'schema_location'  => dirname(dirname(dirname(dirname(__FILE__)))) . '/include/bugs',
-            'class_location'   => dirname(dirname(dirname(dirname(__FILE__)))) . '/include/DataObject',
+            'schema_location'  => "{$ROOT_DIR}/include/DataObject/schema",
+            'class_location'   => "{$ROOT_DIR}/include/DataObject",
             'require_prefix'   => 'DataObject/',
             'class_prefix'     => 'Bugs_DBDataObject_',
         );

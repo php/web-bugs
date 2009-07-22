@@ -78,8 +78,7 @@ $siteBig = strtoupper($site);
 $site_url = $site_data[$site]['url'];
 $bugEmail = $site_data[$site]['email'];
 $basedir  = $site_data[$site]['basedir'];
-$main_include_path = realpath(dirname(__FILE__).'/../');
-$templates_path = realpath(dirname(__FILE__).'/../../');
+$ROOT_DIR = realpath(dirname(__FILE__) . '/../../');
 define('BUG_PATCHTRACKER_TMPDIR', $site_data[$site]['patch_tmp']);
 define('PEAR_DATABASE_DSN', "mysqli://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
 
@@ -97,8 +96,8 @@ $tmp = filectime($_SERVER['SCRIPT_FILENAME']);
 $LAST_UPDATED = date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC';
 
 /// FIXME: These should not be needed!
-require "{$main_include_path}/include/format-html.php"; // aka pear-format-html.php
-require "{$main_include_path}/include/classes/bug_dataobject.php";
+require "{$ROOT_DIR}/include/format-html.php"; // aka pear-format-html.php
+require "{$ROOT_DIR}/include/classes/bug_dataobject.php";
 $self = htmlspecialchars($_SERVER['PHP_SELF']);
 
 extra_styles('css/bugs.css');
@@ -106,7 +105,7 @@ extra_styles('css/bugs.css');
 // Auth stuff only for PEAR/PECL sites for now
 $SIDEBAR_DATA = '-';
 if ($site != 'php') {
-	include_once 'auth.php';
+	include_once "{$ROOT_DIR}/include/auth.php";
 
 	if (!empty($_GET['logout']) && $_GET['logout'] === '1') {
 	    auth_logout($self);
@@ -130,14 +129,14 @@ if ($site != 'php') {
 /**
  * Obtain the functions and variables used throughout the bug system
  */
-require_once "{$main_include_path}/include/functions.inc";
+require_once "{$ROOT_DIR}/include/functions.inc";
 
 /**
  * Obtain the $RESOLVE_REASONS array (project specific!)
  */
 if ($site != 'php')
 {
-	require_once "{$main_include_path}/include/resolve-{$site}.inc";
+	require_once "{$ROOT_DIR}/include/resolve-{$site}.inc";
 } else {
 	$RESOLVE_REASONS = get_resolve_reasons($site);
 }

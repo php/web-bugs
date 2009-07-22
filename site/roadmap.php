@@ -3,10 +3,9 @@
 /**
  * Obtain common includes
  */
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 Bug_DataObject::init();
-define('TEMPLATES_DIR',dirname(__FILE__)."/../templates");
 
 if (isset($_GET['packagexml'])) {
     $roadmap = Bug_DataObject::bugDB('bugdb_roadmap');
@@ -49,7 +48,7 @@ if (isset($_GET['packagexml'])) {
     $templateData->xml = $xml;
     $templateData->package = $_GET['package'];
     $templateData->roadmap = $_GET['roadmap'];
-    include(TEMPLATES_DIR."/roadmap_packagexml.php");
+    include "{$ROOT_DIR}/templates/roadmap_packagexml.php";
     exit;
 }
 if (isset($_GET['showornew'])) {
@@ -86,7 +85,7 @@ if (isset($_GET['edit']) || isset($_GET['new']) || isset($_GET['delete'])) {
         }
     }
     $bugtest = Bug_DataObject::pearDB('maintains');
-    include_once 'pear-database-package.php';
+    include_once "{$ROOT_DIR}/include/pear-database-package.php";
     $bugtest->package = package::info($_GET['package'], 'id');
     $bugtest->handle = $auth_user->handle;
     if (!$bugtest->find(true) || !$bugtest->role == 'lead') {
@@ -133,14 +132,14 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
 
     if (empty($_POST['roadmap_version'])) {
         $templateData->errors = array('Roadmap version cannot be empty');
-        include(TEMPLATES_DIR."/roadmapform.php");
+        include "{$ROOT_DIR}/templates/roadmapform.php";
         exit;
     }
 
     // Check if the roadmap already exists
     if (in_array($_POST['roadmap_version'], $roadmap_v)) {
         $templateData->errors = array('Roadmap version ' . htmlspecialchars($_POST['roadmap_version']) . ' already exists');
-        include(TEMPLATES_DIR."/roadmapform.php");
+        include "{$ROOT_DIR}/templates/roadmapform.php";
         exit;
     }
 
@@ -156,7 +155,7 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
 
     if (isset($_POST['importbugs'])) {
         // Fetch the last release date
-        include_once 'pear-database-package.php';
+        include_once "{$ROOT_DIR}/include/pear-database-package.php";
         $releaseDate = package::getRecent(1, rinse($_GET['package']));
         if (PEAR::isError($releaseDate)) {
             break;
@@ -214,7 +213,7 @@ if (isset($_GET['edit']) && isset($_POST['go'])) {
             );
         $templateData->isnew = true;
         $templateData->errors = array('Roadmap version cannot be empty');
-        include(TEMPLATES_DIR.'/roadmapform.php');
+        include "{$ROOT_DIR}/templates/roadmapform.php";
         exit;
     }
     if ($bugdb->find(false)) {
@@ -313,7 +312,7 @@ if (isset($_GET['addbugs'])) {
     $features = clone($bugdb);
     $bugdb->whereAdd('bug_type IN ("Bug", "Documentation Problem")');
     $releases = Bug_DataObject::pearDB('releases');
-    include_once 'pear-database-package.php';
+    include_once "{$ROOT_DIR}/include/pear-database-package.php";
     $releases->package = package::info($_GET['package'], 'id');
     $releases->orderBy('releasedate DESC');
     if ($releases->find(true)) {
@@ -367,7 +366,7 @@ if (isset($_GET['addbugs'])) {
     $templateData->bugs = $allb;
     $templateData->features = $allf;
     $templateData->tla = $tla;
-    include(TEMPLATES_DIR.'/roadmapadd.php');
+    include "{$ROOT_DIR}/templates/roadmapadd.php";
     exit;
 }
 $order_options = array(
@@ -438,7 +437,8 @@ if (empty($_GET['limit']) || !(int)$_GET['limit']) {
     $bugdb->limit($begin, $limit);
 }
 
-include_once 'pear-database-package.php';
+include_once "{$ROOT_DIR}/include/pear-database-package.php";
+
 $releases = package::info($_GET['package'], 'releases');
 $templateData->showold = isset($_GET['showold']);
 $templateData->releases = array_keys($releases);
@@ -494,7 +494,7 @@ while ($allroadmaps->fetch()) {
             $templateData->tla = $tla;
             $templateData->types = $bug_types;
             ob_start();
-        	include TEMPLATES_DIR . '/searchresults.php';
+        	include "{$ROOT_DIR}/templates/searchresults.php";
         	$features = ob_get_contents();
         	ob_end_clean();
         } else {
@@ -530,7 +530,7 @@ while ($allroadmaps->fetch()) {
             $templateData->tla = $tla;
             $templateData->types = $bug_types;
             ob_start();
-        	include TEMPLATES_DIR . '/searchresults.php';
+        	include "{$ROOT_DIR}/templates/searchresults.php";
         	$bugs = ob_get_contents();
         	ob_end_clean();
         } else {
@@ -584,7 +584,7 @@ if (isset($_GET['edit'])) {
     $templateData->info = $bugdb->toArray();
     $templateData->isnew = false;
     $templateData->errors = false;
-    include(TEMPLATES_DIR.'/roadmapform.php');
+    include "{$ROOT_DIR}/templates/roadmapform.php";
     exit;
 }
 if (isset($_GET['new'])) {
@@ -621,8 +621,8 @@ if (isset($_GET['new'])) {
     $templateData->import = isset($_POST['importbugs']) ? true : false;
     $releases = package::info(htmlspecialchars($_GET['package']), 'releases');
     $templateData->lastRelease = count($releases) ? key($releases) : '';
-    include(TEMPLATES_DIR.'/roadmapform.php');
+    include "{$ROOT_DIR/templates/roadmapform.php";
     exit;
 }
-include(TEMPLATES_DIR.'/roadmap.php');
+include "{$ROOT_DIR}/templates/roadmap.php";
 

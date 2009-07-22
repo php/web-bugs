@@ -638,7 +638,7 @@ class Bug_Accountrequest
         $old = gmdate('Y-m-d H:i:s', time() - 604800);
         $findquery = 'select handle from bug_account_request where created_on < ?';
         $all = $this->dbh->prepare($findquery)->execute(array($old))->fetchAll(MDB2_FETCHMODE_DEFAULT);
-        require_once 'include/classes/bug_patchtracker.php';
+        require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
         $p = new Bug_Patchtracker;
         // purge reserved usernames as well as their account requests
         if (is_array($all)) {

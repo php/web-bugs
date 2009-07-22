@@ -1,5 +1,5 @@
 <?php
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 response_header('How to Report a Bug');
 ?>
 

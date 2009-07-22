@@ -8,7 +8,7 @@
  * ported from php-bugs-web by Gregory Beaver <cellog@php.net>
  */
 
-require_once '../include/prepend.inc';
+require_once '../../include/prepend.inc';
 
 $bug_id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 $format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'rss2';

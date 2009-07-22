@@ -120,7 +120,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 	{
 		case 'php':
 			// Only used for bugs.php.net
-			require_once 'master-auth.inc';
+			require_once "{$ROOT_DIR}/include/master-auth.inc";
 			if ($user != '' && $pw != '' && verify_password($user, $pw)) {
 				$logged_in = 'developer';  
 				$auth_user->handle = $user;
@@ -153,7 +153,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 
 	// Check if developer is trusted
 	if ($logged_in == 'developer') {
-		require_once 'trusted-devs.inc';
+		require_once "{$ROOT_DIR}/include/trusted-devs.inc";
 		$is_trusted_developer = in_array($user, $trusted_developers);
 	}
 }
@@ -878,9 +878,14 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
 
     /* if a developer assigns someone else, let that other person know about it */
     if ($edit == 1 && $in['assign'] && $in['assign'] != $bug['assign']) {
-        include_once 'pear-database-user.php';
-        $info = user::info($in['assign'], "email");
-        $email = $info['email'];
+
+		if ($site != 'php') {
+	        include_once 'pear-database-user.php';
+	        $info = user::info($in['assign'], "email");
+	        $email = $info['email'];
+		} else {
+			$email = $in['assign'];
+		}
 
         if ($email == $from) {
             return;
@@ -1084,8 +1089,9 @@ function get_package_mail($package_name, $bug_id = false)
 	}
 
 	// FIXME: Need to add support for this in pseudo-packages!!
-	if ($site == 'php')
+	if ($site == 'php') {
 		return array ($bugEmail, $bugEmail);
+	}
 
     switch ($package_name) {
         case 'Bug System':
@@ -1247,7 +1253,7 @@ function show_bugs_menu($pkgname, $status = null, $fulllink = false)
 
 	if ($site != 'php') {
 	    if (!class_exists('package')) {
-	        require_once 'pear-database-package.php';
+	        include_once 'pear-database-package.php';
 	    }
 	    if (count($pkgname) == 1) {
 	        $releases = package::info($pkgname[0], 'releases');

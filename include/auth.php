@@ -18,6 +18,8 @@
    $Id$
 */
 
+include_once 'pear-database-user.php';
+
 function auth_reject($realm = null, $message = null)
 {
     global $format;
@@ -112,7 +114,6 @@ function auth_verify($user, $passwd)
     global $dbh, $auth_user;
 
     if (empty($auth_user)) {
-        include_once 'pear-database-user.php';
         $data = user::info($user, null, true, false);
         $auth_user = new PEAR_Auth();
         $auth_user->data($data);
@@ -255,7 +256,7 @@ function init_auth_user()
     if (!empty($auth_user)) {
         return true;
     }
-    require_once 'pear-database.php';
+
     $data = user::info($_COOKIE['PEAR_USER'], null, true, false);
     $auth_user = new PEAR_Auth();
     $auth_user->data($data);
@@ -311,7 +312,6 @@ class PEAR_Auth
         if (!isset($this->handle)) {
             return false;
         }
-        require_once 'pear-database-user.php';
         return (user::isAdmin($this->handle));
     }
 
@@ -320,7 +320,6 @@ class PEAR_Auth
         if (!isset($this->handle)) {
             return false;
         }
-        require_once 'pear-database-user.php';
         return user::isQA($this->handle);
     }
 

@@ -21,7 +21,7 @@
 /**
  * Obtain common includes
  */
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 /* Redirect early if a bug id is passed as search string */
 $search_for_id = (isset($_GET['search_for'])) ? (int) $_GET['search_for'] : 0;
@@ -50,7 +50,7 @@ response_header(
 			title='RSS feed' href='rss/search.php?" . http_build_query($newrequest) . "' />");
 
 // Include common query handler (used also by rss/search.php)
-require './include/query.php';
+require "{$ROOT_DIR}/include/query.php";
 
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 {

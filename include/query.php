@@ -131,7 +131,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
             $where_clause .= " AND bugdb.status NOT IN ('Closed', 'Duplicate', 'Bogus', 'Assigned', 'Wont Fix', 'Suspended')";
             break;
         case 'CRSLR': // Closed Reports Since Last Release
-            if (empty($package_name) || count($package_name) > 1) {
+            if ($site == 'php' || empty($package_name) || count($package_name) > 1) {
                 // Act as ALL
                 break;
             }

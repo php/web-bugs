@@ -21,7 +21,7 @@
 /**
  * Obtain common includes
  */
-require_once './include/prepend.inc';
+require_once '../include/prepend.inc';
 
 response_header('Bugs Stats');
 
@@ -62,7 +62,7 @@ if (!array_key_exists($sort_by, $titles)) {
 
 // Fetch all packages of the user if someone is logged in
 if ($auth_user) {
-    include_once 'pear-database-user.php';
+    include_once "{$ROOT_DIR}/include/pear-database-user.php";
     $pck = user::getPackages($auth_user->handle);
     $packages = array();
     foreach ($pck as $p) {
@@ -154,7 +154,7 @@ if ($total > 0) {
  */
 $res = array();
 if ($site != 'php') {
-	include_once 'pear-database-category.php';
+	include_once "{$ROOT_DIR}/include/pear-database-category.php";
 	$res = category::listAll();
 
 	// DB error
@@ -309,7 +309,7 @@ Developers are considered to have fixed a bug if the bug is marked <strong>Close
 echo '<table>';
 echo '<tr><th>All Time</th><th>Last 30 Days</th><th>Bug Reporting</th></tr>';
 echo '<tr><td valign="top">';
-require_once 'include/classes/bug_stats.php';
+require_once "{$ROOT_DIR}/include/classes/bug_stats.php";
 $bugs = new Bug_Stats($site);
 $develstats = $bugs->allDevelStats();
 $lastmonth = $bugs->lastMonthStats();
