@@ -41,24 +41,24 @@ if (!function_exists('show_prev_next')) {
 ?>
 <table border="0" cellspacing="2" width="100%">
 
-<?php show_prev_next($templateData->begin, $templateData->rows, $templateData->total_rows, $templateData->link, $templateData->limit); ?>
+<?php show_prev_next($this->begin, $this->rows, $this->total_rows, $this->link, $this->limit); ?>
 
  <tr>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=bugb.id">ID#</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=ts1">Date</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=bugb.package">Package</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=bug_type">Type</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=status">Status</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=package_version">Package Version</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=php_version">PHP Version</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=php_os">OS</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=sdesc">Summary</a></th>
-  <th class="results"><a href="<?php echo $templateData->link;?>&amp;reorder_by=assign">Assigned</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=bugb.id">ID#</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=ts1">Date</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=bugb.package">Package</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=bug_type">Type</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=status">Status</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=package_version">Package Version</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=php_version">PHP Version</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=php_os">OS</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=sdesc">Summary</a></th>
+  <th class="results"><a href="<?php echo $this->link;?>&amp;reorder_by=assign">Assigned</a></th>
  </tr>
 <?php
 
-    foreach ($templateData->results as $row) {
-        echo ' <tr valign="top" class="' . $templateData->tla[$row['status']] . '">' . "\n";
+    foreach ($this->results as $row) {
+        echo ' <tr valign="top" class="' . $this->tla[$row['status']] . '">' . "\n";
 
         /* Bug ID */
         echo '  <td align="center"><a href="bug.php?id='.$row['id'].'">'.$row['id'].'</a>';
@@ -67,21 +67,21 @@ if (!function_exists('show_prev_next')) {
         /* Date */
         echo '  <td align="center">'.date ('Y-m-d H:i:s', strtotime ($row['ts1'])).'</td>' . "\n";
         echo '  <td>', htmlspecialchars($row['package_name']), '</td>' . "\n";
-        echo '  <td>', htmlspecialchars(@$templateData->types[$row['bug_type']]), '</td>' . "\n";
+        echo '  <td>', htmlspecialchars(@$this->types[$row['bug_type']]), '</td>' . "\n";
         echo '  <td>', htmlspecialchars($row['status']);
-        if ($row['status'] == 'Feedback' && $row['unchanged'] > 0) {
+        if ($row['status'] == 'Feedback' && isset($row['unchanged']) && $row['unchanged'] > 0) {
             printf ("<br />%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
         }
         echo '</td>' . "\n";
         echo '  <td>', htmlspecialchars($row['package_version']), '</td>';
         echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
         echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>' . "\n";
-        echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc'])  : '&nbsp;', '</td>' . "\n";
+        echo '  <td>', $row['sdesc']  ? clean($row['sdesc'])             : '&nbsp;', '</td>' . "\n";
         echo '  <td>', $row['assign'] ? htmlspecialchars($row['assign']) : '&nbsp;', '</td>' . "\n";
         echo " </tr>\n";
     }
 
-    show_prev_next($templateData->begin, $templateData->rows, $templateData->total_rows, $templateData->link, $templateData->limit);
+    show_prev_next($this->begin, $this->rows, $this->total_rows, $this->link, $this->limit);
 
     echo "</table>\n\n";
 ?>
