@@ -25,8 +25,6 @@ require_once '../include/prepend.inc';
 
 response_header('Bugs Stats');
 
-$dbh->setFetchMode(MDB2_FETCHMODE_ASSOC);
-
 $titles = array(
     'Closed'      => 'Closed',
     'Open'        => 'Open',
@@ -61,8 +59,8 @@ if (!array_key_exists($sort_by, $titles)) {
 }
 
 // Fetch all packages of the user if someone is logged in
-if ($auth_user) {
-    include_once "{$ROOT_DIR}/include/pear-database-user.php";
+if ($site != 'php' && $auth_user) {
+    include_once 'pear-database-user.php';
     $pck = user::getPackages($auth_user->handle);
     $packages = array();
     foreach ($pck as $p) {
@@ -120,9 +118,9 @@ $query .= $from . $where;
 $query .= ' GROUP BY b.package_name, b.status';
 $query .= ' ORDER BY b.package_name, b.status';
 
-$result =& $dbh->prepare($query)->execute();
+$result = $dbh->prepare($query)->execute();
 
-while ($result->fetchInto($row)) {
+while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
     $pkg_tmp[$row['status']][$row['package_name']]  = $row['quant'];
     @$pkg_total[$row['package_name']]               += $row['quant'];
     @$all[$row['status']]                           += $row['quant'];
@@ -176,8 +174,7 @@ if ($site != 'php') {
      Categ<span class="accesskey">o</span>ry:
     </label>
    </strong>
-   <select class="small" name="category" id="category"
-           onchange="this.form.submit(); return false;">
+   <select class="small" name="category" id="category" onchange="this.form.submit(); return false;">
     <option value=""
 <?php
 
@@ -302,6 +299,7 @@ foreach ($pkg[$sort_by] as $name => $value) {
 }
 
 echo "</table>\n";
+
 echo '<a name="devs">&nbsp;</a>';
 echo "<h1>Most Active Bug-fixing Developers</h1>";
 echo "<p>The following is some informational statistics on bug fixing and reporting.
