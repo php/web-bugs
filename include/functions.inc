@@ -188,17 +188,18 @@ function get_pseudo_packages ($project, $return_disabled = true)
 		)
 	);
 	$tree->setup();
+
 	foreach ($tree->data as $data)
 	{
 		if (isset($data['children']))
 		{
-			$pseudo_pkgs[$data['name']] = $data['long_name'];
+			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
 			foreach ($data['children'] as $child)
 			{
-				$pseudo_pkgs[$child['name']] = "&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}";
+				$pseudo_pkgs[$child['name']] = array("&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}", $child['disabled']);
 			}
 		} else if (!isset($pseudo_pkgs[$data['name']]))
-			$pseudo_pkgs[$data['name']] = $data['long_name'];
+			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
 	}
 
 	return $pseudo_pkgs;
@@ -611,7 +612,7 @@ function show_types($current, $show_any, $default = '')
 	        $list = $dbh->prepare($sql)->execute(array($site))->fetchCol();
 
 	        foreach ($list as $name) {
-	            $bug_items[$name] = $name;
+	            $bug_items[$name] = array($name, 0);
 	        }
 		}
     }
@@ -637,7 +638,8 @@ function show_types($current, $show_any, $default = '')
             {
                 echo ' selected="selected"';
             }
-            echo ">$value</option>\n";
+			// Show disabled categories with different background color in listing
+            echo (($value[1]) ? ' style="background-color:#eee;"' : ''), ">{$value[0]}</option>\n";
             if ($key == $current) {
                 $use++;
             }
