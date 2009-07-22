@@ -58,7 +58,7 @@ if (isset($_POST['addpatch'])) {
         $patches = $patchinfo->listPatches($bug_id);
         $errors[] = 'Invalid or empty patch name entered';
         $captcha = $numeralCaptcha->getOperation();
-        include $templates_path . '/templates/addpatch.php';
+        include "{$ROOT_DIR}/templates/addpatch.php";
         exit;
     }
     if (!$loggedin) {
@@ -119,7 +119,7 @@ if (isset($_POST['addpatch'])) {
                 $errors[] = 'Could not attach patch "' . htmlspecialchars($patchname) . '" to Bug #' . $bug_id;
                 $captcha = $numeralCaptcha->getOperation();
                 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-                include $templates_path . '/templates/addpatch.php';
+                include "{$ROOT_DIR}/templates/addpatch.php";
                 exit;
             }
             if ($site != 'php') {
@@ -138,7 +138,7 @@ if (isset($_POST['addpatch'])) {
             $patches = $patchinfo->listPatches($bug_id);
             $captcha = $numeralCaptcha->getOperation();
             $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-            include $templates_path . '/templates/addpatch.php';
+            include "{$ROOT_DIR}/templates/addpatch.php";
             exit;
         }
     }
@@ -150,7 +150,7 @@ if (isset($_POST['addpatch'])) {
         $errors = array($e->getMessage(), 'Could not attach patch "' . htmlspecialchars($patchname) . '" to Bug #' . $bug_id);
         $captcha = $numeralCaptcha->getOperation();
         $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-        include $templates_path . '/templates/addpatch.php';
+        include "{$ROOT_DIR}/templates/addpatch.php";
         exit;
     }
     // {{{ Email after the patch is added.

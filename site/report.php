@@ -700,7 +700,7 @@ DATA;
  <?php
  $patchname = isset($_POST['in']['patchname']) ? $_POST['in']['patchname'] : '';
  $patchfile = isset($_FILES['patchfile']['name']) ? $_FILES['patchfile']['name'] : '';
- include $templates_path . '/templates/patchform.php'; ?>
+ include "{$ROOT_DIR}/templates/patchform.php"; ?>
  <tr>
   <th class="form-label_left">
    Expected result:
