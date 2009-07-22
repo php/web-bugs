@@ -79,7 +79,7 @@ $state_types =  array (
  */
 function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 {
-	global $auth_user, $site;
+	global $auth_user, $site, $ROOT_DIR;
 
 	// Default values
 	$user = '';
@@ -544,10 +544,12 @@ function show_package_version_options($package_name, $current)
  */
 function show_version_options($current, $default = '')
 {
+	global $ROOT_DIR;
+
     $use = 0;
 
     echo '<option value="">--Please Select--</option>' , "\n";
-	include 'include/php_versions.php';
+	include "{$ROOT_DIR}/include/php_versions.php";
     while (list(,$v) = each($versions)) {
         echo '<option';
         if ($current == $v) {

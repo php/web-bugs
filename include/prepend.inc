@@ -78,7 +78,7 @@ $siteBig = strtoupper($site);
 $site_url = $site_data[$site]['url'];
 $bugEmail = $site_data[$site]['email'];
 $basedir  = $site_data[$site]['basedir'];
-$ROOT_DIR = realpath(dirname(__FILE__) . '/../../');
+$ROOT_DIR = realpath(dirname(__FILE__) . '/../');
 define('BUG_PATCHTRACKER_TMPDIR', $site_data[$site]['patch_tmp']);
 define('PEAR_DATABASE_DSN', "mysqli://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
 

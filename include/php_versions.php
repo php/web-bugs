@@ -9,5 +9,4 @@
                 "5.2SVN-{$date} (SVN)",
                 "6SVN-{$date} (snap)",
                 "6SVN-{$date} (SVN)",
-                'Irrelevant',
     );
