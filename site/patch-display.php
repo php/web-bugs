@@ -85,10 +85,10 @@ if (isset($_GET['patchname']) && isset($_GET['revision'])) {
             response_footer();
             exit;
         }
-        require_once "{$ROOT_DIR}/include/Diff/pearweb.php";
+        require_once "{$ROOT_DIR}/include/classes/bug_diff_renderer.php";
         assert_options(ASSERT_WARNING, 0);
         $d = new Text_Diff($orig = file($old), $now = file($new));
-        $diff = new Bugtracker_Diff_Renderer($d);
+        $diff = new Bug_Diff_Renderer($d);
         include "{$ROOT_DIR}/templates/patchdiff.php";
         response_footer();
         exit;
