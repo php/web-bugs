@@ -5,16 +5,16 @@ include './php-bugs-web/bugtypes.inc';
 mysql_connect('localhost', 'nobody', '') or die('Unable to connect to SQL server.');
 mysql_select_db('phpbugsdb') or die('Unable to select database.');
 
-foreach ($items as $key => $name)
+foreach ($items as $key => $orig_name)
 {
 	if ($key == 'Any') continue;
 
 	$key = mysql_escape_string($key);
-	$name = mysql_escape_string(trim(str_replace('&nbsp;', '', $name)));
+	$name = mysql_escape_string(trim(str_replace('&nbsp;', '', $orig_name)));
 
 	$sql = "INSERT INTO bugdb_pseudo_packages SET name = '$key', long_name = '$name', project = 'php'";
 
-	if ($key[0] == '*')
+	if ($key[0] == '*' || substr($orig_name, 0, 6) != '&nbsp;')
 	{
 		mysql_query($sql) or die(mysql_error());
 		$parent = mysql_insert_id();
