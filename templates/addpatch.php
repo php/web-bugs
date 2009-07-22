@@ -78,5 +78,5 @@ if ($errors) {
 
 <?php
 $canpatch = false;
-require $templates_path . '/templates/listpatches.php';
+require "{$ROOT_DIR}/templates/listpatches.php';
 response_footer();
