@@ -12,7 +12,7 @@
 require_once 'Text/Diff.php';
 require_once 'Text/Diff/Renderer.php';
 
-class Bugtracker_Diff_Renderer extends Text_Diff_Renderer {
+class Bug_Diff_Renderer extends Text_Diff_Renderer {
 
     /**
      * Number of leading context "lines" to preserve.
