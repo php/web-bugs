@@ -127,7 +127,11 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 <?php
    $pck = htmlspecialchars($package_name[0]);
    $pck_url = urlencode($pck);
-   echo " Bugs for <a href='/package/{$pck_url}'>{$pck}</a>\n";
+   if ($site != 'php') {
+	   echo "Bugs for <a href='/package/{$pck_url}'>{$pck}</a>\n";
+   } else {
+	   echo "Bugs for {$pck}\n";
+   }
 ?>
   </td>
  </tr>
