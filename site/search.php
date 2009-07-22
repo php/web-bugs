@@ -362,7 +362,7 @@ function show_prev_next($begin, $rows, $total_rows, $link, $limit)
 
     echo '   <table border="0" cellspacing="0" cellpadding="0" width="100%">' . "\n";
     echo "    <tr>\n";
-    echo '     <td class="class-prev">';
+    echo '     <td class="search-prev">';
     if ($begin > 0) {
         echo '<a href="' . $link . '&amp;begin=';
         echo max(0, $begin - $limit);
