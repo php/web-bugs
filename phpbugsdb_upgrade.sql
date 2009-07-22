@@ -49,20 +49,20 @@ DROP TABLE IF EXISTS bugdb_milestones;
 DROP TABLE IF EXISTS bugdb_packs;
 
 # New tables not in phpbugsdb
-CREATE TABLE `bugdb_subscribe` (
+CREATE TABLE bugdb_subscribe (
   bug_id int(8) NOT NULL default '0',
   email varchar(40) NOT NULL default '',
   unsubscribe_date int(11) default NULL,
   unsubscribe_hash varchar(80) default '',
   PRIMARY KEY (bug_id, email),
   KEY (unsubscribe_hash)
-) TYPE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_roadmap_link (
   id int(8) NOT NULL auto_increment,
   roadmap_id int(8) NOT NULL default 0,
   PRIMARY KEY (id, roadmap_id)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_roadmap (
   id int(8) NOT NULL auto_increment,
@@ -72,7 +72,7 @@ CREATE TABLE bugdb_roadmap (
   description text NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY (package, roadmap_version)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_patchtracker (
   bugdb_id int(8) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE bugdb_patchtracker (
   revision int(8) NOT NULL,
   developer varchar(20) NOT NULL,
   PRIMARY KEY (bugdb_id, patch, revision)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_obsoletes_patches (
   bugdb_id int(8) NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE bugdb_obsoletes_patches (
   obsolete_patch varchar(40) NOT NULL,
   obsolete_revision int(8) NOT NULL,
   PRIMARY KEY (bugdb_id, patch, revision, obsolete_patch, obsolete_revision)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bug_account_request (
   id INT NOT NULL AUTO_INCREMENT,
@@ -98,7 +98,7 @@ CREATE TABLE bug_account_request (
   salt CHAR(32) NOT NULL,
   email VARCHAR(65) NOT NULL,
   PRIMARY KEY(id)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_resolves (
   id INT NOT NULL AUTO_INCREMENT,
@@ -109,7 +109,7 @@ CREATE TABLE bugdb_resolves (
   project varchar(40) NOT NULL default '',
   package_name varchar(80) default NULL,
   PRIMARY KEY (id)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_pseudo_packages (
   id INT NOT NULL AUTO_INCREMENT,
@@ -120,7 +120,7 @@ CREATE TABLE bugdb_pseudo_packages (
   disabled tinyint(1) NOT NULL default 0, # Disabled == read-only (no new reports in these!)
   PRIMARY KEY (id),
   UNIQUE KEY (name, project)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 # Default pseudo packages (common for all projects)
 INSERT INTO bugdb_pseudo_packages SET id = '1', parent = '0', name = 'Web Site',   long_name = 'Web Site',   project = '';
@@ -156,7 +156,7 @@ CREATE TABLE packages (
   PRIMARY KEY  (id),
   UNIQUE KEY name (name),
   KEY category (category)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 #
 # This table is copy of pearweb/sql/users.sql
@@ -184,7 +184,7 @@ CREATE TABLE users (
   KEY pgpkeyid (pgpkeyid),
   KEY email (email(25)),
   UNIQUE KEY email_u (email)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 #
 # This table is copy of pearweb/sql/maintains.sql
@@ -195,5 +195,23 @@ CREATE TABLE maintains (
   role enum('lead','developer','contributor','helper') NOT NULL default 'lead',
   active tinyint(4) NOT NULL default '1',
   PRIMARY KEY  (handle,package)
-);
-          
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+#
+# Convert all tables to utf8
+#
+ALTER TABLE bug_account_request DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_comments DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_obsoletes_patches DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_patchtracker DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_pseudo_packages DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_resolves DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_roadmap DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_roadmap_link DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_subscribe DEFAULT CHARSET=utf8;
+ALTER TABLE bugdb_votes DEFAULT CHARSET=utf8;
+ALTER TABLE packages DEFAULT CHARSET=utf8;
+ALTER TABLE users DEFAULT CHARSET=utf8;
+ALTER TABLE maintains DEFAULT CHARSET=utf8;
+      

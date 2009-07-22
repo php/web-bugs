@@ -183,7 +183,7 @@ CREATE TABLE maintains (
   role enum('lead','developer','contributor','helper') NOT NULL default 'lead',
   active tinyint(4) NOT NULL default '1',
   PRIMARY KEY  (handle,package)
-);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 # Default pseudo packages (common for all projects)
 INSERT INTO bugdb_pseudo_packages SET id = '1', parent = '0', name = 'Web Site',   long_name = 'Web Site',   project = '';
