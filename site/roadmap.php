@@ -85,7 +85,7 @@ if (isset($_GET['edit']) || isset($_GET['new']) || isset($_GET['delete'])) {
         }
     }
     $bugtest = Bug_DataObject::pearDB('maintains');
-    include_once "{$ROOT_DIR}/include/pear-database-package.php";
+    include_once 'pear-database-package.php';
     $bugtest->package = package::info($_GET['package'], 'id');
     $bugtest->handle = $auth_user->handle;
     if (!$bugtest->find(true) || !$bugtest->role == 'lead') {
@@ -155,7 +155,7 @@ if (isset($_GET['new']) && isset($_POST['go'])) {
 
     if (isset($_POST['importbugs'])) {
         // Fetch the last release date
-        include_once "{$ROOT_DIR}/include/pear-database-package.php";
+        include_once 'pear-database-package.php';
         $releaseDate = package::getRecent(1, rinse($_GET['package']));
         if (PEAR::isError($releaseDate)) {
             break;
@@ -312,7 +312,7 @@ if (isset($_GET['addbugs'])) {
     $features = clone($bugdb);
     $bugdb->whereAdd('bug_type IN ("Bug", "Documentation Problem")');
     $releases = Bug_DataObject::pearDB('releases');
-    include_once "{$ROOT_DIR}/include/pear-database-package.php";
+    include_once 'pear-database-package.php';
     $releases->package = package::info($_GET['package'], 'id');
     $releases->orderBy('releasedate DESC');
     if ($releases->find(true)) {
@@ -437,7 +437,7 @@ if (empty($_GET['limit']) || !(int)$_GET['limit']) {
     $bugdb->limit($begin, $limit);
 }
 
-include_once "{$ROOT_DIR}/include/pear-database-package.php";
+include_once 'pear-database-package.php';
 
 $releases = package::info($_GET['package'], 'releases');
 $templateData->showold = isset($_GET['showold']);

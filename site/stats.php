@@ -152,7 +152,7 @@ if ($total > 0) {
  */
 $res = array();
 if ($site != 'php') {
-	include_once "{$ROOT_DIR}/include/pear-database-category.php";
+	include_once 'pear-database-category.php';
 	$res = category::listAll();
 
 	// DB error
