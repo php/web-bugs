@@ -299,6 +299,23 @@ function field($n)
 }
 
 /**
+ * Escape string so it can be used as HTML
+ *
+ * If magic_quotes_gpc is on, the slashes are stripped out
+ * then the escaping is done.
+ *
+ * @param string $in  the string to be sanitized
+ *
+ * @return string  the sanitized string
+ *
+ * @see txfield()
+ */
+function clean($in)
+{   
+    return htmlspecialchars($in, ENT_QUOTES, 'ISO-8859-15', false);
+}
+
+/**
  * Returns the data from the field requested and sanitizes
  * it for use as plain text
  *
@@ -911,13 +928,17 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
  *
  * If the date is during the current year, the year is omitted.
  *
- * @param int $date  the unix timestamp to be formatted
+ * @param int $ts         the unix timestamp to be formatted
+ * @param string $format  format to use
  *
  * @return string  the formatted date
  */
-function format_date($date)
+function format_date($ts = null, $format = 'Y-m-d H:i e')
 {
-    return date('Y-m-d H:i', $date - date('Z', $date)) . ' UTC';
+    if (!$ts) {
+        $ts = time();
+    }
+    return gmdate($format, $ts - date('Z', $ts));
 }
 
 /**

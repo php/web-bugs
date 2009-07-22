@@ -19,12 +19,15 @@ Configuration:
  - ./include/prepend.inc
 
 Required PEAR packages:
- # pear install MDB2 DB_DataObject Text_CAPTCHA_Numeral Tree-beta Net_URL2-beta
+ # pear install MDB2 DB_DataObject Text_CAPTCHA_Numeral Text_Diff Tree-beta Net_URL2-beta HTTP HTTP_Upload
  - MDB2
  - DB_DataObject
  - Net_URL2
  - Text_CAPTCHA_Numeral
+ - Text_Diff
  - Tree
+ - HTTP
+ - HTTP_Upload
 
 Required external packages:
  - TODO: These requirements are being removed

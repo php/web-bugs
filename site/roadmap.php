@@ -621,8 +621,8 @@ if (isset($_GET['new'])) {
     $templateData->import = isset($_POST['importbugs']) ? true : false;
     $releases = package::info(htmlspecialchars($_GET['package']), 'releases');
     $templateData->lastRelease = count($releases) ? key($releases) : '';
-    include "{$ROOT_DIR/templates/roadmapform.php";
+    include "{$ROOT_DIR}/templates/roadmapform.php";
     exit;
 }
-include "{$ROOT_DIR}/templates/roadmap.php";
 
+include "{$ROOT_DIR}/templates/roadmap.php";

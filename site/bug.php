@@ -1096,19 +1096,19 @@ require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patches = new Bug_Patchtracker;
 $p = $patches->listPatches($bug_id);
 ?>
+
 <h2>Patches</h2>
 <?php
+
 foreach ($p as $name => $revisions)
 {
     $obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
-    echo '<a href="patch-display.php?bug_id=', $bug_id,
-         '&patch=', urlencode($name),
-         '&revision=latest',
-         (!empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : ''),
-         '">', htmlspecialchars($name),
-         '</a> (last revision ', format_date($revisions[0][0]), ' by ', $revisions[0][1], ')<br />';
+    $style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';
+?><a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($name) ?>&amp;revision=latest" <?php echo $style; ?>>
+<?php echo clean($name) ?></a> (last revision <?php echo format_date($revisions[0][0]) ?> by <?php echo $revisions[0][1] ?>)<br /><?php echo "\n";
 }
-?><br /><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a><br /><?php 
+?><br /><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a><br />
+<?php 
 
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
