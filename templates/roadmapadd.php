@@ -20,7 +20,7 @@ show_bugs_menu(clean($this->package));
    <ul>
     <li class="<?php echo $this->tla[$info['status']] ?>">
     <input type="checkbox" name="bugs[<?php echo $id ?>]"<?php if ($info['inroadmap']) echo ' checked="true"' ?> /><label for="bugs[<?php echo $id ?>]"><a href="bug.php?id=<?php
-     echo $id ?>">Bug #<?php echo $id?></a>:<?php echo $info['summary'] ?> | <?php echo $info['status'] ?></label>
+     echo $id ?>">Bug #<?php echo $id?></a>:<?php echo clean($info['summary']); ?> | <?php echo $info['status']; ?></label>
     </li>
    </ul>
 <?php endforeach; // foreach ($this->bugs as $id => $info) ?>
@@ -35,7 +35,7 @@ show_bugs_menu(clean($this->package));
    <ul>
     <li class="<?php echo $this->tla[$info['status']] ?>">
     <input type="checkbox" id="bugs[<?php echo $id ?>]" name="bugs[<?php echo $id ?>]"<?php if ($info['inroadmap']) echo ' checked="true"' ?> /><label for="bugs[<?php echo $id ?>]"><a href="bug.php?id=<?php
-     echo $id ?>">Feature #<?php echo $id?><a/>:<?php echo $info['summary'] ?> | <?php echo $info['status'] ?></label>
+     echo $id ?>">Feature #<?php echo $id?><a/>:<?php echo clean($info['summary']); ?> | <?php echo $info['status']; ?></label>
     </li>
    </ul>
 <?php endforeach; // foreach ($this->features as $id => $info) ?>

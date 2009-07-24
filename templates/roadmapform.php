@@ -31,7 +31,7 @@ if ($this->errors) {
 
 
    <p><label>Release Version<br />
-   <input type="text" name="roadmap_version" value="<?php echo htmlspecialchars($this->info['roadmap_version']) ?>" /></label></p>
+   <input type="text" name="roadmap_version" value="<?php echo clean($this->info['roadmap_version']); ?>" /></label></p>
 
 
    <p><label>Scheduled Release Date (YYYY-MM-DD)<br />
@@ -45,7 +45,7 @@ if ($this->errors) {
         
 
    <p><label>Describe the Goals of this Release<br />
-   <textarea rows="5" name="description" cols="80" style="margin: 0"><?php echo htmlspecialchars($this->info['description']) ?></textarea></label></p>
+   <textarea rows="5" name="description" cols="80" style="margin: 0"><?php echo clean($this->info['description']); ?></textarea></label></p>
 
 
 
