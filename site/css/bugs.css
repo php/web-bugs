@@ -5,7 +5,7 @@
 @import url(bugs-controls.css);
 
 td.content {
-    font-size: 90%;
+    font-size: 1em;
 }
 
 td.content table {
@@ -27,11 +27,11 @@ pre.note {
 }
 
 input.small, select.small {
-    font-size: 75%;
+    font-size: 0.75em;
 }
 
 textarea.small {
-    font-size: 75%;
+    font-size: 0.75em;
 }
 
 form#comment,
@@ -42,7 +42,7 @@ div.comment {
 }
 
 table.lusersearch td {
-    font-size: 75%;
+    font-size: 0.75em;
 }
 
 table.lusersearch tr {

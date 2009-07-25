@@ -348,6 +348,20 @@ if (isset($_POST['in'])) {
 						$type = 'unknown';
 					}
 
+                    // provide shortcut URLS for "quick bug fixes"
+                    $dev_extra = '';
+                    $maxkeysize = 0;
+                    foreach ($RESOLVE_REASONS as $v) {
+                    	if (!$v['webonly']) {
+                    		$actkeysize = strlen($v['title']) + 1;
+                    		$maxkeysize = (($maxkeysize < $actkeysize) ? $actkeysize : $maxkeysize);
+                    	}
+                    }
+                    foreach ($RESOLVE_REASONS as $k => $v) {
+                        if (!$v['webonly'])
+                            $dev_extra .= str_pad("{$v['title']}:", $maxkeysize) . " http://bugs.php.net/fix.php?id={$cid}&r={$k}\n";
+                    }
+
                     // mail to package developers
                     @mail($mailto, "[$siteBig-BUG] $type #$cid [NEW]: {$_POST['in']['sdesc']}",
                           $ascii_report . "1\n-- \n$dev_extra", $extra_headers,

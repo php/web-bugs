@@ -302,9 +302,6 @@ function field($n)
 /**
  * Escape string so it can be used as HTML
  *
- * If magic_quotes_gpc is on, the slashes are stripped out
- * then the escaping is done.
- *
  * @param string $in  the string to be sanitized
  *
  * @return string  the sanitized string

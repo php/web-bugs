@@ -87,6 +87,7 @@ CREATE TABLE bugdb_resolves (
   message text NOT NULL,
   project varchar(40) NOT NULL default '',
   package_name varchar(80) default NULL,
+  webonly tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
