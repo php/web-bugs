@@ -290,9 +290,9 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Version</th>
   <td style="white-space: nowrap">Return bugs reported with <b>Package version</b></td>
-  <td><input type="text" name="packagever" value="<?php echo htmlspecialchars($packagever);?>" /></td>
+  <td><input type="text" name="packagever" value="<?php echo htmlspecialchars($packagever); ?>" /></td>
 </tr>
-<?php } ?>
+<?php } ?>
 <tr valign="top">
   <th>PHP Version</th>
   <td style="white-space: nowrap">Return bugs reported with <b>PHP version</b></td>
