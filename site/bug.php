@@ -177,6 +177,13 @@ DATA;
 $errors = array();
 $previous = $current = array();
 
+/* Fetch RESOLVE_REASONS array */
+if ($site != 'php') {
+	require_once "{$ROOT_DIR}/include/resolve-{$site}.inc";
+} else {
+	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+}
+
 /**
  * Init BugDataObject class
  */
@@ -359,7 +366,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
     $ncomment = trim($_POST['ncomment']);
     $from = $_POST['in']['commentemail'];
-} elseif (isset($_POST['in'])  && !isset($_POST['preview']) && $edit == 1) {
+} elseif (isset($_POST['in']) && is_array($_POST['in']) && !isset($_POST['preview']) && $edit == 1) {
     // Edits submitted by developer
     if ($logged_in != 'developer') {
         $errors[] = 'You have to login first in order to edit the bug report.';
@@ -372,28 +379,39 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         $ncomment = trim($_POST['ncomment']);
     }
 
-    /* Fetch RESOLVE_REASONS array */
-    $RESOLVE_REASONS = get_resolve_reasons($site);
-
-    if (isset($_POST['in']) && is_array($_POST['in']) &&
-          (($_POST['in']['status'] == 'Bogus' && $bug['status'] != 'Bogus') ||
-          (isset($_POST['in']['resolve']) && isset($RESOLVE_REASONS[$_POST['in']['resolve']]) &&
-           $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == 'Bogus')) &&
-        strlen($ncomment) == 0)
-    {
-        $errors[] = "You must provide a comment when marking a bug 'Bogus'";
-    } elseif (isset($_POST['in']) && is_array($_POST['in']) && !empty($_POST['in']['resolve'])) {
-
-// FIXME: $FIX_VARIATIONS does not exist!
-
+	/* Require comment for open bugs only */
+	if ($_POST['in']['status'] == 'Bogus' && !in_array($bug['status'], array ('Bogus', 'Closed', 'Duplicate', 'No feedback', 'Wont fix')) &&
+	 	strlen(trim($ncomment)) == 0
+	) {
+		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
+	} elseif (($_POST['in']['status'] == 'To be documented' && $bug['status'] != $_POST['in']['status']) ||
+		($_POST['in']['resolve'] && $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == 'To be documented')
+	) {
+		/* Require explanation */
+		if (strlen(trim($ncomment)) == 0) {
+			$errors[] = "You must provide a comment to help in the feature/issue documentation";
+		} else if ($bug['status'] != 'To be documented' && $bug['assign'] == $_POST['in']['assign']) {
+			/*
+			* Reset the assigned value when changing the status to 'To be documented',
+			* as more probably the developer (which was marked as assigned) won't document
+			* the fix.
+			*/
+			$_POST['in']['assign'] = '';
+		}
+		$_POST['in']['status'] = 'To be documented';
+	} elseif (!empty($_POST['in']['resolve'])) {
         if (!$trytoforce && isset($RESOLVE_REASONS[$_POST['in']['resolve']]) &&
             $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == $bug['status'])
         {
             $errors[] = 'The bug is already marked "'.$bug['status'].'". (Submit again to ignore this.)';
         } elseif (!$errors)  {
-            $_POST['in']['status'] = $RESOLVE_REASONS[$_POST['in']['resolve']]['status'];
-            if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS[$in['resolve']][$bug['package_name']])) {
-                $reason = $FIX_VARIATIONS[$in['resolve']][$bug['package_name']];
+        	if ($_POST['in']['status'] == $bug['status']) {
+        		$_POST['in']['status'] = $RESOLVE_REASONS[$_POST['in']['resolve']]['status'];
+			}
+            if ($_POST['in']['status'] == 'Closed' && $bug['status'] == 'To be documented') {
+            	$reason = $FIX_VARIATIONS['fixed']['Documentation problem'];
+ 			} elseif (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS[$_POST['in']['resolve']][$bug['package_name']])) {
+                $reason = $FIX_VARIATIONS[$_POST['in']['resolve']][$bug['package_name']];
             } else {
                 $reason = isset($RESOLVE_REASONS[$_POST['in']['resolve']]) ? $RESOLVE_REASONS[$_POST['in']['resolve']]['message'] : '';
             }
@@ -412,7 +430,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                         $ncomment = "$reason\n\n$ncomment";
                         break;
                     default :
-                        $reason = str_replace('@svn@', 'pear/' . $bug['package_name'], $reason);
+                        $reason = str_replace('@svn@', $bug['package_name'], $reason);
                         $ncomment = "$reason\n\n$ncomment";
                         break;
                 }
@@ -471,7 +489,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             $_POST['in']['package_name'],
             $_POST['in']['bug_type'],
             $_POST['in']['assign'],
-            $_POST['in']['package_version'],
+            !empty($_POST['in']['package_version']) ? $_POST['in']['package_version'] : '',
             $_POST['in']['php_version'],
             $_POST['in']['php_os'],
         ));
@@ -1152,7 +1170,7 @@ DATA;
     } else {
         echo spam_protect(htmlspecialchars($email)) , "</strong>\n";
     }
-    if ($comment_name && $registered) {
+    if ($site != 'php' && $comment_name && $registered) {
         echo '(' , htmlspecialchars($comment_name) , ')';
     }
     // Delete comment action only for trusted developers

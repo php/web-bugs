@@ -69,8 +69,11 @@ if (isset($_POST['in'])) {
     }
 
     // try to verify the user
-    $_POST['in']['handle'] = $auth_user->handle;
     $_POST['in']['email']  = $auth_user->email;
+    $_POST['in']['handle'] = $auth_user->handle;
+
+    $package_name = $_POST['in']['package_name'];
+    $package_version = !empty($_POST['in']['package_version']) ? $_POST['in']['package_version'] : '';
 
     if (!$errors) {
 
@@ -86,7 +89,6 @@ if (isset($_POST['in'])) {
              * If they are filing a feature request,
              * only look for similar features
              */
-            $package_name = $_POST['in']['package_name'];
             $where_clause = 'WHERE bugdb.package_name=p.name ';
             if ($package_name == 'Feature/Change Request') {
                 $where_clause .= "AND package_name = '$package_name'";
@@ -102,7 +104,7 @@ if (isset($_POST['in'])) {
 
             $query = "SELECT bugdb.* from bugdb, packages p $where_clause LIMIT 5";
 
-            $res =& $dbh->prepare($query)->execute();
+            $res = $dbh->prepare($query)->execute();
 
             if ($res->numRows() == 0) {
                 $ok_to_submit_report = true;
@@ -138,7 +140,7 @@ if (isset($_POST['in'])) {
 
                 foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
 
-                    $resolution =& $dbh->prepare("
+                    $resolution = $dbh->prepare("
 						SELECT comment 
 						FROM bugdb_comments
 						WHERE bug = ?
@@ -248,19 +250,19 @@ if (isset($_POST['in'])) {
                 }
 
                 // shunt website bugs to the website package
-                if (in_array($_POST['in']['package_name'], array('Web Site', 'PEPr', 'Bug System'), true)) {
-                    $_POST['in']['package_name'] = 'pearweb';
+                if (in_array($package_name, array('Web Site', 'PEPr', 'Bug System'), true)) {
+                    $package_name = 'pearweb';
                 }
 
-				$dbh->prepare('INSERT INTO bugdb (
+				$res = $dbh->prepare('INSERT INTO bugdb (
                           registered,
                           package_name,
+                          package_version,
                           bug_type,
                           email,
                           handle,
                           sdesc,
                           ldesc,
-                          package_version,
                           php_version,
                           php_os,
                           passwd,
@@ -269,56 +271,59 @@ if (isset($_POST['in'])) {
                           ts1
                          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())')->execute(array (
                           $registereduser,
-                          $_POST['in']['package_name'],
+                          $package_name,
+                          $package_version,
                           $_POST['in']['bug_type'],
                           $_POST['in']['email'],
-                          empty($_POST['in']['handle']) ? '' : $_POST['in']['handle'],
+                          $_POST['in']['handle'],
                           $_POST['in']['sdesc'],
                           $fdesc,
-                          empty($_POST['in']['package_version']) ? '' : $_POST['in']['package_version'],
                           $_POST['in']['php_version'],
                           $_POST['in']['php_os'],
                           $_POST['in']['passwd'],
                           $_POST['in']['reporter_name'],
                         )
 				);
-
-    /*
-     * Need to move the insert ID determination to DB eventually...
-     */
+				if (PEAR::isError($res)) {
+					echo "<pre>";
+					var_dump($_POST['in'], $fdesc, $package_version,$package_name,$registereduser);
+					die($res->getMessage());
+				}
                 $cid = $dbh->lastInsertId();
 
-                Bug_DataObject::init();
-                $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
-                $link->id = $cid;
-                $link->delete();
-                if (isset($_POST['in']['roadmap'])) {
-                    foreach ($_POST['in']['roadmap'] as $rid) {
-                        $link->id = $cid;
-                        $link->roadmap_id = $rid;
-                        $link->insert();
-                    }
-                }
-
+                if ($site != 'php')
+                {
+	                Bug_DataObject::init();
+	                $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
+	                $link->id = $cid;
+	                $link->delete();
+	                if (isset($_POST['in']['roadmap'])) {
+	                    foreach ($_POST['in']['roadmap'] as $rid) {
+	                        $link->id = $cid;
+	                        $link->roadmap_id = $rid;
+	                        $link->insert();
+	                    }
+	                }
+				}
                 $redirectToPatchAdd = false;
                 if (!empty($_POST['in']['patchname']) && $_POST['in']['patchname']) {
-                    require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
-                    $tracker = new Bug_Patchtracker;
-                    PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-                    $patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $_POST['in']['handle'], array());
-                    PEAR::staticPopErrorHandling();
-                    if (PEAR::isError($patchrevision)) {
-                        $redirectToPatchAdd = true;
-                    }
+                   require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
+                   $tracker = new Bug_Patchtracker;
+                   PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
+                   $patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $_POST['in']['handle'], array());
+                   PEAR::staticPopErrorHandling();
+                   if (PEAR::isError($patchrevision)) {
+                       $redirectToPatchAdd = true;
+                   }
                 }
 
                 if (!isset($buggie)) {
                     $report  = '';
                     $report .= 'From:             ' . $_POST['in']['handle'] . "\n";
                     $report .= 'Operating system: ' . $_POST['in']['php_os'] . "\n";
-                    $report .= 'Package version:  ' . $_POST['in']['package_version'] . "\n";
+                    $report .= "Package version:  $package_version\n";
                     $report .= 'PHP version:      ' . $_POST['in']['php_version'] . "\n";
-                    $report .= 'Package:          ' . $_POST['in']['package_name'] . "\n";
+                    $report .= "Package:          $package_name\n";
                     $report .= 'Bug Type:         ' . $_POST['in']['bug_type'] . "\n";
                     $report .= 'Bug description:  ';
 
@@ -326,7 +331,7 @@ if (isset($_POST['in'])) {
                     $ascii_report .= "\n-- \nEdit bug report at ";
                     $ascii_report .= "http://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
 
-                    list($mailto, $mailfrom) = get_package_mail($_POST['in']['package_name']);
+                    list($mailto, $mailfrom) = get_package_mail($package_name);
 
                     $protected_email  = '"' . spam_protect($_POST['in']['email'], 'text') . '"';
                     $protected_email .= '<' . $mailfrom . '>';
@@ -335,9 +340,9 @@ if (isset($_POST['in'])) {
                     $extra_headers .= "X-PHP-BugTracker: {$siteBig}bug\n";
                     $extra_headers .= "X-PHP-Bug: {$cid}\n";
                     $extra_headers .= "X-PHP-Type: {$_POST['in']['bug_type']}\n";
-                    $extra_headers .= "X-PHP-PackageVersion: {$_POST['in']['package_version']}\n";
+                    $extra_headers .= "X-PHP-PackageVersion: {$package_version}\n";
                     $extra_headers .= "X-PHP-Version: {$_POST['in']['php_version']}\n";
-                    $extra_headers .= "X-PHP-Category: {$_POST['in']['package_name']}\n";
+                    $extra_headers .= "X-PHP-Category: {$package_name}\n";
                     $extra_headers .= "X-PHP-OS: {$_POST['in']['php_os']}\n";
                     $extra_headers .= "X-PHP-Status: Open\n";
                     $extra_headers .= "Message-ID: <bug-{$cid}@{$site_url}>";
@@ -349,6 +354,12 @@ if (isset($_POST['in'])) {
 					}
 
                     // provide shortcut URLS for "quick bug fixes"
+					/* Fetch RESOLVE_REASONS array */
+					if ($site != 'php') {
+						require_once "{$ROOT_DIR}/include/resolve-{$site}.inc";
+					} else {
+						list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+					}
                     $dev_extra = '';
                     $maxkeysize = 0;
                     foreach ($RESOLVE_REASONS as $v) {
@@ -382,9 +393,10 @@ if (isset($_POST['in'])) {
                 } elseif (!isset($buggie) && !empty($_POST['in']['patchname'])) {
                     require_once "{$ROOT_DIR}/include/classes/bug_accountrequest.php";
                     $r = new Bug_Accountrequest();
-                    $info = $r->sendPatchEmail($cid, $patchrevision, $_POST['in']['package_name'], $auth_user->handle);
+                    $info = $r->sendPatchEmail($cid, $patchrevision, $package_name, $auth_user->handle);
                 }
-                localRedirect("bug.php?id={$cid}&thanks=4");
+                var_dump ($cid);
+//                localRedirect("bug.php?id={$cid}&thanks=4");
             }
         } while (false);
     } else {
@@ -394,7 +406,7 @@ if (isset($_POST['in'])) {
 
 }  // end of if input
 
-$package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : '';
+$package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : (!empty($package_name) ? $package_name : '');
 
 if (!is_string($package)) {
     response_header('Report - Problems');
@@ -694,7 +706,7 @@ DATA;
    </p>
   </th>
   <td class="form-input">
-   <textarea cols="60" rows="15" name="in[ldesc]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['ldesc']); ?></textarea>
+   <textarea cols="80" rows="15" name="in[ldesc]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['ldesc']); ?></textarea>
   </td>
  </tr>
  <tr>
@@ -708,7 +720,7 @@ DATA;
    </p>
   </th>
   <td class="form-input">
-   <textarea cols="60" rows="15" name="in[repcode]" wrap="no"><?php echo htmlspecialchars($_POST['in']['repcode']); ?></textarea>
+   <textarea cols="80" rows="15" name="in[repcode]" wrap="no"><?php echo htmlspecialchars($_POST['in']['repcode']); ?></textarea>
   </td>
  </tr>
  <?php
@@ -723,7 +735,7 @@ DATA;
    </p>
   </th>
   <td class="form-input">
-   <textarea cols="60" rows="15" name="in[expres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['expres']); ?></textarea>
+   <textarea cols="80" rows="15" name="in[expres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['expres']); ?></textarea>
   </td>
  </tr>
  <tr>
@@ -735,7 +747,7 @@ DATA;
    </p>
   </th>
   <td class="form-input">
-   <textarea cols="60" rows="15" name="in[actres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['actres']); ?></textarea>
+   <textarea cols="80" rows="15" name="in[actres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['actres']); ?></textarea>
   </td>
  </tr>
  <tr>

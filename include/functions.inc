@@ -30,7 +30,7 @@ $tla = array(
     'Bogus'       => 'Bgs',
     'Feedback'    => 'Fbk',
     'No Feedback' => 'NoF',
-    'Wont fix'    => 'WFx',
+    'Wont fix'    => 'Wfx',
     'Duplicate'   => 'Dup',
     'Critical'    => 'Ctl',
     'Assigned'    => 'Asn',
@@ -39,6 +39,8 @@ $tla = array(
     'Suspended'   => 'Sus',
     'Closed'      => 'Csd',
     'Spam'        => 'Spm',
+	'Re-Opened'   => 'ReO',
+	'To be documented' => 'Tbd',
 );
 
 $bug_types = array(
@@ -51,6 +53,7 @@ $bug_types = array(
 $state_types =  array (
     'Open'         => 2,
     'Closed'       => 2,
+    'Re-Opened'    => 1,
     'Duplicate'    => 1,
     'Critical'     => 1,
     'Assigned'     => 1,
@@ -64,9 +67,10 @@ $state_types =  array (
     'Old Feedback' => 0,
     'Stale'        => 0,
     'Fresh'        => 0,
-    'Bogus'        => 2,
-    'Spam'         => 2,
-    'All'          => 0
+    'Bogus'        => 1,
+	'To be documented' => 1,
+    'Spam'         => 1,
+    'All'          => 0,
 );
 
 
@@ -102,7 +106,12 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 
 		// Remember password / user next time 
 		if (isset($_POST['save'])) { # non-developers don't have $user set
-			setcookie('MAGIC_COOKIE', base64_encode("{$user}:{$pw}"), time() + 3600 * 24 * 12, '/','.php.net');
+			if (DEVBOX) {
+				$domain = null; 
+			} else {
+				$domain = '.php.net';
+			}
+			setcookie('MAGIC_COOKIE', base64_encode("{$user}:{$pw}"), time() + 3600 * 24 * 12, '/', $domain);
 		}
 	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
 		$user = $auth_user->handle;  
@@ -127,8 +136,8 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 				$auth_user->email  = "{$user}@php.net";
 				$auth_user->name   = $user;
 			} else {
-				$auth_user->handle = '';
 				$auth_user->email  = isset($_POST['in']['email']) ? $_POST['in']['email'] : '';
+				$auth_user->handle = $auth_user->email;
 				$auth_user->name   = '';
 			}
 			$auth_user->registered = true;
@@ -219,6 +228,10 @@ function get_pseudo_packages ($project, $return_disabled = true)
  */
 function spam_protect($txt, $format = 'html')
 {
+	/* php.net addresses are not protected! */
+	if (preg_match('/^(.+)@php\.net/i', $txt)) {
+		return $txt;
+	}
     if ($format == 'html') {
         $translate = array(
             '@' => ' &#x61;&#116; ',
@@ -341,7 +354,7 @@ function txfield($n)
  * @return bool  true if the data is different, false if it's the same
  */
 function changed($n) {
-    return $_POST['in'][$n] && (trim($_POST['in'][$n]) != trim($GLOBALS['bug'][$n]));
+    return isset($_POST['in'][$n]) && (trim($_POST['in'][$n]) != trim($GLOBALS['bug'][$n]));
 }
 
 /**
@@ -442,19 +455,33 @@ function show_state_options($state, $user_mode = 0, $default = '')
         $state = $default;
     }
 
+// echo '</select>', "state: $state, user_mode: $user_mode, default: $default", '<select>';
+
+
     /* regular users can only pick states with type 2 for unclosed bugs */
     if ($state != 'All' && $state_types[$state] == 1 && $user_mode == 2) {
-        /* If state was 'Feedback', set state to 'Open' automatically. */
-        if ($state == 'Feedback' || $state == 'No Feedback') {
-            echo "<option>Open</option>\n";
-        } else {
-            echo "<option>$state</option>\n";
-        }
+		switch ($state)
+		{
+	        /* If state was 'Feedback', set state to 'Open' automatically. */
+			case 'Feedback':
+	            echo "<option>Open</option>\n";
+				break;
+			case 'No Feedback':
+	            echo "<option>Re-Opened</option>\n";
+				break;
+			default:
+	            echo "<option>$state</option>\n";
+				break;
+		}
+		/* Allow state 'Closed' always when current state is not 'Bogus' */
         if ($state != 'Bogus') {
             echo "<option>Closed</option>\n";
         }
     } else {
         foreach($state_types as $type => $mode) {
+			if ($state == 'Closed' && $type == 'Open') {
+				$type = 'Re-Opened';
+			}
             if ($mode >= $user_mode) {
                 echo '<option';
                 if ($type == $state) {
@@ -482,11 +509,11 @@ function show_reason_types($current = '', $expanded = 0)
     if ($expanded) {
         echo '<option value=""></option>' . "\n";
     }
-	foreach ($RESOLVE_REASONS as $key => $val)
+	foreach ($RESOLVE_REASONS as $val)
 	{
 		if (empty($val['package_name'])) {
-			$sel = ($current == $key) ? " selected='selected'" : '';
-	        echo "<option value='{$key}' {$sel} >{$val['title']}";
+			$sel = ($current == $val['name']) ? " selected='selected'" : '';
+	        echo "<option value='{$val['name']}' {$sel} >{$val['title']}";
 	        if ($expanded) {
 	            echo " ({$val['status']})";
 	        }
@@ -738,7 +765,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     $headers = array();
 
     /* Default addresses */
-    list($mailto,$mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id);
+    list($mailto, $mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id);
 
     $headers[] = array(' ID', $bug['id']);
 
@@ -1396,7 +1423,15 @@ function get_resolve_reasons ($project = false)
 	if ($project !== false)
 		$where.= "WHERE (project = '{$project}' OR project = '')";
 
-	return $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array())->fetchAll(MDB2_FETCHMODE_ASSOC);
+	$resolves = $variations = array();
+	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array());
+	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+		if (!empty($row['package_name'])) {
+			$variations[$row['name']][$row['package_name']] = $row['message'];
+		} else 
+			$resolves[$row['name']] = $row;
+	}
+	return array($resolves, $variations);
 }
 
 /**
@@ -1406,9 +1441,10 @@ function get_resolve_reasons ($project = false)
  */
 function bugs_get_bug ($bug_id)
 {
-	global $dbh;
+	global $dbh, $site;
 
-	if ($dbh->prepare('SELECT handle FROM bugdb WHERE id = ? and handle != ""')->execute(array($bug_id))->fetchOne()) {
+	if ($site != 'php')
+	{
 	    $query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.handle as bughandle, b.reporter_name,
 	        b.sdesc, b.ldesc, b.php_version, b.package_version, b.php_os,
 	        b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
@@ -1432,16 +1468,13 @@ function bugs_get_bug ($bug_id)
 	        1 as registered,
 	        UNIX_TIMESTAMP(b.ts2) AS modified,
 	        COUNT(bug=b.id) AS votes,
-	        SUM(reproduced) AS reproduced,SUM(tried) AS tried,
+	        SUM(reproduced) AS reproduced, SUM(tried) AS tried,
 	        SUM(sameos) AS sameos, SUM(samever) AS samever,
-	        AVG(score)+3 AS average,STD(score) AS deviation,
-	        users.showemail, users.handle, p.package_type
+	        AVG(score)+3 AS average, STD(score) AS deviation
 	        FROM bugdb b
 	        LEFT JOIN bugdb_votes ON b.id = bug
-	        LEFT JOIN users ON users.email = b.email
-	        LEFT JOIN packages p ON b.package_name = p.name
 	        WHERE b.id = ?
-	        GROUP BY bug';
+			GROUP BY bug';
 	}
 	return $dbh->prepare($query)->execute(array($bug_id))->fetchRow(MDB2_FETCHMODE_ASSOC);
 }
@@ -1454,19 +1487,21 @@ function bugs_get_bug ($bug_id)
 
 function bugs_get_bug_comments ($bug_id)
 {
-	global $dbh;
+	global $dbh, $site;
 
-	$query = '
+	$registered = ($site != 'php') ? "IF(c.handle <> '', u.registered, 1) AS registered" : "1 AS registered";
+
+	$query = "
 	    SELECT c.id, c.email, c.comment, 
            UNIX_TIMESTAMP(c.ts) AS added,
            c.reporter_name AS comment_name,
-           IF(c.handle <> "", u.registered, 1) AS registered,
+           {$registered},
            u.showemail, u.handle, c.handle AS bughandle
 	    FROM bugdb_comments c
 	    LEFT JOIN users u ON u.handle = c.handle
 	    WHERE c.bug = ?
 	    GROUP BY c.id ORDER BY c.ts
-	';
+	";
 	return $dbh->prepare($query)->execute(array($bug_id))->fetchAll(MDB2_FETCHMODE_ASSOC);
 }
 

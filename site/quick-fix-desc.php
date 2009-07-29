@@ -23,6 +23,12 @@
  */
 require_once '../include/prepend.inc';
 
+if ($site != 'php') {
+	require_once "{$ROOT_DIR}/include/resolve-{$site}.inc";
+} else {
+	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+}
+
 response_header('Quick Fix Descriptions'); 
 
 ?> 
@@ -40,6 +46,16 @@ foreach ($RESOLVE_REASONS as $key => $reason) {
 		 <td><pre>{$reason['message']}</pre></td>
 		</tr>
 	";
+    if (isset($FIX_VARIATIONS[$key])) {
+		foreach ($FIX_VARIATIONS[$key] as $type => $variation) {
+			echo "
+				<tr>
+					<td>{$reason['title']} ({$type})</td>
+					<td>Status: {$reason['status']}</td>
+					<td><pre>{$variation}</pre></td>
+				</tr>";
+		}
+	}
 } 
 ?>
 </table>

@@ -131,12 +131,3 @@ if ($site != 'php') {
  */
 require_once "{$ROOT_DIR}/include/functions.inc";
 
-/**
- * Obtain the $RESOLVE_REASONS array (project specific!)
- */
-if ($site != 'php')
-{
-	require_once "{$ROOT_DIR}/include/resolve-{$site}.inc";
-} else {
-	$RESOLVE_REASONS = get_resolve_reasons($site);
-}

@@ -103,6 +103,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         case 'All':
             break;
         case 'Closed':
+        case 'Re-Opened':
         case 'Duplicate':
         case 'Critical':
         case 'Assigned':
@@ -148,11 +149,11 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                              ";
             break;
         case 'OpenFeedback':
-            $where_clause .= " AND bugdb.status IN ('Open', 'Assigned','Analyzed', 'Critical', 'Verified', 'Feedback')";
+            $where_clause .= " AND bugdb.status IN ('Open', 'Re-Opened', 'Assigned','Analyzed', 'Critical', 'Verified', 'Feedback')";
             break;
         default:
         case 'Open':
-            $where_clause .= " AND bugdb.status IN ('Open', 'Assigned', 'Analyzed', 'Critical', 'Verified')";
+            $where_clause .= " AND bugdb.status IN ('Open', 'Re-Opened', 'Assigned', 'Analyzed', 'Critical', 'Verified')";
     }
 
     if ($search_for != '') {
