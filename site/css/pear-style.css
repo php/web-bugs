@@ -429,8 +429,8 @@ hr {
 }
 
 code, pre, tt {
-    font-family: "andale mono", "monotype.com", "courier new", courier, monospace;
-    font-size: 0.9em;
+    font-family: monospace;
+    font-size: medium;
 }
 
 h1 {

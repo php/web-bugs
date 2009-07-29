@@ -627,13 +627,13 @@ show_bugs_menu(txfield('package_name'));
 <?php
 	if (!$bug['registered']) {
         echo 'Unconfirmed reporter';
-    } elseif (!empty($bug['bughandle'])) {
+    } elseif ($site != 'php' && !empty($bug['bughandle'])) {
         echo "<a href='/user/{$bug['bughandle']}'>{$bug['bughandle']}</a>";
-    } elseif (!empty($bug['handle']) && $bug['showemail'] != '0') {
+    } elseif ($site != 'php' && !empty($bug['handle']) && $bug['showemail'] != '0') {
         echo "<a href='/user/{$bug['handle']}'>{$bug['handle']}</a>";
     } else {
-        echo spam_protect(htmlspecialchars($bug['email']));
-    }
+		echo spam_protect(htmlspecialchars($bug['email']));
+	}
 ?>
    </td>
    <th class="details">Assigned:</th>
@@ -825,14 +825,12 @@ if ($edit == 1 || $edit == 2) { ?>
 <?php  }
     } else {
         if ($logged_in == 'developer') {
-            if (!isset($_POST['in']) || !is_array($_POST['in'])) {
 ?>
                 <div class="explain">
                  Welcome back, <?php echo $user; ?>! (Not <?php echo $user; ?>?
                  <a href="logout.php">Log out.</a>)
                 </div>
 <?php
-            }
         } else {
 ?>
             <div class="explain">
@@ -1008,7 +1006,7 @@ if ($edit == 1 || $edit == 2) { ?>
     <label for="ncomment" accesskey="m"><b>New<?php if ($edit==1) echo "/Additional"?> Co<span class="accesskey">m</span>ment:</b></label>
     </p>
 
-    <textarea cols="60" rows="8" name="ncomment" id="ncomment"
+    <textarea cols="80" rows="8" name="ncomment" id="ncomment"
      wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
 
     <p style="margin-top: 0em">
@@ -1076,7 +1074,7 @@ if (!$logged_in) { ?>
     <div>
      <input type="hidden" name="id" value="<?php echo $bug_id; ?>" />
      <input type="hidden" name="edit" value="<?php echo $edit; ?>" />
-     <textarea cols="60" rows="10" name="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
+     <textarea cols="80" rows="10" name="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
      <br /><input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
     </div>
 
@@ -1159,9 +1157,8 @@ DATA;
     }
     // Delete comment action only for trusted developers
     echo ($edit == 1 && $com_id !== 0 && $is_trusted_developer) ? "<a href='bug.php?id={$bug_id}&amp;edit=1&amp;delete_comment={$com_id}'>[delete]</a>\n" : '';
-    $comment = wordwrap($comment, 72);
     $comment = make_ticket_links(addlinks($comment));
-    echo "<pre class='note'>\n{$comment}</pre>\n</div>\n";
+    echo "<pre class='note'>{$comment}\n</pre>\n";
 }
 
 function delete_comment($bug_id, $com_id)

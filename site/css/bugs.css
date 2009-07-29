@@ -22,8 +22,11 @@ td.content table {
     background: #9999cc;
 }
 
-pre.note {
-    margin-left: 20px;
+.note {
+	width:65em;
+    margin-left: 10px;
+	white-space:pre-wrap;
+	font-size:medium;
 }
 
 input.small, select.small {
@@ -190,6 +193,9 @@ td.search-next {
 }
 .Opn {
     background-color: #ffbbaa;
+}
+.ReO {
+    background-color: #ffaabb;
 }
 .Sus {
     background-color: #ffccbb;
