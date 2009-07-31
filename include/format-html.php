@@ -308,14 +308,15 @@ print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
 <script language="javascript">
 function makeFocus()
 {
-    <?php echo htmlspecialchars($GLOBALS['ONLOAD']); ?>
+    <?php echo htmlspecialchars($GLOBALS['ONLOAD']); // ?? ?>
 }
 
-function addEvent(obj, eventType, functionCall){
-    if (obj.addEventListener){
+function addEvent(obj, eventType, functionCall)
+{
+    if (obj.addEventListener) {
         obj.addEventListener(eventType, functionCall, false);
         return true;
-    } else if (obj.attachEvent){
+    } else if (obj.attachEvent) {
         var r = obj.attachEvent("on"+eventType, functionCall);
         return r;
     } else {

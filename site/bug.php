@@ -728,7 +728,7 @@ show_bugs_menu(txfield('package_name'));
  </table>
 </div>
 
-<div id="controls">
+<div class="controls">
 <?php
 control(0, 'View');
 control(3, 'Add Comment');
@@ -991,7 +991,8 @@ if ($edit == 1 || $edit == 2) { ?>
      <tr>
       <th class="details">Assigned to <br />Roadmap Version(s):<br />
       (<span class="headerbottom">Already released</span>)</th>
-      <td colspan="5"><?php
+      <td colspan="5">
+<?php
         $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
         $link->id = $bug_id;
         $link->find(false);
@@ -1013,17 +1014,13 @@ if ($edit == 1 || $edit == 2) { ?>
                 if ($released) {
                     echo '<span class="headerbottom">';
                 }
-                ?><input type="checkbox" name="in[fixed_versions][]" value="<?php
-                echo $db->id . '"';
-                if (isset($links[$db->id])) {
-                    echo ' checked="true"';
-                }?>/> <?php echo $db->roadmap_version; '<br />';
+				echo '<input type="checkbox" name="in[fixed_versions][]" value="', $db->id , '"', (isset($links[$db->id]) ? ' checked="checked"' : ''), " />{$db->roadmap_version}<br />";
                 if ($released) {
                     echo '</span>';
                 }
             }
         } else {
-            ?>(No roadmap defined)<?php
+            echo '(No roadmap defined)';
         }
         ?>
       </td>
@@ -1132,22 +1129,57 @@ foreach ($p as $name => $revisions)
 {
     $obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
     $style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';
-?><a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($name) ?>&amp;revision=latest" <?php echo $style; ?>>
+// ?><a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($name) ?>&amp;revision=latest" <?php echo $style; ?>>
 <?php echo clean($name) ?></a> (last revision <?php echo format_date($revisions[0][0]) ?> by <?php echo $revisions[0][1] ?>)<br /><?php echo "\n";
 }
-?><br /><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a><br />
+?><p><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a></p>
 <?php 
 
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
 if (is_array($bug_comments) && count($bug_comments)) {
-    echo '<h2>Comments</h2>';
+    echo '<h2 style="border-bottom:2px solid #666;margin-bottom:0;">Comments</h2>',
+		 "
+		 	<div id='comment_filter' class='controls comments'>
+		 		<span id='type_all'     class='control' onclick='do_comment(this);'>All</span>
+		 		<span id='type_comment' class='control active' onclick='do_comment(this);'>Comments</span>
+		 		<span id='type_log'     class='control' onclick='do_comment(this);'>Log</span>
+		 		<span id='type_svn'     class='control' onclick='do_comment(this);'>SVN commits</span>
+			</div>
+		 ";
+
+	echo "<div id='comments_view' style='clear:both;'>\n";
     foreach ($bug_comments as $row) {
         output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], ($row['bughandle'] ? $row['bughandle'] : $row['handle']), $row['comment_name'], $row['registered']);
     }
+    echo "</div>\n";
 }
 
-response_footer();
+$bug_JS = <<< bug_JS
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript">
+function do_comment(nd)
+{
+	$('#comment_filter > .control,.active').removeClass("active");
+	$(nd).addClass("active");
+	
+	if (nd.id == 'type_all') { 
+		$('#comments_view > .comment:hidden').show('slow');
+	} else {
+		$('#comments_view > .comment').each(function(i) {
+			if ($(this).hasClass(nd.id)) {
+				$(this).show('slow');
+			} else {
+				$(this).hide('slow');
+			}
+		});
+	}
+	return false;
+}
+</script>
+bug_JS;
+
+response_footer($bug_JS);
 
 /** 
  * Helper functions 
@@ -1156,7 +1188,8 @@ function output_note($com_id, $ts, $email, $comment, $comment_type, $handle, $co
 {
     global $site, $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
 
-    echo '<div class="comment">';
+    $display = ($comment_type == 'comment') ? '' : 'style="display:none;"';
+    echo "<div class='comment type_{$comment_type}' {$display}>";
     echo '<a name="' , urlencode($ts) , '">&nbsp;</a>';
     echo "<strong>[" , format_date($ts) , "] ";
     if (!$registered) {
