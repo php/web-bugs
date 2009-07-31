@@ -1,7 +1,5 @@
 /* STYLES FOR THE BUG SYSTEM */
 
-/* $Id$ */
-
 td.content {
     font-size: 1em;
 }
@@ -86,9 +84,14 @@ div.controls span {
     padding: 4px 8px;
     margin-left: 10px;
 }
+
 div.comments span {
 	cursor:pointer;
 	font-weight:normal;
+}
+
+div#comments_view {
+	padding-top:10px;
 }
 
 div.controls .active {

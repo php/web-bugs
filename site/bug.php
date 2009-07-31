@@ -1138,12 +1138,12 @@ foreach ($p as $name => $revisions)
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
 if (is_array($bug_comments) && count($bug_comments)) {
-    echo '<h2 style="border-bottom:2px solid #666;margin-bottom:0;">Comments</h2>',
+    echo '<h2 style="border-bottom:2px solid #666;margin-bottom:0;padding:5px 0;">History</h2>',
 		 "
 		 	<div id='comment_filter' class='controls comments'>
 		 		<span id='type_all'     class='control' onclick='do_comment(this);'>All</span>
 		 		<span id='type_comment' class='control active' onclick='do_comment(this);'>Comments</span>
-		 		<span id='type_log'     class='control' onclick='do_comment(this);'>Log</span>
+		 		<span id='type_log'     class='control' onclick='do_comment(this);'>Changes</span>
 		 		<span id='type_svn'     class='control' onclick='do_comment(this);'>SVN commits</span>
 			</div>
 		 ";
