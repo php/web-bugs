@@ -526,17 +526,17 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         }
 
         if (!empty($log_comment)) {
-            $dbh->prepare('
+            $dbh->prepare("
                 INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle, comment_type)
                 VALUES (?, ?, NOW(), ?, ?, ?, 'log')
-            ')->execute(array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
+            ")->execute(array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
         }
 
         if (!empty($ncomment)) {
-            $dbh->prepare('
+            $dbh->prepare("
                 INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle, comment_type)
                 VALUES (?, ?, NOW(), ?, ?, ?, 'comment')
-            ')->execute(array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
+            ")->execute(array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
         }
     }
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 1) {
