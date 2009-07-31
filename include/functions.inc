@@ -769,7 +769,7 @@ function bug_diff($bug, $in, $previous, $current)
     );
 
     foreach (array_keys($fields) as $name) {
-        if ($in[$name] && (trim($in[$name]) != trim($bug[$name]))) {
+        if (isset($in[$name]) && isset($bug[$name]) && (trim($in[$name]) != trim($bug[$name]))) {
             $changed[$name]['from'] = $bug[$name];
             $changed[$name]['to']   = txfield($name, $bug, $in);
         }
@@ -885,7 +885,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
         /* only fields that are set get added. */
         if ($f = txfield($name, $bug, $in) OR $name == 'roadmap') {
 			if ($name == 'email') {
-                $f = $spam_protect($f, 'text');
+                $f = spam_protect($f, 'text');
             }
 			$foo = isset($changed[$name]['to']) ? $changed[$name]['to'] : $f;
             $headers[] = array($prefix.$desc, $foo);
