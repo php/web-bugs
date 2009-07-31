@@ -1,5 +1,9 @@
 /* STYLES FOR THE BUG SYSTEM */
 
+div.clear {
+	clear:both;
+}
+
 td.content {
     font-size: 1em;
 }

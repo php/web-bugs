@@ -741,6 +741,8 @@ if ($site == 'php' ) {
 ?>
 </div>
 
+<div class="clear"></div>
+
 <?php if (!$edit && canvote($thanks, $bug['status'])) { ?>
   <form id="vote" method="post" action="vote.php">
   <div class="sect">
