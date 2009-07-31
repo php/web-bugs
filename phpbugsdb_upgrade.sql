@@ -32,6 +32,7 @@ ALTER TABLE bugdb_comments MODIFY bug int(8) NOT NULL default '0';
 ALTER TABLE bugdb_comments MODIFY email varchar(40) NOT NULL default '';
 ALTER TABLE bugdb_comments ADD handle varchar(20) NOT NULL default '' AFTER email;
 ALTER TABLE bugdb_comments ADD reporter_name varchar(80) default '' AFTER handle;
+ALTER TABLE bugdb_comments ADD comment_type varchar(10) default 'comment' AFTER comment;
 ALTER TABLE bugdb_comments ADD INDEX bug (bug, id, ts);
 
 # bugdb_votes

@@ -30,8 +30,8 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 	$user = htmlspecialchars(trim($_POST['user']));
 	$ncomment = htmlspecialchars(trim($_POST['ncomment']));
 	$res = $dbh->prepare('
-		INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle)
-		VALUES (?, ?, NOW(), ?, ?, ?)
+		INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle, comment_type)
+		VALUES (?, ?, NOW(), ?, ?, ?, 'svn')
 	')->execute(array ($bug_id, "{$user}@php.net", $ncomment, $user, $user));
 
 	if ($res) {

@@ -46,6 +46,7 @@ CREATE TABLE bugdb_comments (
   reporter_name varchar(80) default '',
   ts datetime NOT NULL default '0000-00-00 00:00:00',
   comment text NOT NULL,
+  comment_type varchar(10) default 'comment',
   PRIMARY KEY  (id),
   KEY bug (bug,id,ts),
   FULLTEXT KEY comment (comment)
