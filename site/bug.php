@@ -1116,7 +1116,7 @@ if (!$logged_in) { ?>
 
 // Display original report
 if ($bug['ldesc']) {
-    output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], $bug['bughandle'], $bug['reporter_name'], $bug['registered']);
+    output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['bughandle'], $bug['reporter_name'], $bug['registered']);
 }
 
 // Display patches
@@ -1143,7 +1143,7 @@ $bug_comments = bugs_get_bug_comments($bug_id);
 if (is_array($bug_comments) && count($bug_comments)) {
     echo '<h2>Comments</h2>';
     foreach ($bug_comments as $row) {
-        output_note($row['id'], $row['added'], $row['email'], $row['comment'], ($row['bughandle'] ? $row['bughandle'] : $row['handle']), $row['comment_name'], $row['registered']);
+        output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], ($row['bughandle'] ? $row['bughandle'] : $row['handle']), $row['comment_name'], $row['registered']);
     }
 }
 
@@ -1152,7 +1152,7 @@ response_footer();
 /** 
  * Helper functions 
  */
-function output_note($com_id, $ts, $email, $comment, $handle, $comment_name, $registered)
+function output_note($com_id, $ts, $email, $comment, $comment_type, $handle, $comment_name, $registered)
 {
     global $site, $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
 
@@ -1185,10 +1185,22 @@ DATA;
     if ($site != 'php' && $comment_name && $registered) {
         echo '(' , htmlspecialchars($comment_name) , ')';
     }
-    // Delete comment action only for trusted developers
-    echo ($edit == 1 && $com_id !== 0 && $is_trusted_developer) ? "<a href='bug.php?id={$bug_id}&amp;edit=1&amp;delete_comment={$com_id}'>[delete]</a>\n" : '';
-    $comment = make_ticket_links(addlinks($comment));
-    echo "<pre class='note'>{$comment}\n</pre>\n";
+
+    switch ($comment_type)
+    {
+    	case 'log':
+		    echo "<div class='log_note'>{$comment}</div>";
+    		break;
+
+    	default:
+		    // Delete comment action only for trusted developers
+		    echo ($edit == 1 && $com_id !== 0 && $is_trusted_developer) ? "<a href='bug.php?id={$bug_id}&amp;edit=1&amp;delete_comment={$com_id}'>[delete]</a>\n" : '';
+
+		    $comment = make_ticket_links(addlinks($comment));
+		    echo "<pre class='note'>{$comment}\n</pre>\n";
+	}
+
+	echo '</div>';
 }
 
 function delete_comment($bug_id, $com_id)

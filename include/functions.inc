@@ -810,7 +810,7 @@ function bug_diff_render_html($diff)
         $maxlength = ($maxlength < $actlength) ? $actlength : $maxlength;
     }
 
-    $changes = '<div id="changeset">' . "\n";
+    $changes = '<div class="changeset">' . "\n";
     $spaces = str_repeat(' ', $maxlength + 1);
     foreach ($diff as $name => $content) {
         // align header content with headers (if a header contains
@@ -910,12 +910,12 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     }
 
     if ($ncomment) {
-		$ncomment = preg_replace('#<div id="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $ncomment);
+		$ncomment = preg_replace('#<div class="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $ncomment);
         $text[] = " New Comment:\n\n{$ncomment}";
     }
 
     $old_comments = get_old_comments($bug['id'], empty($ncomment));
-	$old_comments = preg_replace('#<div id="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $old_comments);
+	$old_comments = preg_replace('#<div class="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $old_comments);
 
 	$text[] = $old_comments;
 
@@ -1554,7 +1554,6 @@ function bugs_get_bug ($bug_id)
  *
  * @return mixed array of bug comments or object with error info
  */
-
 function bugs_get_bug_comments ($bug_id)
 {
 	global $dbh, $site;
@@ -1562,7 +1561,7 @@ function bugs_get_bug_comments ($bug_id)
 	$registered = ($site != 'php') ? "IF(c.handle <> '', u.registered, 1) AS registered" : "1 AS registered";
 
 	$query = "
-	    SELECT c.id, c.email, c.comment, 
+	    SELECT c.id, c.email, c.comment, c.comment_type,
            UNIX_TIMESTAMP(c.ts) AS added,
            c.reporter_name AS comment_name,
            {$registered},

@@ -22,11 +22,32 @@ td.content table {
     background: #9999cc;
 }
 
-.note {
+.note, .changeset {
 	width:65em;
     margin-left: 10px;
 	white-space:pre-wrap;
 	font-size:medium;
+}
+
+.log_note {
+	font-family:monospace;
+	font-size:medium;
+}
+
+.changeset {
+	background-color:#eee;
+	white-space:normal;
+	padding:5px;
+}
+
+.changeset .added {
+	display:block;
+    color: #1aa100;
+}
+
+.changeset .removed {
+	display:block;
+    color: #de0019;
 }
 
 input.small, select.small {
