@@ -1160,7 +1160,7 @@ $bug_JS = <<< bug_JS
 <script type="text/javascript">
 function do_comment(nd)
 {
-	$('#comment_filter > .control,.active').removeClass("active");
+	$('#comment_filter > .control.active').removeClass("active");
 	$(nd).addClass("active");
 	
 	if (nd.id == 'type_all') { 
