@@ -39,8 +39,8 @@ $tla = array(
     'Suspended'   => 'Sus',
     'Closed'      => 'Csd',
     'Spam'        => 'Spm',
-	'Re-Opened'   => 'ReO',
-	'To be documented' => 'Tbd',
+    'Re-Opened'   => 'ReO',
+    'To be documented' => 'Tbd',
 );
 
 $bug_types = array(
@@ -68,7 +68,7 @@ $state_types =  array (
     'Stale'        => 0,
     'Fresh'        => 0,
     'Bogus'        => 1,
-	'To be documented' => 1,
+    'To be documented' => 1,
     'Spam'         => 1,
     'All'          => 0,
 );
@@ -91,7 +91,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 	$logged_in = false;
 	$is_trusted_developer = false;
 
-	if ($site != 'php')	{
+	if ($site != 'php') {
 		init_auth_user();
 	}
 
@@ -337,24 +337,19 @@ function clean($in)
  *
  * @return mixed  the data requested
  *
- * @see escapeSQL(), oneof(), field()
+ * @see clean()
  */
-function txfield($n)
+function txfield($n, $bug = null, $in = null)
 {
-    return oneof((isset($_POST['in'])    && isset($_POST['in'][$n]))    ? $_POST['in'][$n]    : false,
-                 (isset($GLOBALS['bug']) && isset($GLOBALS['bug'][$n])) ? $GLOBALS['bug'][$n] : false);
-}
+    $one = (isset($in)  && isset($in[$n]))  ? $in[$n]  : false;
+    if ($one) {
+        return $one;
+    }
 
-/**
- * Checks if the data submitted from the form is different than the
- * info in the database
- *
- * @param string $n  the name of the field to be examined
- *
- * @return bool  true if the data is different, false if it's the same
- */
-function changed($n) {
-    return isset($_POST['in'][$n]) && (trim($_POST['in'][$n]) != trim($GLOBALS['bug'][$n]));
+    $two = (isset($bug) && isset($bug[$n])) ? $bug[$n] : false;
+    if ($two) {
+        return $two;
+    }
 }
 
 /**
@@ -750,6 +745,89 @@ function display_bug_success($in)
     echo "<div class='success'>{$in}</div>\n";
 }
 
+/** 
+ * Returns array of changes going to be made
+ */
+function bug_diff($bug, $in, $previous, $current)
+{
+    $changed = array();
+
+    if ($in['email'] && (trim($in['email']) != trim($bug['email']))) {
+        $changed['reported_by']['from'] = $bug['email'];
+        $changed['reported_by']['to']   = spam_protect(txfield('email', $bug, $in), 'text');
+    }
+
+    $fields = array(
+        'sdesc'            => 'Summary',
+        'status'           => 'Status',
+        'bug_type'         => 'Type',
+        'package_name'     => 'Package',
+        'php_os'           => 'Operating System',
+        'package_version'  => 'Package Version',
+        'php_version'      => 'PHP Version',
+        'assign'           => 'Assigned To'
+    );
+
+    foreach (array_keys($fields) as $name) {
+        if ($in[$name] && (trim($in[$name]) != trim($bug[$name]))) {
+            $changed[$name]['from'] = $bug[$name];
+            $changed[$name]['to']   = txfield($name, $bug, $in);
+        }
+    }
+
+    if ($current != $previous) {
+        if (count($previous)) {
+            array_walk($previous, create_function('&$a', '$a=$a[0];'));
+        }
+        $changed['roadmap']['from'] = implode($previous, ', ');
+        if (count($current)) {
+            array_walk($current, create_function('&$a', '$a=$a[0];'));
+        }
+        $changed['roadmap']['to'] = implode($current, ', ');
+    }
+
+    return $changed;
+}
+
+function bug_diff_render_html($diff)
+{
+    $fields = array(
+        'sdesc'            => 'Summary',
+        'status'           => 'Status',
+        'bug_type'         => 'Type',
+        'package_name'     => 'Package',
+        'php_os'           => 'Operating System',
+        'package_version'  => 'Package Version',
+        'php_version'      => 'PHP Version',
+        'assign'           => 'Assigned To',
+        'roadmap'          => 'Roadmap Versions',
+    );
+
+    // make diff output aligned
+    $actlength = $maxlength = 0;
+    foreach (array_keys($diff) as $v) {
+        $actlength = strlen($fields[$v]) + 2;
+        $maxlength = ($maxlength < $actlength) ? $actlength : $maxlength;
+    }
+
+    $changes = '<div id="changeset">' . "\n";
+    $spaces = str_repeat(' ', $maxlength + 1);
+    foreach ($diff as $name => $content) {
+        // align header content with headers (if a header contains
+        // more than one line, wrap it intelligently)
+        $field = str_pad($fields[$name] . ':', $maxlength);
+        $from  = wordwrap('-'.$field.$content['from'], 72 - $maxlength, "\n$spaces"); // wrap and indent
+        $from  = rtrim($from); // wordwrap may add spacer to last line
+        $to    = wordwrap('+'.$field.$content['to'], 72 - $maxlength, "\n$spaces"); // wrap and indent
+        $to    = rtrim($to); // wordwrap may add spacer to last line
+        $changes .= '<span class="removed">' . clean($from) . '</span>' . "\n";
+        $changes .= '<span class="added">' .   clean($to) . '</span>' . "\n";
+    }
+    $changes .= '</div>';
+
+    return $changes;
+}
+
 /**
  * Send an email notice about bug aditions and edits
  *
@@ -763,6 +841,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
 
     $text = array();
     $headers = array();
+    $changed = bug_diff($bug, $in, $previous, $current);
 
     /* Default addresses */
     list($mailto, $mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id);
@@ -775,7 +854,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
             $from = "\"$from\" <$mailfrom>";
             break;
         case 2:
-            $from = spam_protect(txfield('email'), 'text');
+            $from = spam_protect(txfield('email', $bug, $in), 'text');
             $headers[] = array(' User updated by', $from);
             $from = "\"{$from}\" <{$mailfrom}>";
             break;
@@ -783,16 +862,8 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
             $headers[] = array(' Updated by', $from);
     }
 
-    $prefix = ' ';
-    if (changed('email')) {
-        $headers[] = array('-Reported By', spam_protect($bug['email']), 'text');
-        $prefix = '+';
-    }
-    if ($f = spam_protect(txfield('email'), 'text')) {
-        $headers[] = array($prefix.'Reported By', $f);
-    }
-
     $fields = array(
+		'email'           => 'Reported by',
         'sdesc'           => 'Summary',
         'status'          => 'Status',
         'bug_type'        => 'Type',
@@ -800,28 +871,24 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
         'php_os'          => 'Operating System',
         'package_version' => 'Package Version',
         'php_version'     => 'PHP Version',
-        'assign'          => 'Assigned To'
+        'assign'          => 'Assigned To',
+		'roadmap'         => 'Roadmap Versions',
     );
 
     foreach ($fields as $name => $desc) {
         $prefix = ' ';
-        if (changed($name)) {
-            $headers[] = array("-{$desc}", $bug[$name]);
+        if (isset($changed[$name])) {
+            $headers[] = array("-{$desc}", $changed[$name]['from']);
             $prefix = '+';
         }
+
         /* only fields that are set get added. */
-        if ($f = txfield($name)) {
-            $headers[] = array($prefix.$desc, $f);
-        }
-    }
-    if ($current != $previous) {
-        if (count($previous)) {
-            array_walk($previous, create_function('&$a', '$a=$a[0];'));
-            $headers[] = array('-Roadmap Versions', implode($previous, ', '));
-        }
-        if (count($current)) {
-            array_walk($current, create_function('&$a', '$a=$a[0];'));
-            $headers[] = array('+Roadmap Versions', implode($current, ', '));
+        if ($f = txfield($name, $bug, $in) OR $name == 'roadmap') {
+			if ($name == 'email') {
+                $f = $spam_protect($f, 'text');
+            }
+			$foo = isset($changed[$name]['to']) ? $changed[$name]['to'] : $f;
+            $headers[] = array($prefix.$desc, $foo);
         }
     }
 
@@ -843,10 +910,14 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
     }
 
     if ($ncomment) {
+		$ncomment = preg_replace('#<div id="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $ncomment);
         $text[] = " New Comment:\n\n{$ncomment}";
     }
 
-    $text[] = get_old_comments($bug['id'], empty($ncomment));
+    $old_comments = get_old_comments($bug['id'], empty($ncomment));
+	$old_comments = preg_replace('#<div id="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $old_comments);
+
+	$text[] = $old_comments;
 
     /* format mail so it looks nice, use 72 to make piners happy */
     $wrapped_text = wordwrap(join("\n", $text), 72);
@@ -872,7 +943,6 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
 
     /* send mail if status was changed or there is a comment */
     if ($in['status'] != $bug['status'] || $ncomment != '' || ($current != $previous)) {
-
         if (isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type']) {
             $subj = $bug_types[$bug['bug_type']] . '->' . $bug_types[$in['bug_type']];
         } else {
@@ -894,7 +964,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
         // the user gets sent mail with an envelope sender that ignores bounces
         if (DEVBOX == false) {
             @mail($bug['email'],
-                  "[$siteBig-BUG] {$subj}" . txfield('sdesc'),
+                  "[$siteBig-BUG] {$subj}" . txfield('sdesc', $bug, $in),
                   $user_text,
                   "From: $siteBig Bug Database <$mailfrom>\n".
                   "Bcc: $Bcc\n" .
@@ -902,10 +972,9 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
                   "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
                   "-fbounces-ignored@php.net");
           
-		// but we go ahead and let the default sender get used for the list
-
+			// but we go ahead and let the default sender get used for the list
             @mail($mailto,
-                  "[$siteBig-BUG] {$subj}" . txfield('sdesc'),
+                  "[$siteBig-BUG] {$subj}" . txfield('sdesc', $bug, $in),
                   $dev_text,
                   "From: $from\n".
                   "X-PHP-Bug: {$bug['id']}\n".
@@ -932,13 +1001,14 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous
 			$email = $in['assign'];
 		}
 
+        // If the developer assigns him self then skip
         if ($email == $from) {
             return;
         }
 
         if (DEVBOX == false) {
             @mail($email,
-                  $subj . txfield('sdesc'),
+                  $subj . txfield('sdesc', $bug, $in),
                   wordwrap($in['assign'] . " you have just been assigned to this bug by {$from}\n\n") .
                   $dev_text,
                   "From: {$from}\n".

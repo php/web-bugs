@@ -520,10 +520,22 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             $current = $previous;
         }
 
+        $changed  = bug_diff($bug, $_POST['in'], $previous, $current);
+        if (!empty($changed)) {
+            $log_comment = bug_diff_render_html($changed);
+        }
+
+        if (!empty($log_comment)) {
+            $dbh->prepare('
+                INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle, comment_type)
+                VALUES (?, ?, NOW(), ?, ?, ?, 'log')
+            ')->execute(array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
+        }
+
         if (!empty($ncomment)) {
             $dbh->prepare('
-                INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle)
-                VALUES (?, ?, NOW(), ?, ?, ?)
+                INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle, comment_type)
+                VALUES (?, ?, NOW(), ?, ?, ?, 'comment')
             ')->execute(array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
         }
     }
