@@ -217,3 +217,9 @@ ALTER TABLE packages DEFAULT CHARSET=utf8;
 ALTER TABLE users DEFAULT CHARSET=utf8;
 ALTER TABLE maintains DEFAULT CHARSET=utf8;
       
+#
+# Set bug type to be what it supposed to be here
+#
+UPDATE bugdb SET bug_type = 'Feature/Change Request' WHERE package_name = 'Feature/Change Request';
+UPDATE bugdb SET bug_type = 'Documentation Problem'  WHERE package_name = 'Documentation problem';
+ 
