@@ -559,7 +559,7 @@ if (isset($_POST['in']) && (!isset($_POST['preview']) && $ncomment || $previous 
     }
 }
 
-switch (txfield('bug_type', $bug, $_POST['in']))
+switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))
 {
     case 'Feature/Change Request':
         $bug_type = 'Request';
