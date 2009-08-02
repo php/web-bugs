@@ -1490,11 +1490,13 @@ function get_resolve_reasons ($project = false)
 
 	$where = '';
 
-	if ($project !== false)
+	if ($project !== false && array_key_exists($project,$site_data))
 		$where.= "WHERE (project = '{$project}' OR project = '')";
 
 	$resolves = $variations = array();
 	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array());
+	if(PEAR::isError($res))
+		throw new Exception("SQL Error in get_resolve_reasons");
 	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 		if (!empty($row['package_name'])) {
 			$variations[$row['name']][$row['package_name']] = $row['message'];
