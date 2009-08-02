@@ -23,56 +23,18 @@ if (get_magic_quotes_gpc()) {
 	die('Turn off "magic_quotes_gpc" in php.ini!');
 }
 
-// FIXME: Configuration should be elsewhere!
+// Copy config_local_sample.php to config_local.php and override settings.
 
-// CONFIG START
-$site = 'php'; // This can be one of php, pear or pecl.
+require_once(dirname(__FILE__).'/config_local.php');
 
-$site_data = array (
-	'php' => array (
-		'url' => 'bugs.php.net',
-		'basedir' => '/bugs',
-		'email' => 'php-bugs@lists.php.net',
-		'security_email' => 'security@php.net',
-		'db' => 'phpbugsdb',
-		'db_user' => 'nobody',
-		'db_pass' => '',
-		'db_host' => 'localhost',
-		'patch_tmp' => '/tmp/patches/', 
-	),
-	'pear' => array (
-		'url' => 'pear.php.net',
-		'basedir' => '/bugs',
-		'email' => 'pear-bugs@lists.php.net',
-		'security_email' => 'pear-group@php.net',
-		'db' => 'pear',
-		'db_user' => 'nobody',
-		'db_pass' => '',
-		'db_host' => 'localhost',
-		'patch_tmp' => '/tmp/patches/', 
-	),
-	'pecl' => array (
-		'url' => 'pecl.php.net',
-		'basedir' => '/bugs',
-		'email' => 'pecl-bugs@lists.php.net',
-		'security_email' => 'security@php.net',
-		'db' => 'pear',
-		'db_user' => 'nobody',
-		'db_pass' => '',
-		'db_host' => 'localhost',
-		'patch_tmp' => '/tmp/patches/', 
-	),
-);
+if (!defined('DEVBOX')) {
+    define('DEVBOX', true);
+}
 
-define('DEVBOX', true);
+if (!defined('PEAR_CHANNELNAME')) {
+    define ('PEAR_CHANNELNAME', 'pear.php.net');
+}
 
-if (!defined('PEAR_CHANNELNAME'))
-	define ('PEAR_CHANNELNAME', 'pear.php.net');
-
-
-// CONFIG END
-
-// DO NOT EDIT ANYTHING BELOW THIS LINE, edit $site_data above instead!
 $logged_in = false;
 $siteBig = strtoupper($site);
 $site_url = $site_data[$site]['url'];
@@ -80,7 +42,7 @@ $bugEmail = $site_data[$site]['email'];
 $basedir  = $site_data[$site]['basedir'];
 $ROOT_DIR = realpath(dirname(__FILE__) . '/../');
 define('BUG_PATCHTRACKER_TMPDIR', $site_data[$site]['patch_tmp']);
-define('PEAR_DATABASE_DSN', "mysqli://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
+define('PEAR_DATABASE_DSN', "{$site_data[$site]['db_driver']}://{$site_data[$site]['db_user']}:{$site_data[$site]['db_pass']}@{$site_data[$site]['db_host']}/{$site_data[$site]['db']}");
 
 // Database connection (required always?)
 include_once 'MDB2.php';
