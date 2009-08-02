@@ -165,7 +165,7 @@ elseif ($in && $edit == 2) {
 	
 		/* add comment */
 		if ($success && !empty($ncomment)) {
-			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment)')";
+			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment')";
 			$success = @mysql_query($query);
 		}
 	}
