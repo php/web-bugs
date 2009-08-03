@@ -1486,7 +1486,7 @@ function unsubscribe($bug_id, $hash)
  */
 function get_resolve_reasons ($project = false)
 {
-	global $dbh;
+	global $dbh,$site_data;
 
 	$where = '';
 
