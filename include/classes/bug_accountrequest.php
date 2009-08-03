@@ -197,7 +197,121 @@ class Bug_Accountrequest
         return $errors;
     }
 
-  
+    function confirmRequest($handle, $password, $name)
+    {
+    	global $siteBig, $bugEmail;
+    	
+        if ($handle == $this->dbh->prepare('SELECT handle FROM users WHERE
+              handle=?')->execute(array($handle))->fetchOne()) {
+            $id = $this->dbh->nextId("karma");
+
+            $query = "INSERT INTO karma VALUES (?, ?, ?, ?, NOW())";
+            $sth = $this->dbh->prepare($query)->execute(array($id, $this->handle, 'pear.bug', 'pearweb'));
+            return true;
+        }
+
+        list($firstname, $lastname) = explode(' ', $name, 2);
+        $data = array(
+            'handle'     => $handle,
+            'firstname'  => $firstname,
+            'lastname'   => $lastname,
+            'email'      => $this->email,
+            'purpose'    => 'bug tracker',
+            'password'   => $password,
+            'password2'  => $password,
+            'purpose'    => 'Open/Comment on bugs',
+            'moreinfo'   => 'Automatic Account Request',
+            'homepage'   => '',
+        );
+
+        include_once 'pear-database-user.php';
+        $useradd = user::add($data, true, true);
+        if ($useradd !== true) {
+            return $useradd;
+        }
+
+        $temphandle = $this->dbh->prepare('SELECT handle from bug_account_request WHERE salt=?')->execute(array($this->salt))->fetchOne();
+        // update all relevant records to the new handle
+        $this->dbh->prepare('UPDATE bugdb_comments set reporter_name=? WHERE handle=?')->execute(array($name, $temphandle));
+        $this->dbh->prepare('UPDATE bugdb set reporter_name=? WHERE handle=?')->execute(array($name, $temphandle));
+        $this->dbh->prepare('UPDATE users set handle=? WHERE handle=?')->execute(array($handle, $temphandle));
+        $this->dbh->prepare('UPDATE bugdb set registered=1, handle=? WHERE handle=?')->execute(array($handle, $temphandle));
+        $this->dbh->prepare('UPDATE bugdb_comments set handle=? WHERE handle=?')->execute(array($handle, $temphandle));
+        $this->dbh->prepare('UPDATE bugdb_patchtracker set developer=? WHERE developer=?')->execute(array($handle, $temphandle));
+        $this->handle = $handle;
+        // activate the handle and grant karma
+        // implicitly without human intervention
+        // copied from the user class and Damblan_Karma
+
+        include_once 'pear-database-user.php';
+        $user = user::info($handle, null, 0);
+        if (!isset($user['registered'])) {
+            return false;
+        }
+        @$arr = unserialize($user['userinfo']);
+
+        include_once 'pear-database-note.php';
+        note::removeAll("uid", $handle);
+
+        $data = array();
+        $data['registered'] = 1;
+        $data['password']   = $password;
+        $data['name']       = $name;
+        if (is_array($arr)) {
+            $data['userinfo'] = $arr[1];
+        }
+        $data['create']   = gmdate('Y-m-d H:i');
+        $data['createBy'] = 'pearweb';
+        $data['handle']   = $handle;
+
+        user::update($data, true);
+
+        $id = $this->dbh->nextId("karma");
+
+        $query = "INSERT INTO karma VALUES (?, ?, ?, ?, NOW())";
+        $sth = $this->dbh->prepare($query)->execute(array($id, $this->handle, 'pear.bug', 'pearweb'));
+
+        $id = $this->dbh->nextId("karma");
+        $sth = $this->dbh->prepare($query)->execute(array($id, $this->handle, 'pear.voter', 'pearweb'));
+
+        if (!PEAR::isError($sth)) {
+            note::add("uid", $this->handle, "Account opened", 'pearweb');
+            $bugs = $this->dbh->prepare('SELECT * FROM bugdb WHERE handle=?')->execute(array($this->handle))->fetchAll(MDB2_FETCHMODE_ASSOC);
+            //FIXME check!
+            foreach ($bugs as $bug) {
+                $this->sendBugEmail($bug);
+            }
+            $patches = $this->dbh->prepare('SELECT bugdb.package_name,bugdb_patchtracker.*
+                FROM bugdb_patchtracker, bugdb
+                WHERE bugdb_patchtracker.developer=?
+                    AND bugdb.id=bugdb_patchtracker.bugdb_id')->execute(array($this->handle))->fetchAll(
+                    MDB2_FETCHMODE_ASSOC);
+            foreach ($patches as $patch) {
+                $this->sendPatchEmail($patch);
+            }
+            $bugs = $this->dbh->prepare('SELECT bugdb_comments.email,bugdb_comments.comment,
+                    bugdb_comments.reporter_name, bugdb.id,
+                    bugdb.bug_type,bugdb.package_name,bugdb.sdesc,
+                    bugdb.ldesc,bugdb.php_version, bugdb.php_os,bugdb.status,
+                    bugdb.assign,bugdb.package_version
+                 FROM bugdb_comments,bugdb WHERE bugdb.id=bugdb_comments.bug AND
+                 bugdb_comments.handle=?')->execute(array($this->handle))->fetchAll(MDB2_FETCHMODE_ASSOC);
+            foreach ($bugs as $bug) {
+                $this->sendBugCommentEmail($bug);
+            }
+            $msg = "Your {$siteBig} bug tracker account has been opened.\n"
+                . "Bugs you have opened will now be displayed, and you can\n"
+                . "add new comments to existing bugs";
+            $xhdr = "From: [$bugEmail}";
+            if (!DEVBOX) {
+                mail($user['email'], "Your {$siteBig} Bug Tracker Account Request", $msg, $xhdr, "-f bounce-no-user@php.net");
+            }
+            $this->deleteRequest();
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Produces an array of email addresses the report should go to
      *
