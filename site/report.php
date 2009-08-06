@@ -395,8 +395,8 @@ if (isset($_POST['in'])) {
                     $r = new Bug_Accountrequest();
                     $info = $r->sendPatchEmail($cid, $patchrevision, $package_name, $auth_user->handle);
                 }
-                var_dump ($cid);
-//                localRedirect("bug.php?id={$cid}&thanks=4");
+//                var_dump ($cid);
+                localRedirect("bug.php?id={$cid}&thanks=4");
             }
         } while (false);
     } else {
