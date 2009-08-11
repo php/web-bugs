@@ -2,20 +2,6 @@
 
 /**
  * The bug system home page
- *
- * This source file is subject to version 3.0 of the PHP license,
- * that is bundled with this package in the file LICENSE, and is
- * available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_0.txt.
- * If you did not receive a copy of the PHP license and are unable to
- * obtain it through the world-wide-web, please send a note to
- * license@php.net so we can mail you a copy immediately.
- *
- * @category  pearweb
- * @package   Bugs
- * @copyright Copyright (c) 1997-2005 The PHP Group
- * @license   http://www.php.net/license/3_0.txt  PHP License
- * @version   $Id$
  */
 
 require_once '../include/prepend.inc';
@@ -28,6 +14,43 @@ if ($id) {
 
 response_header('Bugs');
 
-include "{$ROOT_DIR}/templates/index_{$site}.php";
+?>
+<h1>PHP Bug Tracking System</h1>
+
+<p>Before you report a bug, please make sure you have completed the following steps:</p>
+
+<ul>
+<li>Used the form above or our <a href="search.php">advanced search page</a> 
+to make sure nobody has reported the bug already.</li>
+
+<li>Made sure you are using the latest stable version or a build from SVN, if
+similar bugs have recently been fixed and committed. You can download snapshots at
+<a href="http://snaps.php.net/">http://snaps.php.net</a></li>
+
+<li>Read our tips on <a href="how-to-report.php">how to report
+a bug that someone will want to help fix</a>.</li>
+<li>Make sure it isn't a support question. For support, see the
+<a href="http://www.php.net/support.php">support page</a>.</li>
+</ul>
+
+<p>Once you've double-checked that the bug you've found hasn't already been
+reported, and that you have collected all the information you need to file an
+excellent bug report, you can do so on our <a href="report.php">bug reporting
+page</a>.</p>
+
+<h1>Search the Bug System</h1>
+
+<p>You can search all of the bugs that have been reported on our
+<a href="search.php">advanced search page</a>, or use the form
+at the top of the page for a basic default search.  Read the 
+<a href="search-howto.php">search howto</a> for instructions on 
+how search works.</p>
+
+<h1>Bug System Statistics</h1>
+
+<p>You can view a variety of statistics about the bugs that have been
+reported on our <a href="stats.php">bug statistics page</a>.</p>
+
+<?php
 
 response_footer();

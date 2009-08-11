@@ -116,15 +116,6 @@ class Bug_Patchtracker
             DIRECTORY_SEPARATOR . $this->getPatchFileName($revision);
     }
 
-    function userNotRegistered($bugid, $name, $revision)
-    {
-        $user = $this->_dbh->prepare('SELECT registered from bugdb_patchtracker, users
-            WHERE bugdb_id = ? AND patch = ? AND revision = ?
-                AND users.handle = bugdb_patchtracker.developer')->execute(
-            array($bugid, $name, $revision))->fetchOne();
-        return !$user;
-    }
-
     /**
      * Attach a patch to this bug
      *
@@ -261,17 +252,11 @@ class Bug_Patchtracker
      */
     function getPatch($bugid, $name, $revision)
     {
-    	global $site;
-
-        if ($this->_dbh->prepare('SELECT bugdb_id FROM bugdb_patchtracker
-              WHERE bugdb_id = ? AND patch = ? AND revision = ?')->execute(
-              array($bugid, $name, $revision))->fetchOne()) {
-            if ($site != 'php' && !$this->_dbh->prepare('SELECT registered FROM users, bugdb_patchtracker
-                WHERE bugdb_id = ? AND patch = ? AND revision = ? AND
-                users.handle = bugdb_patchtracker.developer')->execute(array($bugid, $name, $revision))->fetchOne()) {
-                // user is not registered
-                throw new Exception('User who submitted this patch has not registered');
-            }
+        if ($this->_dbh->prepare('
+        	SELECT bugdb_id
+        	FROM bugdb_patchtracker
+        	WHERE bugdb_id = ? AND patch = ? AND revision = ?')->execute(array($bugid, $name, $revision))->fetchOne()
+		) {
             $contents = @file_get_contents($this->getPatchFullpath($bugid, $name, $revision));
             if (!$contents) {
                 return PEAR::raiseError('Cannot retrieve patch revision "' . $revision . '" for patch "' . $name . '"');
@@ -289,22 +274,13 @@ class Bug_Patchtracker
      */
     function listPatches($bugid)
     {
-    	global $site;
-    	
-    	if ($site == 'php') {
-	        $query = '
-	        	SELECT patch, revision, developer
-	            FROM bugdb_patchtracker
-	            WHERE bugdb_id = ?
-	            ORDER BY revision DESC';
-    	} else {
-	        $query = '
-	        	SELECT patch, revision, developer
-	            FROM bugdb_patchtracker, users
-	            WHERE bugdb_id = ? AND users.handle = bugdb_patchtracker.developer
-	            ORDER BY revision DESC';
-    	}
-	
+        $query = '
+        	SELECT patch, revision, developer
+            FROM bugdb_patchtracker
+            WHERE bugdb_id = ?
+            ORDER BY revision DESC
+		';
+
 		return $this->_dbh->prepare($query)->execute(array($bugid))->fetchAll(MDB2_FETCHMODE_ORDERED, true, false, true);
     }
 
@@ -317,19 +293,11 @@ class Bug_Patchtracker
      */
     function listRevisions($bugid, $patch)
     {
-    	global $site;
-		
-		if ($site == 'php') {
-    		$query = 'SELECT revision FROM bugdb_patchtracker
-    			WHERE bugdb_id = ? AND patch = ?
-    			ORDER BY revision DESC';
-		} else {
-			$query = 'SELECT revision FROM bugdb_patchtracker, users
-	            WHERE bugdb_id = ? AND
-	            patch = ? AND users.handle = bugdb_patchtracker.developer AND
-	            users.registered = 1
-		        ORDER BY revision DESC';
-		}
+   		$query = '
+   			SELECT revision FROM bugdb_patchtracker
+   			WHERE bugdb_id = ? AND patch = ?
+   			ORDER BY revision DESC
+		';
 		return $this->_dbh->prepare($query)->execute(array($bugid, $patch))->fetchAll(MDB2_FETCHMODE_ORDERED);
     }
 
@@ -366,11 +334,10 @@ class Bug_Patchtracker
 
     function getObsoletePatches($bugid, $patch, $revision)
     {
-        return $this->_dbh->prepare('SELECT bugdb_id, obsolete_patch, obsolete_revision
+        return $this->_dbh->prepare('
+        	SELECT bugdb_id, obsolete_patch, obsolete_revision
             FROM bugdb_obsoletes_patches
-                WHERE bugdb_id = ? AND
-                      patch = ? AND
-                      revision = ?')->execute(array($bugid, $patch, $revision))->fetchAll(MDB2_FETCHMODE_ASSOC);
+            WHERE bugdb_id = ? AND patch = ? AND revision = ?')->execute(array($bugid, $patch, $revision))->fetchAll(MDB2_FETCHMODE_ASSOC);
     }
 
     /**
@@ -384,23 +351,8 @@ class Bug_Patchtracker
      */
     function obsoletePatch($bugid, $name, $revision, $obsoletename, $obsoleterevision)
     {
-        $this->_dbh->prepare('INSERT INTO bugdb_obsoletes_patches
-            VALUES(?, ?, ?, ?, ?)')->execute(array($bugid, $name, $revision, $obsoletename, $obsoleterevision));
-    }
-
-    /**
-     * Retrieve information on a bug
-     *
-     * @param int $bugid
-     * @return array
-     */
-    function getBugInfo($bugid)
-    {
-        $bugid = (int) $bugid;
-        $info = $this->_dbh->prepare('SELECT * FROM bugdb WHERE id = ?')->execute(array($bugid))->fetchAll(MDB2_FETCHMODE_ASSOC);
-        if (!is_array($info) || !count($info)) {
-            return PEAR::raiseError('No such bug "' . $bugid . '"');
-        }
-        return $info[0];
+        $this->_dbh->prepare('
+        	INSERT INTO bugdb_obsoletes_patches
+        	VALUES(?, ?, ?, ?, ?)')->execute(array($bugid, $name, $revision, $obsoletename, $obsoleterevision));
     }
 }

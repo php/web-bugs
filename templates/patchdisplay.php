@@ -1,10 +1,10 @@
 <?php
-response_header('Patch :: ' . clean($package) . ' :: Bug #' . clean($bug));
-show_bugs_menu(clean($package));
+response_header('Patch :: ' . clean($package_name) . ' :: Bug #' . $bug_id);
+show_bugs_menu(clean($package_name));
 ?>
-<h1>Patch version <?php echo format_date($revision) ?> for <?php echo clean($package) ?> Bug #<?php
-    echo clean($bug) ?></h1>
-<a href="bug.php?id=<?php echo urlencode($bug) ?>">Return to Bug #<?php echo clean($bug) ?></a>
+<h1>Patch version <?php echo format_date($revision) ?> for <?php echo clean($package_name); ?> Bug #<?php
+    echo $bug_id; ?></h1>
+<a href="bug.php?id=<?php echo urlencode($bug) ?>">Return to Bug #<?php echo $bug_id; ?></a>
 | <a href="patch-display.php?bug_id=<?php echo urlencode($bug) ?>&amp;patch=<?php echo urlencode($patch)
     ?>&amp;revision=<?php echo urlencode($revision) ?>&amp;download=1">Download this patch</a><br />
 <?php
@@ -47,7 +47,7 @@ foreach ($revisions as $i => $rev) {
 }
 echo '</ul></li>';
 ?>
-<h3>Developer: <a href="/user/<?php echo $handle ?>"><?php echo $handle ?></a></h3>
+<h3>Developer: <?php echo $handle; ?></a></h3>
 <pre>
 <?php echo htmlentities($patchcontents, ENT_QUOTES, 'UTF-8'); ?>
 </pre>

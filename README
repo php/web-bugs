@@ -1,6 +1,6 @@
 === Welcome to the official php.net bug tracking system ===
 
-This is a collaboration between PEAR, PECL and PHP core to create a unified bug tracker.
+This was a collaboration between PEAR, PECL and PHP core to create a unified bug tracker.
 
 === Status ===
 
@@ -28,10 +28,6 @@ Required PEAR packages:
  - Tree
  - HTTP
  - HTTP_Upload
-
-Required external packages:
- - TODO: These requirements are being removed
- - Damblan: ???
 
 Database:
  - See README.UPGRADE_bugs.php.net

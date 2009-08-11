@@ -10,3 +10,13 @@
                 "6SVN-{$date} (snap)",
                 "6SVN-{$date} (SVN)",
     );
+
+/*
+	This needs a bit tuning to get latest releases of each active branch.
+
+    $foo = unserialize(file_get_contents('http://www.php.net/releases/index.php?serialize=1&max=-1'));
+    
+    foreach ($foo as $f)
+    	echo $f['version'], "\n";
+
+*/

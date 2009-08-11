@@ -1,5 +1,8 @@
 <?php
-/* $Id$ */
+
+/**
+ * Contains functions to handle authentication using master.php.net
+ */
 
 function verify_password($user, $pass)
 {

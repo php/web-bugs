@@ -1,24 +1,17 @@
 <?php
-response_header('Add Patch :: ' . clean($package));
-show_bugs_menu(clean($package));
+response_header('Add Patch :: ' . clean($package_name););
+show_bugs_menu(clean($package_name););
 ?>
-<h2>Add a Patch to <a href="<?php echo clean($bug) ?>">Bug #<?php echo clean($bug) ?></a>
-<?php if ($site != 'php') { ?>
-for Package <?php echo '<a href="/package/', clean($package), '">', clean($package), '</a>'; ?>
-<?php } ?>
-</h2>
+<h2>Add a Patch to <a href="<?php echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a></h2>
 <ul>
  <li>One problem per patch, please</li>
  <li>Patches must be 100k or smaller</li>
-<?php if ($site != 'php') { ?>
- <li>Make sure your coding style complies with <a href="/manual/en/standards.php">Coding Standards</a></li>
-<?php } ?>
  <li>Only text/plain files accepted</li>
  <li>choose a meaningful patch name (i.e. add-fronk-support)</li>
 </ul>
 <form name="patchform" method="post" action="patch-add.php" enctype="multipart/form-data">
 <input type="hidden" name="MAX_FILE_SIZE" value="102400" />
-<input type="hidden" name="bug" value="<?php echo clean($bug) ?>" />
+<input type="hidden" name="bug" value="<?php echo $bug_id; ?>" />
 <?php
 if ($errors) {
     foreach ($errors as $err) {
@@ -34,7 +27,7 @@ if (!$loggedin) {?>
    Email Address (MUST BE VALID)
   </th>
   <td class="form-input">
-   <input type="text" name="email" value="<?php echo clean($email) ?>" />
+   <input type="text" name="email" value="<?php echo clean($email); ?>" />
   </td>
  </tr>
  <tr>
@@ -47,7 +40,7 @@ if (!$loggedin) {?>
    Patch Name
   </th>
   <td class="form-input">
-   <input type="text" maxlength="40" name="name" value="<?php echo clean($name) ?>" /><br />
+   <input type="text" maxlength="40" name="name" value="<?php echo clean($name); ?>" /><br />
    <small>The patch name must be shorter than 40 characters and it must only contain alpha-numeric characters, dots, underscores or hyphens.</small>
   </td>
  </tr>
@@ -67,7 +60,7 @@ if (!$loggedin) {?>
   <td class="form-input">
    <select name="obsoleted[]" multiple="true" size="5">
     <option value="0">(none)</option>
-   <?php
+<?php
    foreach ($patches as $patchname => $patch2) {
        foreach ($patch2 as $patch) {
            echo '<option value="', htmlspecialchars($patchname . '#' . $patch[0]),
@@ -75,7 +68,7 @@ if (!$loggedin) {?>
                 format_date($patch[0]), ' (', $patch[1], ')</option>';
        }
    }
-   ?>
+?>
    </select>
   </td>
  </tr>

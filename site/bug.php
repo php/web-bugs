@@ -2,20 +2,6 @@
 
 /**
  * User interface for viewing and editing bug details
- *
- * This source file is subject to version 3.0 of the PHP license,
- * that is bundled with this package in the file LICENSE, and is
- * available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_0.txt.
- * If you did not receive a copy of the PHP license and are unable to
- * obtain it through the world-wide-web, please send a note to
- * license@php.net so we can mail you a copy immediately.
- *
- * @category  pearweb
- * @package   Bugs
- * @copyright Copyright (c) 1997-2005 The PHP Group
- * @license   http://www.php.net/license/3_0.txt  PHP License
- * @version   $Id$
  */
 
 // Bailout early if no/invalid bug id is passed
@@ -26,14 +12,10 @@ if (empty($_REQUEST['id']) || !((int) $_REQUEST['id'])) {
     $bug_id = (int) $_REQUEST['id'];
 }
 
-/**
- * Start session 
- */
+// Start session 
 session_start();
 
-/**
- * Obtain common includes
- */
+// Obtain common includes
 require_once '../include/prepend.inc';
 
 // Set pseudo_pkgs array
@@ -50,7 +32,6 @@ if (isset($_GET['unsubscribe'])) {
     $unsubcribe = (int) $_GET['unsubscribe'];
 
     $hash = isset($_GET['t']) ? $_GET['t'] : false;
-    $site == 'pear' ? $redirect = 'pecl' : $redirect = 'pear';
 
     if (!$hash) {
         localRedirect("bug.php?id={$bug_id}");
@@ -152,37 +133,12 @@ if (!$bug) {
     exit;
 }
 
-// Redirect to correct site if package type is not same as current site
-if (!empty($bug['package_type']) && $bug['package_type'] != $site) {
-    $url = "{$site_data[$bug['package_type']]['url']}{$site_data[$bug['package_type']]['basedir']}";
-    localRedirect("http://{$url}/bug.php?id={$bug_id}");
-}
-
-// if the user is not registered, this might be spam, don't display
-if ($site != 'php' && !$bug['registered'] && $logged_in != 'developer') {
-    response_header('User has not confirmed identity');
-    display_bug_error('The user who submitted this report has not yet confirmed his/her email address.');
-    $handle_out = urlencode($bug['bughandle']);
-    echo <<< DATA
-If you submitted this report, please check your email.
-If you did not receive any message, <a href="resend-request-email.php?handle={$handle_out}">click here to re-send</a>
-MANUAL CONFIRMATION IS NOT POSSIBLE.  All bugs/comments/patches associated with this email address will be deleted within 48 hours 
-if the account request is not confirmed!
-DATA;
-    response_footer();
-    exit;
-}
-
 // handle any updates, displaying errors if there were any
 $errors = array();
 $previous = $current = array();
 
 /* Fetch RESOLVE_REASONS array */
-if ($site != 'php') {
-	require_once "{$ROOT_DIR}/include/resolve-{$site}.inc";
-} else {
-	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
-}
+list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
 
 /**
  * Init BugDataObject class
@@ -221,44 +177,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
                     break; // skip bug comment addition
                 }
 
-                if ($site != 'php') {
-                    // user doesn't exist yet
-                    require_once "{$ROOT_DIR}/include/classes/bug_accountrequest.php";
-                    $buggie = new Bug_Accountrequest;
-                    $salt = $buggie->addRequest($_POST['in']['commentemail']);
-                    if (is_array($salt)) {
-                        $errors = $salt;
-                        response_header('Add Comment - Problems');
-                        break; // skip bug comment addition
-                    }
-                    if (PEAR::isError($salt)) {
-                        $errors[] = $salt;
-                        response_header('Add Comment - Problems');
-                        break;
-                    }
-                    if ($salt === false) {
-                        $errors[] = 'Your account cannot be added to the queue.'
-                             . ' Please write a mail message to the '
-                             . ' <i>pear-dev</i> mailing list.';
-                        response_header('Report - Problems');
-                        break;
-                    }
-
-                    try {
-                        $buggie->sendEmail();
-                    } catch (Exception $e) {
-                        $errors[] = 'Critical internal error: could not send' .
-                            ' email to your address ' . $_POST['in']['email'] .
-                            ', please write a mail message to the <i>pear-dev</i>' .
-                            'mailing list and report this problem with details.' .
-                            '  We apologize for the problem, your report will help' .
-                            ' us to fix it for future users: ' . $e->getMessage();
-                        response_header('Add Comment - Problems');
-                        break;
-                    }
-                    $_POST['in']['handle'] =
-                    $_POST['in']['name'] = $buggie->handle;
-                }
                 $_POST['in']['name'] = '';
             } else {
                 $_POST['in']['commentemail'] = $auth_user->email;
@@ -493,34 +411,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
             $_POST['in']['php_version'],
             $_POST['in']['php_os'],
         ));
-        $previous = $dbh->prepare("
-            SELECT roadmap_version
-            FROM bugdb_roadmap_link l, bugdb_roadmap b
-            WHERE l.id = {$bug_id} AND b.id=l.roadmap_id
-        ")->execute()->fetchAll();
 
-        // don't change roadmap assignments for non-devs editing a bug
-        if ($logged_in == 'developer') {
-            $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
-            $link->id = $bug_id;
-            $link->delete();
-            if (isset($_POST['in']['fixed_versions'])) {
-                foreach ($_POST['in']['fixed_versions'] as $rid) {
-                    $link->id = $bug_id;
-                    $link->roadmap_id = $rid;
-                    $link->insert();
-                }
-            }
-            $current = $dbh->prepare("
-                SELECT roadmap_version
-                FROM bugdb_roadmap_link l, bugdb_roadmap b
-                WHERE l.id = {$bug_id} AND b.id = l.roadmap_id
-            ")->execute()->fetchAll();
-        } else {
-            $current = $previous;
-        }
-
-        $changed  = bug_diff($bug, $_POST['in'], $previous, $current);
+        $changed  = bug_diff($bug, $_POST['in']);
         if (!empty($changed)) {
             $log_comment = bug_diff_render_html($changed);
         }
@@ -653,19 +545,7 @@ show_bugs_menu(txfield('package_name'));
 
   <tr id="submitter">
    <th class="details">From:</th>
-   <td>
-<?php
-	if (!$bug['registered']) {
-        echo 'Unconfirmed reporter';
-    } elseif ($site != 'php' && !empty($bug['bughandle'])) {
-        echo "<a href='/user/{$bug['bughandle']}'>{$bug['bughandle']}</a>";
-    } elseif ($site != 'php' && !empty($bug['handle']) && $bug['showemail'] != '0') {
-        echo "<a href='/user/{$bug['handle']}'>{$bug['handle']}</a>";
-    } else {
-		echo spam_protect(htmlspecialchars($bug['email']));
-	}
-?>
-   </td>
+   <td><?php echo spam_protect(htmlspecialchars($bug['email'])); ?></td>
    <th class="details">Assigned:</th>
    <td><?php echo htmlspecialchars($bug['assign']); ?></td>
   </tr>
@@ -684,47 +564,6 @@ show_bugs_menu(txfield('package_name'));
    <th class="details">OS:</th>
    <td><?php echo htmlspecialchars($bug['php_os']) ?></td>
   </tr>
-<?php if ($site != 'php') {
-        $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
-        $link->id = $bug_id;
-        $link->find(false);
-        $links = array();
-        while ($link->fetch()) {
-            $links[$link->roadmap_id] = true;
-        }
-        $db = Bug_DataObject::bugDB('bugdb_roadmap');
-        $db->package = $bug['package_name'];
-        $db->orderBy('releasedate DESC');
-        $assignedRoadmap = array();
-        if ($db->find(false)) {
-            while ($db->fetch()) {
-                $released = $dbh->prepare('SELECT releases.id
-                 FROM packages, releases, bugdb_roadmap b
-                 WHERE
-                    b.id=? AND
-                    packages.name=b.package AND releases.package=packages.id AND
-                    releases.version=b.roadmap_version')->execute(
-                    array($db->id))->fetchOne();
-                if (isset($links[$db->id])) {
-                    $assignedRoadmap[] = '<a href="roadmap.php?package=' .
-                        $db->package . ($released ? '&showold=1' : '') .
-                        '&roadmapdetail=' . $db->roadmap_version .
-                        '#a' . $db->roadmap_version . '">' . $db->roadmap_version .
-                        '</a>';
-                }
-            }
-        }
-        if (!count($assignedRoadmap)) {
-            $assignedRoadmap[] = '(Not assigned)';
-        }
-?>
-  <tr id="roadmap">
-   <th class="details">Roadmaps: </th>
-   <td><?php echo implode(', ', $assignedRoadmap); ?></td>
-   <th>&nbsp;</th>
-   <td>&nbsp;</td>
-  </tr>
-<?php } ?>
  </table>
 </div>
 
@@ -732,12 +571,8 @@ show_bugs_menu(txfield('package_name'));
 <?php
 control(0, 'View');
 control(3, 'Add Comment');
-if ($site == 'php' ) {
-    control(1, 'Developer');
-    control(2, 'Edit');
-} else {
-    control(1, 'Edit');
-}
+control(1, 'Developer');
+control(2, 'Edit');
 ?>
 </div>
 
@@ -798,14 +633,14 @@ if ($site == 'php' ) {
   <br clear="all" />
 <?php } 
 
+//
+// FIXME! Do not wrap here either. Re-use the comment display function!
+//
+
 if (isset($_POST['preview']) && !empty($ncomment)) {
     $preview = '<div class="comment">';
     $preview .= "<strong>[" . format_date(time()) . "] ";
-    if ($site != 'php' && $logged_in) {
-        $preview .= "<a href='/user/{$auth_user->handle}'>{$auth_user->handle}</a>";
-    } else {
-        $preview .= spam_protect(htmlspecialchars($from));
-    }
+    $preview .= spam_protect(htmlspecialchars($from));
     $preview .= "</strong>\n<pre class=\"note\">";
     $comment = wordwrap($ncomment, 72);
     $preview .= make_ticket_links(addlinks($comment));
@@ -867,7 +702,7 @@ if ($edit == 1 || $edit == 2) { ?>
 ?>
             <div class="explain">
 
-<?php        if ($site == 'php' && (!isset($_POST['in']) || !is_array($_POST['in']))) { ?>
+<?php        if (!isset($_POST['in']) || !is_array($_POST['in'])) { ?>
 
                     Welcome! If you don't have a SVN account, you can't do anything here.<br />
                     You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
@@ -937,8 +772,7 @@ if ($edit == 1 || $edit == 2) { ?>
       <th class="details">Package:</th>
       <td colspan="3">
        <select name="in[package_name]">
-        <?php show_types(isset($_POST['in']) && isset($_POST['in']['package_name']) ?
-            $_POST['in']['package_name'] : '', 0, $bug['package_name']) ?>
+        <?php show_package_options(isset($_POST['in']) && isset($_POST['in']['package_name']) ? $_POST['in']['package_name'] : '', 0, $bug['package_name']) ?>
        </select>
       </td>
      </tr>
@@ -976,59 +810,12 @@ if ($edit == 1 || $edit == 2) { ?>
        <input type="text" size="20" maxlength="100" name="in[php_version]"
         value="<?php echo field('php_version') ?>" />
       </td>
-<?php if ($site != 'php') { ?>
-      <th class="details">Package Version:</th>
-      <td>
-       <input type="text" size="20" maxlength="100" name="in[package_version]"
-        value="<?php echo field('package_version') ?>" />
-      </td>
-<?php } ?>
       <th class="details">OS:</th>
       <td>
        <input type="text" size="20" maxlength="32" name="in[php_os]"
         value="<?php echo field('php_os') ?>" />
       </td>
      </tr>
-<?php if ($site != 'php' && $logged_in == 'developer') { ?>
-     <tr>
-      <th class="details">Assigned to <br />Roadmap Version(s):<br />
-      (<span class="headerbottom">Already released</span>)</th>
-      <td colspan="5">
-<?php
-        $link = Bug_DataObject::bugDB('bugdb_roadmap_link');
-        $link->id = $bug_id;
-        $link->find(false);
-        $links = array();
-        while ($link->fetch()) {
-            $links[$link->roadmap_id] = true;
-        }
-        $db = Bug_DataObject::bugDB('bugdb_roadmap');
-        $db->package = $bug['package_name'];
-        $db->orderBy('releasedate DESC');
-        if ($db->find(false)) {
-            while ($db->fetch()) {
-                $released = $dbh->prepare('SELECT releases.id
-                 FROM packages, releases, bugdb_roadmap b
-                 WHERE
-                    b.id=? AND
-                    packages.name=b.package AND releases.package=packages.id AND
-                    releases.version=b.roadmap_version')->execute(array($db->id))->fetchOne();
-                if ($released) {
-                    echo '<span class="headerbottom">';
-                }
-				echo '<input type="checkbox" name="in[fixed_versions][]" value="', $db->id , '"', (isset($links[$db->id]) ? ' checked="checked"' : ''), " />{$db->roadmap_version}<br />";
-                if ($released) {
-                    echo '</span>';
-                }
-            }
-        } else {
-            echo '(No roadmap defined)';
-        }
-        ?>
-      </td>
-     </tr>
-<?php } ?>
-     <tr>
     </table>
 
     <p style="margin-bottom: 0em">
@@ -1115,7 +902,7 @@ if (!$logged_in) { ?>
 
 // Display original report
 if ($bug['ldesc']) {
-    output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['bughandle'], $bug['reporter_name'], $bug['registered']);
+    output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['bughandle'], $bug['reporter_name']);
 }
 
 // Display patches
@@ -1152,7 +939,7 @@ if (is_array($bug_comments) && count($bug_comments)) {
 
 	echo "<div id='comments_view' style='clear:both;'>\n";
     foreach ($bug_comments as $row) {
-        output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], ($row['bughandle'] ? $row['bughandle'] : $row['handle']), $row['comment_name'], $row['registered']);
+        output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], ($row['bughandle'] ? $row['bughandle'] : $row['handle']), $row['comment_name']);
     }
     echo "</div>\n";
 }
@@ -1186,40 +973,15 @@ response_footer($bug_JS);
 /** 
  * Helper functions 
  */
-function output_note($com_id, $ts, $email, $comment, $comment_type, $handle, $comment_name, $registered)
+function output_note($com_id, $ts, $email, $comment, $comment_type, $handle, $comment_name)
 {
-    global $site, $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
+    global $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
 
     $display = ($comment_type == 'comment') ? '' : 'style="display:none;"';
     echo "<div class='comment type_{$comment_type}' {$display}>";
     echo '<a name="' , urlencode($ts) , '">&nbsp;</a>';
     echo "<strong>[" , format_date($ts) , "] ";
-    if (!$registered) {
-        $handle_out = urlencode($handle);
-        echo '
-User who submitted this comment has not confirmed identity</strong>
-<pre class="note">';
-
-        if ($logged_in != 'developer') {
-            echo <<< DATA
-If you submitted this note, please check your email.
-If you did not receive any message, <a href="resend-request-email.php?handle={$handle_out}">click here to re-send</a>
-MANUAL CONFIRMATION IS NOT POSSIBLE.  Write a message to <a href='mailto:pear-dev@lists.php.net'>pear-dev@lists.php.net</a>
-to request the confirmation link.  All bugs/comments/patches associated with this email address will be deleted within 48 hours 
-if the account request is not confirmed!
-DATA;
-        }
-        echo '</pre></div>';
-        return;
-    }
-    if ($site != 'php' && $handle) {
-        echo "<a href='/user/{$handle}'>{$handle}</a></strong>\n";
-    } else {
-        echo spam_protect(htmlspecialchars($email)) , "</strong>\n";
-    }
-    if ($site != 'php' && $comment_name && $registered) {
-        echo '(' , htmlspecialchars($comment_name) , ')';
-    }
+    echo spam_protect(htmlspecialchars($email)) , "</strong>\n";
 
     switch ($comment_type)
     {

@@ -1,29 +1,13 @@
-<?php /* vim: set noet ts=4 sw=4: : */
+<?php
 
 /**
  * Search for bugs
- *
- * This source file is subject to version 3.0 of the PHP license,
- * that is bundled with this package in the file LICENSE, and is
- * available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_0.txt.
- * If you did not receive a copy of the PHP license and are unable to
- * obtain it through the world-wide-web, please send a note to
- * license@php.net so we can mail you a copy immediately.
- *
- * @category  pearweb
- * @package   Bugs
- * @copyright Copyright (c) 1997-2005 The PHP Group
- * @license   http://www.php.net/license/3_0.txt  PHP License
- * @version   $Id$
  */
 
-/**
- * Obtain common includes
- */
+// Obtain common includes
 require_once '../include/prepend.inc';
 
-/* Redirect early if a bug id is passed as search string */
+// Redirect early if a bug id is passed as search string
 $search_for_id = (isset($_GET['search_for'])) ? (int) $_GET['search_for'] : 0;
 if ($search_for_id)
 {
@@ -34,12 +18,6 @@ if ($search_for_id)
 bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
 $newrequest = $_REQUEST;
-if (isset($newrequest['PEAR_USER'])) {
-    unset($newrequest['PEAR_USER']);
-}
-if (isset($newrequest['PEAR_PW'])) {
-    unset($newrequest['PEAR_PW']);
-}
 if (isset($newrequest['PHPSESSID'])) {
     unset($newrequest['PHPSESSID']);
 }
@@ -84,11 +62,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 "&amp;order_by=$order_by" .
                 "&amp;direction=$direction" .
                 "&amp;limit=$limit" .
-                '&amp;packagever='  . urlencode($packagever) .
                 '&amp;phpver='      . urlencode($phpver) .
-                '&amp;handle='      . urlencode($handle) .
                 '&amp;assign='      . urlencode($assign) .
-                '&amp;maintain='    . urlencode($maintain);
 
         $link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params}";
         $clean_link = "search.php?cmd=display{$link_params}";
@@ -98,21 +73,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
         }
 
         if (!$rows) {
-            if (isset($_GET['showmenu'])) {
-                show_bugs_menu($package_name, $status, $link);
-            } else {
-                show_bugs_menu($package_name, $status);
-            }
             $errors[] = 'No bugs were found.';
             display_bug_error($errors, 'warnings', '');
         } else {
             display_bug_error($warnings, 'warnings', 'WARNING:');
-            if (isset($_GET['showmenu'])) {
-                show_bugs_menu($package_name, $status, $link);
-            } else {
-                show_bugs_menu($package_name, $status);
-            }
-
             $link .= '&amp;status=' . urlencode($status);
             $package_count = count($package_name);
 ?>
@@ -146,15 +110,12 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 <?php } ?>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
-<?php if ($site != 'php') { ?>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=package_version">Package Version</a></th>
-<?php } ?>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=php_version">PHP Version</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=sdesc">Summary</a></th>
   <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=assign">Assigned</a></th>
  </tr>
-            <?php
+<?php
 
             while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
                 echo ' <tr valign="top" class="' , $tla[$row['status']], '">' , "\n";
@@ -191,11 +152,6 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                     printf ("<br />%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
                 }
                 echo '</td>', "\n";
-
-                /* Package version */
-				if ($site != 'php') {
-	                echo '  <td>', htmlspecialchars($row['package_version']), '</td>';
-				}
 
                 /* PHP version */
                 echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
@@ -271,12 +227,12 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th><label for="category" accesskey="c">Pa<span class="accesskey">c</span>kage</label></th>
   <td style="white-space: nowrap">Return bugs for these <b>packages</b></td>
-  <td><select id="category" name="package_name[]" multiple="multiple" size="6"><?php show_types($package_name, 2);?></select></td>
+  <td><select id="category" name="package_name[]" multiple="multiple" size="6"><?php show_package_options($package_name, 2);?></select></td>
 </tr>
 <tr valign="top">
   <th>&nbsp;</th>
   <td style="white-space: nowrap">Return bugs <b>NOT</b> for these <b>packages</b></td>
-  <td><select name="package_nname[]" multiple="multiple" size="6"><?php show_types($package_nname, 2);?></select></td>
+  <td><select name="package_nname[]" multiple="multiple" size="6"><?php show_package_options($package_nname, 2);?></select></td>
 </tr>
 <tr valign="top">
   <th>OS</th>
@@ -310,21 +266,10 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 ?>
   </td>
 </tr>
-  <tr valign="top">
-  <th>Maintainer</th>
-  <td nowrap="nowrap">Return only bugs in packages <b>maintained</b> by</td>
-  <td><input type="text" name="maintain" value="<?php echo htmlspecialchars($maintain);?>" />
-<?php
-    if (!empty($auth_user->handle)) {
-        $u = htmlspecialchars($auth_user->handle);
-        echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.maintain.value='$u'\" />";
-    }
-?>
-  </td>
- </tr>
+
 <tr valign="top">
   <th>Author e<span class="accesskey">m</span>ail</th>
-  <td style="white-space: nowrap">Return bugs with author email/handle</td>
+  <td style="white-space: nowrap">Return bugs with author email</td>
   <td><input accesskey="m" type="text" name="author_email" value="<?php echo htmlspecialchars($author_email); ?>" />
 <?php
     if (!empty($auth_user->handle)) {

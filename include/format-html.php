@@ -1,493 +1,185 @@
 <?php
-/*
-   +----------------------------------------------------------------------+
-   | PEAR Web site version 1.0                                            |
-   +----------------------------------------------------------------------+
-   | Copyright (c) 2001-2005 The PHP Group                                |
-   +----------------------------------------------------------------------+
-   | This source file is subject to version 2.02 of the PHP license,      |
-   | that is bundled with this package in the file LICENSE, and is        |
-   | available at through the world-wide-web at                           |
-   | http://www.php.net/license/2_02.txt.                                 |
-   | If you did not receive a copy of the PHP license and are unable to   |
-   | obtain it through the world-wide-web, please send a note to          |
-   | license@php.net so we can mail you a copy immediately.               |
-   +----------------------------------------------------------------------+
-   | Authors:                                                             |
-   +----------------------------------------------------------------------+
-   $Id$
-*/
-
-/**
- * Adds extra CSS files to be loaded
- *
- * @param string $style
- */
-function extra_styles($new = null)
-{
-    static $extra_styles = array();
-    if (!is_null($new)) {
-        $extra_styles[] = $new;
-    }
-    return $extra_styles;
-}
 
 /**
  * Prints out the XHTML headers and top of the page.
  *
- * @param string $title  a string to go into the header's <title>
+ * @param string $title	a string to go into the header's <title>
  * @return void
  */
 function response_header($title, $extraHeaders = '')
 {
-    global $_header_done, $SIDEBAR_DATA, $self, $auth_user, $logged_in, $site, $siteBig, $basedir;
+	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $basedir;
 
-    $extra_styles = extra_styles();
+	if ($_header_done) {
+		return;
+	}
 
-    if ($_header_done) {
-        return;
-    }
+	$_header_done	= true;
 
-    $_header_done    = true;
-    $rts             = rtrim($SIDEBAR_DATA);
-
-    if (substr($rts, -1) == '-') {
-        $SIDEBAR_DATA = substr($rts, 0, -1);
-    } else {
-        $SIDEBAR_DATA .= draw_navigation('main_menu', 'Main:');
-        $SIDEBAR_DATA .= draw_navigation('docu_menu', 'Documentation:');
-        $SIDEBAR_DATA .= draw_navigation('downloads_menu', 'Downloads:');
-        if ($site == 'pear') {
-	        $SIDEBAR_DATA .= draw_navigation('proposal_menu', 'Package Proposals:');
-		}
-        if ($logged_in) {
-            if (!empty($auth_user->registered)) {
-                if ($logged_in == 'developer') {
-                    global $developer_menu;
-                    $SIDEBAR_DATA .= draw_navigation('developer_menu', 'Developers:');
-                }
-            }
-            if ($auth_user->isAdmin()) {
-                global $admin_menu;
-                $SIDEBAR_DATA .= draw_navigation('admin_menu', 'Administrators:');
-            }
-        } elseif ($site == 'pear') {
-            $SIDEBAR_DATA .= draw_navigation('developer_menu_public', 'Developers:');
-        }
-    }
-
-    header('Content-Type: text/html; charset=ISO-8859-15');
-    echo '<?xml version="1.0" encoding="ISO-8859-15" ?>';
+	header('Content-Type: text/html; charset=ISO-8859-15');
+	echo '<?xml version="1.0" encoding="ISO-8859-15" ?>';
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<?php
-echo $extraHeaders;
-?>
- <title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
- <link rel="shortcut icon" href="images/<?php echo $site; ?>-favicon.ico" />
- <link rel="stylesheet" href="css/<?php echo $site; ?>-style.css" />
-<?php
-
-    foreach ($extra_styles as $style_file) {
-        echo ' <link rel="stylesheet" href="' . $style_file . "\" />\n";
-    }
-?>
- <link rel="alternate" type="application/rss+xml" title="RSS feed" href="http://<?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/feeds/latest.rss" />
+	<?php echo $extraHeaders; ?>
+	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
+	<link rel="shortcut icon" href="images/favicon.ico" />
+	<link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
-<div>
-<a id="TOP"></a>
-</div>
 
-<!-- START HEADER -->
+<div><a id="TOP"></a></div>
 
 <table id="head-menu" class="head" cellspacing="0" cellpadding="0">
- <tr>
-  <td class="head-logo">
-   <?php print_link("{$basedir}/", make_image($site.'-logo.gif', $siteBig, false, false, false, false, 'margin: 5px;') ); ?><br />
-  </td>
-  <td class="head-menu">
+	<tr>
+		<td class="head-logo">
+			<a href="/"><img src="<?php echo $basedir; ?>/images/logo.gif" alt="Bugs" /></a>
+		</td>
 
-<?php 
+		<td class="head-menu">
+<?php
 
-if ($site == 'php') {
-        print_link('http://www.php.net/', 'php.net', false, 'class="menuWhite"');
-        echo delim();
-        print_link('http://www.php.net/support.php', 'support', false, 'class="menuWhite"');
-        echo delim();
-        print_link('http://www.php.net/docs.php', 'documentation', false, 'class="menuWhite"');
-        echo delim();
-        print_link('report.php', 'report a bug', false, 'class="menuWhite"');
-        echo delim();
-        print_link('search.php', 'advanced search', false, 'class="menuWhite"');
-        echo delim();
-        print_link('search-howto.php', 'search howto', false, 'class="menuWhite"');
-        echo delim();
-        print_link('stats.php', 'statistics', false, 'class="menuWhite"');
-        echo delim();
-        print_link('http://master.php.net/login.php', 'login', false, 'class="menuWhite"');
-} else { 
-
-    if (!$logged_in) {
-        print_link('/account-request.php', 'Register', false, 'class="menuBlack"');
-        echo delim();
-        if ($_SERVER['QUERY_STRING'] && $_SERVER['QUERY_STRING'] != 'logout=1') {
-            print_link('/login.php?redirect=' . urlencode("{$self}?{$_SERVER['QUERY_STRING']}"), 'Login', false, 'class="menuBlack"');
-        } else {
-            print_link('/login.php?redirect=' . $self, 'Login', false, 'class="menuBlack"');
-        }
-    } else {
-        print '<small class="menuWhite">';
-        print 'Logged in as ' . strtoupper($auth_user->handle) . ' (';
-        print '<a class="menuWhite" href="/user/' . $auth_user->handle . '">Info</a> | ';
-        print '<a class="menuWhite" href="/account-edit.php?handle=' . $auth_user->handle . '">Profile</a> | ';
-        print '<a class="menuWhite" href="search.php?handle=' . $auth_user->handle . '&amp;cmd=display&amp;status=OpenFeedback&amp;showmenu=1">Bugs</a> | ';
-        print '<a class="menuWhite" href="search.php?cmd=display' .
-            '&amp;status=All&amp;bug_type=All&amp;author_email=' . $auth_user->handle .
-            '&amp;direction=DESC&amp;order_by=ts1&amp;showmenu=1">My Bugs</a>';
-        print ")</small><br />\n";
-
-        if (empty($_SERVER['QUERY_STRING'])) {
-            print_link('?logout=1', 'Logout', false, 'class="menuBlack"');
-        } else {
-            print_link('?logout=1&amp;' . htmlspecialchars($_SERVER['QUERY_STRING']), 'Logout', false, 'class="menuBlack"');
-        }
-    }
-
-    echo delim();
-    if ($site == 'pear') {
-	    print_link('/manual/', 'Documentation', false, 'class="menuBlack"');
-	    echo delim();
-	}
-    print_link('/packages.php', 'Packages', false, 'class="menuBlack"');
-    echo delim();
-    if ($site == 'pear') {
-	    print_link('/support/', 'Support', false, 'class="menuBlack"');
-	} else {
-	    print_link('support.php', 'Support', false, 'class="menuBlack"');
-	}
-    echo delim();
-    print_link("{$basedir}/", 'Bugs', false, 'class="menuBlack"');
-} 
+print_link('http://www.php.net/', 'php.net', false, 'class="menuWhite"');
+echo delim();
+print_link('http://www.php.net/support.php', 'support', false, 'class="menuWhite"');
+echo delim();
+print_link('http://www.php.net/docs.php', 'documentation', false, 'class="menuWhite"');
+echo delim();
+print_link('report.php', 'report a bug', false, 'class="menuWhite"');
+echo delim();
+print_link('search.php', 'advanced search', false, 'class="menuWhite"');
+echo delim();
+print_link('search-howto.php', 'search howto', false, 'class="menuWhite"');
+echo delim();
+print_link('stats.php', 'statistics', false, 'class="menuWhite"');
+echo delim();
+print_link('http://master.php.net/login.php', 'login', false, 'class="menuWhite"');
 
 ?>
-  </td>
- </tr>
+		</td>
+	</tr>
 
-<?php if ($site == 'php') { ?>
-  <tr>
-   <td class="head-search" colspan="2">
-    <form method="get" action="search.php">
-    <p class="head-search">
-      <input type="hidden" name="cmd" value="display" />
-      <small>go to bug id or search bugs for</small>
-      <input class="small" type="text" name="search_for" value="" size="30" />
-      <input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
-     </p>
-    </form>
-   </td>
-  </tr>
-<?php } else { ?>
- <tr>
-  <td class="head-search" colspan="2">
-   <form method="get" action="/search.php">
-    <p class="head-search">
-     <span class="accesskey">S</span>earch for
-     <input class="small" type="text" name="q" value="" size="20" accesskey="s" />
-     in the
-    <select name="in" class="small">
-        <option value="packages">Packages</option>
-        <option value="site">This site (using Yahoo!)</option>
-<?php if ($site == 'pear') { ?>
-        <option value="users">Developers</option>
-        <option value="pear-dev">Developer mailing list</option>
-        <option value="pear-general">General mailing list</option>
-        <option value="pear-cvs">Commits mailing list</option>
-<?php } else { ?>
-        <option value="developers">Developers</option>
-        <option value="pecl-dev">Developer mailing list</option>
-        <option value="pecl-cvs">Commits mailing list</option>
-<?php } ?>
-    </select>
-    <input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
-    </p>
-   </form>
-  </td>
- </tr>
-<?php } ?>
+	<tr>
+		<td class="head-search" colspan="2">
+			<form method="get" action="search.php">
+				<p class="head-search">
+					<input type="hidden" name="cmd" value="display" />
+					<small>go to bug id or search bugs for</small>
+					<input class="small" type="text" name="search_for" value="" size="30" />
+					<input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
+				</p>
+			</form>
+		</td>
+	</tr>
 </table>
 
-<!-- END HEADER -->
-<!-- START MIDDLE -->
-
 <table class="middle" cellspacing="0" cellpadding="0">
- <tr>
-
-<?php if (!empty($SIDEBAR_DATA)) { ?>
-
-<!-- START LEFT SIDEBAR -->
-  <td class="sidebar_left">
-   <span id="sidebar">
-   <?php echo $SIDEBAR_DATA ?>
-   </span>
-  </td>
-<!-- END LEFT SIDEBAR -->
-
-<?php } ?>
-
-<!-- START MAIN CONTENT -->
-
-  <td class="content">
+	<tr>
+		<td class="content">
 <?php
 }
 
 
-function response_footer($extraContent = false)
+function response_footer()
 {
-    global $site_url, $LAST_UPDATED, $RSIDEBAR_DATA;
+	global $_footer_done, $LAST_UPDATED, $basedir;
 
-    static $called;
-    if ($called) {
-        return;
-    }
-    $called = true;
+	if ($_footer_done) {
+		return;
+	}
+	$_footer_done = true;
 ?>
-  </td>
-
-<!-- END MAIN CONTENT -->
-
-<?php if (!empty($RSIDEBAR_DATA)) { ?>
-
-<!-- START RIGHT SIDEBAR -->
-  <td class="sidebar_right">
-   <?php echo $RSIDEBAR_DATA; ?>
-  </td>
-<!-- END RIGHT SIDEBAR -->
-
-<?php } ?>
-
+	</td>
  </tr>
 </table>
 
-<!-- END MIDDLE -->
-<!-- START FOOTER -->
-
 <table class="foot" cellspacing="0" cellpadding="0">
  <tr>
-  <td class="foot-bar" colspan="2">
+	<td class="foot-bar" colspan="2">
 <?php
 print_link('/about/privacy.php', 'PRIVACY POLICY', false, 'class="menuBlack"');
 echo delim();
 print_link('/about/credits.php', 'CREDITS', false, 'class="menuBlack"');
 ?>
-  </td>
+	</td>
  </tr>
 
  <tr>
-  <td class="foot-copy">
-   <small>
-   	<?php print_link('http://www.php.net/', make_image('php-logo-small.gif', 'PHP', 'left', false, false, false, 'padding-right: 5px;') ); ?>
-    <?php print_link("http://www.php.net/copyright.php", 'Copyright &copy; 2001-' . date('Y') . ' The PHP Group'); ?><br />
-    All rights reserved.
-   </small>
-  </td>
-  <td class="foot-source">
-   <small>
-    Last updated: <?php echo $LAST_UPDATED; ?><br />
-   </small>
-  </td>
+	<td class="foot-copy">
+	<small>
+<?php print_link('http://www.php.net/', "<img src='{$basedir}/images/logo-small.gif' alt='PHP' />"); ?>
+<?php print_link("http://www.php.net/copyright.php", 'Copyright &copy; 2001-' . date('Y') . ' The PHP Group'); ?><br />
+	All rights reserved.
+	 </small>
+	</td>
+	<td class="foot-source">
+	 <small>
+	Last updated: <?php echo $LAST_UPDATED; ?><br />
+	 </small>
+	</td>
  </tr>
 </table>
-
-<!-- Onload focus to pear -->
-<?php if (isset($GLOBALS['ONLOAD'])) { ?>
-<script language="javascript">
-function makeFocus()
-{
-    <?php echo htmlspecialchars($GLOBALS['ONLOAD']); // ?? ?>
-}
-
-function addEvent(obj, eventType, functionCall)
-{
-    if (obj.addEventListener) {
-        obj.addEventListener(eventType, functionCall, false);
-        return true;
-    } else if (obj.attachEvent) {
-        var r = obj.attachEvent("on"+eventType, functionCall);
-        return r;
-    } else {
-        return false;
-    }
-}
-addEvent(window, 'load', makeFocus);
-</script>
-<?php } ?>
-
-<!-- END FOOTER -->
-
 </body>
-<?php
-if (!empty($extraContent)) {
-    echo $extraContent;
-}
-?>
 </html>
 <?php
-}
-
-
-function draw_navigation($type, $menu_title = '')
-{
-    global $self, $site;
-
-    switch ($type) {
-        case 'main_menu':
-            $data = array(
-                '/index.php'           => 'Home',
-                '/news/'               => 'News',
-            );
-            if ($site == 'pear') {
-            	$data['/qa/']    = 'Quality Assurance';
-                $date['/group/'] = 'The PEAR Group';
-			}
-            break;
-        case 'docu_menu':
-            if ($site == 'pear') {
-	            $data = array(
-	                '/manual/en/about-pear.php' => 'About PEAR',
-	                '/manual/index.php'    => 'Manual',
-	                '/manual/en/faq.php'   => 'FAQ',
-	            );
-			} else {
-				$data = array();
-			}
-            $data['/support/'] = 'Support';
-            break;
-        case 'downloads_menu':
-            $data = array(
-                '/packages.php'        => 'List Packages',
-                '/search.php'          => 'Search Packages',
-                '/package-stats.php'   => 'Statistics'
-            );
-            break;
-        case 'developer_menu':
-            $data = array(
-                '/map/'                => 'Find a Developer',
-                '/accounts.php'        => 'List Accounts',
-                '/release-upload.php'  => 'Upload Release',
-                '/package-new.php'     => 'New Package',
-            );
-            if ($site == 'pear') {
-                $data['/notes/admin'] = 'Manage User Notes';
-                $data['/election/']   = 'View Elections';
-			}
-            break;
-        case 'developer_menu_public':
-            $data= array(
-                '/accounts.php'        => 'List Accounts'
-            );
-            break;
-        case 'proposal_menu':
-            $data = array(
-            	'/pepr/'                        => 'Browse Proposals',
-            	'/pepr/pepr-proposal-edit.php'  => 'New Proposal'
-            );
-            break;
-        case 'admin_menu':
-            $data = array(
-                '/admin/' => 'Overview'
-            );
-            break;
-        default:
-            return '';
-    }
-
-    $html = "\n";
-    if (!empty($menu_title)) {
-        $html .= "<strong>$menu_title</strong>\n";
-    }
-
-    $html .= '<ul class="side_pages">' . "\n";
-    foreach ($data as $url => $tit) {
-        $html .= ' <li class="side_page">';
-        if ($url == $self) {
-            $html .= '<strong>' . $tit . '</strong>';
-        } else {
-            $html .= '<a href="' . $url . '">' . $tit . '</a>';
-        }
-        $html .= "</li>\n";
-    }
-    $html .= "</ul>\n\n";
-
-    return $html;
-}
-
-function menu_link($text, $url)
-{
-    echo "<p>\n";
-    print_link($url, make_image('pear_item.gif', $text) );
-    echo '&nbsp;';
-    print_link($url, '<strong>' . $text . '</strong>' );
-    echo "</p>\n";
 }
 
 /**
  * Display errors or warnings as a <ul> inside a <div>
  *
  * Here's what happens depending on $in:
- *   + string: value is printed
- *   + array:  looped through and each value is printed.
- *             If array is empty, nothing is displayed.
- *             If a value contains a PEAR_Error object,
- *   + PEAR_Error: prints the value of getMessage() and getUserInfo()
- *                 if DEVBOX is true, otherwise prints data from getMessage().
+ *	 + string: value is printed
+ *	 + array:	looped through and each value is printed.
+ *			 If array is empty, nothing is displayed.
+ *			 If a value contains a PEAR_Error object,
+ *	 + PEAR_Error: prints the value of getMessage() and getUserInfo()
+ *				 if DEVBOX is true, otherwise prints data from getMessage().
  *
- * @param string|array|PEAR_Error|Exception $in  see long description
- * @param string $class  name of the HTML class for the <div> tag.
- *                        ("errors", "warnings")
- * @param string $head   string to be put above the message
+ * @param string|array|PEAR_Error|Exception $in	see long description
+ * @param string $class	name of the HTML class for the <div> tag.
+ *						("errors", "warnings")
+ * @param string $head	 string to be put above the message
  *
- * @return bool  true if errors were submitted, false if not
+ * @return bool	true if errors were submitted, false if not
  */
 function report_error($in, $class = 'errors', $head = 'ERROR:')
 {
-    if (PEAR::isError($in) || $in instanceof Exception) {
-        if (DEVBOX == true) {
-            if ($in instanceof Exception) {
-                $in = array($in->__toString());
-            } else {
-                $in = array($in->getMessage() . '... ' . $in->getUserInfo());
-            }
-        } else {
-            $in = array($in->getMessage());
-        }
-    } elseif (!is_array($in)) {
-        $in = array($in);
-    } elseif (!count($in)) {
-        return false;
-    }
+	if (PEAR::isError($in) || $in instanceof Exception) {
+		if (DEVBOX == true) {
+			if ($in instanceof Exception) {
+				$in = array($in->__toString());
+			} else {
+				$in = array($in->getMessage() . '... ' . $in->getUserInfo());
+			}
+		} else {
+			$in = array($in->getMessage());
+		}
+	} elseif (!is_array($in)) {
+		$in = array($in);
+	} elseif (!count($in)) {
+		return false;
+	}
 
-    echo '<div class="' . $class . '">' . $head . '<ul>';
-    foreach ($in as $msg) {
-        if (PEAR::isError($msg) || $msg instanceof Exception) {
-            if (DEVBOX == true) {
-                if ($msg instanceof Exception) {
-                    $msg = array($msg->__toString());
-                } else {
-                    $msg = array($msg->getMessage() . '... ' . $msg->getUserInfo());
-                }
-            } else {
-                $msg = $msg->getMessage();
-            }
-        }
-        echo '<li>' . htmlspecialchars($msg) . "</li>\n";
-    }
-    echo "</ul></div>\n";
-    return true;
+	echo '<div class="' . $class . '">' . $head . '<ul>';
+	foreach ($in as $msg) {
+		if (PEAR::isError($msg) || $msg instanceof Exception) {
+			if (DEVBOX == true) {
+				if ($msg instanceof Exception) {
+					$msg = array($msg->__toString());
+				} else {
+					$msg = array($msg->getMessage() . '... ' . $msg->getUserInfo());
+				}
+			} else {
+				$msg = $msg->getMessage();
+			}
+		}
+		echo '<li>' . htmlspecialchars($msg) . "</li>\n";
+	}
+	echo "</ul></div>\n";
+	return true;
 }
 
 /**
@@ -496,194 +188,42 @@ function report_error($in, $class = 'errors', $head = 'ERROR:')
  * For use with PEAR_ERROR_CALLBACK to get messages to be formatted
  * as warnings rather than errors.
  *
- * @param string|array|PEAR_Error $in  see report_error() for more info
+ * @param string|array|PEAR_Error $in	see report_error() for more info
  *
- * @return bool  true if errors were submitted, false if not
+ * @return bool	true if errors were submitted, false if not
  *
  * @see report_error()
  */
 function report_warning($in)
 {
-    return report_error($in, 'warnings', 'WARNING:');
+	return report_error($in, 'warnings', 'WARNING:');
 }
 
 /**
  * Displays success messages inside a <div>
  *
- * @param string $in  the message to be displayed
+ * @param string $in	the message to be displayed
  *
  * @return void
  */
 function report_success($in)
 {
-    echo '<div class="success">';
-    echo htmlspecialchars($in);
-    echo "</div>\n";
-}
-
-
-class BorderBox
-{
-    function BorderBox($title, $width = '90%', $indent = '', $cols = 1, $open = false)
-    {
-        $this->title  = $title;
-        $this->width  = $width;
-        $this->indent = $indent;
-        $this->cols   = $cols;
-        $this->open   = $open;
-        $this->start();
-    }
-
-    function start()
-    {
-        $title = $this->title;
-        if (is_array($title)) {
-            $title = implode('</th><th>', $title);
-        }
-        $i = $this->indent;
-        print "<!-- border box starts -->\n";
-        print "$i<table cellpadding=\"0\" cellspacing=\"1\" style=\"width: $this->width; border: 0px;\">\n";
-        print "$i <tr>\n";
-        print "$i  <td style=\"background-color: #000000;\">\n";
-        print "$i   <table cellpadding=\"2\" cellspacing=\"1\" style=\"width: 100%; border: 0px;\">\n";
-        print "$i    <tr style=\"background-color: #CCCCCC;\">\n";
-        print "$i     <th";
-        if ($this->cols > 1) {
-            print " colspan=\"$this->cols\"";
-        }
-        print ">$title</th>\n";
-        print "$i    </tr>\n";
-        if (!$this->open) {
-            print "$i    <tr style=\"background-color: #FFFFFF;\">\n";
-            print "$i     <td>\n";
-        }
-    }
-
-    function end()
-    {
-        $i = $this->indent;
-        if (!$this->open) {
-            print "$i     </td>\n";
-            print "$i    </tr>\n";
-        }
-        print "$i   </table>\n";
-        print "$i  </td>\n";
-        print "$i </tr>\n";
-        print "$i</table>\n";
-        print "<!-- border box ends -->\n";
-    }
-
-    function horizHeadRow($heading /* ... */)
-    {
-        $i = $this->indent;
-        print "$i    <tr>\n";
-        print "$i     <th style=\"vertical-align: top; background-color: #CCCCCC;\">$heading</th>\n";
-        for ($j = 0; $j < $this->cols-1; $j++) {
-            print "$i     <td style=\"vertical-align: top; background-color: #E8E8E8\">";
-            $data = @func_get_arg($j + 1);
-            if (!isset($data)) {
-                print "&nbsp;";
-            } else {
-                print $data;
-            }
-            print "</td>\n";
-        }
-        print "$i    </tr>\n";
-
-    }
-
-    function headRow()
-    {
-        $i = $this->indent;
-        print "$i    <tr>\n";
-        for ($j = 0; $j < $this->cols; $j++) {
-            print "$i     <th style=\"vertical-align: top; background-color: #FFFFFF;\">";
-            $data = @func_get_arg($j);
-            if (empty($data)) {
-                print '&nbsp;';
-            } else {
-                print $data;
-            }
-            print "</th>\n";
-        }
-        print "$i    </tr>\n";
-    }
-
-    function plainRow(/* ... */)
-    {
-        $i = $this->indent;
-        print "$i    <tr>\n";
-        for ($j = 0; $j < $this->cols; $j++) {
-            print "$i     <td style=\"vertical-align: top; background-color: #FFFFFF;\">";
-            $data = @func_get_arg($j);
-            if (empty($data)) {
-                print '&nbsp;';
-            } else {
-                print $data;
-            }
-            print "</td>\n";
-        }
-        print "$i    </tr>\n";
-    }
-
-    function fullRow($text)
-    {
-        $i = $this->indent;
-        print "$i    <tr>\n";
-        print "$i     <td style=\"background-color: #E8E8E8;\"";
-        if ($this->cols > 1) {
-            print " colspan=\"$this->cols\"";
-        }
-        print ">$text</td>\n";
-        print "$i    </tr>\n";
-
-    }
-}
-
-/**
- * prints "urhere" menu bar
- * Top Level :: XML :: XML_RPC
- * @param bool $link_lastest If the last category should or not be a link
- */
-function html_category_urhere($id, $link_lastest = false)
-{
-    $html = '<a href="/packages.php">Top Level</a>';
-    if ($id !== null) {
-        global $dbh;
-        $res = $dbh->prepare("SELECT c.id, c.name
-                            FROM categories c, categories cat
-                            WHERE cat.id = ?
-                            AND c.cat_left <= cat.cat_left
-                            AND c.cat_right >= cat.cat_right")->execute(array($id));
-        $nrows = $res->numRows();
-        $i = 0;
-        foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
-            if (!$link_lastest && $i >= $nrows -1) {
-                break;
-            }
-            $html .= "  :: ".
-                     "<a href=\"/packages.php?catpid={$row['id']}&amp;catname={$row['name']}\">".
-                     "{$row['name']}</a>";
-            $i++;
-        }
-        if (!$link_lastest) {
-            $html .= '  :: <strong>' . $row['name'] . '</strong>';
-        }
-    }
-    print $html;
+	echo '<div class="success">';
+	echo htmlspecialchars($in);
+	echo "</div>\n";
 }
 
 /**
  * Returns an absolute URL using Net_URL
  *
- * @param  string $url All/part of a url
- * @return string      Full url
+ * @param	string $url All/part of a url
+ * @return string		Full url
  */
 function getURL($url)
 {
-    include_once 'Net/URL2.php';
-    $obj = new Net_URL2($url);
-    return $obj->getURL();
+	include_once 'Net/URL2.php';
+	$obj = new Net_URL2($url);
+	return $obj->getURL();
 }
 
 /**
@@ -693,93 +233,16 @@ function getURL($url)
  * does not return.
  *
  * @param string $url Full/partial url to redirect to
- * @param  bool  $keepProtocol Whether to keep the current protocol or to force HTTP
+ * @param	bool	$keepProtocol Whether to keep the current protocol or to force HTTP
  */
 function localRedirect($url, $keepProtocol = true)
 {
-    $url = getURL($url, $keepProtocol);
-    if  ($keepProtocol == false) {
-        $url = preg_replace("/^https/", "http", $url);
-    }
-    header('Location: ' . $url);
-    exit;
-}
-
-/**
- * Get URL to license text
- *
- * @todo  Add more licenses here
- * @param string Name of the license
- * @return string Link to license URL
- */
-function get_license_link($license = "")
-{
-    switch ($license) {
-
-        case 'PHP License 3.01' :
-        case 'PHP License' :
-        case 'PHP 3.01' :
-            $link = 'http://www.php.net/license/3_01.txt';
-            break;
-
-        case 'PHP 2.02' :
-            $link = 'http://www.php.net/license/2_02.txt';
-            break;
-
-        case 'GPL' :
-        case 'GNU General Public License' :
-            $link = 'http://www.gnu.org/licenses/gpl.html';
-            break;
-
-        case 'LGPL' :
-        case 'GNU Lesser General Public License' :
-            $link = 'http://www.gnu.org/licenses/lgpl.html';
-            break;
-
-        case 'BSD' :
-        case 'BSD License' :
-        case 'New BSD License' :
-        case 'New BSD' :
-            $link = 'http://www.opensource.org/licenses/bsd-license.php';
-            break;
-
-        case 'MIT' :
-        case 'MIT License' :
-            $link = 'http://www.opensource.org/licenses/mit-license.php';
-            break;
-
-        default :
-            $link = '';
-            break;
-    }
-
-    return ($link != '' ? '<a href="' . $link . '">' . $license . "</a>\n" : $license);
-}
-
-function display_user_notes($user, $width = '50%')
-{
-    global $dbh;
-    $bb = new BorderBox("Notes for user $user", $width);
-    $notes = $dbh->getAssoc("SELECT id,nby,ntime,note FROM notes
-                WHERE uid = ? ORDER BY ntime", true, array($user));
-    if (!empty($notes)) {
-        print '<table cellpadding="2" cellspacing="0" style="border: 0px;">' . "\n";
-        foreach ($notes as $nid => $data) {
-        print " <tr>\n";
-        print "  <td>\n";
-        print "   <strong>{$data['nby']} {$data['ntime']}:</strong>";
-        print "<br />\n";
-        print "   ".htmlspecialchars($data['note'])."\n";
-        print "  </td>\n";
-        print " </tr>\n";
-        print " <tr><td>&nbsp;</td></tr>\n";
-        }
-        print "</table>\n";
-    } else {
-        print 'No notes.';
-    }
-    $bb->end();
-    return sizeof($notes);
+	$url = getURL($url, $keepProtocol);
+	if	($keepProtocol == false) {
+		$url = preg_replace("/^https/", "http", $url);
+	}
+	header('Location: ' . $url);
+	exit;
 }
 
 /**
@@ -787,13 +250,13 @@ function display_user_notes($user, $width = '50%')
  */
 function make_link($url, $linktext = '', $target = '', $extras = '', $title = '')
 {
-    return sprintf('<a href="%s"%s%s%s>%s</a>',
-        $url,
-        ($target ? ' target="'.$target.'"' : ''),
-        ($extras ? ' '.$extras : ''),
-        ($title ? ' title="'.$title.'"' : ''),
-        ($linktext != '' ? $linktext : $url)
-    );
+	return sprintf('<a href="%s"%s%s%s>%s</a>',
+		$url,
+		($target ? ' target="'.$target.'"' : ''),
+		($extras ? ' '.$extras : ''),
+		($title ? ' title="'.$title.'"' : ''),
+		($linktext != '' ? $linktext : $url)
+	);
 }
 
 /**
@@ -801,7 +264,7 @@ function make_link($url, $linktext = '', $target = '', $extras = '', $title = ''
  */
 function print_link($url, $linktext = '', $target = '', $extras = '')
 {
-    echo make_link($url, $linktext, $target, $extras);
+	echo make_link($url, $linktext, $target, $extras);
 }
 
 /**
@@ -809,18 +272,18 @@ function print_link($url, $linktext = '', $target = '', $extras = '')
  */
 function make_bug_link($package, $type = 'list', $linktext = '')
 {
-    switch ($type) {
-        case 'list':
-            if (!$linktext) {
-                $linktext = 'Package Bugs';
-            }
-            return make_link('search.php?cmd=display&amp;status=Open&amp;package_name[]=' . urlencode($package), $linktext);
-        case 'report':
-            if (!$linktext) {
-                $linktext = 'Report a new bug';
-            }
-            return make_link('report.php?package=' . urlencode($package), $linktext);
-    }
+	switch ($type) {
+		case 'list':
+			if (!$linktext) {
+				$linktext = 'Package Bugs';
+			}
+			return make_link('search.php?cmd=display&amp;status=Open&amp;package_name[]=' . urlencode($package), $linktext);
+		case 'report':
+			if (!$linktext) {
+				$linktext = 'Report a new bug';
+			}
+			return make_link('report.php?package=' . urlencode($package), $linktext);
+	}
 }
 
 /**
@@ -829,137 +292,55 @@ function make_bug_link($package, $type = 'list', $linktext = '')
  * The link and link text are obfuscated by alternating Ord and Hex
  * entities.
  *
- * @param string $email     the email address to make the link for
- * @param string $linktext  a string for the visible part of the link.
- *                           If not provided, the email address is used.
- * @param string $extras    a string of extra attributes for the <a> element
+ * @param string $email	 	the email address to make the link for
+ * @param string $linktext	a string for the visible part of the link.
+ *							If not provided, the email address is used.
+ * @param string $extras	a string of extra attributes for the <a> element
  *
- * @return string  the HTML hyperlink of an email address
+ * @return string			the HTML hyperlink of an email address
  */
 function make_mailto_link($email, $linktext = '', $extras = '')
 {
-    $tmp = '';
-    for ($i = 0, $l = strlen($email); $i<$l; $i++) {
-        if ($i % 2) {
-            $tmp .= '&#' . ord($email[$i]) . ';';
-        } else {
-            $tmp .= '&#x' . dechex(ord($email[$i])) . ';';
-        }
-    }
+	$tmp = '';
+	for ($i = 0, $l = strlen($email); $i<$l; $i++) {
+		if ($i % 2) {
+			$tmp .= '&#' . ord($email[$i]) . ';';
+		} else {
+			$tmp .= '&#x' . dechex(ord($email[$i])) . ';';
+		}
+	}
 
-    return '<a ' . $extras . ' href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;'
-           . $tmp . '">' . ($linktext != '' ? $linktext : $tmp) . '</a>';
-}
-
-/**
- * Prints an IMG tag for a sized spacer GIF
- */
-function spacer($width = 1, $height = 1, $align = '', $extras = '')
-{
-    printf('<img src="images/spacer.gif" width="%d" height="%d" style="border: 0px;" alt="" %s%s />',
-        $width,
-        $height,
-        ($align ? 'align="'.$align.'" ' : ''),
-        ($extras ? $extras : '')
-    );
-}
-
-/**
- * Tags the output of make_image() and resize it manually
- */
-function resize_image($img, $width = 1, $height = 1)
-{
-    $str = preg_replace('/width=\"([0-9]+?)\"/i', '', $img );
-    $str = preg_replace('/height=\"([0-9]+?)\"/i', '', $str );
-    $str = substr($str,0,-1) . sprintf(' height="%s" width="%s" />', $height, $width );
-    return $str;
-}
-
-/**
- * Returns an IMG tag for a given file (relative to the images dir)
- */
-function make_image($file, $alt = '', $align = '', $extras = '', $dir = '', $border = 0, $styles = '')
-{
-	global $basedir, $ROOT_DIR;
-	
-    if (!$dir) {
-    	$dir = '/images';
-        $img_dir = "{$basedir}/images";
-    } else if (is_string($dir) && $dir{0} != '/') {
-        $img_dir = "{$basedir}/{$dir}";
-    }
-    if ($size = @getimagesize("{$ROOT_DIR}/{$dir}/{$file}")) {
-        $image = sprintf('<img src="%s/%s" style="border: %d;%s%s" %s alt="%s" %s />',
-            $img_dir,
-            $file,
-            $border,
-            ($styles ? ' '.$styles            : ''),
-            ($align  ? ' float: '.$align.';'  : ''),
-            $size[3],
-            ($alt    ? $alt : ''),
-            ($extras ? ' '.$extras            : '')
-        );
-    } else {
-        $image = sprintf('<img src="%s/%s" style="border: %d;%s%s" alt="%s" %s />',
-            $img_dir,
-            $file,
-            $border,
-            ($styles ? ' '.$styles            : ''),
-            ($align  ? ' float: '.$align.';'  : ''),
-            ($alt    ? $alt : ''),
-            ($extras ? ' '.$extras            : '')
-        );
-    }
-    return $image;
-}
-
-/**
- * Prints an IMG tag for a given file
- */
-function print_image($file, $alt = '', $align = '', $extras = '', $dir = '', $border = 0)
-{
-    print make_image($file, $alt, $align, $extras, $dir);
+	return "<a {$extras} href='&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;{$tmp}'>" . ($linktext != '' ? $linktext : $tmp) . '</a>';
 }
 
 /**
  * Print a pipe delimiter
  */
-function delim($color = false, $delimiter = '&nbsp;|&nbsp;')
+function delim()
 {
-    if (!$color) {
-        return $delimiter;
-    }
-    return sprintf('<span style="color: %s;">%s</span>', $color, $delimiter);
+	return '&nbsp;|&nbsp;';
 }
 
 /**
  * Turns bug/feature request numbers into hyperlinks
  *
  * If the bug number is prefixed by the word "PHP, PEAR, PECL" the link will
- * go to correct bugs site.  Otherwise, the bug is considered "local" bug.
+ * go to correct bugs site.	Otherwise, the bug is considered "local" bug.
  *
- * @param string $text  the text to check for bug numbers
+ * @param string $text	the text to check for bug numbers
  *
- * @return string  the string with bug numbers hyperlinked
+ * @return string the string with bug numbers hyperlinked
  */
 function make_ticket_links($text)
 {
 	global $site_url, $basedir, $site_data;
 	
 	// PHP
-	$url = "{$site_data['php']['url']}{$site_data['php']['basedir']}";
-    $text = preg_replace('/(?<=php)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
-                         " <a href='http://{$url}/\\2'>\\1 \\2</a>", $text);
-	// PEAR
-	$url = "{$site_data['pear']['url']}{$site_data['pear']['basedir']}";
-    $text = preg_replace('/(?<=pear)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
-                         " <a href='http://{$url}/\\2'>\\1 \\2</a>", $text);
-	// PECL
-	$url = "{$site_data['pecl']['url']}{$site_data['pecl']['basedir']}";
-    $text = preg_replace('/(?<=pecl)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
-                         " <a href='http://{$url}/\\2'>\\1 \\2</a>", $text);
+	$url = "{$site_data['url']}{$site_data['php']['basedir']}";
+	$text = preg_replace('/(?<=php)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
+						 " <a href='http://{$url}/\\2'>\\1 \\2</a>", $text);
 	// Local
-    $text = preg_replace('/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
-                         "<a href='http://{$site_url}{$basedir}/\\2'>\\0</a>", $text);
-    return $text;
+	$text = preg_replace('/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
+						 "<a href='http://{$site_url}{$basedir}/\\2'>\\0</a>", $text);
+	return $text;
 }

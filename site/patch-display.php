@@ -24,7 +24,7 @@ if (empty($bug_id)) {
 require "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patchinfo = new Bug_Patchtracker;
 
-if (PEAR::isError($buginfo = $patchinfo->getBugInfo($bug_id))) {
+if (PEAR::isError($buginfo = bugs_get_bug($bug_id))) {
     response_header('Error :: invalid bug selected');
     display_bug_error("Invalid bug #{$bug_id} selected");
     response_footer();
