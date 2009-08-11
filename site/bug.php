@@ -513,8 +513,6 @@ switch ($thanks)
 
 display_bug_error($errors);
 
-show_bugs_menu(txfield('package_name'));
-
 ?>
 <div id="bugheader">
  <table id="details">
