@@ -1,19 +1,29 @@
 <?php
+// Start session 
+session_start();
 
 /**
  * User interface for viewing and editing bug details
  */
-
-// Bailout early if no/invalid bug id is passed
-if (empty($_REQUEST['id']) || !((int) $_REQUEST['id'])) {
-    header('Location: index.php');
-    exit;
+if($_REQUEST['id'] == 'preview') {
+	$bug_id = "PREVIEW";
+	$bug = $_SESSION['bug_preview'];
+	
+	if(!$bug) {
+		header('Location: index.php');
+	    exit;
+	}
+	
 } else {
-    $bug_id = (int) $_REQUEST['id'];
+	// Bailout early if no/invalid bug id is passed
+	if (empty($_REQUEST['id']) || !((int) $_REQUEST['id'])) {
+	    header('Location: index.php');
+	    exit;
+	} else {
+	    $bug_id = (int) $_REQUEST['id'];
+	}
 }
 
-// Start session 
-session_start();
 
 // Obtain common includes
 require_once '../include/prepend.inc';
@@ -115,7 +125,7 @@ if ($logged_in) {
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
 
 // fetch info about the bug into $bug
-$bug = bugs_get_bug($bug_id, true);
+if(!$bug) $bug = bugs_get_bug($bug_id, true);
 
 // DB error
 if (is_object($bug)) {
@@ -941,6 +951,21 @@ if (is_array($bug_comments) && count($bug_comments)) {
     }
     echo "</div>\n";
 }
+if($bug_id == 'PREVIEW'):
+?>
+
+<form action='report.php?package=<?=$_SESSION['bug_preview']['package_name']?>' method='post'>
+<? foreach($_SESSION['bug_preview'] as $k=>$v) {
+	echo "<input type='hidden' name='in[{$k}]' value='{$v}'/>";
+}
+	echo "<input type='hidden' name='captcha' value='{$_SESSION['captcha']}'/>";
+?>
+<input type='submit' value='Send bug report'/> <input type='submit' name='edit_after_preview' value='Edit'/>
+</form>
+
+<? 
+endif;
+	
 
 $bug_JS = <<< bug_JS
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>

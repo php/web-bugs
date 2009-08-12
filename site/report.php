@@ -142,6 +142,11 @@ if (isset($_POST['in'])) {
 			 */
 			$ok_to_submit_report = true;
 		}
+		
+		if($_POST['edit_after_preview']) {
+			$ok_to_submit_report = false;
+			response_header("Report - New");
+		}
 
 		if ($ok_to_submit_report) {
 			$registereduser = 1;
@@ -161,6 +166,13 @@ if (isset($_POST['in'])) {
 			if (!empty($_POST['in']['actres']) || $_POST['in']['actres'] === '0') {
 				$fdesc .= "Actual result:\n--------------\n";
 				$fdesc .= $_POST['in']['actres'] . "\n";
+			}
+			
+			if($_POST['preview']) {
+				$_SESSION['bug_preview'] = $_POST['in'];
+				$_SESSION['captcha'] = $_POST['captcha'];
+				header("Location: bug.php?id=preview");
+				exit;
 			}
 
 			$res = $dbh->prepare('
@@ -513,6 +525,7 @@ display_bug_error($errors);
 				<th class="form-label_left">Submit:</th>
 				<td class="form-input">
 					<input type="submit" value="Send bug report" />
+					<input type="submit" value="Preview" name="preview"/>
 				</td>
 			</tr>
 		</table>
