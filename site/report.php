@@ -178,7 +178,7 @@ if (isset($_POST['in'])) {
 					reporter_name,
 					status,
 					ts1
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())')->execute(array (
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())')->execute(array (
 					$registereduser,
 					$package_name,
 					$package_version,
