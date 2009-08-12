@@ -1,6 +1,6 @@
 <?php
-response_header('Add Patch :: ' . clean($package_name););
-show_bugs_menu(clean($package_name););
+response_header('Add Patch :: ' . clean($package_name));
+show_bugs_menu(clean($package_name));
 ?>
 <h2>Add a Patch to <a href="<?php echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a></h2>
 <ul>

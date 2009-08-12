@@ -19,7 +19,7 @@ if (empty($bug_id)) {
 	exit;
 }
 
-if (PEAR::isError($buginfo = bugs_get_bug($bug_id)) {
+if (PEAR::isError($buginfo = bugs_get_bug($bug_id))) {
 	response_header('Error :: invalid bug selected');
 	report_error("Invalid bug #{$bug_id} selected");
 	response_footer();
@@ -150,47 +150,47 @@ Revision:   {$e}
 URL:        {$patch_url}
 TXT;
 
-		$query = '
-			INSERT INTO bugdb_comments (
-				bug,
-				email,
-				ts,
-				comment,
-				comment_type,
-				reporter_name
-			) VALUES (?, ?, NOW(), ?, "patch", ?)
-		';
-		$res = $dbh->prepare($query)->execute(array(
-			$bug_id,
-			$auth_user->email,
+	$query = '
+		INSERT INTO bugdb_comments (
+			bug,
+			email,
+			ts,
+			comment,
+			comment_type,
+			reporter_name
+		) VALUES (?, ?, NOW(), ?, "patch", ?)
+	';
+	$res = $dbh->prepare($query)->execute(array(
+		$bug_id,
+		$auth_user->email,
+		$text,
+		$auth_user->name,
+	));
+
+	// Send emails 
+	list($mailto, $mailfrom) = get_package_mail($package_name);
+
+	$protected_email  = '"' . spam_protect($email, 'text') . '"' .  "<{$mailfrom}>";
+	$extra_headers  = "From: {$protected_email}\n";
+	$extra_headers .= "Message-ID: <bug-{$cid}@{$site_url}>";
+
+	if (!DEVBOX) {
+		@mail(
+			$mailto,
+			"[$siteBig-BUG] {$buginfo['bug_type']} #{$bug_id} [PATCH]: {$buginfo['sdesc']}",
 			$text,
-			$auth_user->name,
-		));
-
-		// Send emails 
-		list($mailto, $mailfrom) = get_package_mail($package_name);
-
-		$protected_email  = '"' . spam_protect($email, 'text') . '"' .  "<{$mailfrom}>";
-		$extra_headers  = "From: {$protected_email}\n";
-		$extra_headers .= "Message-ID: <bug-{$cid}@{$site_url}>";
-
-		if (!DEVBOX) {
-			@mail(
-				$mailto,
-				"[$siteBig-BUG] {$buginfo['bug_type'] #{$bug_id} [PATCH]: {$buginfo['sdesc']}",
-				$text,
-				$extra_headers,
-				'-f bounce-no-user@php.net'
-			);
-		}
+			$extra_headers,
+			'-f bounce-no-user@php.net'
+		);
 	}
-
 	$name    = $_POST['name'];
 	$patches = $patchinfo->listPatches($bug_id);
 	$errors  = array();
 	include "{$ROOT_DIR}/templates/patchadded.php";
 	exit;
+	
 }
+
 
 $email   = isset($_GET['email']) ? $_GET['email'] : '';
 $errors  = array();
