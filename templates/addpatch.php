@@ -40,8 +40,8 @@ if (!$loggedin) {?>
    Patch Name
   </th>
   <td class="form-input">
-   <input type="text" maxlength="40" name="name" value="<?php echo clean($name); ?>" /><br />
-   <small>The patch name must be shorter than 40 characters and it must only contain alpha-numeric characters, dots, underscores or hyphens.</small>
+   <input type="text" maxlength="80" name="name" value="<?php echo clean($name); ?>" /><br />
+   <small>The patch name must be shorter than 80 characters and it must only contain alpha-numeric characters, dots, underscores or hyphens.</small>
   </td>
  </tr>
  <tr>

@@ -57,7 +57,7 @@ CREATE TABLE bugdb_subscribe (
 
 CREATE TABLE bugdb_patchtracker (
   bugdb_id int(8) NOT NULL,
-  patch varchar(40) NOT NULL,
+  patch varchar(80) NOT NULL,
   revision int(8) NOT NULL,
   developer varchar(20) NOT NULL,
   PRIMARY KEY (bugdb_id, patch, revision)
@@ -65,7 +65,7 @@ CREATE TABLE bugdb_patchtracker (
 
 CREATE TABLE bugdb_obsoletes_patches (
   bugdb_id int(8) NOT NULL,
-  patch varchar(40) NOT NULL,
+  patch varchar(80) NOT NULL,
   revision int(8) NOT NULL,
   obsolete_patch varchar(40) NOT NULL,
   obsolete_revision int(8) NOT NULL,
