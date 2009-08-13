@@ -10,6 +10,10 @@ session_start();
 if ($_REQUEST['id'] == 'preview') {
 	$bug_id = 'PREVIEW';
 	$bug = $_SESSION['bug_preview'];
+	$bug['submitted'] = time();
+	$bug['modified'] = null;
+	$bug['votes'] = 0;
+	$bug['assign'] = '';
 	
 	if (!$bug) {
 		header('Location: index.php');
@@ -457,11 +461,11 @@ switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))
 
 response_header(
 	"{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']),
-	" 
+	($bug_id != 'PREVIEW') ? " 
 	  <link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}' />
 	  <link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2' />
 	  <script type='text/javascript' src='js/util.js'></script>	
-	"
+	" : ''
 );
 
 // DISPLAY BUG
@@ -516,6 +520,7 @@ display_bug_error($errors);
    <th class="details">Modified:</th>
    <td style="white-space: nowrap;"><?php echo ($bug['modified']) ? format_date($bug['modified']) : '-'; ?></td>
    <td rowspan="5">
+
 <?php if ($bug['votes']) { ?>
 	<table id="votes">
 	 <tr><th class="details">Votes:</th><td><?php echo $bug['votes'] ?></td></tr>
@@ -553,6 +558,8 @@ display_bug_error($errors);
   </tr>
  </table>
 </div>
+
+<?php if ($bug_id != 'PREVIEW') { ?>
 
 <div class="controls">
 <?php
@@ -619,6 +626,8 @@ control(2, 'Edit');
   </form>
   <br clear="all" />
 <?php } 
+
+} // if ($bug_id != 'PREVIEW') { 
 
 //
 // FIXME! Do not wrap here either. Re-use the comment display function!
@@ -895,24 +904,29 @@ if ($bug['ldesc']) {
 }
 
 // Display patches
-require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
-$patches = new Bug_Patchtracker;
-$p = $patches->listPatches($bug_id);
-?>
+if ($bug_id != 'PREVIEW') {
+	require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
+	$patches = new Bug_Patchtracker;
+	$p = $patches->listPatches($bug_id);
+	
+	echo "<h2>Patches</h2>\n";
 
-<h2>Patches</h2>
-<?php
+	foreach ($p as $name => $revisions)
+	{
+		$obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
+		$style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';
+		$url_name = urlencode($name);
+		$clean_name = clean($name);
+		$formatted_date = format_date($revisions[0][0]);
 
-foreach ($p as $name => $revisions)
-{
-	$obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
-	$style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';
-?><a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($name) ?>&amp;revision=latest" <?php echo $style; ?>>
-<?php echo clean($name) ?></a> (last revision <?php echo format_date($revisions[0][0]) ?> by <?php echo $revisions[0][1] ?>)<br /><?php echo "\n";
+		echo <<< OUTPUT
+<a href="patch-display.php?bug_id={$bug_id}&amp;patch={$url_name}&amp;revision=latest" {$style}>{$clean_name}</a>
+(last revision {$formatted_date}) by {$revisions[0][1]})
+<br />
+OUTPUT;
+	}
+	echo "<p><a href='patch-add.php?bug_id={$bug_id}'>Add a Patch</a></p>";
 }
-
-?><p><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a></p>
-<?php 
 
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
