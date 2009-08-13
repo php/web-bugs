@@ -304,7 +304,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	) {
 		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
 	} elseif (($_POST['in']['status'] == 'To be documented' && $bug['status'] != $_POST['in']['status']) ||
-		(isset($_POST['in']['resolve']) && $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == 'To be documented')
+		(!empty($_POST['in']['resolve']) && $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == 'To be documented')
 	) {
 		/* Require explanation */
 		if (strlen(trim($ncomment)) == 0) {
