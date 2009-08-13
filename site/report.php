@@ -143,7 +143,7 @@ if (isset($_POST['in'])) {
 			$ok_to_submit_report = true;
 		}
 		
-		if($_POST['edit_after_preview']) {
+		if ($_POST['edit_after_preview']) {
 			$ok_to_submit_report = false;
 			response_header("Report - New");
 		}
@@ -168,7 +168,7 @@ if (isset($_POST['in'])) {
 				$fdesc .= $_POST['in']['actres'] . "\n";
 			}
 			
-			if($_POST['preview']) {
+			if ($_POST['preview']) {
 				$_SESSION['bug_preview'] = $_POST['in'];
 				$_SESSION['captcha'] = $_POST['captcha'];
 				header("Location: bug.php?id=preview");
