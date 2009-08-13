@@ -63,12 +63,11 @@ if (isset($_POST['addpatch'])) {
 	if (!$logged_in) {
 		try {
 			$errors = array();
-			if (empty($_POST['email'])) {
+
+			if (!is_valid_email($_POST['email'])) {
 				$errors[] = 'Email address must be valid!';
 			}
-			if (!preg_match("/^[.\\w+-]+@[.\\w-]+\\.\\w{2,}\z/i",$_POST['email'])) {
-				$errors[] = 'Email address must be valid!';
-			}
+
 			/**
 			 * Check if session answer is set, then compare
 			 * it with the post captcha value. If it's not
@@ -79,6 +78,7 @@ if (isset($_POST['addpatch'])) {
 					$errors[] = 'Incorrect Captcha';
 				}
 			}
+
 			if (count($errors)) {
 				throw new Exception('');
 			}
