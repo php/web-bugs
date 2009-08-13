@@ -9,7 +9,8 @@ require_once '../include/prepend.inc';
 /* If 'id' is passed redirect to the bug page */
 $id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($id) {
-	localRedirect("bug.php?id={$id}");
+	redirect("bug.php?id={$id}");
+	exit;
 }
 
 response_header('Bugs');

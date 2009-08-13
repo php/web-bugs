@@ -99,7 +99,7 @@ if (isset($_POST['addpatch'])) {
 				exit;
 			}
 
-			localRedirect('patch-display.php?bug=' . $bug_id . '&patch=' . urlencode($_POST['name']) . '&revision=' . $e);
+			redirect("patch-display.php?bug={$bug_id}&patch=" . urlencode($_POST['name']) . "&revision={$e}");
 			exit;
 		} catch (Exception $e) {
 			if (!is_string($_POST['name'])) {

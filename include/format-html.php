@@ -214,35 +214,13 @@ function report_success($in)
 }
 
 /**
- * Returns an absolute URL using Net_URL
- *
- * @param	string $url All/part of a url
- * @return string		Full url
- */
-function getURL($url)
-{
-	include_once 'Net/URL2.php';
-	$obj = new Net_URL2($url);
-	return $obj->getURL();
-}
-
-/**
  * Redirects to the given full or partial URL.
- * will turn the given url into an absolute url
- * using the above getURL() function. This function
- * does not return.
  *
  * @param string $url Full/partial url to redirect to
- * @param	bool	$keepProtocol Whether to keep the current protocol or to force HTTP
  */
-function localRedirect($url, $keepProtocol = true)
+function redirect($url)
 {
-	$url = getURL($url, $keepProtocol);
-	if	($keepProtocol == false) {
-		$url = preg_replace("/^https/", "http", $url);
-	}
-	header('Location: ' . $url);
-	exit;
+	header("Location: {$url}");
 }
 
 /**

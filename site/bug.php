@@ -7,6 +7,7 @@
 // Start session 
 session_start();
 
+// Handle preview
 if ($_REQUEST['id'] == 'preview') {
 	$bug_id = 'PREVIEW';
 	$bug = $_SESSION['bug_preview'];
@@ -16,18 +17,21 @@ if ($_REQUEST['id'] == 'preview') {
 	$bug['assign'] = '';
 	
 	if (!$bug) {
-		header('Location: index.php');
+		redirect('index.php');
 		exit;
 	}
 } else {
 	// Bailout early if no/invalid bug id is passed
 	if (empty($_REQUEST['id']) || !((int) $_REQUEST['id'])) {
-		header('Location: index.php');
+		redirect('index.php');
 		exit;
 	} else {
 		$bug_id = (int) $_REQUEST['id'];
 	}
 }
+
+// Init common variables
+$errors = array();
 
 // Obtain common includes
 require_once '../include/prepend.inc';
@@ -48,7 +52,8 @@ if (isset($_GET['unsubscribe'])) {
 	$hash = isset($_GET['t']) ? $_GET['t'] : false;
 
 	if (!$hash) {
-		localRedirect("bug.php?id={$bug_id}");
+		redirect("bug.php?id={$bug_id}");
+		exit;
 	}
 	unsubscribe($bug_id, $hash);
 	$_GET['thanks'] = 9;
@@ -62,10 +67,9 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 	 * it with the post captcha value. If it's not
 	 * the same, then it's an incorrect password.
 	 */
-	$errors = '';
 	if (isset($_SESSION['answer']) && strlen(trim($_SESSION['answer'])) > 0) {
 		if ($_POST['captcha'] != $_SESSION['answer']) {
-			$errors = 'Incorrect Captcha';
+			$errors[] = 'Incorrect Captcha';
 		}
 	}
 
@@ -76,7 +80,7 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 			$email = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
 		}
 		if ($email == '' || !is_valid_email($email)) {
-			$errors = 'You must provide a valid email address.';
+			$errors[] = 'You must provide a valid email address.';
 		} else {
 			// Unsubscribe
 			if (isset($_POST['unsubscribe_to_bug'])) {
@@ -89,7 +93,8 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 				$dbh->prepare('REPLACE INTO bugdb_subscribe SET bug_id = ?, email = ?')->execute(array($bug_id, $email));
 				$thanks = 7;
 			}
-			localRedirect("bug.php?id={$bug_id}&thanks={$thanks}");
+			redirect("bug.php?id={$bug_id}&thanks={$thanks}");
+			exit;
 		}
 	}
 	// If we get here, display errors
@@ -108,7 +113,8 @@ if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
 		delete_comment($bug_id, $delete_comment);
 		$addon = '&thanks=1';
 	}
-	localRedirect("bug.php?id=$bug_id&edit=1$addon");
+	redirect("bug.php?id=$bug_id&edit=1$addon");
+	exit;
 }
 
 // captcha is not necessary if the user is logged in
@@ -122,7 +128,7 @@ if ($logged_in) {
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
 
 // fetch info about the bug into $bug
-if (!$bug) {
+if (!isset($bug)) {
 	$bug = bugs_get_bug($bug_id, true);
 }
 
@@ -143,7 +149,6 @@ if (!$bug) {
 }
 
 // Handle any updates, displaying errors if there were any
-$errors = array();
 $previous = $current = array();
 
 /* Fetch RESOLVE_REASONS array */
@@ -285,7 +290,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	// Edits submitted by developer
 	if ($logged_in != 'developer') {
 		$errors[] = 'You have to login first in order to edit the bug report.';
-		$errors[] = 'Tip: log in via another browser window then resubmit the form in this window.';
 	}
 	$comment_name = $auth_user->name;
 	if (empty($_POST['ncomment'])) {
@@ -300,7 +304,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	) {
 		$errors[] = "You must provide a comment when marking a bug 'Bogus'";
 	} elseif (($_POST['in']['status'] == 'To be documented' && $bug['status'] != $_POST['in']['status']) ||
-		($_POST['in']['resolve'] && $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == 'To be documented')
+		(isset($_POST['in']['resolve']) && $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == 'To be documented')
 	) {
 		/* Require explanation */
 		if (strlen(trim($ncomment)) == 0) {
@@ -437,10 +441,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 if (isset($_POST['in']) && (!isset($_POST['preview']) && $ncomment || $previous != $current)) {
 	if (!$errors) {
-		if (!isset($buggie)) {
-			mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $bug_id, $previous, $current);
-		}
-		localRedirect("bug.php?id=$bug_id&thanks=$edit");
+		mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $bug_id, $previous, $current);
+		redirect("bug.php?id=$bug_id&thanks=$edit");
 		exit;
 	}
 }
@@ -690,34 +692,24 @@ if ($edit == 1 || $edit == 2) { ?>
 				 Welcome back, <?php echo $user; ?>! (Not <?php echo $user; ?>?
 				 <a href="logout.php">Log out.</a>)
 				</div>
-<?php
-		} else {
-?>
+<?php } else { ?>
 			<div class="explain">
-
-<?php		if (!isset($_POST['in']) || !is_array($_POST['in'])) { ?>
-
-					Welcome! If you don't have a SVN account, you can't do anything here.<br />
-					You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
-					or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
-
-<div class="details">
- <label for="svnuser">SVN Username:</label>
- <input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
- <label for="svnpw">SVN Password:</label>
- <input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20" />
- <label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
-</div>
-<?php		 } ?>
-
+				Welcome! If you don't have a SVN account, you can't do anything here.<br />
+				You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
+				or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
+				<div class="details">
+					<label for="svnuser">SVN Username:</label>
+					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
+					<label for="svnpw">SVN Password:</label>
+					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20" />
+					<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
+				</div>
 			</div>
-
-			<?php
+<?php
 		}
 	}
 	echo $preview;
-	?>
-
+?>
 	<table>
 
 <?php if ($edit == 1 && $logged_in == 'developer') { // Developer Edit Form ?>

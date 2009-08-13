@@ -163,7 +163,7 @@ if (isset($_POST['in'])) {
 				$_POST['in']['status'] = 'Open';
 				$_SESSION['bug_preview'] = $_POST['in'];
 				$_SESSION['captcha'] = $_POST['captcha'];
-				header("Location: bug.php?id=preview");
+				redirect('bug.php?id=preview');
 				exit;
 			}
 
@@ -287,9 +287,11 @@ REPORT;
 			if ($redirectToPatchAdd) {
 				$patchname = urlencode($_POST['in']['patchname']);
 				$patchemail= urlencode($_POST['in']['email']);
-				localRedirect("patch-add.php?bug_id={$cid}&patchname={$patchname}&email={$patchemail}");
+				redirect("patch-add.php?bug_id={$cid}&patchname={$patchname}&email={$patchemail}");
+				exit;
 			}
-			localRedirect("bug.php?id={$cid}&thanks=4");
+			redirect("bug.php?id={$cid}&thanks=4");
+			exit;
 		}
 	} else {
 		// had errors...
@@ -323,8 +325,7 @@ if (!isset($_POST['in'])) {
 			 'passwd' => '',
 	);
 	response_header('Report - New');
-	
-	?>
+?>
 
 	<p>
 		Before you report a bug, make sure to search for similar bugs using the &quot;Bug List&quot; link.
