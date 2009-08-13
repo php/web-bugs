@@ -249,13 +249,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$from = $bug['email'];
 	}
 
-	if (!empty($_POST['in']['package_name']) &&
-		$bug['package_name'] != $_POST['in']['package_name']
-	) {
-		// reset package version if we change package name
-		$_POST['in']['package_version'] = '';
-	}
-
 	if (!$errors && !($errors = incoming_details_are_valid($_POST['in'], false))) {
 		$dbh->prepare("
 			UPDATE bugdb
@@ -264,7 +257,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				status = ?,
 				package_name = ?,
 				bug_type = ?,
-				package_version = ?,
 				php_version = ?,
 				php_os = ?,
 				email = ?,
@@ -275,7 +267,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['status'],
 			$_POST['in']['package_name'],
 			$_POST['in']['bug_type'],
-			$_POST['in']['package_version'],
 			$_POST['in']['php_version'],
 			$_POST['in']['php_os'],
 			$from,
@@ -391,29 +382,21 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['assign'] = $auth_user->handle;
 		}
 
-		if (!empty($_POST['in']['package_name']) &&
-			$bug['package_name'] != $_POST['in']['package_name']) {
-			// reset package version if we change package name
-			$_POST['in']['package_version'] = '';
-		}
-
 		$dbh->prepare($query .= "
 			sdesc = ?, 
 			status = ?, 
 			package_name = ?,
 			bug_type = ?,
 			assign = ?,
-			package_version = ?,
 			php_version = ?,
 			php_os = ?,
-			ts2=NOW() WHERE id = {$bug_id}
+			ts2 = NOW() WHERE id = {$bug_id}
 		")->execute(array (
 			$_POST['in']['sdesc'],
 			$status,
 			$_POST['in']['package_name'],
 			$_POST['in']['bug_type'],
 			$_POST['in']['assign'],
-			!empty($_POST['in']['package_version']) ? $_POST['in']['package_version'] : '',
 			$_POST['in']['php_version'],
 			$_POST['in']['php_os'],
 		));
@@ -559,7 +542,6 @@ display_bug_error($errors);
    <th class="details">Package:</th>
    <td>
    <?php echo htmlspecialchars($bug['package_name']); ?>
-   <?php if ($bug['package_version']) { ?>(version <?php echo htmlspecialchars($bug['package_version']);?>)<?php } ?>
    </td>
   </tr>
   <tr id="situation">
@@ -905,7 +887,7 @@ if (!$logged_in) { ?>
 
 // Display original report
 if ($bug['ldesc']) {
-	output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['bughandle'], $bug['reporter_name']);
+	output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name']);
 }
 
 // Display patches
@@ -921,9 +903,10 @@ foreach ($p as $name => $revisions)
 {
 	$obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
 	$style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';
-// ?><a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($name) ?>&amp;revision=latest" <?php echo $style; ?>>
+?><a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($name) ?>&amp;revision=latest" <?php echo $style; ?>>
 <?php echo clean($name) ?></a> (last revision <?php echo format_date($revisions[0][0]) ?> by <?php echo $revisions[0][1] ?>)<br /><?php echo "\n";
 }
+
 ?><p><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Add a Patch</a></p>
 <?php 
 
@@ -942,25 +925,24 @@ if (is_array($bug_comments) && count($bug_comments)) {
 
 	echo "<div id='comments_view' style='clear:both;'>\n";
 	foreach ($bug_comments as $row) {
-		output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], ($row['bughandle'] ? $row['bughandle'] : $row['handle']), $row['comment_name']);
+		output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], $row['comment_name']);
 	}
 	echo "</div>\n";
 }
-if($bug_id == 'PREVIEW'):
+
+if ($bug_id == 'PREVIEW') {
 ?>
 
-<form action='report.php?package=<?=$_SESSION['bug_preview']['package_name']?>' method='post'>
-<? foreach($_SESSION['bug_preview'] as $k=>$v) {
+<form action="report.php?package=<?php $_SESSION['bug_preview']['package_name']; ?>" method="post">
+<?php foreach($_SESSION['bug_preview'] as $k => $v) {
 	echo "<input type='hidden' name='in[{$k}]' value='{$v}'/>";
 }
 	echo "<input type='hidden' name='captcha' value='{$_SESSION['captcha']}'/>";
 ?>
-<input type='submit' value='Send bug report'/> <input type='submit' name='edit_after_preview' value='Edit'/>
+	<input type='submit' value='Send bug report' /> <input type='submit' name='edit_after_preview' value='Edit' />
 </form>
 
-<? 
-endif;
-	
+<?php }
 
 $bug_JS = <<< bug_JS
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
@@ -991,7 +973,7 @@ response_footer($bug_JS);
 /** 
  * Helper functions 
  */
-function output_note($com_id, $ts, $email, $comment, $comment_type, $handle, $comment_name)
+function output_note($com_id, $ts, $email, $comment, $comment_type, $comment_name)
 {
 	global $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
 
