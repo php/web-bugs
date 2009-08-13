@@ -382,6 +382,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$status = $_POST['in']['status'];
 		}
 
+		// Assign automatically when closed
 		if ($status == 'Closed' && $_POST['in']['assign'] == '') {
 			$_POST['in']['assign'] = $auth_user->handle;
 		}
@@ -907,10 +908,11 @@ if ($bug_id != 'PREVIEW') {
 		$url_name = urlencode($name);
 		$clean_name = clean($name);
 		$formatted_date = format_date($revisions[0][0]);
+		$submitter = spam_protect($revisions[0][1]);
 
 		echo <<< OUTPUT
 <a href="patch-display.php?bug_id={$bug_id}&amp;patch={$url_name}&amp;revision=latest" {$style}>{$clean_name}</a>
-(last revision {$formatted_date}) by {$revisions[0][1]})
+(last revision {$formatted_date}) by {$submitter})
 <br />
 OUTPUT;
 	}
