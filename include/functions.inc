@@ -809,8 +809,9 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id)
 		$maxlength = (($maxlength < $actlength) ? $actlength : $maxlength);
 	}
 
-	/* Align header content with headers (if a header contains more than one line, wrap it intelligently)
+	/* Align header content with headers (if a header contains more than one line, wrap it intelligently) */
 	$header_text = '';
+
 	$spaces = str_repeat(' ', $maxlength + 1);
 	foreach ($headers as $v) {
 		$hcontent = wordwrap($v[1], 72 - $maxlength, "\n{$spaces}"); // wrap and indent
@@ -826,7 +827,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id)
 	$old_comments = get_old_comments($bug['id'], empty($ncomment));
 	$old_comments = preg_replace('#<div class="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $old_comments);
 
-	$text[] = $old_comments;
+	$text[] = $old_comments;
 
 	/* format mail so it looks nice, use 72 to make piners happy */
 	$wrapped_text = wordwrap(join("\n", $text), 72);
@@ -837,16 +838,16 @@ ATTENTION! Do NOT reply to this email!
 To reply, use the web interface found at
 http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=2
 
-$header_text
-$wrapped_text
+{$header_text}
+{$wrapped_text}
 USER_TEXT;
 
 	/* developer text with headers, previous messages, and edit link */
 	$dev_text = <<< DEV_TEXT
 Edit report at http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
 
-$header_text
-$wrapped_text
+{$header_text}
+{$wrapped_text}
 
 -- 
 Edit this bug report at http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
@@ -957,7 +958,7 @@ function format_date($ts = null, $format = 'Y-m-d H:i e')
  */
 function get_old_comments($bug_id, $all = 0)
 {
-	global $dbh, $site_url;
+	global $dbh, $site_url, $basedir;
 
 	$divider = str_repeat('-', 72);
 	$max_message_length = 10 * 1024;
@@ -976,8 +977,8 @@ function get_old_comments($bug_id, $all = 0)
 	}
 
 	while (($row = $res->fetchRow(MDB2_FETCHMODE_ORDERED)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
-		$email = ($row[3]) ? $row[3] : spam_protect($row[1], 'text');
-		$output .= "[{$row[0]}] {$email}\n\n{$row[2]}\n\n{$divider}\n\n";
+		$email = spam_protect($row[1], 'text');
+		$output .= "[{$row[0]}] {$email}\n\n{$row[2]}\n\n{$divider}\n";
 	}
 
 	if (strlen($output) < $max_message_length && $count < $max_comments) {
@@ -989,10 +990,30 @@ function get_old_comments($bug_id, $all = 0)
 		if (!$row) {
 			return $output;
 		}
-		$email = ($row[3]) ? $row[3] : spam_protect($row[1], 'text');
-		return ("\n\nPrevious Comments:\n{$divider}\n\n{$output}[{$row[0]}] {$email}\n\n{$row[2]}\n\n{$divider}\n\n");
+		$email = spam_protect($row[1], 'text');
+		return ("
+
+Previous Comments:
+{$divider}
+{$output}[{$row[0]}] {$email}
+
+{$row[2]}
+
+{$divider}
+
+");
 	} else {
-		return ("\n\nPrevious Comments:\n{$divider}\n\n{$output}The remainder of the comments for this report are too long. To view\nthe rest of the comments, please view the bug report online at\n	http://{$site_url}{$basedir}/bug.php?id={$bug_id}\n");
+		return "
+
+Previous Comments:
+{$divider}
+{$output}
+
+The remainder of the comments for this report are too long. To view
+the rest of the comments, please view the bug report online at
+
+    http://{$site_url}{$basedir}/bug.php?id={$bug_id}
+";
 	}
 
 	return '';
