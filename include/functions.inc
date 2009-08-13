@@ -673,7 +673,7 @@ function display_bug_success($in)
 /**
  * Returns array of changes going to be made
  */
-function bug_diff($bug, $in, $previous, $current)
+function bug_diff($bug, $in)
 {
 	$changed = array();
 
@@ -746,13 +746,13 @@ function bug_diff_render_html($diff)
  *
  * @return void
  */
-function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id, $previous = array(), $current = array())
+function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id)
 {
 	global $tla, $bug_types, $siteBig, $site_url, $basedir;
 
 	$text = array();
 	$headers = array();
-	$changed = bug_diff($bug, $in, $previous, $current);
+	$changed = bug_diff($bug, $in);
 
 	/* Default addresses */
 	list($mailto, $mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id);
@@ -857,7 +857,7 @@ DEV_TEXT;
 	}
 
 	/* send mail if status was changed or there is a comment */
-	if ($in['status'] != $bug['status'] || $ncomment != '' || ($current != $previous)) {
+	if ($in['status'] != $bug['status'] || $ncomment != '') {
 		if (isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type']) {
 			$subj = $bug_types[$bug['bug_type']] . '->' . $bug_types[$in['bug_type']];
 		} else {
