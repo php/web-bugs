@@ -145,11 +145,6 @@ $previous = $current = array();
 /* Fetch RESOLVE_REASONS array */
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
 
-/**
- * Init BugDataObject class
- */
-Bug_DataObject::init();
-
 if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	// Submission of additional comment by others
 
