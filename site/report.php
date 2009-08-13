@@ -24,6 +24,9 @@ if ($logged_in) {
 } else {
 	require_once 'Text/CAPTCHA/Numeral.php';
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+
+	$captcha = $numeralCaptcha->getOperation();
+	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 }
 
 // Handle input
@@ -432,16 +435,12 @@ display_bug_error($errors);
 				</td>
 			</tr>
 
-<?php if (!$logged_in) { 
-	$captcha_operation = $numeralCaptcha->getOperation();
-	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
-?>
+<?php if (!$logged_in) { ?>
 			<tr>
-				<th>Solve the problem : <?php echo $captcha_operation; ?> = ?</th>
+				<th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
 				<td class="form-input"><input type="text" name="captcha" /></td>
 			</tr>
 <?php } ?>
-
 			<tr>
 				<th class="form-label_left">Summary:</th>
 				<td class="form-input">

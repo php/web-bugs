@@ -30,7 +30,7 @@ if (!$loggedin) {?>
   </td>
  </tr>
  <tr>
-  <th>Solve the problem : <?php echo $captcha; ?> = ?</th>
+  <th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
   <td class="form-input"><input type="text" name="captcha" /></td>
  </tr>
 <?php } ?>

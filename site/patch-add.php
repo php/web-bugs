@@ -37,6 +37,9 @@ if ($logged_in) {
 } else {
 	require_once 'Text/CAPTCHA/Numeral.php';
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+
+	$captcha = $numeralCaptcha->getOperation();
+	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 }
 
 require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
@@ -56,7 +59,6 @@ if (isset($_POST['addpatch'])) {
 		$name = $_POST['name'];
 		$patches = $patchinfo->listPatches($bug_id);
 		$errors[] = 'No patch name entered';
-		$captcha = $numeralCaptcha->getOperation();
 		include "{$ROOT_DIR}/templates/addpatch.php";
 		exit;
 	}
@@ -96,8 +98,6 @@ if (isset($_POST['addpatch'])) {
 				$patches = $patchinfo->listPatches($bug_id);
 				$errors[] = $e->getMessage();
 				$errors[] = 'Could not attach patch "' . htmlspecialchars($_POST['name']) . '" to Bug #' . $bug_id;
-				$captcha = $numeralCaptcha->getOperation();
-				$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 				include "{$ROOT_DIR}/templates/addpatch.php";
 				exit;
 			}
@@ -110,8 +110,6 @@ if (isset($_POST['addpatch'])) {
 			}
 			$name = $_POST['name'];
 			$patches = $patchinfo->listPatches($bug_id);
-			$captcha = $numeralCaptcha->getOperation();
-			$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 			include "{$ROOT_DIR}/templates/addpatch.php";
 			exit;
 		}
@@ -130,9 +128,6 @@ if (isset($_POST['addpatch'])) {
 			'Could not attach patch "' .
 			htmlspecialchars($_POST['name']) .
 			'" to Bug #' . $bug_id);
-		$captcha = $numeralCaptcha->getOperation();
-		$_SESSION['answer'] = $numeralCaptcha->getAnswer();
-
 		include "{$ROOT_DIR}/templates/addpatch.php";
 		exit;
 	}
@@ -191,12 +186,9 @@ TXT;
 	
 }
 
-
 $email   = isset($_GET['email']) ? $_GET['email'] : '';
 $errors  = array();
 $name    = isset($_GET['patch']) ? $_GET['patch'] : '';
 $patches = $patchinfo->listPatches($bug);
-$captcha = $numeralCaptcha->getOperation();
-$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 
 include "{$ROOT_DIR}/templates/addpatch.php";
