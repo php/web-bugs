@@ -61,9 +61,46 @@ $state_types =  array (
  * DEFINE FUNCTIONS ============================
  */
 
+
 /**
  * Authentication
  */
+
+function verify_password($user, $pass)
+{
+	global $errors;
+
+	$post = http_build_query(
+		array(
+			"token" => getenv("TOKEN"),
+			"username" => $user,
+			"password" => $pass,
+		)
+	);
+
+	$opts = array(
+		"method"  => "POST",
+		"header"  => "Content-type: application/x-www-form-urlencoded",
+		"content" => $post,
+	);
+
+	$ctx = stream_context_create(array("http" => $opts));
+
+	$s = file_get_contents("https://master.php.net/fetch/cvsauth.php", false, $ctx);
+
+	$a = @unserialize($s);
+	if (!is_array($a)) {
+		$errors[] = "Unknown authentication error\n";
+		exit;
+	}
+	if (isset($a["errno"])) {
+		$errors[] = "Authentication failed: {$a['errstr']}\n";
+		return false;
+	}
+
+	return true;
+}
+
 function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 {
 	global $auth_user, $ROOT_DIR;
@@ -104,7 +141,6 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 
 	// Authentication and user level check
 	// User levels are: reader (0), commenter/patcher/etc. (edit = 3), submitter (edit = 2), developer (edit = 1)
-	require_once "{$ROOT_DIR}/include/master-auth.inc";
 	if ($user != '' && $pw != '' && verify_password($user, $pw)) {
 		$logged_in = 'developer';
 		$auth_user->handle = $user;
