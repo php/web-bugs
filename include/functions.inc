@@ -1387,7 +1387,7 @@ function verify_bug_passwd($bug_id, $passwd)
  */
 function bugs_mail($to, $subject, $message, $headers = '', $parameters = '')
 {
-	if (DEVBOX === false) {
+	if (DEVBOX === true) {
 		echo '<pre>';
 		var_dump($to, $subject, $message, $headers, $parameters);
 		echo '</pre>';
