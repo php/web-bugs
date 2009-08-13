@@ -169,6 +169,7 @@ if (isset($_POST['in'])) {
 			}
 			
 			if ($_POST['preview']) {
+				$_POST['in']['status'] = 'Open';
 				$_SESSION['bug_preview'] = $_POST['in'];
 				$_SESSION['captcha'] = $_POST['captcha'];
 				header("Location: bug.php?id=preview");
