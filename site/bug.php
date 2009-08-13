@@ -740,7 +740,7 @@ if ($edit == 1 || $edit == 2) { ?>
 			$_POST['in']['status'] : '', $edit, $bug['status']) ?>
 	   </select>
 
-<?php if ($edit == 1 && $logged_in == 'developer') { ?>
+<?php if ($edit == 1) { ?>
 
 		</td>
 		<th class="details">Assign to:</th>
