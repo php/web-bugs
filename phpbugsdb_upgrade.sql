@@ -59,7 +59,7 @@ CREATE TABLE bugdb_patchtracker (
   bugdb_id int(8) NOT NULL,
   patch varchar(80) NOT NULL,
   revision int(8) NOT NULL,
-  developer varchar(20) NOT NULL,
+  developer varchar(40) NOT NULL,
   PRIMARY KEY (bugdb_id, patch, revision)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -67,7 +67,7 @@ CREATE TABLE bugdb_obsoletes_patches (
   bugdb_id int(8) NOT NULL,
   patch varchar(80) NOT NULL,
   revision int(8) NOT NULL,
-  obsolete_patch varchar(40) NOT NULL,
+  obsolete_patch varchar(80) NOT NULL,
   obsolete_revision int(8) NOT NULL,
   PRIMARY KEY (bugdb_id, patch, revision, obsolete_patch, obsolete_revision)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
