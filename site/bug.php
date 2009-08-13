@@ -138,7 +138,7 @@ if (!$bug) {
 	exit;
 }
 
-// handle any updates, displaying errors if there were any
+// Handle any updates, displaying errors if there were any
 $errors = array();
 $previous = $current = array();
 
@@ -184,11 +184,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				$_POST['in']['name'] = $auth_user->name;
 			}
 
-// FIXME: MDB2 changes '' into null? Need to pass handle like this because of it..
-			$handle = $dbh->escape($_POST['in']['handle']);
-			$query = "INSERT INTO bugdb_comments (bug, email, handle, ts, comment, reporter_name)
-					  VALUES (?, ?, '{$handle}', NOW(), ?, ?)";
-			$res = $dbh->prepare($query)->execute(array(
+			$res = $dbh->prepare('
+				INSERT INTO bugdb_comments (bug, email, comment, reporter_name, ts)
+				VALUES (?, ?, ?, ?, NOW())
+			')->execute(array(
 				$bug_id,
 				$_POST['in']['commentemail'],
 				$ncomment,
@@ -267,9 +266,12 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		));
 
 		if (!empty($ncomment)) {
-			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment)
-					  VALUES ({$bug_id}, ?, NOW(), ?)";
-			$dbh->prepare($query)->execute(array($from, $ncomment));
+			$dbh->prepare("
+				INSERT INTO bugdb_comments (bug, email, comment, ts)
+				VALUES ({$bug_id}, ?, ?, NOW())
+			")->execute(array(
+				$from, $ncomment,
+			));
 		}
 	}
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
@@ -376,15 +378,16 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['assign'] = $auth_user->handle;
 		}
 
-		$dbh->prepare($query .= "
-			sdesc = ?, 
-			status = ?, 
-			package_name = ?,
-			bug_type = ?,
-			assign = ?,
-			php_version = ?,
-			php_os = ?,
-			ts2 = NOW() WHERE id = {$bug_id}
+		$dbh->prepare($query . "
+				sdesc = ?, 
+				status = ?, 
+				package_name = ?,
+				bug_type = ?,
+				assign = ?,
+				php_version = ?,
+				php_os = ?,
+				ts2 = NOW()
+			WHERE id = {$bug_id}
 		")->execute(array (
 			$_POST['in']['sdesc'],
 			$status,
@@ -395,23 +398,27 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['php_os'],
 		));
 
-		$changed  = bug_diff($bug, $_POST['in']);
+		$changed = bug_diff($bug, $_POST['in']);
 		if (!empty($changed)) {
 			$log_comment = bug_diff_render_html($changed);
 		}
 
 		if (!empty($log_comment)) {
 			$dbh->prepare("
-				INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle, comment_type)
-				VALUES (?, ?, NOW(), ?, ?, ?, 'log')
-			")->execute(array ($bug_id, $from, $log_comment, $comment_name, $auth_user->handle));
+				INSERT INTO bugdb_comments (bug, email, comment, reporter_name, comment_type, ts)
+				VALUES (?, ?, ?, ?, 'log', NOW())
+			")->execute(array(
+				$bug_id, $from, $log_comment, $comment_name,
+			));
 		}
 
 		if (!empty($ncomment)) {
 			$dbh->prepare("
-				INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, handle, comment_type)
-				VALUES (?, ?, NOW(), ?, ?, ?, 'comment')
-			")->execute(array ($bug_id, $from, $ncomment, $comment_name, $auth_user->handle));
+				INSERT INTO bugdb_comments (bug, email, comment, reporter_name, comment_type, ts)
+				VALUES (?, ?, ?, ?, 'comment', NOW())
+			")->execute(array(
+				$bug_id, $from, $ncomment, $comment_name,
+			));
 		}
 	}
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 1) {

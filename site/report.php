@@ -44,7 +44,6 @@ if (isset($_POST['in'])) {
 
 	// try to verify the user
 	$_POST['in']['email']  = $auth_user->email;
-	$_POST['in']['handle'] = $auth_user->handle;
 
 	$package_name = $_POST['in']['package_name'];
 	$package_version = !empty($_POST['in']['package_version']) ? $_POST['in']['package_version'] : '';
@@ -143,13 +142,12 @@ if (isset($_POST['in'])) {
 			$ok_to_submit_report = true;
 		}
 		
-		if ($_POST['edit_after_preview']) {
+		if (isset($_POST['edit_after_preview'])) {
 			$ok_to_submit_report = false;
 			response_header("Report - New");
 		}
 
 		if ($ok_to_submit_report) {
-			$registereduser = 1;
 			$_POST['in']['reporter_name'] = $auth_user->name;
 			$_POST['in']['handle'] = $auth_user->handle;
 
@@ -168,7 +166,7 @@ if (isset($_POST['in'])) {
 				$fdesc .= $_POST['in']['actres'] . "\n";
 			}
 			
-			if ($_POST['preview']) {
+			if (isset($_POST['preview'])) {
 				$_POST['in']['status'] = 'Open';
 				$_SESSION['bug_preview'] = $_POST['in'];
 				$_SESSION['captcha'] = $_POST['captcha'];
@@ -178,9 +176,7 @@ if (isset($_POST['in'])) {
 
 			$res = $dbh->prepare('
 				INSERT INTO bugdb (
-					registered,
 					package_name,
-					package_version,
 					bug_type,
 					email,
 					sdesc,
@@ -191,10 +187,9 @@ if (isset($_POST['in'])) {
 					reporter_name,
 					status,
 					ts1
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())')->execute(array (
-					$registereduser,
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())
+			')->execute(array(
 					$package_name,
-					$package_version,
 					$_POST['in']['bug_type'],
 					$_POST['in']['email'],
 					$_POST['in']['sdesc'],
@@ -207,7 +202,7 @@ if (isset($_POST['in'])) {
 			);
 			if (PEAR::isError($res)) {
 				echo "<pre>";
-				var_dump($_POST['in'], $fdesc, $package_version, $package_name, $registereduser);
+				var_dump($_POST['in'], $fdesc, $package_version, $package_name);
 				die($res->getMessage());
 			}
 			$cid = $dbh->lastInsertId();
@@ -439,7 +434,7 @@ display_bug_error($errors);
 ?>
 			<tr>
 				<th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
-				<td class="form-input"><input type="text" name="captcha" /></td>
+				<td class="form-input" autocomplete="off"><input type="text" name="captcha" /></td>
 			</tr>
 <?php } ?>
 			<tr>
