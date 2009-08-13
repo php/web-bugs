@@ -605,13 +605,6 @@ display_bug_error($errors);
 	</div>
    </fieldset>
    <fieldset>
-	<legend>Are you using the same Package version?</legend>
-	<div>
-	 <input type="radio" id="ver-y" name="samever" value="1" /> <label for="ver-y">yes</label>
-	 <input type="radio" id="ver-n" name="samever" value="0" checked="checked" /> <label for="ver-n">no</label>
-	</div>
-   </fieldset>
-   <fieldset>
 	<legend>Are you using the same operating system?</legend>
 	<div>
 	 <input type="radio" id="os-y" name="sameos" value="1" /> <label for="os-y">yes</label>

@@ -637,7 +637,7 @@ div.details {
 	margin:5px;
 }
 th.details {
-    vertical-align: middle;
+    vertical-align: top;
     text-align: right;
 }
 th.results {
@@ -702,7 +702,10 @@ form#asearch table#primary {
     background: #eee;
     padding: 4px;
 }
-
+table#votes {
+	background-color:#eee;
+	margin:0 0 0 50px;
+}
 /* === Search === */
 
 a.status_active {
