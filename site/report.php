@@ -46,14 +46,13 @@ if (isset($_POST['in'])) {
 	$_POST['in']['email']  = $auth_user->email;
 
 	$package_name = $_POST['in']['package_name'];
-	$package_version = !empty($_POST['in']['package_version']) ? $_POST['in']['package_version'] : '';
 
 	if (!$errors) {
 		/*
 		 * When user submits a report, do a search and display
 		 * the results before allowing them to continue.
 		 */
-		if (!isset($_POST['in']['did_luser_search']) || !$_POST['in']['did_luser_search']) {
+		if (!isset($_POST['preview']) && empty($_POST['in']['did_luser_search'])) {
 
 			$_POST['in']['did_luser_search'] = 1;
 
@@ -106,15 +105,9 @@ if (isset($_POST['in'])) {
 						LIMIT 1
 					")->execute(array($row['id']))->fetchOne();
 
-					if ($resolution) {
-						$resolution = htmlspecialchars($resolution);
-					}
-
 					$summary = $row['ldesc'];
 					if (strlen($summary) > 256) {
-						$summary = htmlspecialchars(substr(trim($summary), 0, 256)) . ' ...';
-					} else {
-						$summary = htmlspecialchars($summary);
+						$summary = substr(trim($summary), 0, 256) . ' ...';
 					}
 
 					$bug_url = "bug.php?id={$row['id']}&amp;edit=2";
@@ -125,8 +118,8 @@ if (isset($_POST['in'])) {
 					echo "</a></td>\n";
 					echo " </tr>\n";
 					echo " <tr>\n";
-					echo "  <td>{$summary}</td>\n";
-					echo '  <td>' . nl2br($resolution) . "</td>\n";
+					echo "  <td><pre class='note'>{$summary}</pre></td>\n";
+					echo "  <td><pre class='note'>{$resolution}</pre></td>\n";
 					echo " </tr>\n";
 
 				}
@@ -202,7 +195,7 @@ if (isset($_POST['in'])) {
 			);
 			if (PEAR::isError($res)) {
 				echo "<pre>";
-				var_dump($_POST['in'], $fdesc, $package_version, $package_name);
+				var_dump($_POST['in'], $fdesc, $package_name);
 				die($res->getMessage());
 			}
 			$cid = $dbh->lastInsertId();
@@ -222,7 +215,6 @@ if (isset($_POST['in'])) {
 			$report  = <<< REPORT
 From:             {$_POST['in']['handle']}
 Operating system: {$_POST['in']['php_os']}
-Package version:  {$package_version}
 PHP version:      {$_POST['in']['php_version']}
 Package:          $package_name}
 Bug Type:         {$_POST['in']['bug_type']}
@@ -365,9 +357,8 @@ if (!isset($_POST['in'])) {
 display_bug_error($errors);
 
 ?>
-
 	<form method="post" action="report.php?package=<?php echo htmlspecialchars($package); ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
-		<input type="hidden" name="in[did_luser_search]" value="<?php echo isset($_POST['in']['did_luser_search']) ? 1 : 0; ?>" />
+		<input type="hidden" name="in[did_luser_search]" value="<?php echo isset($_POST['in']['did_luser_search']) ? $_POST['in']['did_luser_search'] : 0; ?>" />
 		<table class="form-holder" cellspacing="1">
 			<tr>
 <?php if ($logged_in) { ?>
@@ -428,15 +419,6 @@ display_bug_error($errors);
 				</td>
 			</tr>
 
-<?php if (!$logged_in) { 
-	$captcha = $numeralCaptcha->getOperation();
-	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
-?>
-			<tr>
-				<th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
-				<td class="form-input" autocomplete="off"><input type="text" name="captcha" /></td>
-			</tr>
-<?php } ?>
 			<tr>
 				<th class="form-label_left">Summary:</th>
 				<td class="form-input">
@@ -515,6 +497,16 @@ display_bug_error($errors);
 					<textarea cols="80" rows="15" name="in[actres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['actres']); ?></textarea>
 				</td>
 			</tr>
+
+<?php if (!$logged_in) { 
+	$captcha = $numeralCaptcha->getOperation();
+	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+?>
+			<tr>
+				<th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
+				<td class="form-input" autocomplete="off"><input type="text" name="captcha" /></td>
+			</tr>
+<?php } ?>
 
 			<tr>
 				<th class="form-label_left">Submit:</th>

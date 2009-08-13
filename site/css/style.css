@@ -542,7 +542,9 @@ td.content table {
 	white-space:pre-wrap;
 	font-size:medium;
 }
-
+.lusersearch .note {
+	width:100%;
+}
 .log_note {
 	font-family:monospace;
 	font-size:medium;
