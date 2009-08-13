@@ -42,18 +42,16 @@ if ($logged_in) {
 require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patchinfo = new Bug_Patchtracker;
 
+$patch_name = (!empty($_POST['name']) && is_string($_POST['name'])) ? $_POST['name'] : '';
+$patch_name_url = urlencode($patch_name);
+
 if (isset($_POST['addpatch'])) {
 	if (!isset($_POST['obsoleted'])) {
 		$_POST['obsoleted'] = array();
 	}
 
-	$email = isset($_POST['email']) ? $_POST['email'] : '';
-
-	if (!isset($_POST['name']) || empty($_POST['name']) || !is_string($_POST['name'])) {
-		if (!is_string($_POST['name'])) {
-			$_POST['name'] = '';
-		}
-		$name = $_POST['name'];
+	// Check that patch name is given (required always)
+	if (empty($patch_name)) {
 		$patches = $patchinfo->listPatches($bug_id);
 		$errors[] = 'No patch name entered';
 		include "{$ROOT_DIR}/templates/addpatch.php";
@@ -64,7 +62,9 @@ if (isset($_POST['addpatch'])) {
 		try {
 			$errors = array();
 
-			if (!is_valid_email($_POST['email'])) {
+			$email = isset($_POST['email']) ? $_POST['email'] : '';
+
+			if (!is_valid_email($email)) {
 				$errors[] = 'Email address must be valid!';
 			}
 
@@ -84,55 +84,43 @@ if (isset($_POST['addpatch'])) {
 			}
 
 			PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-			$e = $patchinfo->attach($bug_id, 'patch', $_POST['name'], $_POST['email'], $_POST['obsoleted']);
+			$e = $patchinfo->attach($bug_id, 'patch', $patch_name, $email, $_POST['obsoleted']);
 			PEAR::popErrorHandling();
 
 			if (PEAR::isError($e)) {
-				if (!is_string($_POST['name'])) {
-					$_POST['name'] = '';
-				}
-				$name = $_POST['name'];
 				$patches = $patchinfo->listPatches($bug_id);
 				$errors[] = $e->getMessage();
-				$errors[] = 'Could not attach patch "' . htmlspecialchars($_POST['name']) . '" to Bug #' . $bug_id;
+				$errors[] = 'Could not attach patch "' . htmlspecialchars($patch_name) . '" to Bug #' . $bug_id;
 				include "{$ROOT_DIR}/templates/addpatch.php";
 				exit;
 			}
 
-			redirect("patch-display.php?bug={$bug_id}&patch=" . urlencode($_POST['name']) . "&revision={$e}");
+			redirect("patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$e}");
 			exit;
 		} catch (Exception $e) {
-			if (!is_string($_POST['name'])) {
-				$_POST['name'] = '';
-			}
-			$name = $_POST['name'];
 			$patches = $patchinfo->listPatches($bug_id);
 			include "{$ROOT_DIR}/templates/addpatch.php";
 			exit;
 		}
+	} else {
+		$email = $auth_user->email;
 	}
 
 	PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-	$e = $patchinfo->attach($bug_id, 'patch', $_POST['name'], $auth_user->handle, $_POST['obsoleted']);
+	$e = $patchinfo->attach($bug_id, 'patch', $patch_name, $auth_user->email, $_POST['obsoleted']);
 	PEAR::popErrorHandling();
 	if (PEAR::isError($e)) {
-		if (!is_string($_POST['name'])) {
-			$_POST['name'] = '';
-		}
-		$name = $_POST['name'];
 		$patches = $patchinfo->listPatches($bug_id);
 		$errors = array($e->getMessage(),
 			'Could not attach patch "' .
-			htmlspecialchars($_POST['name']) .
+			htmlspecialchars($patch_name) .
 			'" to Bug #' . $bug_id);
 		include "{$ROOT_DIR}/templates/addpatch.php";
 		exit;
 	}
 
 	// Add a comment to the bug report.
-	$patch_name = $_POST['name'];
-	$patch_name_url = urlencode($patch_name);
-	$patch_url = "http://{$site_url}{$basedir}/{$url}patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$e}&display=1";
+	$patch_url = "http://{$site_url}{$basedir}/patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$e}&display=1";
 
 	$text = <<<TXT
 The following patch has been added/updated:
@@ -159,7 +147,7 @@ TXT;
 
 	$protected_email  = '"' . spam_protect($email, 'text') . '"' .  "<{$mailfrom}>";
 	$extra_headers  = "From: {$protected_email}\n";
-	$extra_headers .= "Message-ID: <bug-{$cid}@{$site_url}>";
+	$extra_headers .= "Message-ID: <bug-{$bug_id}@{$site_url}>";
 
 	bugs_mail(
 		$mailto,
@@ -169,7 +157,6 @@ TXT;
 		'-f bounce-no-user@php.net'
 	);
 
-	$name    = $_POST['name'];
 	$patches = $patchinfo->listPatches($bug_id);
 	$errors  = array();
 	include "{$ROOT_DIR}/templates/patchadded.php";
@@ -178,8 +165,7 @@ TXT;
 }
 
 $email   = isset($_GET['email']) ? $_GET['email'] : '';
-$errors  = array();
 $name    = isset($_GET['patch']) ? $_GET['patch'] : '';
-$patches = $patchinfo->listPatches($bug);
+$patches = $patchinfo->listPatches($bug_id);
 
 include "{$ROOT_DIR}/templates/addpatch.php";

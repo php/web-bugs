@@ -1,7 +1,7 @@
 <?php
 response_header('Add Patch :: ' . clean($package_name));
 ?>
-<h2>Add a Patch to <a href="<?php echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a></h2>
+<h2>Add a Patch to <a href="bug.php?id=<?php echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a></h2>
 <ul>
  <li>One problem per patch, please</li>
  <li>Patches must be 100k or smaller</li>
@@ -12,7 +12,7 @@ response_header('Add Patch :: ' . clean($package_name));
 <input type="hidden" name="MAX_FILE_SIZE" value="102400" />
 <input type="hidden" name="bug" value="<?php echo $bug_id; ?>" />
 <?php
-if ($errors) {
+if (!empty($errors)) {
     foreach ($errors as $err) {
         echo '<div class="errors">' . htmlspecialchars($err) . '</div>';
     }
@@ -42,7 +42,7 @@ if (!$logged_in) {
    Patch Name
   </th>
   <td class="form-input">
-   <input type="text" maxlength="80" size="40" name="name" value="<?php echo clean($name); ?>" /><br />
+   <input type="text" maxlength="80" size="40" name="name" value="<?php echo clean($patch_name); ?>" /><br />
    <small>The patch name must be shorter than 80 characters and it must only contain alpha-numeric characters, dots, underscores or hyphens.</small>
   </td>
  </tr>

@@ -1,18 +1,14 @@
-<?php
-response_header('Patch :: ' . clean($package_name) . ' :: Bug #' . $bug_id);
-?>
-<h1>Patch version <?php echo format_date($revision) ?> for <?php echo clean($package_name); ?> Bug #<?php
-    echo $bug_id; ?></h1>
-<a href="bug.php?id=<?php echo urlencode($bug) ?>">Return to Bug #<?php echo $bug_id; ?></a>
-| <a href="patch-display.php?bug_id=<?php echo urlencode($bug) ?>&amp;patch=<?php echo urlencode($patch)
-    ?>&amp;revision=<?php echo urlencode($revision) ?>&amp;download=1">Download this patch</a><br />
+<h2>Patch <?php echo clean($patch_name); ?> for <?php echo clean($package_name); ?> Bug #<?php echo $bug_id; ?></h2>
+<p><b>Patch version <?php echo format_date($revision); ?></b></p>
+<a href="bug.php?id=<?php echo $bug_id; ?>">Return to Bug #<?php echo $bug_id; ?></a> |
+<a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo $patch_name_url; ?>&amp;revision=<?php echo urlencode($revision); ?>&amp;download=1">Download this patch</a><br />
 <?php
 if (count($obsoletedby)) {
     echo '<div class="warnings">This patch is obsolete</div><p>Obsoleted by patches:<ul>';
     foreach ($obsoletedby as $betterpatch) {
         echo '<li><a href="patch-display.php?patch=',
              urlencode($betterpatch['patch']),
-             '&amp;bug_id=', $bug, '&amp;revision=', $betterpatch['revision'],
+             '&amp;bug_id=', $bug_id, '&amp;revision=', $betterpatch['revision'],
              '">', htmlspecialchars($betterpatch['patch']), ', revision ',
              format_date($betterpatch['revision']), '</a></li>';
     }
@@ -24,7 +20,7 @@ if (count($obsoletes)) {
     foreach ($obsoletes as $betterpatch) {
         echo '<li><a href="patch-display.php?patch=',
              urlencode($betterpatch['obsolete_patch']),
-             '&amp;bug_id=', $bug,
+             '&amp;bug_id=', $bug_id,
              '&amp;revision=', $betterpatch['obsolete_revision'],
              '">', htmlspecialchars($betterpatch['obsolete_patch']), ', revision ',
              format_date($betterpatch['obsolete_revision']), '</a></li>';
@@ -36,12 +32,12 @@ Patch Revisions:
 <?php
 echo '<ul>';
 foreach ($revisions as $i => $rev) {
-    echo '<li><a href="patch-display.php?bug_id=', urlencode($bug), '&amp;patch=',
-         urlencode($patch), '&amp;revision=', urlencode($rev[0]), '">',
+    echo '<li><a href="patch-display.php?bug_id=', $bug_id, '&amp;patch=',
+         $patch_name_url, '&amp;revision=', urlencode($rev[0]), '">',
          format_date($rev[0]), '</a>',
          ' <a href="patch-display.php?patch=',
-             urlencode($patch),
-             '&amp;bug_id=', $bug, '&amp;diff=1&amp;old=', $rev[0], '&amp;revision=',
+             $patch_name_url,
+             '&amp;bug_id=', $bug_id, '&amp;diff=1&amp;old=', $rev[0], '&amp;revision=',
              $revision, '">[diff to current]</a></li>';
 }
 echo '</ul></li>';

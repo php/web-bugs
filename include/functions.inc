@@ -1410,7 +1410,7 @@ function bugs_mail($to, $subject, $message, $headers = '', $parameters = '')
 {
 	if (DEVBOX === true) {
 		echo '<pre>';
-		var_dump($to, $subject, $message, $headers, $parameters);
+		var_dump(htmlspecialchars($to), htmlspecialchars($subject), htmlspecialchars($message), htmlspecialchars($headers), htmlspecialchars($parameters));
 		echo '</pre>';
 		return true;
 	}
