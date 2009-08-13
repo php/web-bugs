@@ -38,19 +38,3 @@ function verify_password($user, $pass)
 
 	return true;
 }
-
-function is_developer()
-{
-	if (empty($_COOKIE['MAGIC_COOKIE'])) {
-		return false;
-	}
-	
-	// 0 = username, 1 = password
-	$c = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']), 2);
-	
-	if (!verify_password($c[0], $c[1])) {
-		return false;
-	}
-
-	return true;
-}
