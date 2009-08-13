@@ -1,6 +1,5 @@
 <?php
 response_header('Patch :: ' . clean($package_name) . ' :: Bug #' . $bug_id);
-show_bugs_menu(clean($package_name));
 ?>
 <h1>Patch version <?php echo format_date($revision) ?> for <?php echo clean($package_name); ?> Bug #<?php
     echo $bug_id; ?></h1>

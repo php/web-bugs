@@ -1,6 +1,5 @@
 <?php
 response_header('Add Patch :: ' . clean($package_name));
-show_bugs_menu(clean($package_name));
 ?>
 <h2>Add a Patch to <a href="<?php echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a></h2>
 <ul>
@@ -40,7 +39,7 @@ if (!$loggedin) {?>
    Patch Name
   </th>
   <td class="form-input">
-   <input type="text" maxlength="80" name="name" value="<?php echo clean($name); ?>" /><br />
+   <input type="text" maxlength="80" size="40" name="name" value="<?php echo clean($name); ?>" /><br />
    <small>The patch name must be shorter than 80 characters and it must only contain alpha-numeric characters, dots, underscores or hyphens.</small>
   </td>
  </tr>
