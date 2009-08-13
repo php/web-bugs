@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Add your local changes here and copy to local_config.php
+ */
+
+$site_data = array (
+	'url' => 'bugs.php.net',
+	'basedir' => '/bugs',
+	'email' => 'php-bugs@lists.php.net',
+	'security_email' => 'security@php.net',
+	'db' => 'phpbugsdb',
+	'db_user' => 'nobody',
+	'db_pass' => '',
+	'db_host' => 'localhost',
+	'patch_tmp' => '/tmp/patches/', 
+);
+
+define('DEVBOX', true);

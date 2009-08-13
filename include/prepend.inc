@@ -11,20 +11,25 @@ if (get_magic_quotes_gpc()) {
 
 $site = 'php';
 $siteBig = 'PHP';
+$ROOT_DIR = realpath(dirname(__FILE__) . '/../');
 
-$site_data = array (
-	'url' => 'bugs.php.net',
-	'basedir' => '/bugs',
-	'email' => 'php-bugs@lists.php.net',
-	'security_email' => 'security@php.net',
-	'db' => 'phpbugsdb',
-	'db_user' => 'nobody',
-	'db_pass' => '',
-	'db_host' => 'localhost',
-	'patch_tmp' => '/tmp/patches/', 
-);
-
-define('DEVBOX', true);
+$local_cfg = "{$ROOT_DIR}/local_config.php";
+if (file_exists($local_cfg)) {
+	require $local_cfg;
+} else {
+	$site_data = array (
+		'url' => 'bugs.php.net',
+		'basedir' => '/bugs',
+		'email' => 'php-bugs@lists.php.net',
+		'security_email' => 'security@php.net',
+		'db' => 'phpbugsdb',
+		'db_user' => 'nobody',
+		'db_pass' => '',
+		'db_host' => 'localhost',
+		'patch_tmp' => '/tmp/patches/', 
+	);
+	define('DEVBOX', true);
+}
 
 // CONFIG END
 
@@ -33,7 +38,6 @@ $logged_in = false;
 $site_url = $site_data['url'];
 $bugEmail = $site_data['email'];
 $basedir  = $site_data['basedir'];
-$ROOT_DIR = realpath(dirname(__FILE__) . '/../');
 define('BUG_PATCHTRACKER_TMPDIR', $site_data['patch_tmp']);
 define('DATABASE_DSN', "mysqli://{$site_data['db_user']}:{$site_data['db_pass']}@{$site_data['db_host']}/{$site_data['db']}");
 
