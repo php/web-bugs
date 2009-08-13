@@ -262,27 +262,25 @@ REPORT;
 				}
 			}
 
-			if (!DEVBOX) {
-				// mail to reporter
-				@mail(
-					$_POST['in']['email'],
-					"[$siteBig-BUG] $type #$cid: {$_POST['in']['sdesc']}",
-					"{$ascii_report}2\n",
-					"From: $siteBig Bug Database <$mailfrom>\n" .
-					"X-PHP-Bug: $cid\n" .
-					"Message-ID: <bug-$cid@{$site_url}>",
-					'-f bounce-no-user@php.net'
-				);
+			// mail to reporter
+			bugs_mail(
+				$_POST['in']['email'],
+				"[$siteBig-BUG] $type #$cid: {$_POST['in']['sdesc']}",
+				"{$ascii_report}2\n",
+				"From: $siteBig Bug Database <$mailfrom>\n" .
+				"X-PHP-Bug: $cid\n" .
+				"Message-ID: <bug-$cid@{$site_url}>",
+				'-f bounce-no-user@php.net'
+			);
 
-				// mail to package mailing list
-				@mail(
-					$mailto,
-					"[$siteBig-BUG] $type #$cid [NEW]: {$_POST['in']['sdesc']}",
-					$ascii_report . "1\n-- \n{$dev_extra}",
-					$extra_headers,
-					'-f bounce-no-user@php.net'
-				);
-			}
+			// mail to package mailing list
+			bugs_mail(
+				$mailto,
+				"[$siteBig-BUG] $type #$cid [NEW]: {$_POST['in']['sdesc']}",
+				$ascii_report . "1\n-- \n{$dev_extra}",
+				$extra_headers,
+				'-f bounce-no-user@php.net'
+			);
 
 			if ($redirectToPatchAdd) {
 				$patchname = urlencode($_POST['in']['patchname']);

@@ -144,13 +144,8 @@ TXT;
 
 	$query = '
 		INSERT INTO bugdb_comments (
-			bug,
-			email,
-			ts,
-			comment,
-			comment_type,
-			reporter_name
-		) VALUES (?, ?, NOW(), ?, "patch", ?)
+			bug, email, comment, reporter_name, comment_type, ts
+		) VALUES (?, ?, ?, ?, "patch", NOW())
 	';
 	$res = $dbh->prepare($query)->execute(array(
 		$bug_id,
@@ -166,15 +161,14 @@ TXT;
 	$extra_headers  = "From: {$protected_email}\n";
 	$extra_headers .= "Message-ID: <bug-{$cid}@{$site_url}>";
 
-	if (!DEVBOX) {
-		@mail(
-			$mailto,
-			"[$siteBig-BUG] {$buginfo['bug_type']} #{$bug_id} [PATCH]: {$buginfo['sdesc']}",
-			$text,
-			$extra_headers,
-			'-f bounce-no-user@php.net'
-		);
-	}
+	bugs_mail(
+		$mailto,
+		"[$siteBig-BUG] {$buginfo['bug_type']} #{$bug_id} [PATCH]: {$buginfo['sdesc']}",
+		$text,
+		$extra_headers,
+		'-f bounce-no-user@php.net'
+	);
+
 	$name    = $_POST['name'];
 	$patches = $patchinfo->listPatches($bug_id);
 	$errors  = array();

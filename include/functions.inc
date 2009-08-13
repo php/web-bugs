@@ -876,36 +876,34 @@ DEV_TEXT;
 			$subj .= " #{$bug['id']} [{$tla[$bug['status']]}]: ";
 		}
 
-		if (DEVBOX == false) {
-			// the user gets sent mail with an envelope sender that ignores bounces
-			@mail(
-				$bug['email'],
-				"[$siteBig-BUG] {$subj}" . txfield('sdesc', $bug, $in),
-				$user_text,
-				"From: $siteBig Bug Database <$mailfrom>\n".
-				"Bcc: $Bcc\n" .
-				"X-PHP-Bug: {$bug['id']}\n".
-				"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
-				"-f bounces-ignored@php.net"
-			);
+		// the user gets sent mail with an envelope sender that ignores bounces
+		bugs_mail(
+			$bug['email'],
+			"[$siteBig-BUG] {$subj}" . txfield('sdesc', $bug, $in),
+			$user_text,
+			"From: $siteBig Bug Database <$mailfrom>\n".
+			"Bcc: $Bcc\n" .
+			"X-PHP-Bug: {$bug['id']}\n".
+			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
+			"-f bounces-ignored@php.net"
+		);
 
-			// but we go ahead and let the default sender get used for the list
-			@mail(
-				$mailto,
-				"[$siteBig-BUG] {$subj}" . txfield('sdesc', $bug, $in),
-				$dev_text,
-				"From: $from\n".
-				"X-PHP-Bug: {$bug['id']}\n".
-				"X-PHP-Type: " 				. (($edit != 3) ? $in['bug_type']			: $bug['bug_type'])			. "\n" .
-				"X-PHP-Version: "			. (($edit != 3) ? $in['php_version']		: $bug['php_version'])		. "\n" .
-				"X-PHP-Category: "			. (($edit != 3) ? $in['package_name']		: $bug['package_name'])		. "\n" .
-				"X-PHP-OS: "				. (($edit != 3) ? $in['php_os']				: $bug['php_os'])			. "\n" .
-				"X-PHP-Status: {$new_status}\n" .
-				"X-PHP-Old-Status: {$old_status}\n" .
-				"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
-				"-f bounces-ignored@php.net"
-			);
-		}
+		// but we go ahead and let the default sender get used for the list
+		bugs_mail(
+			$mailto,
+			"[$siteBig-BUG] {$subj}" . txfield('sdesc', $bug, $in),
+			$dev_text,
+			"From: $from\n".
+			"X-PHP-Bug: {$bug['id']}\n".
+			"X-PHP-Type: " 				. (($edit != 3) ? $in['bug_type']			: $bug['bug_type'])			. "\n" .
+			"X-PHP-Version: "			. (($edit != 3) ? $in['php_version']		: $bug['php_version'])		. "\n" .
+			"X-PHP-Category: "			. (($edit != 3) ? $in['package_name']		: $bug['package_name'])		. "\n" .
+			"X-PHP-OS: "				. (($edit != 3) ? $in['php_os']				: $bug['php_os'])			. "\n" .
+			"X-PHP-Status: {$new_status}\n" .
+			"X-PHP-Old-Status: {$old_status}\n" .
+			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
+			"-f bounces-ignored@php.net"
+		);
 	}
 
 	/* if a developer assigns someone else, let that other person know about it */
@@ -918,18 +916,16 @@ DEV_TEXT;
 			return;
 		}
 
-		if (DEVBOX == false) {
-			@mail(
-				$email,
-				$subj . txfield('sdesc', $bug, $in),
-				wordwrap($in['assign'] . " you have just been assigned to this bug by {$from}\n\n") .
-				$dev_text,
-				"From: {$from}\n".
-				"X-PHP-Bug: {$bug['id']}\n".
-				"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
-				"-f bounces-ignored@php.net"
-			);
-		}
+		bugs_mail(
+			$email,
+			$subj . txfield('sdesc', $bug, $in),
+			wordwrap($in['assign'] . " you have just been assigned to this bug by {$from}\n\n") .
+			$dev_text,
+			"From: {$from}\n".
+			"X-PHP-Bug: {$bug['id']}\n".
+			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
+			"-f bounces-ignored@php.net"
+		);
 	}
 }
 
@@ -1036,8 +1032,7 @@ function package_exists($package_name)
 	if (isset($pseudo_pkgs[$package_name])) {
 		return true;
 	}
-	$found = $dbh->prepare('SELECT count(name) FROM packages WHERE name = ?')->execute(array($package_name))->fetchOne();
-	return ($found == 1) ? true : false;
+	return false;
 }
 
 /**
@@ -1113,14 +1108,21 @@ function get_package_mail($package_name, $bug_id = false)
 {
 	global $dbh, $bugEmail;
 
-	if (DEVBOX) {
-		return array ('root@localhost', 'root@localhost');
-	}
-
 	$to = array();
 	
 	/* Get package mailing list address */
-	$list_email = $dbh->prepare("SELECT list_email FROM bugdb_pseudo_packages WHERE package_name = ? ")->execute(array($package_name))->fetchOne();
+	$res = $dbh->prepare('
+		SELECT list_email
+		FROM bugdb_pseudo_packages
+		WHERE name = ?
+	')->execute(array($package_name));
+
+	if (PEAR::isError($res)) {
+		throw new Exception('SQL Error in get_package_name(): ' . $res->getMessage());
+	}
+
+	$list_email = $res->fetchOne();
+
 	if ($list_email) {
 		$to[] = $list_email;
 	} else { // Fall back to default mailing list
@@ -1234,13 +1236,15 @@ http://{$site_url}{$basedir}/bug.php?id={$bug_id}&unsubscribe=1&t={$hash}
 
 USER_TEXT;
 
-		@mail($email,
-			  "[$siteBig-BUG-unsubscribe] #{$bug_id}",
-			  $user_text,
-			  "From: {$siteBig} Bug Database <{$bugEmail}>\n".
-			  "X-PHP-Bug: {$bug_id}\n".
-			  "In-Reply-To: <bug-{$bug_id}@{$site_url}>",
-			  "-fbounces-ignored@php.net");
+		bugs_mail(
+			$email,
+			"[$siteBig-BUG-unsubscribe] #{$bug_id}",
+			$user_text,
+			"From: {$siteBig} Bug Database <{$bugEmail}>\n".
+			"X-PHP-Bug: {$bug_id}\n".
+			"In-Reply-To: <bug-{$bug_id}@{$site_url}>",
+			"-fbounces-ignored@php.net"
+		);
 	}
 }
 
@@ -1373,4 +1377,21 @@ function verify_bug_passwd($bug_id, $passwd)
 	global $dbh;
 
 	return (bool) $dbh->prepare('SELECT 1 FROM bugdb WHERE id = ? AND passwd = ?')->execute(array($bug_id, $passwd))->fetchOne();
+}
+
+/**
+ * Mailer function. When DEVBOX is defined, this only outputs the parameters as-is. 
+ * 
+ * @return bool
+ *
+ */
+function bugs_mail($to, $subject, $message, $headers = '', $parameters = '')
+{
+	if (DEVBOX === false) {
+		echo '<pre>';
+		var_dump($to, $subject, $message, $headers, $parameters);
+		echo '</pre>';
+		return true;
+	}
+	return @mail($to, $subject, $message, $headers, $parameters);
 }
