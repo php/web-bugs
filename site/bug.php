@@ -559,17 +559,14 @@ display_bug_error($errors);
  </table>
 </div>
 
-<?php if ($bug_id != 'PREVIEW') { ?>
-
-<div class="controls">
-<?php
-control(0, 'View');
-control(3, 'Add Comment');
-control(1, 'Developer');
-control(2, 'Edit');
+<?php if ($bug_id !== 'PREVIEW') {
+	echo '<div class="controls">', "\n",
+		control(0, 'View'),
+		control(3, 'Add Comment'),
+		control(1, 'Developer'),
+		control(2, 'Edit'),
+		'</div>', "\n";
 ?>
-</div>
-
 <div class="clear"></div>
 
 <?php if (!$edit && canvote($thanks, $bug['status'])) { ?>
@@ -1029,14 +1026,13 @@ function control($num, $desc)
 {
 	global $bug_id, $edit;
 
-	echo "<span id='control_{$num}' class='control";
+	$str = "<span id='control_{$num}' class='control";
 	if ($edit == $num) {
-		echo ' active\'>';
-		echo $desc;
+		$str .= " active'>{$desc}";
 	} else {
-		echo "'><a href='bug.php?id={$bug_id}" , (($num) ? "&amp;edit={$num}" : '') , "'>{$desc}</a>";
+		$str .= "'><a href='bug.php?id={$bug_id}" . (($num) ? "&amp;edit={$num}" : '') . "'>{$desc}</a>";
 	}
-	echo "</span>\n";
+	return "{$str}</span>\n";
 }
 
 function canvote($thanks, $status)
