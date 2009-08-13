@@ -83,7 +83,7 @@ print_link('http://master.php.net/login.php', 'login', false, 'class="menuWhite"
 }
 
 
-function response_footer()
+function response_footer($extra_html = '')
 {
 	global $_footer_done, $LAST_UPDATED, $basedir;
 
@@ -95,7 +95,7 @@ function response_footer()
 	</td>
  </tr>
 </table>
-
+<?php echo $extra_html; ?>
 <table class="foot" cellspacing="0" cellpadding="0">
  <tr>
 	<td class="foot-bar" colspan="2">
