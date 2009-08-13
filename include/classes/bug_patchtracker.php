@@ -13,7 +13,7 @@ class Bug_Patchtracker
         if (!file_exists(BUG_PATCHTRACKER_TMPDIR)) {
             if (!@mkdir(BUG_PATCHTRACKER_TMPDIR)) {
                 $this->_upload = false;
-                $this->_dbh = &$GLOBALS['dbh'];
+                $this->_dbh = $GLOBALS['dbh'];
                 return;
             }
         }
@@ -131,8 +131,8 @@ class Bug_Patchtracker
         if (!$this->_upload) {
             return PEAR::raiseError('Upload directory for patches could not be initialized');
         }
-        if (!preg_match('/^[\w\-\.]+\z/', $name) || strlen($name) > 40) {
-            return PEAR::raiseError('Invalid patch name "' . $name . '"');
+        if (!preg_match('/^[\w\-\.]+\z/', $name) || strlen($name) > 80) {
+            return PEAR::raiseError("Invalid patch name \"{$name}\"");
         }
         if (!is_array($obsoletes)) {
             return PEAR::raiseError('Invalid obsoleted patches');
