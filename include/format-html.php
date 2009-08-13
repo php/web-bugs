@@ -335,8 +335,7 @@ function make_ticket_links($text)
 {
 	global $site_url, $basedir, $site_data;
 	
-	// PHP
-	$url = "{$site_data['url']}{$site_data['php']['basedir']}";
+	$url = "{$site_data['url']}{$site_data['basedir']}";
 	$text = preg_replace('/(?<=php)\s*(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
 						 " <a href='http://{$url}/\\2'>\\1 \\2</a>", $text);
 	// Local
