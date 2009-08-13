@@ -17,13 +17,13 @@ if ($_REQUEST['id'] == 'preview') {
 	$bug['assign'] = '';
 	
 	if (!$bug) {
-		redirect('index.php');
+		header('Location: index.php');
 		exit;
 	}
 } else {
 	// Bailout early if no/invalid bug id is passed
 	if (empty($_REQUEST['id']) || !((int) $_REQUEST['id'])) {
-		redirect('index.php');
+		header('Location: index.php');
 		exit;
 	} else {
 		$bug_id = (int) $_REQUEST['id'];
