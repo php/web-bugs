@@ -20,7 +20,10 @@ if ($errors) {
 ?>
 <table>
 <?php
-if (!$loggedin) {?>
+if (!$logged_in) {
+	$captcha = $numeralCaptcha->getOperation();
+	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+?>
  <tr>
   <th class="form-label_left">
    Email Address (MUST BE VALID)

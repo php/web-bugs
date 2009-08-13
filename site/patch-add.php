@@ -37,9 +37,6 @@ if ($logged_in) {
 } else {
 	require_once 'Text/CAPTCHA/Numeral.php';
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
-
-	$captcha = $numeralCaptcha->getOperation();
-	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 }
 
 require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";

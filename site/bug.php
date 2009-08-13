@@ -113,15 +113,14 @@ if ($logged_in) {
 } else {
 	require_once 'Text/CAPTCHA/Numeral.php';
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
-
-	$captcha = $numeralCaptcha->getOperation();
-	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 }
 
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
 
 // fetch info about the bug into $bug
-if(!$bug) $bug = bugs_get_bug($bug_id, true);
+if (!$bug) {
+	$bug = bugs_get_bug($bug_id, true);
+}
 
 // DB error
 if (is_object($bug)) {
@@ -846,7 +845,10 @@ if ($edit == 1 || $edit == 2) { ?>
 
 echo $preview;
 
-if (!$logged_in) { ?>
+if (!$logged_in) {
+	$captcha = $numeralCaptcha->getOperation();
+	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+?>
 	<table>
 	 <tr>
 	  <th class="details">Y<span class="accesskey">o</span>ur email address:<br />
