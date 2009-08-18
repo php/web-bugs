@@ -467,7 +467,11 @@ response_header(
 	($bug_id != 'PREVIEW') ? " 
 	  <link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}' />
 	  <link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2' />
-	  <script type='text/javascript' src='js/util.js'></script>	
+	  
+	  <script type='text/javascript' src='js/util.js'></script>
+	  <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
+	  <script type='text/javascript' src='js/jquery.autocomplete.min.js'></script>
+	  <script type='text/javascript' src='js/userlisting.php'></script> 	
 	" : ''
 );
 
@@ -739,7 +743,9 @@ if ($edit == 1 || $edit == 2) { ?>
 		<th class="details">Assign to:</th>
 		<td>
 		 <input type="text" size="10" maxlength="16" name="in[assign]"
-		  value="<?php echo field('assign') ?>" />
+		  value="<?php echo field('assign') ?>" id="assigned_user"/>
+		  <script type="text/javascript" src="js/search.js"></script>
+		  
 <?php } ?>
 
 	   <input type="hidden" name="id" value="<?php echo $bug_id ?>" />

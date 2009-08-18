@@ -782,3 +782,10 @@ td.search-next {
 .Tbd {
     background-color: #cdb26e;
 }
+.autocomplete {
+	background-color: #FFF;
+}
+.autocomplete .selected {
+  background:#F0F0F0;
+}
+
