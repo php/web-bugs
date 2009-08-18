@@ -15,5 +15,3 @@ $('#assigned_user').autocomplete({
     onSelect: function(value, data){ $('#assigned_user').val(users[value]["username"]); },
     lookup: lookup
 });
-
-// vim: set expandtab shiftwidth=4 softtabstop=4 tabstop=4 : 
