@@ -372,16 +372,24 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 				$Cc = "Cc: doc-bugs@lists.php.net\n";
 			}
 
+			$tmp = $edit != 3 ? $in : $bug;
+			$mail = array(
+				"from"        => str_replace(array("\n", "\r"), "", $from),
+				"php_version" => str_replace(array("\n", "\r"), "", $tmp['php_version']),
+				"bug_type"    => str_replace(array("\n", "\r"), "", $tmp['bug_type']),
+				"php_os"      => str_replace(array("\n", "\r"), "", $tmp['php_os']),
+			);
+
 			# but we go ahead and let the default sender get used for the list
 			@mail($mailto,
 		      	rinse($subj) . txfield('sdesc'),
 		      	$dev_text,
-		      	"From: $from\n".
+		      	"From: {$mail["from"]}\n".
 				$Cc.
 		      	"X-PHP-Bug: $bug[id]\n".
-		      	"X-PHP-Version: "    . stripslashes((($edit != 3) ? $in['php_version'] : $bug['php_version'])) . "\n" .
-		      	"X-PHP-Category: "   . stripslashes((($edit != 3) ? $in['bug_type']    : $bug['bug_type']))    . "\n" .
-		      	"X-PHP-OS: "         . stripslashes((($edit != 3) ? $in['php_os']      : $bug['php_os']))      . "\n" .
+		      	"X-PHP-Version: "    . stripslashes($mail['php_version']) . "\n" .
+		      	"X-PHP-Category: "   . stripslashes($mail['bug_type'])    . "\n" .
+		      	"X-PHP-OS: "         . stripslashes($mail['php_os'])      . "\n" .
 		      	"X-PHP-Status: "     . stripslashes($new_status) . "\n" .
 		      	"X-PHP-Old-Status: " . stripslashes($old_status) . "\n" .
 		      	"X-PHP-Reported-By: " . stripslashes(spam_protect(rinse($bug['email']))) . "\n" .
