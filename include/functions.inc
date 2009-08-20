@@ -857,12 +857,14 @@ DEV_TEXT;
 		$user_text = $dev_text;
 	}
 
+	// Defaults
+	$subj = $bug_types[$bug['bug_type']];
+	$sdesc = txfield('sdesc', $bug, $in);
+
 	/* send mail if status was changed or there is a comment */
 	if ($in['status'] != $bug['status'] || $ncomment != '') {
 		if (isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type']) {
 			$subj = $bug_types[$bug['bug_type']] . '->' . $bug_types[$in['bug_type']];
-		} else {
-			$subj = $bug_types[$bug['bug_type']];
 		}
 
 		$old_status = $bug['status'];
@@ -870,40 +872,44 @@ DEV_TEXT;
 
 		if ($in['status'] != $bug['status'] && $edit != 3) {	/* status changed */
 			$new_status = $in['status'];
-			$subj .= " #{$bug['id']} [{$tla[$old_status]}->{$tla[$new_status]}]: ";
+			$subj .= " #{$bug['id']} [{$tla[$old_status]}->{$tla[$new_status]}]";
 		} elseif ($edit == 3) {	/* comment */
-			$subj .= " #{$bug['id']} [Com]: ";
+			$subj .= " #{$bug['id']} [Com]";
 		} else {	/* status did not change and not comment */
-			$subj .= " #{$bug['id']} [{$tla[$bug['status']]}]: ";
+			$subj .= " #{$bug['id']} [{$tla[$bug['status']]}]";
 		}
 
 		// the user gets sent mail with an envelope sender that ignores bounces
 		bugs_mail(
 			$bug['email'],
-			"[$siteBig-BUG] {$subj}" . txfield('sdesc', $bug, $in),
+			"[{$siteBig}-BUG] {$subj}: {$sdesc}",
 			$user_text,
-			"From: $siteBig Bug Database <$mailfrom>\n".
-			"Bcc: $Bcc\n" .
-			"X-PHP-Bug: {$bug['id']}\n".
-			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
-			"-f bounces-ignored@php.net"
+			"From: {$siteBig} Bug Database <{$mailfrom}>\n" .
+			"Bcc: {$Bcc}\n" .
+			"X-PHP-Bug: {$bug['id']}\n" .
+			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
 		);
+
+		// Spam protection
+		$tmp = $edit != 3 ? $in : $bug;
+		foreach (array('bug_type', 'php_version', 'package_name', 'php_os') as $field) {
+			$tmp[$field] = strtok($tmp[$field], "\r\n");
+		}
 
 		// but we go ahead and let the default sender get used for the list
 		bugs_mail(
 			$mailto,
-			"[$siteBig-BUG] {$subj}" . txfield('sdesc', $bug, $in),
+			"[{$siteBig}-BUG] {$subj}: {$sdesc}",
 			$dev_text,
-			"From: $from\n".
-			"X-PHP-Bug: {$bug['id']}\n".
-			"X-PHP-Type: " 				. (($edit != 3) ? $in['bug_type']			: $bug['bug_type'])			. "\n" .
-			"X-PHP-Version: "			. (($edit != 3) ? $in['php_version']		: $bug['php_version'])		. "\n" .
-			"X-PHP-Category: "			. (($edit != 3) ? $in['package_name']		: $bug['package_name'])		. "\n" .
-			"X-PHP-OS: "				. (($edit != 3) ? $in['php_os']				: $bug['php_os'])			. "\n" .
+			"From: {$from}\n".
+			"X-PHP-Bug: {$bug['id']}\n" .
+			"X-PHP-Type: {$tmp['bug_type']}\n" .
+			"X-PHP-Version: {$tmp['php_version']}\n" .
+			"X-PHP-Category: {$tmp['package_name']}\n" .
+			"X-PHP-OS: {$tmp['php_os']}\n" .
 			"X-PHP-Status: {$new_status}\n" .
 			"X-PHP-Old-Status: {$old_status}\n" .
-			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
-			"-f bounces-ignored@php.net"
+			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
 		);
 	}
 
@@ -920,12 +926,10 @@ DEV_TEXT;
 		bugs_mail(
 			$email,
 			$subj . txfield('sdesc', $bug, $in),
-			wordwrap($in['assign'] . " you have just been assigned to this bug by {$from}\n\n") .
-			$dev_text,
-			"From: {$from}\n".
-			"X-PHP-Bug: {$bug['id']}\n".
-			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
-			"-f bounces-ignored@php.net"
+			"{$in['assign']} you have just been assigned to this bug by {$from}\n\n{$dev_text}",
+			"From: {$from}\n" .
+			"X-PHP-Bug: {$bug['id']}\n" .
+			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
 		);
 	}
 }
@@ -1263,8 +1267,7 @@ USER_TEXT;
 			$user_text,
 			"From: {$siteBig} Bug Database <{$bugEmail}>\n".
 			"X-PHP-Bug: {$bug_id}\n".
-			"In-Reply-To: <bug-{$bug_id}@{$site_url}>",
-			"-fbounces-ignored@php.net"
+			"In-Reply-To: <bug-{$bug_id}@{$site_url}>"
 		);
 	}
 }
@@ -1406,15 +1409,15 @@ function verify_bug_passwd($bug_id, $passwd)
  * @return bool
  *
  */
-function bugs_mail($to, $subject, $message, $headers = '', $parameters = '')
+function bugs_mail($to, $subject, $message, $headers = '')
 {
 	if (DEVBOX === true) {
 		if (defined('DEBUG_MAILS')) {
 			echo '<pre>';
-			var_dump(htmlspecialchars($to), htmlspecialchars($subject), htmlspecialchars($message), htmlspecialchars($headers), htmlspecialchars($parameters));
+			var_dump(htmlspecialchars($to), htmlspecialchars($subject), htmlspecialchars($message), htmlspecialchars($headers));
 			echo '</pre>';
 		}
 		return true;
 	}
-	return @mail($to, $subject, $message, $headers, $parameters);
+	return @mail($to, $subject, $message, $headers, '-f noreply@php.net');
 }
