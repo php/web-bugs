@@ -173,12 +173,18 @@ our <a href="http://www.php.net/mailing-lists.php">internals</a> list.</p>
 						" http://bugs.php.net/fix.php?id=$cid&r=$k\n";
 			}
 
+			$mail = array(
+				"from"        => str_replace(array("\n", "\r"), "", $protected_email),
+				"php_version" => str_replace(array("\n", "\r"), "", $in['php_version']),
+				"bug_type"    => str_replace(array("\n", "\r"), "", $in['bug_type']),
+				"php_os"      => str_replace(array("\n", "\r"), "", $in['php_os']),
+			);
 			// Set extra-headers
-			$extra_headers = "From: $protected_email\n";
+			$extra_headers = "From: {$mail["protected_email"]}\n";
 			$extra_headers.= "X-PHP-Bug: $cid\n";
-			$extra_headers.= "X-PHP-Version: "  . stripslashes($in['php_version']) . "\n";
-			$extra_headers.= "X-PHP-Category: " . stripslashes($in['bug_type'])    . "\n";
-			$extra_headers.= "X-PHP-OS: "       . stripslashes($in['php_os'])      . "\n";
+			$extra_headers.= "X-PHP-Version: "  . stripslashes($mail['php_version']) . "\n";
+			$extra_headers.= "X-PHP-Category: " . stripslashes($mail['bug_type'])    . "\n";
+			$extra_headers.= "X-PHP-OS: "       . stripslashes($mail['php_os'])      . "\n";
 			$extra_headers.= "X-PHP-Status: Open\n";
 			$extra_headers.= "Message-ID: <bug-$cid@bugs.php.net>";
 			
