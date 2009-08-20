@@ -131,7 +131,7 @@ our <a href="http://www.php.net/mailing-lists.php">internals</a> list.</p>
 			if (!empty($in['actres']) || $in['actres'] === '0') {
 				$fdesc .= "Actual result:\n--------------\n". $in['actres'] ."\n";
 			}
-			if (is_phpversion_irrelevant($in['bug_type'])) {
+			if (empty($in['php_version']) && is_phpversion_irrelevant($in['bug_type'])) {
 				$in['php_version'] = 'Irrelevant';
 			}
 
