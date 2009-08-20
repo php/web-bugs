@@ -467,11 +467,6 @@ response_header(
 	($bug_id != 'PREVIEW') ? " 
 	  <link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}' />
 	  <link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2' />
-	  
-	  <script type='text/javascript' src='js/util.js'></script>
-	  <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
-	  <script type='text/javascript' src='js/jquery.autocomplete.min.js'></script>
-	  <script type='text/javascript' src='js/userlisting.php'></script> 	
 	" : ''
 );
 
@@ -953,7 +948,10 @@ if ($bug_id == 'PREVIEW') {
 <?php }
 
 $bug_JS = <<< bug_JS
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type='text/javascript' src='js/util.js'></script>
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
+<script type='text/javascript' src='js/jquery.autocomplete.min.js'></script>
+<script type='text/javascript' src='js/userlisting.php'></script> 	
 <script type="text/javascript">
 function do_comment(nd)
 {
