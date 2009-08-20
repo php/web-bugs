@@ -72,28 +72,28 @@ function verify_password($user, $pass)
 
 	$post = http_build_query(
 		array(
-			"token" => getenv("TOKEN"),
-			"username" => $user,
-			"password" => $pass,
+			'token' => getenv('AUTH_TOKEN'),
+			'username' => $user,
+			'password' => $pass,
 		)
 	);
 
 	$opts = array(
-		"method"  => "POST",
-		"header"  => "Content-type: application/x-www-form-urlencoded",
-		"content" => $post,
+		'method'  => 'POST',
+		'header'  => 'Content-type: application/x-www-form-urlencoded',
+		'content' => $post,
 	);
 
-	$ctx = stream_context_create(array("http" => $opts));
+	$ctx = stream_context_create(array('http' => $opts));
 
-	$s = file_get_contents("https://master.php.net/fetch/cvsauth.php", false, $ctx);
+	$s = file_get_contents('https://master.php.net/fetch/cvsauth.php', false, $ctx);
 
 	$a = @unserialize($s);
 	if (!is_array($a)) {
 		$errors[] = "Unknown authentication error\n";
 		exit;
 	}
-	if (isset($a["errno"])) {
+	if (isset($a['errno'])) {
 		$errors[] = "Authentication failed: {$a['errstr']}\n";
 		return false;
 	}

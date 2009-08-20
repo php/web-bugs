@@ -4,7 +4,7 @@ function getAllUsers()
 {
 	$opts = array('ignore_errors' => true);
 	$ctx = stream_context_create(array('http' => $opts));
-	$token = getenv('TOKEN');
+	$token = getenv('USER_TOKEN');
 
 	$retval = @file_get_contents('https://master.php.net/fetch/allusers.php?&token=' . rawurlencode($token), false, $ctx);
 

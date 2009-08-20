@@ -737,9 +737,7 @@ if ($edit == 1 || $edit == 2) { ?>
 		</td>
 		<th class="details">Assign to:</th>
 		<td>
-		 <input type="text" size="10" maxlength="16" name="in[assign]"
-		  value="<?php echo field('assign') ?>" id="assigned_user"/>
-		  <script type="text/javascript" src="js/search.js"></script>
+		 <input type="text" size="10" maxlength="16" name="in[assign]" value="<?php echo field('assign') ?>" id="assigned_user"/>
 		  
 <?php } ?>
 
@@ -950,8 +948,6 @@ if ($bug_id == 'PREVIEW') {
 $bug_JS = <<< bug_JS
 <script type='text/javascript' src='js/util.js'></script>
 <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
-<script type='text/javascript' src='js/jquery.autocomplete.min.js'></script>
-<script type='text/javascript' src='js/userlisting.php'></script> 	
 <script type="text/javascript">
 function do_comment(nd)
 {
@@ -973,6 +969,15 @@ function do_comment(nd)
 }
 </script>
 bug_JS;
+
+if ($edit == 1) {
+	$bug_JS .= '
+<script type="text/javascript" src="js/jquery.autocomplete.min.js"></script>
+<script type="text/javascript" src="js/userlisting.php"></script> 	
+<script type="text/javascript" src="js/search.js"></script>
+	';
+
+}
 
 response_footer($bug_JS);
 

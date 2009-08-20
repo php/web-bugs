@@ -13,7 +13,7 @@ if (!$bug_id) {
 require_once '../include/prepend.inc';
 
 // Authenticate
-if ($_POST['token'] != md5(getenv('TOKEN'))) {
+if ($_POST['token'] != md5(getenv('AUTH_TOKEN'))) {
 	echo json_encode(array('result' => array('error' => 'Invalid token')));
 	exit;
 }
