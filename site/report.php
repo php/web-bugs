@@ -269,8 +269,7 @@ REPORT;
 				"{$ascii_report}2\n",
 				"From: $siteBig Bug Database <$mailfrom>\n" .
 				"X-PHP-Bug: $cid\n" .
-				"Message-ID: <bug-$cid@{$site_url}>",
-				'-f bounce-no-user@php.net'
+				"Message-ID: <bug-$cid@{$site_url}>"
 			);
 
 			// mail to package mailing list
