@@ -180,7 +180,7 @@ our <a href="http://www.php.net/mailing-lists.php">internals</a> list.</p>
 				"php_os"      => str_replace(array("\n", "\r"), "", $in['php_os']),
 			);
 			// Set extra-headers
-			$extra_headers = "From: {$mail["protected_email"]}\n";
+			$extra_headers = "From: {$mail["from"]}\n";
 			$extra_headers.= "X-PHP-Bug: $cid\n";
 			$extra_headers.= "X-PHP-Version: "  . stripslashes($mail['php_version']) . "\n";
 			$extra_headers.= "X-PHP-Category: " . stripslashes($mail['bug_type'])    . "\n";
