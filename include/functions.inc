@@ -373,11 +373,16 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 			}
 
 			$tmp = $edit != 3 ? $in : $bug;
+			// Make sure they cannot inject additional mail headers
 			$mail = array(
 				"from"        => str_replace(array("\n", "\r"), "", $from),
 				"php_version" => str_replace(array("\n", "\r"), "", $tmp['php_version']),
 				"bug_type"    => str_replace(array("\n", "\r"), "", $tmp['bug_type']),
 				"php_os"      => str_replace(array("\n", "\r"), "", $tmp['php_os']),
+				"from_addr"   => str_replace(array("\n", "\r"), "", $from_addr),
+				"new_status"  => str_replace(array("\n", "\r"), "", $new_status),
+				"old_status"  => str_replace(array("\n", "\r"), "", $old_status),
+				"email"       => str_replace(array("\n", "\r"), "", $bug['email']),
 			);
 
 			# but we go ahead and let the default sender get used for the list
@@ -390,10 +395,10 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 		      	"X-PHP-Version: "    . stripslashes($mail['php_version']) . "\n" .
 		      	"X-PHP-Category: "   . stripslashes($mail['bug_type'])    . "\n" .
 		      	"X-PHP-OS: "         . stripslashes($mail['php_os'])      . "\n" .
-		      	"X-PHP-Status: "     . stripslashes($new_status) . "\n" .
-		      	"X-PHP-Old-Status: " . stripslashes($old_status) . "\n" .
-		      	"X-PHP-Reported-By: " . stripslashes(spam_protect(rinse($bug['email']))) . "\n" .
-		      	"X-PHP-Updated-By: " . stripslashes($from_addr) . "\n" .
+		      	"X-PHP-Status: "     . stripslashes($mail['new_status']) . "\n" .
+		      	"X-PHP-Old-Status: " . stripslashes($mail['old_status']) . "\n" .
+		      	"X-PHP-Reported-By: " . stripslashes(spam_protect(rinse($mail['email']))) . "\n" .
+		      	"X-PHP-Updated-By: " . stripslashes($mail['from_addr']) . "\n" .
 		      	"In-Reply-To: <bug-$bug[id]@bugs.php.net>");
 		}
 	}
