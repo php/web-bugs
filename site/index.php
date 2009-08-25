@@ -1,12 +1,11 @@
 <?php
 
-/**
- * The bug system home page
- */
+/* The bug system home page */
 
+// Obtain common includes
 require_once '../include/prepend.php';
 
-/* If 'id' is passed redirect to the bug page */
+// If 'id' is passed redirect to the bug page
 $id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($id) {
 	redirect("bug.php?id={$id}");
@@ -66,6 +65,4 @@ how search works.</p>
 <p>You can view a variety of statistics about the bugs that have been
 reported on our <a href="stats.php">bug statistics page</a>.</p>
 
-<?php
-
-response_footer();
+<?php response_footer();

@@ -23,67 +23,76 @@ PHP configured with <code>--enable-debug</code>!
 <h3>If you don't have a core file yet:</h3>
 
 <ul>
-<li>Remove any limits you may have on core dump size from your shell:
-  <ul>
-  <li>tcsh:  unlimit coredumpsize</li>
-  <li>bash/sh:  ulimit -c unlimited</li>
-  </ul>
-</li>
-<li>Ensure that the directory in which you're running PHP, or the
-PHP-enabled httpd, has write permissions for the user who's running PHP.</li>
-<li>Cause PHP to crash:
-  <ul>
-  <li>PHP CGI: Simply run php with the script that crashes it</li>
-  <li>PHP Apache Module: Run httpd -X, and access the script that crashes PHP</li>
-  </ul>
-</li>
+	<li>
+		Remove any limits you may have on core dump size from your shell:
+		<ul>
+			<li>tcsh:  unlimit coredumpsize</li>
+			<li>bash/sh:  ulimit -c unlimited</li>
+		</ul>
+	</li>
+	<li>
+		Ensure that the directory in which you're running PHP, or the
+		PHP-enabled httpd, has write permissions for the user who's running PHP.
+	</li>
+	<li>
+		Cause PHP to crash:
+		<ul>
+			<li>PHP CGI: Simply run php with the script that crashes it</li>
+			<li>PHP Apache Module: Run httpd -X, and access the script that crashes PHP</li>
+		</ul>
+	</li>
 </ul>
 
 <h3>Once you have the core file:</h3>
 
 <ul>
-<li>Run gdb with the path to the PHP or PHP-enabled httpd binary, and
-path to the core file. Some examples:
-  <ul>
-  <li><code>gdb /usr/local/apache/sbin/httpd /usr/local/apache/sbin/core</code></li>
-  <li><code>gdb /home/user/dev/php-snaps/sapi/cli/php /home/user/dev/testing/core</code></li>
-  </ul>
-</li>  
-<li>At the gdb prompt, run:
-  <ul>
-  <li><code>(gdb) bt</code></li>
-  </ul>
-</li>
+	<li>
+		Run gdb with the path to the PHP or PHP-enabled httpd binary, and
+		path to the core file. Some examples:
+		<ul>
+			<li><code>gdb /usr/local/apache/sbin/httpd /usr/local/apache/sbin/core</code></li>
+			<li><code>gdb /home/user/dev/php-snaps/sapi/cli/php /home/user/dev/testing/core</code></li>
+		</ul>
+	</li>
+	<li>
+		At the gdb prompt, run:
+		<ul>
+			<li><code>(gdb) bt</code></li>
+		</ul>
+	</li>
 </ul>
 
 <h3>If you can't get a core file:</h3>
 <ul>
-<li>Run httpd -X under gdb with something like:
-  <ul>
-  <li><code>gdb /usr/local/apache/sbin/httpd</code></li>
-  <li>(gdb) run -X</li>
-  </ul>
-</li>
-<li>
-   Then use your web browser and access your server to force the crash.
-   You should see a gdb prompt appear and some message indicating that
-   there was a crash. At this gdb prompt, type:
-  <ul>
-  <li><code>(gdb) bt</code></li>
-  </ul>
-  <ul>
-   <li>or, running from the commandline
-    <ul>
-     <li>gdb /home/user/dev/php-snaps/sapi/cli/php
-      <ul>
-       <li><code>(gdb) run /path/to/script.php</code></li>
-       <li><code>(gdb) bt</code></li>
-      </ul>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
+	<li>
+		Run httpd -X under gdb with something like:
+		<ul>
+			<li><code>gdb /usr/local/apache/sbin/httpd</code></li>
+			<li>(gdb) run -X</li>
+		</ul>
+	</li>
+	<li>
+		Then use your web browser and access your server to force the crash.
+		You should see a gdb prompt appear and some message indicating that
+		there was a crash. At this gdb prompt, type:
+		<ul>
+			<li><code>(gdb) bt</code></li>
+		</ul>
+		<ul>
+			<li>
+				or, running from the commandline
+				<ul>
+					<li>
+						gdb /home/user/dev/php-snaps/sapi/cli/php
+						<ul>
+							<li><code>(gdb) run /path/to/script.php</code></li>
+							<li><code>(gdb) bt</code></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
 </ul>
 
 <p>This should generate a backtrace, that you should submit in
@@ -108,8 +117,8 @@ number). You can move the current working stack with the
 be used as a guideline on how to handle your segfault.</p>
 
 <ul>
-  <li>Sample gdb session</li>
-  <pre><code>
+	<li>Sample gdb session</li>
+	<pre><code>
 (gdb) bt
 #0  0x080ca21b in _efree (ptr=0xbfffdb9b) at zend_alloc.c:240
 #1  0x080d691a in _zval_dtor (zvalue=0x8186b94) at zend_variables.c:44
@@ -133,7 +142,7 @@ $15 = 0x816cfc4 "result_error"
 (gdb) print (char *)executor_globals.active_op_array->filename
 $16 = 0x816afbc "/home/yohgaki/php/DEV/segfault.php"
 (gdb) 
-  </code></pre>
+	</code></pre>
 </ul>
 
 <p>In this session, frame 3 is the last <b><code>execute()</code></b>

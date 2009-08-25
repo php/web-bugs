@@ -23,7 +23,7 @@ if (!$bug) {
 $comments = bugs_get_bug_comments($bug_id);
 
 if ($format == 'xml') {
-    header('Content-type: text/xml; charset=utf-8');
+	header('Content-type: text/xml; charset=utf-8');
 	include './xml.php';
 	exit;
 } elseif ($format == "rss2") {
@@ -32,7 +32,7 @@ if ($format == 'xml') {
 	include './rss.php';
 	exit;
 } else {
-    header('Content-type: application/rdf+xml; charset=utf-8');
+	header('Content-type: application/rdf+xml; charset=utf-8');
 	$uri = "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
 	include './rdf.php';
 	exit;

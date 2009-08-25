@@ -7,9 +7,7 @@ if (!$bug_id) {
 	exit;
 }
 
-/**
- * Obtain common includes
- */
+// Obtain common includes
 require_once '../include/prepend.php';
 
 // Authenticate
@@ -18,7 +16,7 @@ if ($_POST['token'] != md5(getenv('AUTH_TOKEN'))) {
 	exit;
 }
 
-# fetch info about the bug into $bug
+// fetch info about the bug into $bug
 $bug = bugs_get_bug($bug_id);
 
 if (!is_array($bug)) {

@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Search for bugs
- */
-
 // Obtain common includes
 require_once '../include/prepend.php';
 
@@ -34,7 +30,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if (!$res) {
 		$errors[] = 'Invalid query';
 	} else {
-		/* Selected packages to search in */
+		// Selected packages to search in
 		$package_name_string = '';
 		if (count($package_name) > 0) {
 			foreach ($package_name as $type_str) {
@@ -42,7 +38,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			}
 		}
 
-		/* Selected packages NOT to search in */
+		// Selected packages NOT to search in
 		$package_nname_string = '';
 		if (count($package_nname) > 0) {
 			foreach ($package_nname as $type_str) {
@@ -51,18 +47,18 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		}
 
 		$link_params =
-				'&amp;search_for='   . urlencode($search_for) .
-				'&amp;php_os='       . urlencode($php_os) .
-				'&amp;author_email=' . urlencode($author_email) .
-				'&amp;bug_type='     . urlencode($bug_type) .
+				'&amp;search_for='  . urlencode($search_for) .
+				'&amp;php_os='      . urlencode($php_os) .
+				'&amp;author_email='. urlencode($author_email) .
+				'&amp;bug_type='    . urlencode($bug_type) .
 				"&amp;boolean=$boolean_search" .
 				"&amp;bug_age=$bug_age" .
 				"&amp;bug_updated=$bug_updated" .
 				"&amp;order_by=$order_by" .
 				"&amp;direction=$direction" .
 				"&amp;limit=$limit" .
-				'&amp;phpver='       . urlencode($phpver) .
-				'&amp;assign='       . urlencode($assign);
+				'&amp;phpver=' . urlencode($phpver) .
+				'&amp;assign=' . urlencode($assign);
 
 		$link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params}";
 		$clean_link = "search.php?cmd=display{$link_params}";
@@ -115,45 +111,45 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 				echo ' <tr valign="top" class="' , $tla[$row['status']], '">' , "\n";
 
-				/* Bug ID */
+				// Bug ID
 				echo '  <td align="center"><a href="bug.php?id=', $row['id'], '">', $row['id'], '</a>';
 				echo '<br /><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a></td>', "\n";
 
-				/* Date */
+				// Date
 				echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
 
-				/* Last Modified */
+				// Last Modified
 				$ts2 = strtotime($row['ts2']);
 				echo '  <td align="center">' , ($ts2 ? format_date($ts2) : 'Not modified') , "</td>\n";
 
-				/* Package */
+				// Package
 				if ($package_count !== 1) {
 					$pck = htmlspecialchars($row['package_name']);
 					$pck_url = urlencode($pck);
 					echo "<td><a href='{$clean_link}&amp;package_name[]={$pck_url}'>{$pck}</a></td>\n";
 				}
 
-				/* Bug type */
+				/// Bug type
 				$type_idx = !empty($row['bug_type']) ? $row['bug_type'] : 'Bug';
 				echo '  <td>', htmlspecialchars($bug_types[$type_idx]), '</td>', "\n";
 
-				/* Status */
+				// Status
 				echo '  <td>', htmlspecialchars($row['status']);
 				if ($row['status'] == 'Feedback' && $row['unchanged'] > 0) {
 					printf ("<br />%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
 				}
 				echo '</td>', "\n";
 
-				/* PHP version */
+				/// PHP version
 				echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
 
-				/* OS */
+				// OS
 				echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>', "\n";
 
-				/* Short description */
+				// Short description
 				echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</td>', "\n";
 
-				/* Assigned to */
+				// Assigned to
 				echo '  <td>',  ($row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=" . urlencode($row['assign']) . '">' . htmlspecialchars($row['assign']) . '</a>') : '&nbsp;'), '</td>';
 				echo " </tr>\n";
 			}

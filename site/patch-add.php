@@ -1,5 +1,6 @@
 <?php
 
+// Obtain common includes
 require_once '../include/prepend.php';
 
 session_start();
@@ -145,9 +146,9 @@ TXT;
 	// Send emails 
 	list($mailto, $mailfrom) = get_package_mail($package_name);
 
-	$protected_email  = '"' . spam_protect($email, 'text') . '"' .  "<{$mailfrom}>";
-	$extra_headers  = "From: {$protected_email}\n";
-	$extra_headers .= "Message-ID: <bug-{$bug_id}@{$site_url}>";
+	$protected_email = '"' . spam_protect($email, 'text') . '"' .  "<{$mailfrom}>";
+	$extra_headers = "From: {$protected_email}\n";
+	$extra_headers.= "Message-ID: <bug-{$bug_id}@{$site_url}>";
 
 	bugs_mail(
 		$mailto,
@@ -157,14 +158,13 @@ TXT;
 	);
 
 	$patches = $patchinfo->listPatches($bug_id);
-	$errors  = array();
+	$errors = array();
 	include "{$ROOT_DIR}/templates/patchadded.php";
 	exit;
 	
 }
 
-$email   = isset($_GET['email']) ? $_GET['email'] : '';
-$name    = isset($_GET['patch']) ? $_GET['patch'] : '';
+$email = isset($_GET['email']) ? $_GET['email'] : '';
 $patches = $patchinfo->listPatches($bug_id);
 
 include "{$ROOT_DIR}/templates/addpatch.php";

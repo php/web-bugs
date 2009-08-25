@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Obtain common includes
- */
+// Obtain common includes
 require_once '../include/prepend.php';
 
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
@@ -19,9 +17,9 @@ foreach ($RESOLVE_REASONS as $key => $reason) {
 
 	echo "
 		<tr>
-		 <td>{$reason['title']}</td>
-		 <td>Status: {$reason['status']}</td>
-		 <td><pre>{$reason['message']}</pre></td>
+			<td>{$reason['title']}</td>
+			<td>Status: {$reason['status']}</td>
+			<td><pre>{$reason['message']}</pre></td>
 		</tr>
 	";
     if (isset($FIX_VARIATIONS[$key])) {

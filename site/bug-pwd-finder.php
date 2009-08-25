@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Procedure for emailing a password reminder to a user
- */
+/* Procedure for emailing a password reminder to a user */
 
 // Obtain common includes
 require_once '../include/prepend.php';

@@ -1,9 +1,5 @@
 <?php 
 
-/**
- * Procedures for reporting bugs
- */
-
 // Obtain common includes
 require_once '../include/prepend.php';
 
@@ -31,11 +27,8 @@ if (isset($_POST['in'])) {
 
 	$errors = incoming_details_are_valid($_POST['in'], 1);
 
-	/**
-	 * Check if session answer is set, then compare
-	 * it with the post captcha value. If it's not
-	 * the same, then it's an incorrect password.
-	 */
+	// Check if session answer is set, then compare it with the post captcha value.
+	// If it's not the same, then it's an incorrect password.
 	if (isset($_SESSION['answer']) && strlen(trim($_SESSION['answer'])) > 0) {
 		if ($_POST['captcha'] != $_SESSION['answer']) {
 			$errors[] = 'Incorrect Captcha';
@@ -48,10 +41,7 @@ if (isset($_POST['in'])) {
 	$package_name = $_POST['in']['package_name'];
 
 	if (!$errors) {
-		/*
-		 * When user submits a report, do a search and display
-		 * the results before allowing them to continue.
-		 */
+		// When user submits a report, do a search and display the results before allowing them to continue.
 		if (!isset($_POST['preview']) && empty($_POST['in']['did_luser_search'])) {
 
 			$_POST['in']['did_luser_search'] = 1;
@@ -112,26 +102,26 @@ if (isset($_POST['in'])) {
 
 					$bug_url = "bug.php?id={$row['id']}&amp;edit=2";
 
-					echo " <tr>\n";
-					echo "  <td colspan='2'><strong>{$row['package_name']}</strong> : <a href='{$bug_url}'>Bug #";
-					echo $row['id'] . ': ' . htmlspecialchars($row['sdesc']);
-					echo "</a></td>\n";
-					echo " </tr>\n";
-					echo " <tr>\n";
-					echo "  <td><pre class='note'>{$summary}</pre></td>\n";
-					echo "  <td><pre class='note'>{$resolution}</pre></td>\n";
-					echo " </tr>\n";
+					$sdesc =  htmlspecialchars($row['sdesc']);
 
+					echo <<< OUTPUT
+						<tr>
+							<td colspan='2'><strong>{$row['package_name']}</strong> : <a href='{$bug_url}'>Bug #{$row['id']}: {$sdesc}</a></td>
+						</tr>
+						<tr>
+							<td><pre class='note'>{$summary}</pre></td>
+							<td><pre class='note'>{$resolution}</pre></td>
+						</tr>
+OUTPUT;
 				}
 
-				echo "</table>\n";
-				echo "</div>\n";
+				echo "
+					</table>
+				</div>
+				";
 			}
 		} else {
-			/*
-			 * We displayed the luser search and they said it really
-			 * was not already submitted, so let's allow them to submit.
-			 */
+			// We displayed the luser search and they said it really was not already submitted, so let's allow them to submit.
 			$ok_to_submit_report = true;
 		}
 		
@@ -212,7 +202,7 @@ if (isset($_POST['in'])) {
 				}
 			}
 
-			$report  = <<< REPORT
+			$report = <<< REPORT
 From:             {$_POST['in']['handle']}
 Operating system: {$_POST['in']['php_os']}
 PHP version:      {$_POST['in']['php_version']}
@@ -221,23 +211,23 @@ Bug Type:         {$_POST['in']['bug_type']}
 Bug description:
 REPORT;
 
-			$ascii_report  = "{$report}{$_POST['in']['sdesc']}\n\n" . wordwrap($fdesc);
-			$ascii_report .= "\n-- \nEdit bug report at ";
-			$ascii_report .= "http://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
+			$ascii_report = "{$report}{$_POST['in']['sdesc']}\n\n" . wordwrap($fdesc);
+			$ascii_report.= "\n-- \nEdit bug report at ";
+			$ascii_report.= "http://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
 
 			list($mailto, $mailfrom) = get_package_mail($package_name);
 
-			$protected_email  = '"' . spam_protect($_POST['in']['email'], 'text') . '"' .  "<{$mailfrom}>";
+			$protected_email = '"' . spam_protect($_POST['in']['email'], 'text') . '"' .  "<{$mailfrom}>";
 
-			$extra_headers  = "From: {$protected_email}\n";
-			$extra_headers .= "X-PHP-BugTracker: {$siteBig}bug\n";
-			$extra_headers .= "X-PHP-Bug: {$cid}\n";
-			$extra_headers .= "X-PHP-Type: {$_POST['in']['bug_type']}\n";
-			$extra_headers .= "X-PHP-Version: {$_POST['in']['php_version']}\n";
-			$extra_headers .= "X-PHP-Category: {$package_name}\n";
-			$extra_headers .= "X-PHP-OS: {$_POST['in']['php_os']}\n";
-			$extra_headers .= "X-PHP-Status: Open\n";
-			$extra_headers .= "Message-ID: <bug-{$cid}@{$site_url}>";
+			$extra_headers = "From: {$protected_email}\n";
+			$extra_headers.= "X-PHP-BugTracker: {$siteBig}bug\n";
+			$extra_headers.= "X-PHP-Bug: {$cid}\n";
+			$extra_headers.= "X-PHP-Type: {$_POST['in']['bug_type']}\n";
+			$extra_headers.= "X-PHP-Version: {$_POST['in']['php_version']}\n";
+			$extra_headers.= "X-PHP-Category: {$package_name}\n";
+			$extra_headers.= "X-PHP-OS: {$_POST['in']['php_os']}\n";
+			$extra_headers.= "X-PHP-Status: Open\n";
+			$extra_headers.= "Message-ID: <bug-{$cid}@{$site_url}>";
 
 			if (isset($bug_types[$_POST['in']['bug_type']])) {
 				$type = $bug_types[$_POST['in']['bug_type']];
@@ -294,7 +284,7 @@ REPORT;
 		// had errors...
 		response_header('Report - Problems');
 	}
-}  // end of if input
+} // end of if input
 
 $package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : (!empty($package_name) ? $package_name : '');
 

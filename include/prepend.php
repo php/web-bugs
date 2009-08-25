@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Performs the requires/includes needed for the entire bug system
- */
-
 // magic_quotes_gpc is no longer supported!
 if (get_magic_quotes_gpc()) {
 	die('Turn off "magic_quotes_gpc" in php.ini!');
@@ -37,7 +33,7 @@ if (file_exists($local_cfg)) {
 $logged_in = false;
 $site_url = $site_data['url'];
 $bugEmail = $site_data['email'];
-$basedir  = $site_data['basedir'];
+$basedir = $site_data['basedir'];
 define('BUG_PATCHTRACKER_TMPDIR', $site_data['patch_tmp']);
 define('DATABASE_DSN', "mysqli://{$site_data['db_user']}:{$site_data['db_pass']}@{$site_data['db_host']}/{$site_data['db']}");
 

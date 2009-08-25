@@ -56,12 +56,8 @@ time if you first try to reproduce the bug with the latest stable snapshot. If
 the bug still exists, select 5SVN.. as your version. Note that the format is
 5SVN-YYYY-MM-DD. Here are the latest snapshots for version 5 of PHP:
 <ul>
- <li>
-  <a href="http://windows.php.net/snapshots/">Windows</a>
- </li>
- <li>
-  <a href="http://snaps.php.net/php5.2-latest.tar.gz">Source code</a>
- </li>
+	<li><a href="http://windows.php.net/snapshots/">Windows</a></li>
+	<li><a href="http://snaps.php.net/php5.2-latest.tar.gz">Source code</a></li>
 </ul>
 </p>
 
@@ -80,28 +76,28 @@ as a feature request.)</p>
 
 <p>This is a fine line to walk. But there are some general guidelines:</p>
 <ul>
- <li>
-  Remember the three basics: what you did, what you expected to happen,
-  and what happened.
- </li>
- <li>
-  When you provide code that demonstrates the problem, it should almost
-  never be more than ten lines long. Anything longer probably contains a
-  lot of code that has nothing to do with the problem, which just makes
-  it take longer to figure out the real problem. (But don't forget to make
-  sure that your code still demonstrates the bug you're reporting and
-  doesn't have some other problem because you've accidently trimmed out
-  something you thought wasn't important but was!)
- </li>
- <li>
-  If PHP is crashing, include a backtrace. Instructions for doing this
-  can be found <a href="bugs-generating-backtrace.php">here for *NIX users</a> and
-   <a href="bugs-generating-backtrace-win32.php">here for Windows users</a>.
- </li>
- <li> 
-  <a href="http://valgrind.org">Valgrind</a> log can be also very useful.
-  See <a href="bugs-getting-valgrind-log.php">instructions how to generate it</a>.
- </li>
+	<li>
+		Remember the three basics: what you did, what you expected to happen,
+		and what happened.
+	</li>
+	<li>
+		When you provide code that demonstrates the problem, it should almost
+		never be more than ten lines long. Anything longer probably contains a
+		lot of code that has nothing to do with the problem, which just makes
+		it take longer to figure out the real problem. (But don't forget to make
+		sure that your code still demonstrates the bug you're reporting and
+		doesn't have some other problem because you've accidently trimmed out
+		something you thought wasn't important but was!)
+	</li>
+	<li>
+		If PHP is crashing, include a backtrace. Instructions for doing this
+		can be found <a href="bugs-generating-backtrace.php">here for *NIX users</a> and
+		<a href="bugs-generating-backtrace-win32.php">here for Windows users</a>.
+	</li>
+	<li> 
+		<a href="http://valgrind.org">Valgrind</a> log can be also very useful.
+		See <a href="bugs-getting-valgrind-log.php">instructions how to generate it</a>.
+	</li>
 </ul>
 
 <h2>Use English.</h2>
@@ -130,20 +126,20 @@ with the different bugs.</p>
 <h2>Check out these other resources.</h2>
 
 <ul>
- <li>
-  Eric Raymond's and Rick Moen's 
-  <a href="http://www.catb.org/~esr/faqs/smart-questions.html">How
-  To Ask Questions The Smart Way</a>
- </li>
- <li>
-  mozilla.org's 
-  <a href="http://www.mozilla.org/quality/bug-writing-guidelines.html">bug
-  writing guidelines</a>
- </li>
- <li>
-  Simon Tatham's <a href="http://www.chiark.greenend.org.uk/~sgtatham/bugs.html">How
-  to Report Bugs Effectively</a>
- </li>
+	<li>
+		Eric Raymond's and Rick Moen's
+		<a href="http://www.catb.org/~esr/faqs/smart-questions.html">How
+		To Ask Questions The Smart Way</a>
+	</li>
+	<li>
+		mozilla.org's 
+		<a href="http://www.mozilla.org/quality/bug-writing-guidelines.html">bug
+		writing guidelines</a>
+	</li>
+	<li>
+		Simon Tatham's <a href="http://www.chiark.greenend.org.uk/~sgtatham/bugs.html">How
+		to Report Bugs Effectively</a>
+	</li>
 </ul>
 
 <?php response_footer();

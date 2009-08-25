@@ -1,12 +1,6 @@
 <?php
 
-/**
- * Contains functions and variables used throughout the bug system
- */
-
-/*
- * DEFINE VARIABLES ============================
- */
+/* Contains functions and variables used throughout the bug system */
 
 // used in mail_bug_updates(), below, and class for search results
 $tla = array(
@@ -34,7 +28,7 @@ $bug_types = array(
 );
 
 // Used in show_state_options()
-$state_types =  array (
+$state_types = array (
 	'Open'			=> 2,
 	'Closed'		=> 2,
 	'Re-Opened'		=> 1,
@@ -57,15 +51,9 @@ $state_types =  array (
 	'All'			=> 0,
 );
 
-/*
- * DEFINE FUNCTIONS ============================
- */
-
-
 /**
  * Authentication
  */
-
 function verify_password($user, $pass)
 {
 	global $errors;
@@ -79,9 +67,9 @@ function verify_password($user, $pass)
 	);
 
 	$opts = array(
-		'method'  => 'POST',
-		'header'  => 'Content-type: application/x-www-form-urlencoded',
-		'content' => $post,
+		'method'	=> 'POST',
+		'header'	=> 'Content-type: application/x-www-form-urlencoded',
+		'content'	=> $post,
 	);
 
 	$ctx = stream_context_create(array('http' => $opts));
@@ -107,7 +95,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 
 	// Default values
 	$user = '';
-	$pw   = '';
+	$pw = '';
 	$logged_in = false;
 	$is_trusted_developer = false;
 
@@ -131,7 +119,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 		}
 	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
 		$user = $auth_user->handle;
-		$pw   = $auth_user->password;
+		$pw = $auth_user->password;
 	} elseif (isset($_COOKIE['MAGIC_COOKIE'])) {
 		@list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']));
 		if ($pw === null) {
@@ -144,12 +132,12 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 	if ($user != '' && $pw != '' && verify_password($user, $pw)) {
 		$logged_in = 'developer';
 		$auth_user->handle = $user;
-		$auth_user->email  = "{$user}@php.net";
-		$auth_user->name   = $user;
+		$auth_user->email = "{$user}@php.net";
+		$auth_user->name = $user;
 	} else {
-		$auth_user->email  = isset($_POST['in']['email']) ? $_POST['in']['email'] : '';
+		$auth_user->email = isset($_POST['in']['email']) ? $_POST['in']['email'] : '';
 		$auth_user->handle = '';
-		$auth_user->name   = '';
+		$auth_user->name = '';
 	}
 
 	// Check if developer is trusted
@@ -162,10 +150,10 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 /**
  * Fetches pseudo packages from database
  *
- * @param string $project			define what project pseudo packages are returned
- * @param bool   $return_disabled	whether to return read-only items, defaults to true
+ * @param string	$project			define what project pseudo packages are returned
+ * @param bool		$return_disabled	whether to return read-only items, defaults to true
  *
- * @return array  array of pseudo packages
+ * @return array	array of pseudo packages
  */
 function get_pseudo_packages ($project, $return_disabled = true)
 {
@@ -216,7 +204,7 @@ function get_pseudo_packages ($project, $return_disabled = true)
  * @param string $txt		the email address to be obfuscated
  * @param string $format	how the output will be displayed ('html', 'text')
  *
- * @return string  the altered email address
+ * @return string	the altered email address
  */
 function spam_protect($txt, $format = 'html')
 {
@@ -241,8 +229,7 @@ function spam_protect($txt, $format = 'html')
 /**
  * Escape strings so they can be used as literals in queries
  *
- * @param string|array $in	the data to be sanitized.  If it's an array, each
- *							element is sanitized.
+ * @param string|array	$in		data to be sanitized. If it's an array, each element is sanitized.
  *
  * @return string|array  the sanitized data
  *
@@ -269,9 +256,9 @@ function escapeSQL($in)
  *
  * Handy function for when you're dealing with user input or a default.
  *
- * @param mixed  as many variables as you wish to check
+ * @param mixed		as many variables as you wish to check
  *
- * @return mixed  the value, if any
+ * @return mixed	the value, if any
  *
  * @see escapeSQL(), field(), txfield()
  */
@@ -291,9 +278,9 @@ function oneof()
  * If the data from a form submission exists, that is used.
  * But if that's not there, the info is obtained from the database.
  *
- * @param string $n  the name of the field to be looked for
+ * @param string $n		the name of the field to be looked for
  *
- * @return mixed  the data requested
+ * @return mixed		the data requested
  *
  * @see escapeSQL(), oneof(), txfield()
  */
@@ -307,9 +294,9 @@ function field($n)
 /**
  * Escape string so it can be used as HTML
  *
- * @param string $in  the string to be sanitized
+ * @param string $in	the string to be sanitized
  *
- * @return string  the sanitized string
+ * @return string		the sanitized string
  *
  * @see txfield()
  */
@@ -325,15 +312,15 @@ function clean($in)
  * If the data from a form submission exists, that is used.
  * But if that's not there, the info is obtained from the database.
  *
- * @param string $n  the name of the field to be looked for
+ * @param string $n		the name of the field to be looked for
  *
- * @return mixed  the data requested
+ * @return mixed		the data requested
  *
  * @see clean()
  */
 function txfield($n, $bug = null, $in = null)
 {
-	$one = (isset($in)  && isset($in[$n]))  ? $in[$n]  : false;
+	$one = (isset($in) && isset($in[$n])) ? $in[$n] : false;
 	if ($one) {
 		return $one;
 	}
@@ -347,19 +334,19 @@ function txfield($n, $bug = null, $in = null)
 /**
  * Prints age <option>'s for use in a <select>
  *
- * @param string $current  the field's current value
+ * @param string $current	the field's current value
  *
  * @return void
  */
 function show_byage_options($current)
 {
 	$opts = array(
-		'0'   => 'the beginning',
-		'1'   => 'yesterday',
-		'7'   => '7 days ago',
-		'15'  => '15 days ago',
-		'30'  => '30 days ago',
-		'90'  => '90 days ago',
+		'0' => 'the beginning',
+		'1'	=> 'yesterday',
+		'7'	=> '7 days ago',
+		'15' => '15 days ago',
+		'30' => '30 days ago',
+		'90' => '90 days ago',
 	);
 	while (list($k,$v) = each($opts)) {
 		echo "<option value=\"$k\"", ($current==$k ? ' selected="selected"' : ''), ">$v</option>\n";
@@ -370,7 +357,7 @@ function show_byage_options($current)
  * Prints a list of <option>'s for use in a <select> element
  * asking how many bugs to display
  *
- * @param int $limit  the presently selected limit to be used as the default
+ * @param int $limit	the presently selected limit to be used as the default
  *
  * @return void
  */
@@ -396,8 +383,8 @@ function show_limit_options($limit = 30)
  *
  * Options include "Bug", "Documentation Problem" and "Feature/Change Request."
  *
- * @param string $current	bug's current type
- * @param bool   $all		whether or not 'All' should be an option
+ * @param string	$current	bug's current type
+ * @param bool		$all		whether or not 'All' should be an option
  *
  * @retun void
  */
@@ -483,9 +470,8 @@ function show_state_options($state, $user_mode = 0, $default = '')
 /**
  * Prints bug resolution <option>'s for use in a <select> list
  *
- * @param string $current   the bug's present state
- * @param int	$expanded	whether or not a longer explanation should be
- *							displayed
+ * @param string $current	the bug's present state
+ * @param int	$expande	whether or not a longer explanation should be displayed
  *
  * @return void
  */
@@ -512,8 +498,8 @@ function show_reason_types($current = '', $expanded = 0)
 /**
  * Prints PHP version number <option>'s for use in a <select> list
  *
- * @param string $current  the bug's current version number
- * @param string $default  a version number that should be the default
+ * @param string $current	the bug's current version number
+ * @param string $default	a version number that should be the default
  *
  * @return void
  */
@@ -546,9 +532,9 @@ function show_version_options($current, $default = '')
  * Prints package name <option>'s for use in a <select> list
  *
  * @param string $current	the bug's present state
- * @param int	$show_any	whether or not 'Any' should be an option.  'Any'
+ * @param int	$show_any	whether or not 'Any' should be an option. 'Any'
  *							will only be printed if no $current value exists.
- * @param string $default   the default value
+ * @param string $default 	the default value
  *
  * @return void
  */
@@ -595,7 +581,7 @@ function show_package_options($current, $show_any, $default = '')
  * Prints a series of radio inputs to determine how the search
  * term should be looked for
  *
- * @param string $current   the users present selection
+ * @param string $current	the users present selection
  *
  * @return void
  */
@@ -615,19 +601,18 @@ function show_boolean_options($current)
  * Display errors or warnings as a <ul> inside a <div>
  *
  * Here's what happens depending on $in:
- *   + string:	value is printed
- *   + array: 	looped through and each value is printed.
+ *	 + string:	value is printed
+ *	 + array: 	looped through and each value is printed.
  *				If array is empty, nothing is displayed.
  *				If a value contains a PEAR_Error object,
- *   + PEAR_Error: prints the value of getMessage() and getUserInfo()
+ *	 + PEAR_Error: prints the value of getMessage() and getUserInfo()
  *				if DEVBOX is true, otherwise prints data from getMessage().
  *
- * @param string|array|PEAR_Error $in  see long description
- * @param string $class  name of the HTML class for the <div> tag.
- *						("errors", "warnings")
- * @param string $head   string to be put above the message
+ * @param string|array|PEAR_Error $in see long description
+ * @param string $class		name of the HTML class for the <div> tag. ("errors", "warnings")
+ * @param string $head		string to be put above the message
  *
- * @return bool  true if errors were submitted, false if not
+ * @return bool		true if errors were submitted, false if not
  */
 function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 {
@@ -661,7 +646,7 @@ function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 /**
  * Prints a message saying the action succeeded
  *
- * @param string $in  the string to be displayed
+ * @param string $in	the string to be displayed
  *
  * @return void
  */
@@ -679,7 +664,7 @@ function bug_diff($bug, $in)
 
 	if ($in['email'] && (trim($in['email']) != trim($bug['email']))) {
 		$changed['reported_by']['from'] = $bug['email'];
-		$changed['reported_by']['to']   = spam_protect(txfield('email', $bug, $in), 'text');
+		$changed['reported_by']['to'] = spam_protect(txfield('email', $bug, $in), 'text');
 	}
 
 	$fields = array(
@@ -695,7 +680,7 @@ function bug_diff($bug, $in)
 	foreach (array_keys($fields) as $name) {
 		if (isset($in[$name]) && isset($bug[$name]) && (trim($in[$name]) != trim($bug[$name]))) {
 			$changed[$name]['from'] = $bug[$name];
-			$changed[$name]['to']   = txfield($name, $bug, $in);
+			$changed[$name]['to'] = txfield($name, $bug, $in);
 		}
 	}
 
@@ -727,12 +712,12 @@ function bug_diff_render_html($diff)
 		// align header content with headers (if a header contains
 		// more than one line, wrap it intelligently)
 		$field = str_pad($fields[$name] . ':', $maxlength);
-		$from  = wordwrap('-'.$field.$content['from'], 72 - $maxlength, "\n$spaces"); // wrap and indent
-		$from  = rtrim($from); // wordwrap may add spacer to last line
+		$from = wordwrap('-'.$field.$content['from'], 72 - $maxlength, "\n$spaces"); // wrap and indent
+		$from = rtrim($from); // wordwrap may add spacer to last line
 		$to	= wordwrap('+'.$field.$content['to'], 72 - $maxlength, "\n$spaces"); // wrap and indent
 		$to	= rtrim($to); // wordwrap may add spacer to last line
 		$changes .= '<span class="removed">' . clean($from) . '</span>' . "\n";
-		$changes .= '<span class="added">' .   clean($to) . '</span>' . "\n";
+		$changes .= '<span class="added">' . clean($to) . '</span>' . "\n";
 	}
 	$changes .= '</div>';
 
@@ -942,7 +927,7 @@ DEV_TEXT;
  * @param int $ts			the unix timestamp to be formatted
  * @param string $format	format to use
  *
- * @return string  the formatted date
+ * @return string	the formatted date
  */
 function format_date($ts = null, $format = 'Y-m-d H:i e')
 {
@@ -958,7 +943,7 @@ function format_date($ts = null, $format = 'Y-m-d H:i e')
  * @param int $bug_id	the bug's id number
  * @param int $all		should all existing comments be returned?
  *
- * @return string  the comments
+ * @return string	the comments
  */
 function get_old_comments($bug_id, $all = 0)
 {
@@ -1026,9 +1011,9 @@ the rest of the comments, please view the bug report online at
 /**
  * Converts any URI's found in the string to hyperlinks
  *
- * @param string $text  the text to be examined
+ * @param string $text	the text to be examined
  *
- * @return string  the converted string
+ * @return string	the converted string
  */
 function addlinks($text)
 {
@@ -1043,7 +1028,7 @@ function addlinks($text)
 /**
  * Determine if the given package name is legitimate
  *
- * @param string $package_name  the name of the package
+ * @param string $package_name	the name of the package
  *
  * @return bool
  */
@@ -1125,9 +1110,9 @@ function incoming_details_are_valid($in, $initial = 0)
 /**
  * Produces an array of email addresses the report should go to
  *
- * @param string $package_name  the package's name
+ * @param string $package_name	the package's name
  *
- * @return array  an array of email addresses
+ * @return array		an array of email addresses
  */
 function get_package_mail($package_name, $bug_id = false)
 {
@@ -1177,7 +1162,7 @@ function get_package_mail($package_name, $bug_id = false)
 /**
  * Prepare a query string with the search terms
  *
- * @param string $search  the term to be searched for
+ * @param string $search	the term to be searched for
  *
  * @return array
  */
@@ -1246,7 +1231,7 @@ function unsubscribe_hash($bug_id, $email)
 	if ($affected > 0) {
 		$hash = urlencode($hash);
 		/* user text with attention, headers and previous messages */
-		$user_text  = <<< USER_TEXT
+		$user_text = <<< USER_TEXT
 ATTENTION! Do NOT reply to this email!
 
 A request has been made to remove your subscription to
@@ -1276,7 +1261,7 @@ USER_TEXT;
 /**
  * Remove a subscribtion
  *
- * @param integer   bug ID
+ * @param integer	bug ID
  * @param string	hash
  *
  * @return void
@@ -1550,7 +1535,7 @@ function redirect($url)
  * The link and link text are obfuscated by alternating Ord and Hex
  * entities.
  *
- * @param string $email	 	the email address to make the link for
+ * @param string $email		the email address to make the link for
  * @param string $linktext	a string for the visible part of the link.
  *							If not provided, the email address is used.
  * @param string $extras	a string of extra attributes for the <a> element
@@ -1583,7 +1568,9 @@ function make_mailto_link($email, $linktext = '', $extras = '')
  */
 function make_ticket_links($text)
 {
-	$text = preg_replace('/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
-						 "<a href='bug.php?id=\\2'>\\0</a>", $text);
-	return $text;
+	return preg_replace(
+		'/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
+		"<a href='bug.php?id=\\2'>\\0</a>",
+		$text
+	);
 }
