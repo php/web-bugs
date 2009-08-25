@@ -21,17 +21,31 @@ response_header('Bugs');
 <p>Before you report a bug, please make sure you have completed the following steps:</p>
 
 <ul>
-<li>Used the form above or our <a href="search.php">advanced search page</a> 
-to make sure nobody has reported the bug already.</li>
+	<li>
+		Used the form above or our <a href="search.php">advanced search page</a> 
+		to make sure nobody has reported the bug already.
+	</li>
 
-<li>Made sure you are using the latest stable version or a build from SVN, if
-similar bugs have recently been fixed and committed. You can download snapshots at
-<a href="http://snaps.php.net/">http://snaps.php.net</a></li>
+	<li>
+		Made sure you are using the latest stable version or a build from SVN, if
+		similar bugs have recently been fixed and committed. You can download snapshots at
+		<a href="http://snaps.php.net/">http://snaps.php.net</a>
+	</li>
 
-<li>Read our tips on <a href="how-to-report.php">how to report
-a bug that someone will want to help fix</a>.</li>
-<li>Make sure it isn't a support question. For support, see the
-<a href="http://www.php.net/support.php">support page</a>.</li>
+	<li>
+		Read our tips on <a href="how-to-report.php">how to report a bug that someone will want to help fix</a>.
+	</li>
+	
+	<li>
+		See how to get a backtrace in case of a crash: 
+		<a href="bugs-generating-backtrace.php">for *NIX</a> and
+		<a href="bugs-generating-backtrace-win32.php">for Windows</a>.
+	</li>
+	
+	<li>
+		Make sure it isn't a support question. For support,
+		see the <a href="http://www.php.net/support.php">support page</a>.
+	</li>
 </ul>
 
 <p>Once you've double-checked that the bug you've found hasn't already been

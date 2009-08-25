@@ -19,9 +19,9 @@ if (empty($bug_id)) {
 	exit;
 }
 
-if (PEAR::isError($buginfo = bugs_get_bug($bug_id))) {
+if (!($buginfo = bugs_get_bug($bug_id))) {
 	response_header('Error :: invalid bug selected');
-	report_error("Invalid bug #{$bug_id} selected");
+	display_bug_error("Invalid bug #{$bug_id} selected");
 	response_footer();
 	exit;
 }

@@ -1421,3 +1421,169 @@ function bugs_mail($to, $subject, $message, $headers = '')
 	}
 	return @mail($to, $subject, $message, $headers, '-f noreply@php.net');
 }
+
+/**
+ * Prints out the XHTML headers and top of the page.
+ *
+ * @param string $title	a string to go into the header's <title>
+ * @return void
+ */
+function response_header($title, $extraHeaders = '')
+{
+	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $basedir;
+
+	if ($_header_done) {
+		return;
+	}
+
+	$_header_done	= true;
+
+	header('Content-Type: text/html; charset=ISO-8859-15');
+	echo '<?xml version="1.0" encoding="ISO-8859-15" ?>';
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<?php echo $extraHeaders; ?>
+	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
+	<link rel="shortcut icon" href="images/favicon.ico" />
+	<link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+<div><a id="TOP"></a></div>
+
+<table id="head-menu" class="head" cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="head-logo">
+			<a href="/"><img src="images/logo.gif" alt="Bugs" vspace="2" hspace="2" /></a>
+		</td>
+
+		<td class="head-menu">
+			<a href="http://www.php.net/" class="menuWhite">php.net</a>&nbsp;|&nbsp;
+			<a href="http://www.php.net/support.php" class="menuWhite">support</a>&nbsp;|&nbsp;
+			<a href="http://www.php.net/docs.php" class="menuWhite">documentation</a>&nbsp;|&nbsp;
+			<a href="report.php" class="menuWhite">report a bug</a>&nbsp;|&nbsp;
+			<a href="search.php" class="menuWhite">advanced search</a>&nbsp;|&nbsp;
+			<a href="search-howto.php" class="menuWhite">search howto</a>&nbsp;|&nbsp;
+			<a href="stats.php" class="menuWhite">statistics</a>&nbsp;|&nbsp;
+			<a href="http://master.php.net/login.php" class="menuWhite">login</a>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="head-search" colspan="2">
+			<form method="get" action="search.php">
+				<p class="head-search">
+					<input type="hidden" name="cmd" value="display" />
+					<small>go to bug id or search bugs for</small>
+					<input class="small" type="text" name="search_for" value="" size="30" />
+					<input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
+				</p>
+			</form>
+		</td>
+	</tr>
+</table>
+
+<table class="middle" cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="content">
+<?php
+}
+
+
+function response_footer($extra_html = '')
+{
+	global $_footer_done, $LAST_UPDATED, $basedir;
+
+	if ($_footer_done) {
+		return;
+	}
+	$_footer_done = true;
+?>
+		</td>
+	</tr>
+</table>
+
+<?php echo $extra_html; ?>
+
+<table class="foot" cellspacing="0" cellpadding="0">
+	<tr>
+		<td class="foot-bar" colspan="2">&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td class="foot-copy">
+			<small>
+				<a href="http://www.php.net/"><img src="images/logo-small.gif" align="left" valign="middle" hspace="3" alt="PHP" /></a>
+				<a href="http://www.php.net/copyright.php">Copyright &copy; 2001-<?php echo date('Y'); ?> The PHP Group</a><br />
+				All rights reserved.
+			</small>
+		</td>
+		<td class="foot-source">
+			<small>Last updated: <?php echo $LAST_UPDATED; ?></small>
+		</td>
+	</tr>
+</table>
+</body>
+</html>
+<?php
+}
+
+
+/**
+ * Redirects to the given full or partial URL.
+ *
+ * @param string $url Full/partial url to redirect to
+ */
+function redirect($url)
+{
+	header("Location: {$url}");
+}
+
+
+/**
+ * Turns the provided email address into a "mailto:" hyperlink.
+ *
+ * The link and link text are obfuscated by alternating Ord and Hex
+ * entities.
+ *
+ * @param string $email	 	the email address to make the link for
+ * @param string $linktext	a string for the visible part of the link.
+ *							If not provided, the email address is used.
+ * @param string $extras	a string of extra attributes for the <a> element
+ *
+ * @return string			the HTML hyperlink of an email address
+ */
+function make_mailto_link($email, $linktext = '', $extras = '')
+{
+	$tmp = '';
+	for ($i = 0, $l = strlen($email); $i<$l; $i++) {
+		if ($i % 2) {
+			$tmp .= '&#' . ord($email[$i]) . ';';
+		} else {
+			$tmp .= '&#x' . dechex(ord($email[$i])) . ';';
+		}
+	}
+
+	return "<a {$extras} href='&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;{$tmp}'>" . ($linktext != '' ? $linktext : $tmp) . '</a>';
+}
+
+/**
+ * Turns bug/feature request numbers into hyperlinks
+ *
+ * If the bug number is prefixed by the word "PHP, PEAR, PECL" the link will
+ * go to correct bugs site.	Otherwise, the bug is considered "local" bug.
+ *
+ * @param string $text	the text to check for bug numbers
+ *
+ * @return string the string with bug numbers hyperlinked
+ */
+function make_ticket_links($text)
+{
+	$text = preg_replace('/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
+						 "<a href='bug.php?id=\\2'>\\0</a>", $text);
+	return $text;
+}

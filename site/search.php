@@ -180,7 +180,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap"><input type="text" name="search_for" value="<?php echo htmlspecialchars($search_for);?>" size="20" maxlength="255" accesskey="o" /><br />
    <small>
 <?php show_boolean_options($boolean_search) ?>
-(<?php print_link('search-howto.php', '?', true);?>)
+(<a href="search-howto.php" target="_new">?</a>)
    </small>
   </td>
   <td rowspan="3">

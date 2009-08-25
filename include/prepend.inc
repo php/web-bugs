@@ -54,11 +54,7 @@ if (empty($dbh))
 $tmp = filectime($_SERVER['SCRIPT_FILENAME']);
 $LAST_UPDATED = date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC';
 
-/// FIXME: These should not be needed!
-require "{$ROOT_DIR}/include/format-html.php"; // aka pear-format-html.php
-
 /**
  * Obtain the functions and variables used throughout the bug system
  */
 require_once "{$ROOT_DIR}/include/functions.inc";
-

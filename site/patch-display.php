@@ -27,7 +27,7 @@ if (empty($bug_id)) {
 require "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patchinfo = new Bug_Patchtracker;
 
-if (PEAR::isError($buginfo = bugs_get_bug($bug_id))) {
+if (!($buginfo = bugs_get_bug($bug_id))) {
     response_header('Error :: invalid bug selected');
     display_bug_error("Invalid bug #{$bug_id} selected");
     response_footer();
@@ -53,6 +53,7 @@ if (isset($patch_name) && isset($revision)) {
     }
 
     require_once 'HTTP.php';
+
     if (isset($_GET['download'])) {
         header('Last-modified: ' . HTTP::date(filemtime($path)));
         header('Content-type: application/octet-stream');

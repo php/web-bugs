@@ -85,14 +85,6 @@ a:visited.menuWhite {
     color: #FFFFFF;
 }
 
-a:link.menuBlack,
-a:hover.menuBlack,
-a:visited.menuBlack {
-    text-decoration: none;
-    color: #FFFFFF;
-}
-
-
 /* ========= Sidebars ========= */
 
 td.sidebar_left {
