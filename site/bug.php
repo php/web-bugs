@@ -34,7 +34,7 @@ if ($_REQUEST['id'] == 'preview') {
 $errors = array();
 
 // Obtain common includes
-require_once '../include/prepend.inc';
+require_once '../include/prepend.php';
 
 // Set pseudo_pkgs array
 $pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included

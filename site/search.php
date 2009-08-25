@@ -5,7 +5,7 @@
  */
 
 // Obtain common includes
-require_once '../include/prepend.inc';
+require_once '../include/prepend.php';
 
 // Redirect early if a bug id is passed as search string
 $search_for_id = (isset($_GET['search_for'])) ? (int) $_GET['search_for'] : 0;

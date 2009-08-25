@@ -57,4 +57,4 @@ $LAST_UPDATED = date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC';
 /**
  * Obtain the functions and variables used throughout the bug system
  */
-require_once "{$ROOT_DIR}/include/functions.inc";
+require_once "{$ROOT_DIR}/include/functions.php";

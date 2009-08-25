@@ -1,6 +1,6 @@
 <?php
 
-require_once '../include/prepend.inc';
+require_once '../include/prepend.php';
 
 session_start();
 

@@ -1,4 +1,4 @@
-<?php /* vim: set noet ts=4 sw=4: : */
+<?php
 
 /* Generates an RSS/RDF feed for a set of bugs
  * based on search criteria as provided.
@@ -19,7 +19,7 @@ define ('MAX_BUGS_RETURN', 150);
 /**
  * Obtain common includes
  */
-require_once '../../include/prepend.inc';
+require_once '../../include/prepend.php';
 require "{$ROOT_DIR}/include/query.php";
 
 if (!$res) {

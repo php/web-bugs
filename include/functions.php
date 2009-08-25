@@ -154,7 +154,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 
 	// Check if developer is trusted
 	if ($logged_in == 'developer') {
-		require_once "{$ROOT_DIR}/include/trusted-devs.inc";
+		require_once "{$ROOT_DIR}/include/trusted-devs.php";
 		$is_trusted_developer = in_array($user, $trusted_developers);
 	}
 }

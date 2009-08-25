@@ -5,7 +5,7 @@
  */
 
 // Obtain common includes
-require_once '../include/prepend.inc';
+require_once '../include/prepend.php';
 
 // Start session 
 session_start();

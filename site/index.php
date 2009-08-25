@@ -4,7 +4,7 @@
  * The bug system home page
  */
 
-require_once '../include/prepend.inc';
+require_once '../include/prepend.php';
 
 /* If 'id' is passed redirect to the bug page */
 $id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;

@@ -1,4 +1,4 @@
-<?php /* vim: set noet ts=4 sw=4: : */
+<?php
 
 $bug_id = (int) $_REQUEST['id'];
 
@@ -10,7 +10,7 @@ if (!$bug_id) {
 /**
  * Obtain common includes
  */
-require_once '../include/prepend.inc';
+require_once '../include/prepend.php';
 
 // Authenticate
 if ($_POST['token'] != md5(getenv('AUTH_TOKEN'))) {

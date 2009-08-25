@@ -1,4 +1,4 @@
-<?php /* vim: set noet ts=4 sw=4: : */
+<?php
 
 /* Generates an RSS/RDF feed for a particular bug specified as the "id"
  * parameter.  optionally, if "format" is "xml", generates data in a
@@ -8,7 +8,7 @@
  * ported from php-bugs-web by Gregory Beaver <cellog@php.net>
  */
 
-require_once '../../include/prepend.inc';
+require_once '../../include/prepend.php';
 
 $bug_id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 $format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'rss2';
