@@ -5,9 +5,6 @@ This was a collaboration between PEAR, PECL and PHP core to create a unified bug
 === Status ===
 
  - Beta
- - Likely implementation date: Q3 2009
- 
-  Note: All existing functionality from pear.php.net/bugs/ works already.
  
 === Progress ===
 
@@ -16,7 +13,7 @@ This system is based off pearweb/bugs/ and php-bugs-web.
 === Installation ===
 
 Configuration:
- - ./include/prepend.inc
+ - ./local_config.php (see local_config.php.sample for more information)
 
 Required PEAR packages:
  # pear install MDB2 DB_DataObject Text_CAPTCHA_Numeral Text_Diff Tree-beta HTTP HTTP_Upload
