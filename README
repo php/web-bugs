@@ -6,14 +6,11 @@ This was a collaboration between PEAR, PECL and PHP core to create a unified bug
 
  - Beta
  
-=== Progress ===
-
-This system is based off pearweb/bugs/ and php-bugs-web.
-
 === Installation ===
 
-Configuration:
- - ./local_config.php (see local_config.php.sample for more information)
+Local configuration:
+
+ - Copy local_config.php.sample to local_config.php and modify accordingly.
 
 Required PEAR packages:
  # pear install MDB2 DB_DataObject Text_CAPTCHA_Numeral Text_Diff Tree-beta HTTP HTTP_Upload
