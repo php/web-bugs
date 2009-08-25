@@ -1,5 +1,5 @@
 <?php
-echo "<{$site}bug>\n";
+echo "<bug>\n";
 foreach ($bug as $key => $value) {
     echo "  <$key>" . htmlspecialchars($value) . "</$key>\n";
 }
@@ -10,4 +10,4 @@ foreach ($comments as $comment) {
         echo "    <$key>" . htmlspecialchars($value) . "</$key>\n";
     echo "  </comment>\n";
 }
-echo "</{$site}bug>\n";
+echo "</bug>\n";

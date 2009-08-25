@@ -1,6 +1,6 @@
 <?php
 require '../include/prepend.php';
-response_header("How to search the {$siteBig} Bugs database");
+response_header("How to search the bug database");
 ?>
 
 <h1>How to Search</h1>

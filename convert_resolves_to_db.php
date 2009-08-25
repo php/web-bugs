@@ -4,7 +4,6 @@ include './php-bugs-web/include/resolve.inc';
 
 mysql_connect('localhost', 'nobody', '') or die('Unable to connect to SQL server.');
 mysql_select_db('phpbugsdb') or die('Unable to select database.');
-                                                
 mysql_query("
 	DELETE FROM bugdb_resolves
 ") or die (mysql_error());
