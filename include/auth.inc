@@ -23,11 +23,11 @@ function verify_password($user, $pass)
 
 	$a = @unserialize($s);
 	if (!is_array($a)) {
-		echo "Unknown authentication error\n";
+		//echo "Unknown authentication error\n";
 		exit;
 	}
 	if (isset($a["errno"])) {
-		echo "Authentication failed: ", $a["errstr"], "\n";
+		//echo "Authentication failed: ", $a["errstr"], "\n";
 		return false;
 	}
 
