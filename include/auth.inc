@@ -23,11 +23,11 @@ function verify_password($user, $pass)
 
 	$a = @unserialize($s);
 	if (!is_array($a)) {
-		//echo "Unknown authentication error\n";
+		echo "Unknown authentication error<br />\nMaybe master is down?";
 		exit;
 	}
 	if (isset($a["errno"])) {
-		//echo "Authentication failed: ", $a["errstr"], "\n";
+		echo "Authentication failed: ", $a["errstr"], "\n";
 		return false;
 	}
 
@@ -42,6 +42,11 @@ function is_developer()
 	
 	// 0 = username, 1 = password
 	$c = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']), 2);
+
+	if (!$c[0]) {
+		// The "remember me" for bug reports (non-devs) feature uses MAGIC_COOKIE without username
+		return false;
+	}
 	
 	if (!verify_password($c[0], $c[1])) {
 		return false;
