@@ -43,7 +43,7 @@ function is_developer()
 	// 0 = username, 1 = password
 	$c = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']), 2);
 
-	if (!$c[0]) {
+	if (!$c[0] || !$c[1]) {
 		// The "remember me" for bug reports (non-devs) feature uses MAGIC_COOKIE without username
 		return false;
 	}
@@ -54,3 +54,4 @@ function is_developer()
 
 	return true;
 }
+
