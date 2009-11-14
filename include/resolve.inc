@@ -302,6 +302,12 @@ across the globe to all mirror sites, including PHP.net itself.
 
 Thank you for the report, and for helping us make PHP.net better.',
 
+    'Online Doc Editor problem' =>
+'This bug has been fixed in SVN, and should show up online in an
+hour or three.
+
+Thank you for the report, and for helping us make PHP.net better.',
+
     'DocWeb problem' =>
 'This bug has been fixed in SVN. Since the PHP Documentation Tools website
 is updated from the SVN repository at a regular interval, the fix might need

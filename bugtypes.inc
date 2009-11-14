@@ -9,6 +9,7 @@ $items = array (
 	'Translation problem'      => '&nbsp;&nbsp;&nbsp;&nbsp;Documentation translation problem',
 	'Doc Build problem'        => '&nbsp;&nbsp;&nbsp;&nbsp;Doc Build (PhD) problem',
 	'Website problem'          => '&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Website problem',
+	'Online Doc Editor problem'=> '&nbsp;&nbsp;&nbsp;&nbsp;Online Documentation Editor problem',
 	'Systems problem'          => '&nbsp;&nbsp;&nbsp;&nbsp;PHP.net Systems Operation problem',
 	'Output Control'           => '&nbsp;&nbsp;&nbsp;&nbsp;Output Control',
 	'Performance problem'      => '&nbsp;&nbsp;&nbsp;&nbsp;Performance problem',
