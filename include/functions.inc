@@ -558,6 +558,9 @@ function get_bugtype_mail($bug_type)
 	elseif (eregi("doc build", $bug_type)) {
 		return array("doc-bugs@lists.php.net", "doc-bugs@lists.php.net");
 	}
+	elseif (eregi("online doc editor", $bug_type)) {
+		return array("doc-bugs@lists.php.net", "doc-bugs@lists.php.net");
+	}
 	elseif (eregi("docweb", $bug_type)) {
 		return array("doc-web@lists.php.net", "doc-web@lists.php.net");
 	}
