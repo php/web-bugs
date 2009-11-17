@@ -49,7 +49,7 @@ function outputHeader($bug,$format) {
 		case 'xml':
 			echo "<phpbug>\n";  
 			foreach($bug as $key => $value)
-				echo "  <$key>" . htmlspecialchars($value) . "</$key>\n";
+				echo "  <$key>" . utf8_encode(htmlspecialchars($value)) . "</$key>\n";
 			break;
 		case 'rss':
 		default:
