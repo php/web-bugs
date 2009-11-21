@@ -4,10 +4,7 @@ require_once 'prepend.inc';
 
 commonHeader("Statistics");
 
-@mysql_connect("localhost","nobody","")
-	or die("unable to connect to database");
-@mysql_select_db("phpbugdb")
-	or die("unable to select database");
+db_connect();
 
 $sort_by = isset($_GET['sort_by']) ? htmlspecialchars($_GET['sort_by'], ENT_QUOTES) : 'open';
 $rev     = isset($_GET['rev'])     ? (int) $_GET['rev']    : 1;

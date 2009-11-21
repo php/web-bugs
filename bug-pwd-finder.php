@@ -8,10 +8,7 @@ require_once 'prepend.inc';
 
 if ($bug_id) {
 
-	mysql_connect ("localhost","nobody","")
-		or die("Unable to connect to SQL server. Please try again later.");
-
-	mysql_select_db ("phpbugdb");
+	db_connect();
 
 	// Clean up the bug id
 	$bug_id = ereg_replace ("[^0-9]+", "", $bug_id);

@@ -19,9 +19,8 @@ $boolean = isset($_REQUEST['boolean']) ? (int) $_REQUEST['boolean'] : 1;
 define('BOOLEAN_SEARCH', $boolean);
 
 if (isset($cmd) && $cmd == "display") {
-	@mysql_connect("localhost","nobody","")
-		or die("Unable to connect to SQL server.");
-	@mysql_select_db("phpbugdb");
+
+	db_connect();
 
 	$mysql4 = version_compare(mysql_get_server_info(), "4.0.0", "ge");
 

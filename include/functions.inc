@@ -805,4 +805,15 @@ function make_mailto_link($email, $linktext = '', $extras = '')
     return '<a ' . $extras . ' href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;'
            . $tmp . '">' . ($linktext != '' ? $linktext : $tmp) . '</a>';
 }
-?>
+
+function db_connect() {
+	if ($conn = @mysql_connect(BUG_DB_SERVER, BUG_DB_USER, BUG_DB_PASS)) {
+		if (mysql_select_db(BUG_DB_NAME, $conn)) {
+			return $conn;
+		}
+	}
+	commonHeader('The bugs system is resting');
+	echo '<p>The data center is offline. This might be a feature, and not a bug, but probably not.</p>';
+	commonFooter();
+	exit;
+}

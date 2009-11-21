@@ -1,8 +1,8 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
-mysql_connect("localhost","nobody","")
-  or die("Unable to connect to SQL server\n");
-mysql_select_db("phpbugdb");
+require './include/prepend.inc';
+
+db_connect();
 
 if ($id) {
 	$id = (int) $id;

@@ -70,9 +70,7 @@ if ($errors) {
   exit;
 }
 
-@mysql_connect("localhost","nobody","")
-	or die("Unable to connect to SQL server.");
-@mysql_select_db("phpbugdb");
+db_connect();
 
 # fetch info about the bug into $bug
 $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"

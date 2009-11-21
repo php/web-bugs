@@ -25,8 +25,7 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
   list($user,$pw) = explode(":", base64_decode($MAGIC_COOKIE),2);
 }
 
-@mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server.");
-@mysql_select_db("phpbugdb");
+db_connect();
 
 # fetch info about the bug into $bug
 $query = "SELECT id,bug_type,email,passwd,sdesc,ldesc,"

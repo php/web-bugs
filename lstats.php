@@ -1,5 +1,9 @@
 <?php /* vim: set noet ts=4 sw=4: : */
 
+require './include/prepend.inc';
+
+db_connect();
+
 function status_print ($status, $num, $width, $align='left') {
 	$str = ucfirst($status).":";
 	$str.= str_repeat(" ", $width - strlen($str) + (($align == 'right') ? (4 - strlen($num)) : 0));
@@ -52,9 +56,6 @@ if(!isset($phpver)) {
 	$phpver = htmlspecialchars($phpver, ENT_QUOTES);
 	echo "<h3>Bug stats for PHP $phpver:</h3>\n<pre>\n";	
 }
-
-mysql_connect("localhost","nobody","");
-mysql_select_db("phpbugdb");
 
 if (isset($per_category)) {
 	include ('bugtypes.inc');

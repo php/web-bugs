@@ -17,9 +17,7 @@ $reproduced = (int)$reproduced;
 $samever = (int)$samever;
 $sameos = (int)$sameos;
 
-@mysql_connect("localhost","nobody","")
-	or die("Unable to connect to SQL server.");
-@mysql_select_db("phpbugdb");
+db_connect();
 
 $query = "SELECT id FROM bugdb WHERE id=" . $id . " LIMIT 1";
 $res = mysql_num_rows(mysql_query($query));

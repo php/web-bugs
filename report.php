@@ -22,9 +22,7 @@ if (isset($MAGIC_COOKIE) && !isset($user) && !isset($pw)) {
 
 $mail_bugs_to = "php-bugs@lists.php.net";
 
-@mysql_connect("localhost","nobody","")
-	or die("Unable to connect to SQL server.");
-@mysql_select_db("phpbugdb");
+db_connect();
 
 $errors = array();
 if ($in) {

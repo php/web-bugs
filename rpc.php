@@ -6,6 +6,7 @@ if (!$id) {
   exit;
 }
 
+require './include/prepend.inc';
 require './include/auth.inc';
 
 if (isset($_POST['MAGIC_COOKIE'])) {
@@ -20,8 +21,7 @@ if (!verify_password($user,$pw)) {
   exit;
 }
 
-@mysql_connect("localhost","nobody","") or die("Unable to connect to SQL server.");
-@mysql_select_db("phpbugdb");
+db_connect();
 @mysql_set_charset('utf8');
 
 # fetch info about the bug into $bug
