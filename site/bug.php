@@ -6,7 +6,7 @@
 session_start();
 
 // Handle preview
-if ($_REQUEST['id'] == 'preview') {
+if (isset($_REQUEST['id']) && $_REQUEST['id'] == 'preview') {
 	$bug_id = 'PREVIEW';
 	$bug = $_SESSION['bug_preview'];
 	$bug['submitted'] = time();
@@ -822,10 +822,8 @@ if (!$logged_in) {
 		<tr>
 			<th class="details">Subscribe to this entry?</th>
 			<td class="form-input">
-				<form name="subscribetobug" action="bug.php?id=<?php echo $bug_id; ?>" method="post">
-					<input type="submit" name="subscribe_to_bug" value="Subscribe" />
-					<input type="submit" name="unsubscribe_to_bug" value="Unsubscribe" />
-				</form>
+				<input type="submit" name="subscribe_to_bug" value="Subscribe" />
+				<input type="submit" name="unsubscribe_to_bug" value="Unsubscribe" />
 			</td>
 		</tr>
 	</table>
