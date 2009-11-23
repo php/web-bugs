@@ -78,7 +78,7 @@ function verify_password($user, $pass)
 
 	$a = @unserialize($s);
 	if (!is_array($a)) {
-		$errors[] = "Unknown authentication error\n";
+		echo "Unknown authentication error<br />\nMaybe master is down?\n";
 		exit;
 	}
 	if (isset($a['errno'])) {
