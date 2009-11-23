@@ -121,7 +121,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 		$user = $auth_user->handle;
 		$pw = $auth_user->password;
 	} elseif (isset($_COOKIE['MAGIC_COOKIE'])) {
-		@list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']));
+		@list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']), 2);
 		if ($pw === null) {
 			$pw = '';
 		}
