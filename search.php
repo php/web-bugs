@@ -46,7 +46,11 @@ if (isset($cmd) && $cmd == "display") {
 	
 	/* Treat assigned, analyzed, critical and verified bugs as open */
 	if ($status == "Open") {
-		$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical' OR status='Verified')";
+		if (in_array("Documentation problem", $bug_type)) {
+			$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical' OR status='Verified' OR status='To be documented')";
+		} else {
+			$where_clause .= " AND (status='Open' OR status='Assigned' OR status='Analyzed' OR status='Critical' OR status='Verified')";
+		}
 	} elseif ($status == "Old Feedback") {
 		$where_clause .= " AND status='Feedback' AND TO_DAYS(NOW())-TO_DAYS(ts2)>60";
 	} elseif ($status == "Fresh") {
