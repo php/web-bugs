@@ -27,7 +27,6 @@ function verify_password($user, $pass)
 		exit;
 	}
 	if (isset($a["errno"])) {
-		echo "Authentication failed: ", $a["errstr"], "\n";
 		return false;
 	}
 
@@ -48,10 +47,6 @@ function is_developer()
 		return false;
 	}
 	
-	if (!verify_password($c[0], $c[1])) {
-		return false;
-	}
-
-	return true;
+	return verify_password($c[0], $c[1]);
 }
 
