@@ -4,23 +4,28 @@ This was a collaboration between PEAR, PECL and PHP core to create a unified bug
 
 === Status ===
 
- - Beta
+- Beta
  
 === Installation ===
 
 Local configuration:
 
- - Copy local_config.php.sample to local_config.php and modify accordingly.
+- Copy local_config.php.sample to local_config.php and modify accordingly.
 
-Required PEAR packages:
- # pear install MDB2 DB_DataObject Text_CAPTCHA_Numeral Text_Diff Tree-beta HTTP HTTP_Upload
- - MDB2
- - DB_DataObject
- - Text_CAPTCHA_Numeral
- - Text_Diff
- - Tree
- - HTTP
- - HTTP_Upload
+- Required PEAR packages:
+  . MDB2
+  . DB_DataObject
+  . Text_CAPTCHA_Numeral
+  . Text_Diff
+  . Tree
+  . HTTP
+  . HTTP_Upload
 
-Database:
- - See README.UPGRADE_bugs.php.net
+  # pear install MDB2 DB_DataObject Text_CAPTCHA_Numeral Text_Diff Tree-beta HTTP HTTP_Upload
+
+- Database:
+  . See README.UPGRADE_bugs.php.net
+
+=== TODO ===
+
+- AJAXify
