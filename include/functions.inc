@@ -141,7 +141,7 @@ function show_version_options($current,$default="")
 		"5.3.1",
 		"5.3SVN-{$date} (snap)",
 		"5.3SVN-{$date} (SVN)",
-		"5.2.12RC3",
+		"5.2.12RC4",
 		"5.2.11",
 		"5.2SVN-{$date} (snap)",
 		"5.2SVN-{$date} (SVN)",
