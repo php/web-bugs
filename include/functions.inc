@@ -227,6 +227,39 @@ function show_boolean_options($current) {
 	}
 }
 
+function comment_get_headers($bug, $in, $array = false)
+{
+    $headers = array();
+    
+    $fields = array(
+        'email'       => 'Reported by',
+        'sdesc'       => 'Summary',
+        'status'      => 'Status',
+        'bug_type'    => 'Bug Type',
+        'php_os'      => 'Operating System',
+        'php_version' => 'PHP Version',
+        'assign'      => 'Assigned To'
+    );
+    
+    foreach ($fields as $name => $desc) {
+        if (changed($name)) {
+            $headers[] = array("-$desc", $bug[$name]);
+            $headers[] = array("+$desc", $in[$name]);
+        }
+    }
+    
+    if ($array) {
+        return $headers;
+    }
+    
+    $ret = '';
+    foreach ($headers as $header) {
+        $ret .= vsprintf("%s: %s\n", $header);
+    }
+    
+    return rtrim($ret);
+}
+
 function mail_bug_updates($bug, $in, $from, $ncomment, $edit=1)
 {
     $text = array();

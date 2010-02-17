@@ -229,7 +229,14 @@ if (!isset($in)) {
 
     // Allow passing in manpage to repcode (e.g., report.php?manpage=/manual/en/foo.php)
     if (isset($_GET['manpage'])) {
-        $in['repcode'] .= "\n---\nFrom manual page: " . clean($_GET['manpage']) . "\n---\n";
+        $manpage = clean($_GET['manpage']);
+        if ($manpage[0] !== '/') {
+            $manpage = '/' . $manpage;
+        }
+        
+        $manpage = 'http://www.php.net' . $manpage;
+        
+        $in['repcode'] .= "\n---\nFrom manual page: $manpage\n---\n";
     }
 ?>
 

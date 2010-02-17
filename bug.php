@@ -156,6 +156,8 @@ elseif ($in && $edit == 2) {
 	}
 
 	$from = ($bug['email'] != $in['email'] && !empty($in['email'])) ? $in['email'] : $bug['email'];
+    
+    $ncommentDb = trim(comment_get_headers($bug, $in) . "\n\n$ncomment");
 
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		/* update bug record */
@@ -164,7 +166,7 @@ elseif ($in && $edit == 2) {
 	
 		/* add comment */
 		if ($success && !empty($ncomment)) {
-			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncomment')";
+			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncommentDb')";
 			$success = @mysql_query($query);
 		}
 	}
@@ -211,14 +213,16 @@ elseif ($in && $edit == 1) {
 			          . "\n\n$ncomment";
 		}
 	}
-
+    
+    $ncommentDb = trim(comment_get_headers($bug, $in) . "\n\n$ncomment");
+    
 	if (!$errors && !($errors = incoming_details_are_valid($in))) {
 		$query = 'UPDATE bugdb SET ';
 		$query.= ($bug['email'] != $in['email'] && !empty($in['email'])) ? "email='{$in['email']}', " : '';
 		$query.= "sdesc='{$in['sdesc']}', status='{$in['status']}', bug_type='{$in['bug_type']}', assign='{$in['assign']}', php_version='{$in['php_version']}', php_os='{$in['php_os']}', ts2=NOW() WHERE id=$id";
 		$success = @mysql_query($query);
 		if ($success && !empty($ncomment)) {
-			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'$ncomment')";
+			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'$ncommentDb')";
 			$success = @mysql_query($query);
 		}
 	
