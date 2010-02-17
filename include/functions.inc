@@ -19,7 +19,7 @@ function is_spam($string)
 	if (substr_count(strtolower($string), 'http://') > 5) {
 		return true;
 	}
-	if (preg_match("/(asian)|(spy)|(bdsm)|(massage)|(mortage)|(sex)|(11nong)/i", $string)) {
+	if (preg_match("/(asian)|(spy)|(bdsm)|(massage)|(mortage)|(sex)|(11nong)|(oxycontin)|(distance-education)/i", $string)) {
 		return true;
 	}
 	return false;
