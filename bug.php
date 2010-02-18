@@ -165,7 +165,7 @@ elseif ($in && $edit == 2) {
 		$success = @mysql_query($query);
 	
 		/* add comment */
-		if ($success && !empty($ncomment)) {
+		if ($success && !empty($ncommentDb)) {
 			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$from',NOW(),'$ncommentDb')";
 			$success = @mysql_query($query);
 		}
@@ -221,7 +221,7 @@ elseif ($in && $edit == 1) {
 		$query.= ($bug['email'] != $in['email'] && !empty($in['email'])) ? "email='{$in['email']}', " : '';
 		$query.= "sdesc='{$in['sdesc']}', status='{$in['status']}', bug_type='{$in['bug_type']}', assign='{$in['assign']}', php_version='{$in['php_version']}', php_os='{$in['php_os']}', ts2=NOW() WHERE id=$id";
 		$success = @mysql_query($query);
-		if ($success && !empty($ncomment)) {
+		if ($success && !empty($ncommentDb)) {
 			$query = "INSERT INTO bugdb_comments (bug, email, ts, comment) VALUES ($id,'$user@php.net',NOW(),'$ncommentDb')";
 			$success = @mysql_query($query);
 		}
