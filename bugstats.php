@@ -2,9 +2,10 @@
 
 require_once 'prepend.inc';
 
+db_connect();
+
 commonHeader("Statistics");
 
-db_connect();
 
 $sort_by = isset($_GET['sort_by']) ? htmlspecialchars($_GET['sort_by'], ENT_QUOTES) : 'open';
 $rev     = isset($_GET['rev'])     ? (int) $_GET['rev']    : 1;
