@@ -738,6 +738,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id)
 	$text = array();
 	$headers = array();
 	$changed = bug_diff($bug, $in);
+	$from = str_replace(array("\n", "\r"), '', $from);
 
 	/* Default addresses */
 	list($mailto, $mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id);
@@ -877,6 +878,8 @@ DEV_TEXT;
 
 		// Spam protection
 		$tmp = $edit != 3 ? $in : $bug;
+		$tmp['new_status'] = $new_status;
+		$tmp['old_status'] = $old_status;
 		foreach (array('bug_type', 'php_version', 'package_name', 'php_os') as $field) {
 			$tmp[$field] = strtok($tmp[$field], "\r\n");
 		}
@@ -892,8 +895,8 @@ DEV_TEXT;
 			"X-PHP-Version: {$tmp['php_version']}\n" .
 			"X-PHP-Category: {$tmp['package_name']}\n" .
 			"X-PHP-OS: {$tmp['php_os']}\n" .
-			"X-PHP-Status: {$new_status}\n" .
-			"X-PHP-Old-Status: {$old_status}\n" .
+			"X-PHP-Status: {$tmp['new_status']}\n" .
+			"X-PHP-Old-Status: {$tmp['old_status']}\n" .
 			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
 		);
 	}
