@@ -194,6 +194,21 @@ function get_pseudo_packages ($project, $return_disabled = true)
 	return $pseudo_pkgs;
 }
 
+/* Primitive check for SPAM. Add more later. */
+function is_spam($string)
+{
+	if (substr_count(strtolower($string), 'http://') > 5) {
+		return true;
+	}
+	if (preg_match("/(asian)|(spy)|(bdsm)|(massage)|(mortage)|(sex)|(11nong)|(oxycontin)|(distance-education)|(sismatech)|(justiceplan)|(prednisolone)|(baclofen)|(diflucan)|(unbra.se)|(objectis)/i", $string)) {
+		return true;
+	}
+	if (preg_match("~/Members/~", $string)) {
+		return true;
+	}
+	return false;
+}
+
 
 /**
  * Obfuscates email addresses to hinder spammer's spiders

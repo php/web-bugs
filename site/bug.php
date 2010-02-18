@@ -233,6 +233,11 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		}
 	}
 
+	// primitive spam detection
+	if ($ncomment && is_spam($ncomment)) {
+		$errors[] = "Please do not SPAM our bug system.";
+	}
+
 	if (!empty($_POST['in']['email']) &&
 		$bug['email'] != $_POST['in']['email']
 	) {
@@ -286,6 +291,11 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$ncomment = '';
 	} else {
 		$ncomment = trim($_POST['ncomment']);
+	}
+
+	// primitive spam detection
+	if ($ncomment && is_spam($ncomment)) {
+		$errors[] = "Please do not SPAM our bug system.";
 	}
 
 	// Require comment for open bugs only
