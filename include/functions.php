@@ -78,8 +78,8 @@ function verify_password($user, $pass)
 
 	$a = @unserialize($s);
 	if (!is_array($a)) {
-		echo "Unknown authentication error<br />\nMaybe master is down?\n";
-		exit;
+		$errors[] = "Failed to get authentication information.\nMaybe master is down?\n";
+		return false;
 	}
 	if (isset($a['errno'])) {
 		$errors[] = "Authentication failed: {$a['errstr']}\n";
@@ -1441,8 +1441,8 @@ function response_header($title, $extraHeaders = '')
 
 	$_header_done	= true;
 
-	header('Content-Type: text/html; charset=ISO-8859-15');
-	echo '<?xml version="1.0" encoding="ISO-8859-15" ?>';
+	header('Content-Type: text/html; charset=UTF-8');
+	echo '<?xml version="1.0" encoding="UTF-8" ?>';
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
