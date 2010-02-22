@@ -9,8 +9,8 @@ if ($search_for_id) {
 	redirect("bug.php?id={$search_for_id}");
 }
 
-// Authenticate
-bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+// Authenticate (Disabled for now, searching does not require knowledge of user level)
+//bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
 $newrequest = $_REQUEST;
 if (isset($newrequest['PHPSESSID'])) {
