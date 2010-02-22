@@ -10,6 +10,7 @@ $site_data = array (
 	'email' => 'php-bugs@lists.php.net',
 	'security_email' => 'security@php.net',
 	'db' => 'phpbugsdb',
+	'db_extension' => 'mysqli',
 	'db_user' => 'nobody',
 	'db_pass' => '',
 	'db_host' => 'localhost',

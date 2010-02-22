@@ -19,6 +19,7 @@ if (file_exists($local_cfg)) {
 		'email' => 'php-bugs@lists.php.net',
 		'security_email' => 'security@php.net',
 		'db' => 'phpbugsdb',
+		'db_extension' => 'mysqli',
 		'db_user' => 'nobody',
 		'db_pass' => '',
 		'db_host' => 'localhost',
@@ -35,7 +36,7 @@ $site_url = $site_data['url'];
 $bugEmail = $site_data['email'];
 $basedir = $site_data['basedir'];
 define('BUG_PATCHTRACKER_TMPDIR', $site_data['patch_tmp']);
-define('DATABASE_DSN', "mysqli://{$site_data['db_user']}:{$site_data['db_pass']}@{$site_data['db_host']}/{$site_data['db']}");
+define('DATABASE_DSN', "{$site_data['db_extension']}://{$site_data['db_user']}:{$site_data['db_pass']}@{$site_data['db_host']}/{$site_data['db']}");
 
 // Database connection (required always?)
 include_once 'MDB2.php';
