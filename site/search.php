@@ -173,7 +173,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Find bugs</th>
   <td style="white-space: nowrap">with all or any of the w<span class="accesskey">o</span>rds</td>
-  <td style="white-space: nowrap"><input type="text" name="search_for" value="<?php echo htmlspecialchars($search_for);?>" size="20" maxlength="255" accesskey="o" /><br />
+  <td style="white-space: nowrap"><input type="text" name="search_for" value="<?php echo htmlspecialchars($search_for, ENT_COMPAT, 'UTF-8'); ?>" size="20" maxlength="255" accesskey="o" /><br />
    <small>
 <?php show_boolean_options($boolean_search) ?>
 (<a href="search-howto.php" target="_new">?</a>)
@@ -227,19 +227,19 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <th>OS</th>
   <td style="white-space: nowrap">Return bugs with <b>operating system</b></td>
   <td>
-    <input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os);?>" />
+    <input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os, ENT_COMPAT, 'UTF-8'); ?>" />
     <input style="vertical-align:middle;" type="checkbox" name="php_os_not" value="1" <?php echo ($php_os_not == 'not') ? 'checked="checked"' : ''; ?>" /> NOT
   </td>
 </tr>
 <tr valign="top">
   <th>PHP Version</th>
   <td style="white-space: nowrap">Return bugs reported with <b>PHP version</b></td>
-  <td><input type="text" name="phpver" value="<?php echo htmlspecialchars($phpver);?>" /></td>
+  <td><input type="text" name="phpver" value="<?php echo htmlspecialchars($phpver, ENT_COMPAT, 'UTF-8'); ?>" /></td>
 </tr>
 <tr valign="top">
   <th>Assigned</th>
   <td style="white-space: nowrap">Return bugs <b>assigned</b> to</td>
-  <td><input type="text" name="assign" value="<?php echo htmlspecialchars($assign);?>" />
+  <td><input type="text" name="assign" value="<?php echo htmlspecialchars($assign, ENT_COMPAT, 'UTF-8'); ?>" />
 <?php
 	if (!empty($auth_user->handle)) {
 		$u = htmlspecialchars($auth_user->handle);
@@ -252,7 +252,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Author e<span class="accesskey">m</span>ail</th>
   <td style="white-space: nowrap">Return bugs with author email</td>
-  <td><input accesskey="m" type="text" name="author_email" value="<?php echo htmlspecialchars($author_email); ?>" />
+  <td><input accesskey="m" type="text" name="author_email" value="<?php echo htmlspecialchars($author_email, ENT_COMPAT, 'UTF-8'); ?>" />
 <?php
 	if (!empty($auth_user->handle)) {
 		$u = htmlspecialchars($auth_user->handle);

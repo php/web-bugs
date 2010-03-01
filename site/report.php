@@ -357,7 +357,7 @@ display_bug_error($errors);
 <?php } else { ?>
 				<th class="form-label_left">Y<span class="accesskey">o</span>ur email address:<br /><strong>MUST BE VALID</strong></th>
 					<td class="form-input">
-						<input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo htmlspecialchars($_POST['in']['email']); ?>" accesskey="o" />
+						<input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo htmlspecialchars($_POST['in']['email'], ENT_COMPAT, 'UTF-8'); ?>" accesskey="o" />
 					</td>
 				</th>
 <?php } ?>
@@ -366,7 +366,7 @@ display_bug_error($errors);
 			<tr>
 				<th class="form-label_left"><span class="accesskey">P</span>assword:</th>
 				<td class="form-input">
-					<input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd']);?>" accesskey="p" /><br />
+					<input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8');?>" accesskey="p" /><br />
 					You <b>must</b> enter any password here, which will be stored for this bug report.<br />
 					This password allows you to come back and modify your submitted bug report at a later date.
 					[<a href="bug-pwd-finder.php">Lost a bug password?</a>]
@@ -403,14 +403,14 @@ display_bug_error($errors);
 			<tr>
 				<th class="form-label_left">Operating system:</th>
 				<td class="form-input">
-					<input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo htmlspecialchars($_POST['in']['php_os']); ?>" />
+					<input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo htmlspecialchars($_POST['in']['php_os'], ENT_COMPAT, 'UTF-8'); ?>" />
 				</td>
 			</tr>
 
 			<tr>
 				<th class="form-label_left">Summary:</th>
 				<td class="form-input">
-					<input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo htmlspecialchars($_POST['in']['sdesc']); ?>" />
+					<input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo htmlspecialchars($_POST['in']['sdesc'], ENT_COMPAT, 'UTF-8'); ?>" />
 				</td>
 			</tr>
 
@@ -438,7 +438,7 @@ display_bug_error($errors);
 					</p>
 				</th>
 				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[ldesc]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['ldesc']); ?></textarea>
+					<textarea cols="80" rows="15" name="in[ldesc]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['ldesc'], ENT_COMPAT, 'UTF-8'); ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -452,7 +452,7 @@ display_bug_error($errors);
 					</p>
 				</th>
 				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[repcode]" wrap="no"><?php echo htmlspecialchars($_POST['in']['repcode']); ?></textarea>
+					<textarea cols="80" rows="15" name="in[repcode]" wrap="no"><?php echo htmlspecialchars($_POST['in']['repcode'], ENT_COMPAT, 'UTF-8'); ?></textarea>
 				</td>
 			</tr>
 <?php
@@ -469,7 +469,7 @@ display_bug_error($errors);
 					</p>
 				</th>
 				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[expres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['expres']); ?></textarea>
+					<textarea cols="80" rows="15" name="in[expres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['expres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
 				</td>
 			</tr>
 
@@ -482,7 +482,7 @@ display_bug_error($errors);
 					</p>
 				</th>
 				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[actres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['actres']); ?></textarea>
+					<textarea cols="80" rows="15" name="in[actres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['actres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
 				</td>
 			</tr>
 

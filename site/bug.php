@@ -822,7 +822,7 @@ if (!$logged_in) {
 		<tr>
 			<th class="details">Y<span class="accesskey">o</span>ur email address:<br /><strong>MUST BE VALID</strong></th>
 			<td class="form-input">
-				<input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo isset($_POST['in']['commentemail']) ? htmlspecialchars($_POST['in']['commentemail']) : ''; ?>" accesskey="o" />
+				<input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo isset($_POST['in']['commentemail']) ? htmlspecialchars($_POST['in']['commentemail'], ENT_COMPAT, 'UTF-8') : ''; ?>" accesskey="o" />
 			</td>
 		</tr>
 		<tr>
