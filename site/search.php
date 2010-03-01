@@ -49,6 +49,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		$link_params =
 				'&amp;search_for='  . urlencode($search_for) .
 				'&amp;php_os='      . urlencode($php_os) .
+				"&amp;php_os_not=$php_os_not" .
 				'&amp;author_email='. urlencode($author_email) .
 				'&amp;bug_type='    . urlencode($bug_type) .
 				"&amp;boolean=$boolean_search" .
@@ -228,7 +229,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">Return bugs with <b>operating system</b></td>
   <td>
     <input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os, ENT_COMPAT, 'UTF-8'); ?>" />
-    <input style="vertical-align:middle;" type="checkbox" name="php_os_not" value="1" <?php echo ($php_os_not == 'not') ? 'checked="checked"' : ''; ?>" /> NOT
+    <input style="vertical-align:middle;" type="checkbox" name="php_os_not" value="1" <?php echo ($php_os_not == 'not') ? 'checked="checked"' : ''; ?> /> NOT
   </td>
 </tr>
 <tr valign="top">
