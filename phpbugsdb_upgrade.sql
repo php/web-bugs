@@ -113,3 +113,8 @@ ALTER TABLE bugdb_votes DEFAULT CHARSET=utf8;
 #
 UPDATE bugdb SET bug_type = 'Feature/Change Request' WHERE package_name = 'Feature/Change Request';
 UPDATE bugdb SET bug_type = 'Documentation Problem' WHERE package_name = 'Documentation problem';
+
+#
+# Update SVN commit comment type
+#
+update bugdb_comments set comment_type = 'svn' where email = 'svn@php.net';
