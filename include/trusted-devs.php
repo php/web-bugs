@@ -9,4 +9,5 @@ $trusted_developers = array(
 	'jacques',
 	'johannes',
 	'bjori',
+	'rasmus',
 );
