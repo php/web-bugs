@@ -1433,7 +1433,7 @@ function bugs_mail($to, $subject, $message, $headers = '')
  */
 function response_header($title, $extraHeaders = '')
 {
-	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $basedir;
+	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $site_url, $basedir;
 
 	if ($_header_done) {
 		return;
@@ -1450,7 +1450,7 @@ function response_header($title, $extraHeaders = '')
 <head>
 	<?php echo $extraHeaders; ?>
 	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
-	<link rel="shortcut icon" href="images/favicon.ico" />
+	<link rel="shortcut icon" href="http://<?php echo $site_url, $basedir; ?>/images/favicon.ico" />
 	<link rel="stylesheet" href="css/style.css" />
 </head>
 
