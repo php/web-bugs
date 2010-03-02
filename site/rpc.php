@@ -42,7 +42,7 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 		INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, comment_type)
 		VALUES (?, ?, NOW(), ?, ?, 'svn')
 	");
-	$prep->execute(array ($bug_id, "{$user}@php.net", $ncomment, $user));
+	$res = $prep->execute(array ($bug_id, "{$user}@php.net", $ncomment, $user));
 
 	if ($res) {
 		echo json_encode(array('result' => array('status' => $bug)));
