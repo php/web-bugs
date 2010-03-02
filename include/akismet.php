@@ -7,7 +7,7 @@
 
 include 'Services/Akismet2.php';
 
-function akismet($author,$authorEmail,$authorUri,$content) {
+function akismet($content, $author=null, $authorEmail=null, $authorUri=null) {
 	static $apiKey = getenv('AKISMET_KEY');
 
 	$comment = new Services_Akismet2_Comment(array(
@@ -24,11 +24,11 @@ function akismet($author,$authorEmail,$authorUri,$content) {
 			$isSpam = true;
 		} 
 	} catch (Services_Akismet2_InvalidApiKeyException $keyException) {
-		echo 'Invalid API key!';
+		// echo 'Invalid API key!';
 	} catch (Services_Akismet2_HttpException $httpException) {
-		echo 'Error communicating with Akismet API server: ' .  $httpException->getMessage();
+		// echo 'Error communicating with Akismet API server: ' .  $httpException->getMessage();
 	} catch (Services_Akismet2_InvalidCommentException $commentException) {
-		echo 'Specified comment is missing one or more required fields.' .  $commentException->getMessage();
+		// echo 'Specified comment is missing one or more required fields.' .  $commentException->getMessage();
 	}
 	
 	return $isSpam;
