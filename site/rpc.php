@@ -10,10 +10,18 @@ if (!$bug_id) {
 // Obtain common includes
 require_once '../include/prepend.php';
 
-// Authenticate
-if ($_POST['token'] != md5(getenv('AUTH_TOKEN'))) {
-	echo json_encode(array('result' => array('error' => 'Invalid token')));
-	exit;
+if (isset($_POST['MAGIC_COOKIE'])) {
+  list($user,$pw) = explode(":", base64_decode($_POST['MAGIC_COOKIE']), 2);
+} else {
+  echo json_encode(array('result'=>array('error'=>'Missing credentials')));
+  exit;
+}
+
+bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+
+if (!empty($auth_user->handle)) {
+  echo json_encode(array('result'=>array('error'=>'Invalid user or password')));
+  exit;
 }
 
 // fetch info about the bug into $bug
