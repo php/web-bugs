@@ -38,10 +38,11 @@ if (!is_array($bug)) {
 if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 	$user = htmlspecialchars(trim($_POST['user']));
 	$ncomment = htmlspecialchars(trim($_POST['ncomment']));
-	$res = $dbh->prepare("
+	$prep = $dbh->prepare("
 		INSERT INTO bugdb_comments (bug, email, ts, comment, reporter_name, comment_type)
-		VALUES (?, ?, NOW(), ?, ?, ?, 'svn')
-	")->execute(array ($bug_id, "{$user}@php.net", $ncomment, $user));
+		VALUES (?, ?, NOW(), ?, ?, 'svn')
+	");
+	$prep->execute(array ($bug_id, "{$user}@php.net", $ncomment, $user));
 
 	if ($res) {
 		echo json_encode(array('result' => array('status' => $bug)));
