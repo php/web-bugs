@@ -1,5 +1,7 @@
 <?php
 
+include_once 'MDB2.php';
+
 $bug_id = (int) $_REQUEST['id'];
 
 if (!$bug_id) {
