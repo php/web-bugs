@@ -25,12 +25,17 @@ Local configuration:
   . HTTP
   . HTTP_Upload
 
+- For Akismet support:
+  . Net_URL2
+  . HTTP_Request2
+  . Services_Akismet2
+
 - Preferred PEAR packages:
   . MDB2#mysqli
 
 - Command to install all:
 
-  # pear install MDB2 MDB2#mysql MDB2#mysqli DB_DataObject Text_CAPTCHA_Numeral Text_Diff Tree-beta HTTP HTTP_Upload
+  # pear install MDB2 MDB2#mysql MDB2#mysqli DB_DataObject Text_CAPTCHA_Numeral Text_Diff Tree-beta HTTP HTTP_Upload Net_URL2 HTTP_Request2 Services_Akismet2
 
 - Database:
   . See README.UPGRADE_bugs.php.net
