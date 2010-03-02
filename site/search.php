@@ -9,6 +9,9 @@ if ($search_for_id) {
 	redirect("bug.php?id={$search_for_id}");
 }
 
+// For bug count only, used in places like doc.php.net
+$count_only = isset($_REQUEST['count_only']) && $_REQUEST['count_only'];
+
 // Authenticate (Disabled for now, searching does not require knowledge of user level)
 //bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
@@ -16,11 +19,14 @@ $newrequest = $_REQUEST;
 if (isset($newrequest['PHPSESSID'])) {
 	unset($newrequest['PHPSESSID']);
 }
-response_header(
-	'Bugs :: Search',
-	" <link rel='alternate'
-			type='application/rdf+xml'
-			title='RSS feed' href='rss/search.php?" . http_build_query($newrequest) . "' />");
+
+if (!$count_only) {
+	response_header(
+		'Bugs :: Search',
+		" <link rel='alternate'
+				type='application/rdf+xml'
+				title='RSS feed' href='rss/search.php?" . http_build_query($newrequest) . "' />");
+}
 
 // Include common query handler (used also by rss/search.php)
 require "{$ROOT_DIR}/include/query.php";
@@ -30,6 +36,12 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if (!$res) {
 		$errors[] = 'Invalid query';
 	} else {
+		// For count only, simply print the count and exit
+		if ($count_only) {
+			echo (int) $rows;
+			exit;
+		}
+
 		// Selected packages to search in
 		$package_name_string = '';
 		if (count($package_name) > 0) {
