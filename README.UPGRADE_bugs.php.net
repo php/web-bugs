@@ -8,8 +8,8 @@ start fresh (A) OR import the old bugs database (B).
 
   Create initial empty phpbugsdb:
 
-    mysql -u root -p < phpbugsdb_create.sql
-    mysql -u nobody phpbugsdb < bugs.sql
+    mysql -u root -p < sql/phpbugsdb_create.sql
+    mysql -u nobody phpbugsdb < sql/bugs.sql
 
 ==== (B) Importing from old php-bugs-web ====
 
@@ -21,7 +21,7 @@ start fresh (A) OR import the old bugs database (B).
 
   Upgrade/convert to the new DB schema
 
-    mysql -u nobody phpbugsdb < phpbugsdb_upgrade.sql
+    mysql -u nobody phpbugsdb < sql/phpbugsdb_upgrade.sql
 
 ==== For either, add some additional data ====
 
@@ -31,9 +31,9 @@ start fresh (A) OR import the old bugs database (B).
 
   Convert bugtypes.inc into database entries:
 
-    php -n convert_bugtypes_to_db.php
+    php -n scripts/convert_bugtypes_to_db.php
 
   Convert quick resolves into database entries:
 
-    php -n convert_resolves_to_db.php
+    php -n scripts/convert_resolves_to_db.php
 
