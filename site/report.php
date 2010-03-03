@@ -255,10 +255,11 @@ REPORT;
 			// mail to reporter
 			bugs_mail(
 				$_POST['in']['email'],
-				"[$siteBig-BUG] $type #$cid: {$_POST['in']['sdesc']}",
+				"$type #$cid: {$_POST['in']['sdesc']}",
 				"{$ascii_report}2\n",
 				"From: $siteBig Bug Database <$mailfrom>\n" .
 				"X-PHP-Bug: $cid\n" .
+				"X-PHP-Site: {$siteBig}\n" .
 				"Message-ID: <bug-$cid@{$site_url}>"
 			);
 

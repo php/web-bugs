@@ -148,11 +148,12 @@ TXT;
 
 	$protected_email = '"' . spam_protect($email, 'text') . '"' .  "<{$mailfrom}>";
 	$extra_headers = "From: {$protected_email}\n";
-	$extra_headers.= "Message-ID: <bug-{$bug_id}@{$site_url}>";
+	$extra_headers.= "Message-ID: <bug-{$bug_id}@{$site_url}>\n";
+	$extra_headers.= "X-PHP-Site: {$siteBig}";
 
 	bugs_mail(
 		$mailto,
-		"[$siteBig-BUG] {$buginfo['bug_type']} #{$bug_id} [PATCH]: {$buginfo['sdesc']}",
+		"{$buginfo['bug_type']} #{$bug_id} [PATCH]: {$buginfo['sdesc']}",
 		$text,
 		$extra_headers
 	);

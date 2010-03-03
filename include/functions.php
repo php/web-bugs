@@ -883,11 +883,12 @@ DEV_TEXT;
 		// the user gets sent mail with an envelope sender that ignores bounces
 		bugs_mail(
 			$bug['email'],
-			"[{$siteBig}-BUG] {$subj}: {$sdesc}",
+			"{$subj}: {$sdesc}",
 			$user_text,
 			"From: {$siteBig} Bug Database <{$mailfrom}>\n" .
 			"Bcc: {$Bcc}\n" .
 			"X-PHP-Bug: {$bug['id']}\n" .
+			"X-PHP-Site: {$siteBig}\n" .
 			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
 		);
 
@@ -902,10 +903,11 @@ DEV_TEXT;
 		// but we go ahead and let the default sender get used for the list
 		bugs_mail(
 			$mailto,
-			"[{$siteBig}-BUG] {$subj}: {$sdesc}",
+			"{$subj}: {$sdesc}",
 			$dev_text,
 			"From: {$from}\n".
 			"X-PHP-Bug: {$bug['id']}\n" .
+			"X-PHP-Site: {$siteBig}\n" .
 			"X-PHP-Type: {$tmp['bug_type']}\n" .
 			"X-PHP-Version: {$tmp['php_version']}\n" .
 			"X-PHP-Category: {$tmp['package_name']}\n" .
