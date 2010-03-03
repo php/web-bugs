@@ -15,19 +15,18 @@ if (file_exists($local_cfg)) {
 } else {
 	$site_data = array (
 		'url' => 'bugs.php.net',
-		'basedir' => '/bugs',
+		'basedir' => '',
 		'email' => 'php-bugs@lists.php.net',
 		'security_email' => 'security@php.net',
-		'db' => 'phpbugsdb',
 		'db_extension' => 'mysqli',
+		'db' => 'phpbugsdb',
 		'db_user' => 'nobody',
 		'db_pass' => '',
 		'db_host' => 'localhost',
 		'patch_tmp' => '/tmp/patches/', 
 	);
-	define('DEVBOX', true);
+	define('DEVBOX', false);
 }
-
 // CONFIG END
 
 // DO NOT EDIT ANYTHING BELOW THIS LINE, edit $site_data above instead!
