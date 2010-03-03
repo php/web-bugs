@@ -855,7 +855,7 @@ if (!$logged_in) {
 
 // Display original report
 if ($bug['ldesc']) {
-	output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name']);
+	output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name'], false);
 }
 
 // Display patches
@@ -887,19 +887,33 @@ OUTPUT;
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
 if (is_array($bug_comments) && count($bug_comments)) {
+	$history_tabs = array(
+		'type_all'     => 'All',
+		'type_comment' => 'Comments',
+		'type_log'     => 'Changes',
+		'type_svn'     => 'SVN commits'
+	);
+
+	if (!isset($_COOKIE['history_tab']) || !isset($history_tabs[$_COOKIE['history_tab']])) {
+		$active_history_tab = 'type_comment';
+	} else {
+		$active_history_tab = $_COOKIE['history_tab'];
+	}
 	echo '<h2 style="border-bottom:2px solid #666;margin-bottom:0;padding:5px 0;">History</h2>',
-			"
-				<div id='comment_filter' class='controls comments'>
-					<span id='type_all'		class='control' onclick='do_comment(this);'>All</span>
-					<span id='type_comment' class='control active' onclick='do_comment(this);'>Comments</span>
-					<span id='type_log'		class='control' onclick='do_comment(this);'>Changes</span>
-					<span id='type_svn'		class='control' onclick='do_comment(this);'>SVN commits</span>
-			</div>
-			";
+			"<div id='comment_filter' class='controls comments'>";
+
+	foreach ($history_tabs as $id => $label)
+	{
+		$class_extra = ($id == $active_history_tab) ? 'active' : '';
+		echo "<span id='{$id}' class='control {$class_extra}' onclick='do_comment(this);'>{$label}</span>";
+	}
+	
+	echo '			</div>
+			';
 
 	echo "<div id='comments_view' style='clear:both;'>\n";
 	foreach ($bug_comments as $row) {
-		output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], $row['comment_name']);
+		output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], $row['comment_name'], !($active_history_tab == 'type_all' || ('type_' . $row['comment_type']) == $active_history_tab));
 	}
 	echo "</div>\n";
 }
@@ -921,11 +935,14 @@ if ($bug_id == 'PREVIEW') {
 $bug_JS = <<< bug_JS
 <script type='text/javascript' src='js/util.js'></script>
 <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
 <script type="text/javascript">
 function do_comment(nd)
 {
 	$('#comment_filter > .control.active').removeClass("active");
 	$(nd).addClass("active");
+	
+	$.cookie('history_tab', nd.id, { expires: 365 });
 	
 	if (nd.id == 'type_all') { 
 		$('#comments_view > .comment:hidden').show('slow');
@@ -956,11 +973,12 @@ response_footer($bug_JS);
 
 // Helper functions
 
-function output_note($com_id, $ts, $email, $comment, $comment_type, $comment_name)
+function output_note($com_id, $ts, $email, $comment, $comment_type, $comment_name, $is_hidden = false)
 {
 	global $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
 
-	$display = ($comment_type == 'comment') ? '' : 'style="display:none;"';
+	$display = (!$is_hidden) ? '' : 'style="display:none;"';
+
 	echo "<div class='comment type_{$comment_type}' {$display}>";
 	echo '<a name="' , urlencode($ts) , '">&nbsp;</a>';
 	echo "<strong>[" , format_date($ts) , "] ";
