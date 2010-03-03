@@ -102,7 +102,9 @@ if (isset($_POST['in'])) {
 
 					$bug_url = "bug.php?id={$row['id']}&amp;edit=2";
 
-					$sdesc =  htmlspecialchars($row['sdesc']);
+					$sdesc		= htmlspecialchars($row['sdesc']);
+					$summary	= htmlspecialchars($summary);
+					$resolution	= htmlspecialchars($resolution);
 
 					echo <<< OUTPUT
 						<tr>
