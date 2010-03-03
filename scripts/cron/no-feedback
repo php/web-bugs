@@ -1,0 +1,57 @@
+#!/local/bin/php -q
+<?php /* vim: set ft=phpbugdb noet ts=4 sw=4 : */
+
+# this script closes bugs due to lack of feedback.
+
+require dirname(__FILE__).'/../../include/prepend.php';
+
+$message =
+'No feedback was provided for this bug for over a week, so it is
+being suspended automatically. If you are able to provide the
+information that was originally requested, please do so and change
+the status of the bug back to "Open".';
+
+# date interval to close after
+$after = "7 DAY";
+
+# fetch info about the bug into $bug
+$query = "
+	SELECT id, package_name, bug_type, email, passwd, sdesc, ldesc, php_version,
+		php_os, status, ts1, ts2, assign, UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified
+	FROM bugdb
+	WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})";
+
+# Set "input" array
+$in = array('status' => 'No Feedback');
+
+# Update relevant reports 
+if ($dbh)
+{
+	$res = $dbh->prepare($query)->execute(array());
+	if (PEAR::isError($res)) {
+		throw new Exception("SQL Error in no-feedback");
+	}
+	while ($bug = $res->fetchRow(MDB2_FETCHMODE_ASSOC))
+	{
+		list($mailto, $mailfrom) = get_package_mail($bug['package_name']);
+
+		$dbh->prepare('
+			INSERT INTO bugdb_comments (bug, email, comment, reporter_name, ts)
+			VALUES (?, ?, ?, "", NOW())
+		')->execute(array(
+			$bug['id'],
+			$mailfrom,
+			$message,
+		));
+
+		$dbh->prepare('
+			UPDATE bugdb
+			SET status = "No Feedback", ts2 = NOW() 
+			WHERE id = ?
+		')->execute(array(
+			$bug['id'],
+		));
+
+		mail_bug_updates($bug, $in, $mailfrom, $message);
+	}
+}

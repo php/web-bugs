@@ -746,7 +746,7 @@ function bug_diff_render_html($diff)
  *
  * @return void
  */
-function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id)
+function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 {
 	global $tla, $bug_types, $siteBig, $site_url, $basedir;
 
