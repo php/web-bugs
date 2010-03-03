@@ -317,7 +317,7 @@ function field($n)
  */
 function clean($in)
 {
-	return htmlspecialchars($in, ENT_QUOTES, 'ISO-8859-15', false);
+	return htmlspecialchars($in, ENT_QUOTES, 'UTF-8', false);
 }
 
 /**
