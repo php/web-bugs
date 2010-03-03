@@ -5,21 +5,8 @@
 
 require dirname(__FILE__).'/../../include/prepend.php';
 
-$message =
-'No feedback was provided for this bug for over a week, so it is
-being suspended automatically. If you are able to provide the
-information that was originally requested, please do so and change
-the status of the bug back to "Open".';
-
 # date interval to close after
 $after = "7 DAY";
-
-# fetch info about the bug into $bug
-$query = "
-	SELECT id, package_name, bug_type, email, passwd, sdesc, ldesc, php_version,
-		php_os, status, ts1, ts2, assign, UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified
-	FROM bugdb
-	WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})";
 
 # Set "input" array
 $in = array('status' => 'No Feedback');
@@ -27,7 +14,14 @@ $in = array('status' => 'No Feedback');
 # Update relevant reports 
 if ($dbh)
 {
-	$res = $dbh->prepare($query)->execute(array());
+	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+
+	$res = $dbh->prepare("
+		SELECT id, package_name, bug_type, email, passwd, sdesc, ldesc, php_version,
+			php_os, status, ts1, ts2, assign, UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified
+		FROM bugdb
+		WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})
+	")->execute(array());
 	if (PEAR::isError($res)) {
 		throw new Exception("SQL Error in no-feedback");
 	}
@@ -35,15 +29,40 @@ if ($dbh)
 	{
 		list($mailto, $mailfrom) = get_package_mail($bug['package_name']);
 
+		// Changelog entry
+		$changed = bug_diff($bug, $_POST['in']);
+		if (!empty($changed)) {
+			$log_comment = bug_diff_render_html($changed);
+		}
+		if (!empty($log_comment)) {
+			$dbh->prepare('
+				INSERT INTO bugdb_comments (bug, email, comment, reporter_name, comment_type, ts)
+				VALUES (?, ?, ?, "", "log", NOW())
+			')->execute(array(
+				$bug['id'],
+				$mailfrom,
+				$log_comment,
+			));
+		}
+
+		// No feedback message
+		if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS['nofeedback'][$bug['package_name']])) {
+			$message = $FIX_VARIATIONS['nofeedback'][$bug['package_name']];
+		} elseif (isset($RESOLVE_REASONS['nofeedback'])) {
+			$message = $RESOLVE_REASONS['nofeedback']['message'];
+		} else {
+			die('[no-feedback] Could not find resolve reason! (this should not happen!)');
+		}
 		$dbh->prepare('
-			INSERT INTO bugdb_comments (bug, email, comment, reporter_name, ts)
-			VALUES (?, ?, ?, "", NOW())
+			INSERT INTO bugdb_comments (bug, email, comment, reporter_name, comment_type, ts)
+			VALUES (?, ?, ?, "", "comment", NOW())
 		')->execute(array(
 			$bug['id'],
 			$mailfrom,
 			$message,
 		));
 
+		// Update status
 		$dbh->prepare('
 			UPDATE bugdb
 			SET status = "No Feedback", ts2 = NOW() 
@@ -52,6 +71,7 @@ if ($dbh)
 			$bug['id'],
 		));
 
+		// Send emails
 		mail_bug_updates($bug, $in, $mailfrom, $message);
 	}
 }
