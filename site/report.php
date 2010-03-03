@@ -208,7 +208,7 @@ OUTPUT;
 From:             {$_POST['in']['handle']}
 Operating system: {$_POST['in']['php_os']}
 PHP version:      {$_POST['in']['php_version']}
-Package:          $package_name}
+Package:          {$package_name}
 Bug Type:         {$_POST['in']['bug_type']}
 Bug description:
 REPORT;
