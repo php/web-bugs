@@ -34,9 +34,6 @@ $errors = array();
 // Obtain common includes
 require_once '../include/prepend.php';
 
-// Set pseudo_pkgs array
-$pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
-
 // Set edit mode
 $edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
 
@@ -144,10 +141,17 @@ if (!$bug) {
 }
 
 // Handle any updates, displaying errors if there were any
-$previous = $current = array();
+$RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = $previous = $current = array();
+
+// Only fetch stuff when it's really needed
+if ($edit && $edit < 3) {
+	$pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
+}
 
 // Fetch RESOLVE_REASONS array
-list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+if ($edit === 1) {
+	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+}
 
 if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	// Submission of additional comment by others
@@ -934,7 +938,7 @@ if ($bug_id == 'PREVIEW') {
 
 $bug_JS = <<< bug_JS
 <script type='text/javascript' src='js/util.js'></script>
-<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
 <script type="text/javascript">
 function do_comment(nd)
@@ -962,7 +966,7 @@ bug_JS;
 
 if ($edit == 1) {
 	$bug_JS .= '
-<script type="text/javascript" src="js/jquery.autocomplete.min.js"></script>
+<script type="text/javascript" src="js/jquery.autocomplete-min.js"></script>
 <script type="text/javascript" src="js/userlisting.php"></script> 	
 <script type="text/javascript" src="js/search.js"></script>
 	';
