@@ -1,6 +1,22 @@
 <?php
-#$uri=substr($REDIRECT_ERROR_NOTES,strpos($REDIRECT_ERROR_NOTES,$DOCUMENT_ROOT)+strlen($DOCUMENT_ROOT)+1);
-$uri = $_SERVER['REQUEST_URI'];
-if ($uri[0] == "/") $uri = (int)substr($uri,1);
-header("Location: http://bugs.php.net/bug.php?id=$uri");
+
+/* The bug system error page */
+
+// Obtain common includes
+require_once '../include/prepend.php';
+
+// If 'id' is passed redirect to the bug page
+$id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
+if ($id) {
+	redirect("bug.php?id={$id}");
+	exit;
+}
+
+response_header('Bugs :: 404 Not Found');
+
 ?>
+<h1>404 Not Found</h1>
+
+<p>Doh.</p>
+
+<?php response_footer();
