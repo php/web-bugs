@@ -975,7 +975,12 @@ function get_old_comments($bug_id, $all = 0)
 	$output = '';
 	$count = 0;
 
-	$res = $dbh->prepare("SELECT ts, email, comment FROM bugdb_comments WHERE bug = ? ORDER BY ts DESC")->execute(array($bug_id));
+	$res = $dbh->prepare("
+		SELECT ts, email, comment
+		FROM bugdb_comments
+		WHERE bug = ? AND comment_type != 'log'
+		ORDER BY ts DESC
+	")->execute(array($bug_id));
 
 	// skip the most recent unless the caller wanted all comments
 	if (!$all) {
