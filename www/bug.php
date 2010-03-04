@@ -141,7 +141,7 @@ if (!$bug) {
 }
 
 // Handle any updates, displaying errors if there were any
-$RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = $previous = $current = array();
+$RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = array();
 
 // Only fetch stuff when it's really needed
 if ($edit && $edit < 3) {
@@ -443,9 +443,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	$ncomment = '';
 }
 
-if (isset($_POST['in']) && (!isset($_POST['preview']) && $ncomment || $previous != $current)) {
+if (isset($_POST['in']) && !isset($_POST['preview']) && $ncomment) {
 	if (!$errors) {
-		mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $bug_id, $previous, $current);
+		mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $bug_id);
 		redirect("bug.php?id=$bug_id&thanks=$edit");
 		exit;
 	}
