@@ -543,14 +543,18 @@ display_bug_error($errors);
 			<th class="details">From:</th>
 			<td><?php echo spam_protect(htmlspecialchars($bug['email'])); ?></td>
 			<th class="details">Assigned:</th>
+<?php if (!empty($bug['assign'])) { ?>
+			<td><a href="search.php?cmd=display&amp;assign=<?php echo urlencode($bug['assign']), '">', htmlspecialchars($bug['assign']); ?></a></td>
+<?php } else { ?>
 			<td><?php echo htmlspecialchars($bug['assign']); ?></td>
+<?php } ?>
 		</tr>
 
 		<tr id="categorization">
 			<th class="details">Status:</th>
 			<td><?php echo htmlspecialchars($bug['status']); ?></td>
 			<th class="details">Package:</th>
-			<td><?php echo htmlspecialchars($bug['package_name']); ?></td>
+			<td><a href="search.php?cmd=display&amp;package_name[]=<?php echo urlencode($bug['package_name']), '">', htmlspecialchars($bug['package_name']); ?></a></td>
 		</tr>
 
 		<tr id="situation">
