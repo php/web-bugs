@@ -927,7 +927,7 @@ if ($bug_id == 'PREVIEW') {
 
 <form action="report.php?package=<?php $_SESSION['bug_preview']['package_name']; ?>" method="post">
 <?php foreach($_SESSION['bug_preview'] as $k => $v) {
-	echo "<input type='hidden' name='in[{$k}]' value='{$v}'/>";
+	echo "<input type='hidden' name='in[{$k}]' value='", htmlentities($v, ENT_QUOTES, 'UTF-8'), "'/>";
 }
 	echo "<input type='hidden' name='captcha' value='{$_SESSION['captcha']}'/>";
 ?>
