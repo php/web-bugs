@@ -137,27 +137,30 @@ class Bug_Patchtracker
 		if (!is_array($obsoletes)) {
 			return PEAR::raiseError('Invalid obsoleted patches');
 		}
-		$newobsoletes = array();
-		foreach ($obsoletes as $who) {
-			if (!$who) {
-				continue; // remove (none)
-			}
-			$who = explode('#', $who);
-			if (count($who) != 2) {
-				continue;
-			}
-			if (file_exists($this->getPatchFullpath($bugid, $who[0], $who[1]))) {
-				$newobsoletes[] = $who;
-			}
-		}
-		if (PEAR::isError($e = $this->setupPatchDir($bugid, $name))) {
-			return $e;
-		}
+
 		$file = $this->_upload->getFiles($patch);
 		if (PEAR::isError($file)) {
 			return $file;
 		}
+	
 		if ($file->isValid()) {
+			$newobsoletes = array();
+			foreach ($obsoletes as $who) {
+				if (!$who) {
+					continue; // remove (none)
+				}
+				$who = explode('#', $who);
+				if (count($who) != 2) {
+					continue;
+				}
+				if (file_exists($this->getPatchFullpath($bugid, $who[0], $who[1]))) {
+					$newobsoletes[] = $who;
+				}
+			}
+			if (PEAR::isError($e = $this->setupPatchDir($bugid, $name))) {
+				return $e;
+			}
+
 			$res = $this->newPatchFileName($bugid, $name, $handle);
 			if (PEAR::isError($res)) {
 				return $res;
@@ -219,7 +222,7 @@ class Bug_Patchtracker
 			}
 			return $id;
 		} elseif ($file->isMissing()) {
-			return PEAR::raiseError('No patch has been uploaded.');
+			return PEAR::raiseError('Uploaded file is empty or nothing was uploaded.');
 		} elseif ($file->isError()) {
 			return PEAR::raiseError($file->errorMsg());
 		}
