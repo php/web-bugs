@@ -19,10 +19,8 @@ $bug_id = $bug_id ? $bug_id : '';
 if (isset($_POST['captcha']) && $bug_id != '') {
 	 // Check if session answer is set, then compare it with the post captcha value.
 	 // If it's not the same, then it's an incorrect password.
- 	if (isset($_SESSION['answer']) && strlen(trim($_SESSION['answer'])) > 0) {
-		if ($_POST['captcha'] != $_SESSION['answer']) {
-			$errors[] = 'Incorrect Captcha';
-		}
+	if (empty($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+		$errors[] = 'Incorrect Captcha';
 	} else {
 		exit;
 	}

@@ -59,8 +59,8 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 
 	// Check if session answer is set, then compare it with the post captcha value.
 	// If it's not the same, then it's an incorrect password.
-	if (isset($_SESSION['answer']) && strlen(trim($_SESSION['answer'])) > 0) {
-		if ($_POST['captcha'] != $_SESSION['answer']) {
+	if (!$logged_in) {
+		if (empty($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
 			$errors[] = 'Incorrect Captcha';
 		}
 	}
@@ -110,9 +110,7 @@ if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
 }
 
 // captcha is not necessary if the user is logged in
-if ($logged_in) {
-	unset($_SESSION['answer']);
-} else {
+if (!$logged_in) {
 	require_once 'Text/CAPTCHA/Numeral.php';
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
 }

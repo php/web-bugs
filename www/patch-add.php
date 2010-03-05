@@ -33,9 +33,7 @@ $package_name = $buginfo['package_name'];
 bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
 // captcha is not necessary if the user is logged in
-if ($logged_in) {
-	unset($_SESSION['answer']);
-} else {
+if (!$logged_in) {
 	require_once 'Text/CAPTCHA/Numeral.php';
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
 }
@@ -74,10 +72,8 @@ if (isset($_POST['addpatch'])) {
 			 * it with the post captcha value. If it's not
 			 * the same, then it's an incorrect password.
 			 */
-			if (isset($_SESSION['answer']) && strlen(trim($_SESSION['answer'])) > 0) {
-				if ($_POST['captcha'] != $_SESSION['answer']) {
-					$errors[] = 'Incorrect Captcha';
-				}
+			if (empty($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+				$errors[] = 'Incorrect Captcha';
 			}
 
 			if (count($errors)) {
