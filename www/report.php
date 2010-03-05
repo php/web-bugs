@@ -356,6 +356,7 @@ display_bug_error($errors);
 				<th class="form-label_left">Your handle:</th>
 				<td class="form-input">
 					<?php echo $auth_user->handle; ?>
+					<input type="hidden" name="in[email]" value="<?php echo $auth_user->email; ?>" />
 				</td>
 <?php } else { ?>
 				<th class="form-label_left">Y<span class="accesskey">o</span>ur email address:<br /><strong>MUST BE VALID</strong></th>
