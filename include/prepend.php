@@ -23,7 +23,7 @@ if (file_exists($local_cfg)) {
 		'db_user' => 'nobody',
 		'db_pass' => '',
 		'db_host' => 'localhost',
-		'patch_tmp' => '/tmp/patches/', 
+		'patch_tmp' => "{$ROOT_DIR}/uploads/patches/", 
 	);
 	define('DEVBOX', false);
 }
