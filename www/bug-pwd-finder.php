@@ -38,7 +38,7 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 			if (empty($row['passwd'])) {
 				$errors[] = "No password found for #$bug_id bug report, sorry.";
 			} else {
-				$resp = mail($row['email'],
+				$resp = bugs_mail($row['email'],
 						 "Password for {$siteBig} bug report #{$bug_id}",
 						 "The password for {$siteBig} bug report #{$bug_id} is {$row['passwd']}",
 						 'From: noreply@php.net');
