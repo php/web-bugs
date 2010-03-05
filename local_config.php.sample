@@ -14,7 +14,7 @@ $site_data = array (
 	'db_user' => 'nobody',
 	'db_pass' => '',
 	'db_host' => 'localhost',
-	'patch_tmp' => '/tmp/patches/', 
+	'patch_tmp' => "{$ROOT_DIR}/uploads/patches/",
 );
 
 define('DEVBOX', true);
