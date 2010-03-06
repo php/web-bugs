@@ -1,0 +1,39 @@
+
+=== DATABASE ===
+
+Two different routes are possible, so you can either
+start fresh (A) OR import the old bugs database (B).
+
+==== (A) Starting fresh ====
+
+  Create initial empty phpbugsdb:
+
+    mysql -u root -p < sql/phpbugsdb_create.sql
+    mysql -u nobody phpbugsdb < sql/bugs.sql
+
+==== (B) Importing from old php-bugs-web ====
+
+  Download and import a dump from this database:
+
+    wget http://bugs.php.net/~rasmus/bugs-db-dump.sql.gz
+    gunzip bugs-db-dump.sql.gz
+    mysql -u nobody phpbugsdb < bugs-db-dump.sql
+
+  Upgrade/convert to the new DB schema
+
+    mysql -u nobody phpbugsdb < sql/phpbugsdb_upgrade.sql
+
+==== For either, add some additional data ====
+
+  Checkout php-bugs-web code:
+
+    svn co http://svn.php.net/repository/web/php-bugs/trunk php-bugs-web
+
+  Convert bugtypes.inc into database entries:
+
+    php -n scripts/convert_bugtypes_to_db.php
+
+  Convert quick resolves into database entries:
+
+    php -n scripts/convert_resolves_to_db.php
+

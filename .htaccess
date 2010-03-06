@@ -1,7 +1,0 @@
-#
-# Settings required by bugs.php.net to work as expected
-#
-php_value register_globals 1
-php_value magic_quotes_gpc 1
-php_value magic_quotes_runtime 0
-php_value error_reporting 2039

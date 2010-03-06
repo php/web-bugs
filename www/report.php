@@ -1,0 +1,512 @@
+<?php 
+
+// Obtain common includes
+require_once '../include/prepend.php';
+
+// Start session 
+session_start();
+
+// Init variables
+$errors = array();
+$ok_to_submit_report = false;
+$pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
+
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+
+// captcha is not necessary if the user is logged in
+if (!$logged_in) {
+	require_once 'Text/CAPTCHA/Numeral.php';
+	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+}
+
+// Handle input
+if (isset($_POST['in'])) {
+
+	$errors = incoming_details_are_valid($_POST['in'], 1);
+
+	// Check if session answer is set, then compare it with the post captcha value.
+	// If it's not the same, then it's an incorrect password.
+	if (!$logged_in) {
+		if (empty($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+			$errors[] = 'Incorrect Captcha';
+		}
+	}
+
+	// try to verify the user
+	$_POST['in']['email']  = $auth_user->email;
+
+	$package_name = $_POST['in']['package_name'];
+
+	if (!$errors) {
+		// When user submits a report, do a search and display the results before allowing them to continue.
+		if (!isset($_POST['preview']) && empty($_POST['in']['did_luser_search'])) {
+
+			$_POST['in']['did_luser_search'] = 1;
+
+			$where_clause = "WHERE package_name != 'Feature/Change Request'";
+
+			// search for a match using keywords from the subject
+			list($sql_search, $ignored) = format_search_string($_POST['in']['sdesc']);
+
+			$where_clause .= $sql_search;
+
+			$query = "SELECT * from bugdb $where_clause LIMIT 5";
+
+			$res = $dbh->prepare($query)->execute();
+
+			if ($res->numRows() == 0) {
+				$ok_to_submit_report = true;
+			} else {
+				response_header("Report - Confirm");
+				if (count($_FILES)) {
+					echo '<h1>WARNING: YOU MUST RE-UPLOAD YOUR PATCH, OR IT WILL BE IGNORED</h1>';
+				} 
+?>
+				<p>
+					Are you sure that you searched before you submitted your bug report? We
+					found the following bugs that seem to be similar to yours; please check
+					them before sumitting the report as they might contain the solution you
+					are looking for.
+				</p>
+
+				<p>
+					If you're sure that your report is a genuine bug that has not been reported
+					before, you can scroll down and click the submit button to really enter the
+					details into our database.
+				</p>
+
+				<div class="warnings">
+					<table class="lusersearch">
+						<tr>
+							<th>Description</th>
+							<th>Possible Solution</th>
+						</tr>
+<?php
+
+				foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
+					$resolution = $dbh->prepare("
+						SELECT comment 
+						FROM bugdb_comments
+						WHERE bug = ?
+						ORDER BY id DESC
+						LIMIT 1
+					")->execute(array($row['id']))->fetchOne();
+
+					$summary = $row['ldesc'];
+					if (strlen($summary) > 256) {
+						$summary = substr(trim($summary), 0, 256) . ' ...';
+					}
+
+					$bug_url = "bug.php?id={$row['id']}&amp;edit=2";
+
+					$sdesc		= htmlspecialchars($row['sdesc']);
+					$summary	= htmlspecialchars($summary);
+					$resolution	= htmlspecialchars($resolution);
+
+					echo <<< OUTPUT
+						<tr>
+							<td colspan='2'><strong>{$row['package_name']}</strong> : <a href='{$bug_url}'>Bug #{$row['id']}: {$sdesc}</a></td>
+						</tr>
+						<tr>
+							<td><pre class='note'>{$summary}</pre></td>
+							<td><pre class='note'>{$resolution}</pre></td>
+						</tr>
+OUTPUT;
+				}
+
+				echo "
+					</table>
+				</div>
+				";
+			}
+		} else {
+			// We displayed the luser search and they said it really was not already submitted, so let's allow them to submit.
+			$ok_to_submit_report = true;
+		}
+		
+		if (isset($_POST['edit_after_preview'])) {
+			$ok_to_submit_report = false;
+			response_header("Report - New");
+		}
+
+		if ($ok_to_submit_report) {
+			$_POST['in']['reporter_name'] = $auth_user->name;
+			$_POST['in']['handle'] = $auth_user->handle;
+
+			// Put all text areas together.
+			$fdesc = "Description:\n------------\n" . $_POST['in']['ldesc'] . "\n\n";
+			if (!empty($_POST['in']['repcode'])) {
+				$fdesc .= "Test script:\n---------------\n";
+				$fdesc .= $_POST['in']['repcode'] . "\n\n";
+			}
+			if (!empty($_POST['in']['expres']) || $_POST['in']['expres'] === '0') {
+				$fdesc .= "Expected result:\n----------------\n";
+				$fdesc .= $_POST['in']['expres'] . "\n\n";
+			}
+			if (!empty($_POST['in']['actres']) || $_POST['in']['actres'] === '0') {
+				$fdesc .= "Actual result:\n--------------\n";
+				$fdesc .= $_POST['in']['actres'] . "\n";
+			}
+			
+			if (isset($_POST['preview'])) {
+				$_POST['in']['status'] = 'Open';
+				$_SESSION['bug_preview'] = $_POST['in'];
+				$_SESSION['captcha'] = $_POST['captcha'];
+				redirect('bug.php?id=preview');
+				exit;
+			}
+
+			$res = $dbh->prepare('
+				INSERT INTO bugdb (
+					package_name,
+					bug_type,
+					email,
+					sdesc,
+					ldesc,
+					php_version,
+					php_os,
+					passwd,
+					reporter_name,
+					status,
+					ts1
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())
+			')->execute(array(
+					$package_name,
+					$_POST['in']['bug_type'],
+					$_POST['in']['email'],
+					$_POST['in']['sdesc'],
+					$fdesc,
+					$_POST['in']['php_version'],
+					$_POST['in']['php_os'],
+					$_POST['in']['passwd'],
+					$_POST['in']['reporter_name'],
+				)
+			);
+			if (PEAR::isError($res)) {
+				echo "<pre>";
+				var_dump($_POST['in'], $fdesc, $package_name);
+				die($res->getMessage());
+			}
+			$cid = $dbh->lastInsertId();
+
+			$redirectToPatchAdd = false;
+			if (!empty($_POST['in']['patchname']) && $_POST['in']['patchname']) {
+				require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
+				$tracker = new Bug_Patchtracker;
+				PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
+				$patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $_POST['in']['handle'], array());
+				PEAR::staticPopErrorHandling();
+				if (PEAR::isError($patchrevision)) {
+					$redirectToPatchAdd = true;
+				}
+			}
+
+			$report = <<< REPORT
+From:             {$_POST['in']['handle']}
+Operating system: {$_POST['in']['php_os']}
+PHP version:      {$_POST['in']['php_version']}
+Package:          {$package_name}
+Bug Type:         {$_POST['in']['bug_type']}
+Bug description:
+REPORT;
+
+			$ascii_report = "{$report}{$_POST['in']['sdesc']}\n\n" . wordwrap($fdesc);
+			$ascii_report.= "\n-- \nEdit bug report at ";
+			$ascii_report.= "http://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
+
+			list($mailto, $mailfrom) = get_package_mail($package_name);
+
+			$protected_email = '"' . spam_protect($_POST['in']['email'], 'text') . '"' .  "<{$mailfrom}>";
+
+			$extra_headers = "From: {$protected_email}\n";
+			$extra_headers.= "X-PHP-BugTracker: {$siteBig}bug\n";
+			$extra_headers.= "X-PHP-Bug: {$cid}\n";
+			$extra_headers.= "X-PHP-Type: {$_POST['in']['bug_type']}\n";
+			$extra_headers.= "X-PHP-Version: {$_POST['in']['php_version']}\n";
+			$extra_headers.= "X-PHP-Category: {$package_name}\n";
+			$extra_headers.= "X-PHP-OS: {$_POST['in']['php_os']}\n";
+			$extra_headers.= "X-PHP-Status: Open\n";
+			$extra_headers.= "Message-ID: <bug-{$cid}@{$site_url}>";
+
+			if (isset($bug_types[$_POST['in']['bug_type']])) {
+				$type = $bug_types[$_POST['in']['bug_type']];
+			} else {
+				$type = 'unknown';
+			}
+
+			// provide shortcut URLS for "quick bug fixes"
+			list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+
+			$dev_extra = '';
+			$maxkeysize = 0;
+			foreach ($RESOLVE_REASONS as $v) {
+				if (!$v['webonly']) {
+					$actkeysize = strlen($v['title']) + 1;
+					$maxkeysize = (($maxkeysize < $actkeysize) ? $actkeysize : $maxkeysize);
+				}
+			}
+			foreach ($RESOLVE_REASONS as $k => $v) {
+				if (!$v['webonly']) {
+					$dev_extra .= str_pad("{$v['title']}:", $maxkeysize) . " http://bugs.php.net/fix.php?id={$cid}&r={$k}\n";
+				}
+			}
+
+			// mail to reporter
+			bugs_mail(
+				$_POST['in']['email'],
+				"$type #$cid: {$_POST['in']['sdesc']}",
+				"{$ascii_report}2\n",
+				"From: $siteBig Bug Database <$mailfrom>\n" .
+				"X-PHP-Bug: $cid\n" .
+				"X-PHP-Site: {$siteBig}\n" .
+				"Message-ID: <bug-$cid@{$site_url}>"
+			);
+
+			// mail to package mailing list
+			bugs_mail(
+				$mailto,
+				"[$siteBig-BUG] $type #$cid [NEW]: {$_POST['in']['sdesc']}",
+				$ascii_report . "1\n-- \n{$dev_extra}",
+				$extra_headers,
+				'-f bounce-no-user@php.net'
+			);
+
+			if ($redirectToPatchAdd) {
+				$patchname = urlencode($_POST['in']['patchname']);
+				$patchemail= urlencode($_POST['in']['email']);
+				redirect("patch-add.php?bug_id={$cid}&patchname={$patchname}&email={$patchemail}");
+				exit;
+			}
+			redirect("bug.php?id={$cid}&thanks=4");
+			exit;
+		}
+	} else {
+		// had errors...
+		response_header('Report - Problems');
+	}
+} // end of if input
+
+$package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : (!empty($package_name) ? $package_name : '');
+
+if (!is_string($package)) {
+	response_header('Report - Problems');
+	$errors[] = 'Invalid package name passed. Please fix it and try again.';
+	display_bug_error($errors);
+	response_footer();
+	exit;
+}
+
+if (!isset($_POST['in'])) {
+
+	$_POST['in'] = array(
+			 'package_name' => '',
+			 'bug_type' => '',
+			 'email' => '',
+			 'sdesc' => '',
+			 'ldesc' => '',
+			 'repcode' => '',
+			 'expres' => '',
+			 'actres' => '',
+			 'php_version' => '',
+			 'php_os' => '',
+			 'passwd' => '',
+	);
+	response_header('Report - New');
+?>
+
+	<p>
+		Before you report a bug, make sure to search for similar bugs using the &quot;Bug List&quot; link.
+		Also, read the instructions for <a target="top" href="how-to-report.php">how to report a bug that someone will want to help fix</a>.
+	</p>
+
+	<p>
+		If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support
+		<a href="http://www.php.net/support.php">listed here</a>.
+	</p>
+
+	<p>
+		<strong>Failure to follow these instructions may result in your bug simply being marked as &quot;bogus.&quot;</strong>
+	</p>
+
+	<p>Report <img src="images/pecl_item.gif"><b>PECL</b> related bugs <a href="http://pecl.php.net/bugs/">here</a></p>
+	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="http://pear.php.net/bugs/">here</a></p>
+
+	<p>
+		<strong>If you feel this bug concerns a security issue, eg a buffer overflow, weak encryption, etc, then email
+
+		<?php echo make_mailto_link("{$site_data['security_email']}?subject=%5BSECURITY%5D+possible+new+bug%21", $site_data['security_email']); ?>
+		who will assess the situation.</strong>
+	</p>
+
+<?php
+
+}
+
+display_bug_error($errors);
+
+?>
+	<form method="post" action="report.php?package=<?php echo htmlspecialchars($package); ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
+		<input type="hidden" name="in[did_luser_search]" value="<?php echo isset($_POST['in']['did_luser_search']) ? $_POST['in']['did_luser_search'] : 0; ?>" />
+		<table class="form-holder" cellspacing="1">
+			<tr>
+<?php if ($logged_in) { ?>
+				<th class="form-label_left">Your handle:</th>
+				<td class="form-input">
+					<?php echo $auth_user->handle; ?>
+					<input type="hidden" name="in[email]" value="<?php echo $auth_user->email; ?>" />
+				</td>
+<?php } else { ?>
+				<th class="form-label_left">Y<span class="accesskey">o</span>ur email address:<br /><strong>MUST BE VALID</strong></th>
+					<td class="form-input">
+						<input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo htmlspecialchars($_POST['in']['email'], ENT_COMPAT, 'UTF-8'); ?>" accesskey="o" />
+					</td>
+				</th>
+<?php } ?>
+			</tr>
+
+			<tr>
+				<th class="form-label_left"><span class="accesskey">P</span>assword:</th>
+				<td class="form-input">
+					<input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8');?>" accesskey="p" /><br />
+					You <b>must</b> enter any password here, which will be stored for this bug report.<br />
+					This password allows you to come back and modify your submitted bug report at a later date.
+					[<a href="bug-pwd-finder.php">Lost a bug password?</a>]
+				</td>
+			</tr>
+
+			<tr>
+				<th class="form-label_left">PHP version:</th>
+				<td class="form-input">
+					<select name="in[php_version]">
+						<?php show_version_options($_POST['in']['php_version']); ?>
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<th class="form-label_left">Package affected:</th>
+				<td class="form-input">
+					<select name="in[package_name]">
+						<?php show_package_options(null, 0, htmlspecialchars($package)); ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<th class="form-label_left">Bug Type:</th>
+				<td class="form-input">
+					<select name="in[bug_type]">
+						<?php show_type_options($_POST['in']['bug_type']); ?>
+					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<th class="form-label_left">Operating system:</th>
+				<td class="form-input">
+					<input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo htmlspecialchars($_POST['in']['php_os'], ENT_COMPAT, 'UTF-8'); ?>" />
+				</td>
+			</tr>
+
+			<tr>
+				<th class="form-label_left">Summary:</th>
+				<td class="form-input">
+					<input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo htmlspecialchars($_POST['in']['sdesc'], ENT_COMPAT, 'UTF-8'); ?>" />
+				</td>
+			</tr>
+
+			<tr>
+				<th class="form-label_left">Note:</th>
+				<td class="form-input">
+					Please supply any information that may be helpful in fixing the bug:
+					<ul>
+						<li>The version number of the <?php echo $siteBig; ?> package or files you are using.</li>
+						<li>A short script that reproduces the problem.</li>
+						<li>The list of modules you compiled PHP with (your configure line).</li>
+						<li>Any other information unique or specific to your setup.</li>
+						<li>Any changes made in your php.ini compared to php.ini-dist or php.ini-recommended (<strong>not</strong> your whole php.ini!)</li>
+						<li>A <a href="bugs-generating-backtrace.php">gdb backtrace</a>.</li>
+					</ul>
+				</td>
+			</tr>
+
+			<tr>
+				<th class="form-label_left">
+					Description:
+					<p class="cell_note">
+						Put short code samples in the &quot;Test script&quot; section <strong>below</strong>
+						and upload patches and/or long code samples <strong>below</strong>.
+					</p>
+				</th>
+				<td class="form-input">
+					<textarea cols="80" rows="15" name="in[ldesc]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['ldesc'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th class="form-label_left">
+					Test script:
+					<p class="cell_note">
+						A short test script you wrote that demonstrates the bug.
+						Please <strong>do not</strong> post more than 20 lines of code.
+						If the code is longer than 20 lines, provide a URL to the source
+						code that will reproduce the bug.
+					</p>
+				</th>
+				<td class="form-input">
+					<textarea cols="80" rows="15" name="in[repcode]" wrap="no"><?php echo htmlspecialchars($_POST['in']['repcode'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+				</td>
+			</tr>
+<?php
+	$patchname = isset($_POST['in']['patchname']) ? $_POST['in']['patchname'] : '';
+	$patchfile = isset($_FILES['patchfile']['name']) ? $_FILES['patchfile']['name'] : '';
+	include "{$ROOT_DIR}/templates/patchform.php";
+?>
+
+			<tr>
+				<th class="form-label_left">
+					Expected result:
+					<p class="cell_note">
+						What do you expect to happen or see when you run the test script above?
+					</p>
+				</th>
+				<td class="form-input">
+					<textarea cols="80" rows="15" name="in[expres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['expres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+				</td>
+			</tr>
+
+			<tr>
+				<th class="form-label_left">
+					Actual result:
+					<p class="cell_note">
+						This could be a <a href="bugs-generating-backtrace.php">backtrace</a> for example.
+						Try to keep it as short as possible without leaving anything relevant out.
+					</p>
+				</th>
+				<td class="form-input">
+					<textarea cols="80" rows="15" name="in[actres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['actres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+				</td>
+			</tr>
+
+<?php if (!$logged_in) { 
+	$captcha = $numeralCaptcha->getOperation();
+	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+?>
+			<tr>
+				<th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
+				<td class="form-input" autocomplete="off"><input type="text" name="captcha" /></td>
+			</tr>
+<?php } ?>
+
+			<tr>
+				<th class="form-label_left">Submit:</th>
+				<td class="form-input">
+					<input type="submit" value="Send bug report" />
+					<input type="submit" value="Preview" name="preview"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+<?php
+
+response_footer();
