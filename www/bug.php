@@ -71,7 +71,7 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 		} else {
 			$email = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
 		}
-		if ($email == '' || !is_valid_email($email)) {
+		if ($email == '' || !is_valid_email($email, $logged_in)) {
 			$errors[] = 'You must provide a valid email address.';
 		} else {
 			// Unsubscribe
@@ -174,7 +174,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		do {
 			if (!$logged_in) {
 
-				if (!is_valid_email($_POST['in']['commentemail'])) {
+				if (!is_valid_email($_POST['in']['commentemail'], $logged_in)) {
 					$errors[] = 'You must provide a valid email address.';
 					response_header('Add Comment - Problems');
 					break; // skip bug comment addition

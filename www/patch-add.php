@@ -63,7 +63,7 @@ if (isset($_POST['addpatch'])) {
 
 			$email = isset($_POST['email']) ? $_POST['email'] : '';
 
-			if (!is_valid_email($email)) {
+			if (!is_valid_email($email, $logged_in)) {
 				$errors[] = 'Email address must be valid!';
 			}
 

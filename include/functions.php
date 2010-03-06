@@ -1073,8 +1073,13 @@ function package_exists($package_name)
 /**
  * Validate an email address
  */
-function is_valid_email($email)
+function is_valid_email($email, $phpnet_allowed = true)
 {
+	if (!$phpnet_allowed) {
+		if (false !== stripos($email, '@php.net')) {
+			return false;
+		}
+	}
 	return (bool) preg_match("/^[.\\w+-]+@[.\\w-]+\\.\\w{2,}\z/i", $email);
 }
 
