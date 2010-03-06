@@ -60,7 +60,7 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 	// Check if session answer is set, then compare it with the post captcha value.
 	// If it's not the same, then it's an incorrect password.
 	if (!$logged_in) {
-		if (empty($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+		if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
 			$errors[] = 'Incorrect Captcha';
 		}
 	}
@@ -157,7 +157,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	// Check if session answer is set, then compare it with the post captcha value.
 	// If it's not the same, then it's an incorrect password.
 	if (!$logged_in) {
-		if (empty($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+		if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
 			$errors[] = 'Incorrect Captcha';
 		}
 	}

@@ -72,7 +72,7 @@ if (isset($_POST['addpatch'])) {
 			 * it with the post captcha value. If it's not
 			 * the same, then it's an incorrect password.
 			 */
-			if (empty($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+			if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
 				$errors[] = 'Incorrect Captcha';
 			}
 
