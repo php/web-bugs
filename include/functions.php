@@ -693,9 +693,13 @@ function bug_diff($bug, $in)
 	);
 
 	foreach (array_keys($fields) as $name) {
-		if (isset($in[$name]) && isset($bug[$name]) && (trim($in[$name]) != trim($bug[$name]))) {
-			$changed[$name]['from'] = $bug[$name];
-			$changed[$name]['to'] = txfield($name, $bug, $in);
+		if (array_key_exists($name, $in) && array_key_exists($name, $bug)) {
+			$to   = trim($in[$name]);
+			$from = trim($bug[$name]);
+			if ($from != $to) {
+				$changed[$name]['from'] = $from;
+				$changed[$name]['to'] = $to;
+			}
 		}
 	}
 
