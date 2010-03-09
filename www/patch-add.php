@@ -117,7 +117,7 @@ if (isset($_POST['addpatch'])) {
 	}
 
 	// Add a comment to the bug report.
-	$patch_url = "http://{$site_url}{$basedir}/patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$e}&display=1";
+	$patch_url = "http://{$site_url}{$basedir}/patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$e}";
 
 	$text = <<<TXT
 The following patch has been added/updated:
