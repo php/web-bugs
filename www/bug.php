@@ -119,7 +119,7 @@ $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
 
 // fetch info about the bug into $bug
 if (!isset($bug)) {
-	$bug = bugs_get_bug($bug_id, true);
+	$bug = bugs_get_bug($bug_id);
 }
 
 // DB error
@@ -441,12 +441,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	$ncomment = '';
 }
 
-if (isset($_POST['in']) && !isset($_POST['preview']) && $ncomment) {
-	if (!$errors) {
-		mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $bug_id);
-		redirect("bug.php?id=$bug_id&thanks=$edit");
-		exit;
-	}
+if (isset($_POST['in']) && !isset($_POST['preview']) && !$errors) {
+	mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $bug_id);
+	redirect("bug.php?id=$bug_id&thanks=$edit");
+	exit;
 }
 
 switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))
