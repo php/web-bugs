@@ -765,6 +765,10 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 	$headers[] = array(' ID', $bug['id']);
 
 	switch ($edit) {
+		case 4:
+			$headers[] = array(' Patch added by', $from);
+			$from = "\"{$from}\" <{$mailfrom}>";
+			break;
 		case 3:
 			$headers[] = array(' Comment by', $from);
 			$from = "\"{$from}\" <{$mailfrom}>";
@@ -878,6 +882,8 @@ DEV_TEXT;
 		if ($in['status'] != $bug['status'] && $edit != 3) {	/* status changed */
 			$new_status = $in['status'];
 			$subj .= " #{$bug['id']} [{$tla[$old_status]}->{$tla[$new_status]}]";
+		} elseif ($edit == 4) {	/* patch */
+			$subj .= " #{$bug['id']} [PATCH]";
 		} elseif ($edit == 3) {	/* comment */
 			$subj .= " #{$bug['id']} [Com]";
 		} else {	/* status did not change and not comment */

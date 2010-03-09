@@ -130,25 +130,12 @@ TXT;
 	$res = bugs_add_comment($bug_id, $auth_user->email, $auth_user->name, $text, 'patch');
 
 	// Send emails 
-	list($mailto, $mailfrom) = get_package_mail($package_name);
-
-	$protected_email = '"' . spam_protect($email, 'text') . '"' .  "<{$mailfrom}>";
-	$extra_headers = "From: {$protected_email}\n";
-	$extra_headers.= "Message-ID: <bug-{$bug_id}@{$site_url}>\n";
-	$extra_headers.= "X-PHP-Site: {$siteBig}";
-
-	bugs_mail(
-		$mailto,
-		"{$buginfo['bug_type']} #{$bug_id} [PATCH]: {$buginfo['sdesc']}",
-		$text,
-		$extra_headers
-	);
+	mail_bug_updates($buginfo, $buginfo, $auth_user->email, $text, 4, $bug_id);
 
 	$patches = $patchinfo->listPatches($bug_id);
 	$errors = array();
 	include "{$ROOT_DIR}/templates/patchadded.php";
 	exit;
-	
 }
 
 $email = isset($_GET['email']) ? $_GET['email'] : '';
