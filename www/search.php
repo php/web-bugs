@@ -15,17 +15,14 @@ $count_only = isset($_REQUEST['count_only']) && $_REQUEST['count_only'];
 // Authenticate (Disabled for now, searching does not require knowledge of user level)
 //bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
-$newrequest = $_REQUEST;
-if (isset($newrequest['PHPSESSID'])) {
-	unset($newrequest['PHPSESSID']);
-}
+$newrequest = http_build_query(array_merge($_GET, $_POST));
 
 if (!$count_only) {
 	response_header(
-		'Bugs :: Search',
-		" <link rel='alternate'
-				type='application/rdf+xml'
-				title='RSS feed' href='rss/search.php?" . http_build_query($newrequest) . "' />");
+		'Bugs :: Search', "
+			<link rel='alternate' type='application/rss+xml' title='Search bugs - RDF' href='rss/search.php?{$newrequest}' />
+			<link rel='alternate' type='application/rss+xml' title='Search bugs - RSS 2.0' href='rss/search.php?format=rss2&{$newrequest}' />
+	");
 }
 
 // Include common query handler (used also by rss/search.php)

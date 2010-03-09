@@ -1381,7 +1381,8 @@ function bugs_get_bug ($bug_id)
 
 	$query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.reporter_name,
 		b.sdesc, b.ldesc, b.php_version, b.php_os,
-		b.status, b.ts1, b.ts2, b.assign, UNIX_TIMESTAMP(b.ts1) AS submitted,
+		b.status, b.ts1, b.ts2, b.assign,
+		UNIX_TIMESTAMP(b.ts1) AS submitted,
 		UNIX_TIMESTAMP(b.ts2) AS modified,
 		COUNT(bug=b.id) AS votes,
 		SUM(reproduced) AS reproduced, SUM(tried) AS tried,

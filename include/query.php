@@ -48,8 +48,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		SELECT SQL_CALC_FOUND_ROWS 
 		bugdb.*,
 		TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) AS unchanged,
-		UNIX_TIMESTAMP(ts1) as ts1a,
-		UNIX_TIMESTAMP(ts2) as ts2a
+		UNIX_TIMESTAMP(ts1) AS submitted,
+		UNIX_TIMESTAMP(ts2) AS modified
 		FROM bugdb
 	';
 

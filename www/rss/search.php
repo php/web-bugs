@@ -39,7 +39,7 @@ xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sy="http://purl.org/rss/1.0/mo
 xmlns:admin="http://webns.net/mvcb/" xmlns:content="http://purl.org/rss/1.0/modules/content/">';
 echo "\n  <channel rdf:about=\"http://{$site_url}{$basedir}/rss/search.php\">\n";
 echo "	<title>{$siteBig} Bug Search Results</title>\n";
-echo "	<link>http://{$site_url}{$basedir}/rss/search.php?" , htmlspecialchars(http_build_query($_GET)) , "</link>\n";
+echo "	<link>http://{$site_url}{$basedir}/rss/search.php?" , clean(http_build_query($_GET)) , "</link>\n";
 echo "	<description>Search Results</description>\n";
 echo "	<dc:language>en-us</dc:language>\n";
 echo "	<dc:creator>{$site}-webmaster@lists.php.net</dc:creator>\n";
@@ -64,26 +64,24 @@ if ($total_rows > 0) {
 	   	} else {
 	   		$desc .= substr($row['email'], 0, strpos($row['email'], '@')) . "@...\n";
 		}
-		$desc .= date(DATE_ATOM, $row['ts1a']) . "\n";
+		$desc .= date(DATE_ATOM, $row['submitted']) . "\n";
 		$desc .= "PHP: {$row['php_version']}, OS: {$row['php_os']}, Package Version: {$row['package_version']}\n\n";
 		$desc .= $row['ldesc'];
-		$desc = '<pre>' . utf8_encode(htmlspecialchars($desc)) . '</pre>';
+		$desc = '<pre>' . clean($desc) . '</pre>';
 
 		echo "	  <rdf:li rdf:resource=\"http://{$site_url}{$basedir}/{$row['id']}\" />\n";
 		$items .= "  <item rdf:about=\"http://{$site_url}{$basedir}/{$row['id']}\">\n";
-		$items .= '	<title>' . utf8_encode(htmlspecialchars("{$row['bug_type']} {$row['id']} [{$row['status']}] {$row['sdesc']}")) . "</title>\n";
+		$items .= '	<title>' . clean("{$row['bug_type']} {$row['id']} [{$row['status']}] {$row['sdesc']}") . "</title>\n";
 		$items .= "	<link>http://{$site_url}{$basedir}/{$row['id']}</link>\n";
 		$items .= '	<content:encoded><![CDATA[' .  $desc . "]]></content:encoded>\n";
 		$items .= '	<description><![CDATA[' . $desc . "]]></description>\n";
 		if (!$row['unchanged']) {
-			$items .= '	<dc:date>' . date(DATE_ATOM, $row['ts1a']) . "</dc:date>\n";
+			$items .= '	<dc:date>' . date(DATE_ATOM, $row['submitted']) . "</dc:date>\n";
 		} else {
-			$items .= '	<dc:date>' . date(DATE_ATOM, $row['ts2a']) . "</dc:date>\n";
+			$items .= '	<dc:date>' . date(DATE_ATOM, $row['modified']) . "</dc:date>\n";
 		}
-		$items .= '	<dc:creator>' . utf8_encode(htmlspecialchars(spam_protect($row['email']))) . "</dc:creator>\n";
-		$items .= '	<dc:subject>' .
-		   utf8_encode(htmlspecialchars($row['package_name'])) . ' ' .
-		   utf8_encode(htmlspecialchars($row['bug_type'])) . "</dc:subject>\n";
+		$items .= '	<dc:creator>' . clean(spam_protect($row['email'])) . "</dc:creator>\n";
+		$items .= '	<dc:subject>' . clean($row['package_name']) . ' ' . clean($row['bug_type']) . "</dc:subject>\n";
 		$items .= "  </item>\n";
 	}
 } else {
@@ -110,7 +108,7 @@ if (count($warnings) > 0) {
 	echo "<!--\n\n";
 	echo "The following warnings occured during your request:\n\n";
 	foreach($warnings as $warning) {
-		echo utf8_encode(htmlspecialchars('* ' . $warning)) . "\n";
+		echo clean('* ' . $warning) . "\n";
 	}
 	echo "-->\n";
 }

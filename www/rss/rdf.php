@@ -1,14 +1,15 @@
 <?php
+
 $desc = "{$bug['package_name']} {$bug['bug_type']}\nReported by ";
 if ($bug['handle']) {
 	$desc .= "{$bug['handle']}\n";
 } else {
 	$desc .= substr($bug['email'], 0, strpos($bug['email'], '@')) . "@...\n";
 }
-$desc .= date(DATE_ATOM, $bug['ts1a']) . "\n";
+$desc .= date(DATE_ATOM, $bug['submitted']) . "\n";
 $desc .= "PHP: {$bug['php_version']}, OS: {$bug['php_os']}, Package Version: {$bug['package_version']}\n\n";
 $desc .= $bug['ldesc'];
-$desc = '<pre>' . utf8_encode(htmlspecialchars($desc)) . '</pre>';
+$desc = '<pre>' . clean($desc) . '</pre>';
 
 $state = 'http://xmlns.com/baetle/#Open';
 switch ($bug['status']) {
@@ -62,7 +63,7 @@ print '<?xml version="1.0"?>';
 	<channel rdf:about="<?php echo $uri; ?>">
 		<title><?php echo $bug['package_name']; ?> Bug #<?php echo intval($bug['id']); ?></title>
 		<link><?php echo $uri; ?></link>
-		<description><?php echo utf8_encode(htmlspecialchars("[{$bug['status']}] {$bug['sdesc']}")); ?></description>
+		<description><?php echo clean("[{$bug['status']}] {$bug['sdesc']}"); ?></description>
 
 		<dc:language>en-us</dc:language>
 		<dc:creator><?php echo $site; ?>-webmaster@lists.php.net</dc:creator>
@@ -84,17 +85,17 @@ print '<?xml version="1.0"?>';
 	</channel>
 
 	<btl:Bug rdf:about="<?php echo $uri; ?>">
-		<btl:summary><?php echo utf8_encode(htmlspecialchars($bug['sdesc'])); ?></btl:summary>
-		<btl:description><?php echo utf8_encode(htmlspecialchars($bug['ldesc'])); ?></btl:description>
+		<btl:summary><?php echo clean($bug['sdesc']); ?></btl:summary>
+		<btl:description><?php echo clean($bug['ldesc']); ?></btl:description>
 		<wf:state rdf:resource="<?php echo $state; ?>" />
 	</btl:Bug>
 
 	<item rdf:about="<?php echo $uri; ?>">
-		<title><?php echo utf8_encode(htmlspecialchars(substr($bug['email'], 0, strpos($bug['email'], '@')))) . "@... [{$bug['ts1']}]"; ?></title>
+		<title><?php echo clean(substr($bug['email'], 0, strpos($bug['email'], '@'))), "@... [{$bug['ts1']}]"; ?></title>
 		<link><?php echo $uri; ?></link>
 		<description><![CDATA[<?php echo $desc; ?>]]></description>
 		<content:encoded><![CDATA[<?php echo $desc; ?>]]></content:encoded>
-		<dc:date><?php echo date(DATE_ATOM, $bug['ts1a']); ?></dc:date>
+		<dc:date><?php echo date(DATE_ATOM, $bug['submitted']); ?></dc:date>
 	</item>
 
 <?php
@@ -109,17 +110,17 @@ print '<?xml version="1.0"?>';
 			<title>
 <?php
 		if ($comment['handle']) {
-			echo utf8_encode(htmlspecialchars($comment['handle'])) . " [$displayts]";
+			echo clean($comment['handle']) . " [$displayts]";
 		} else {
-			echo utf8_encode(htmlspecialchars(substr($comment['email'], 0, strpos($comment['email'], '@')))) . "@... [$displayts]";
+			echo clean(substr($comment['email'], 0, strpos($comment['email'], '@'))), "@... [$displayts]";
 		}
 ?>
 			</title>
 
 			<link><?php echo $uri; ?>#<?php echo $comment['added']; ?></link>
 			
-			<description><![CDATA[<pre><?php echo utf8_encode(htmlspecialchars($comment['comment'])); ?></pre>]]></description>
-			<content:encoded><![CDATA[<pre><?php echo utf8_encode(htmlspecialchars($comment['comment'])); ?></pre>]]></content:encoded>
+			<description><![CDATA[<pre><?php echo clean($comment['comment']); ?></pre>]]></description>
+			<content:encoded><![CDATA[<pre><?php echo clean($comment['comment']); ?></pre>]]></content:encoded>
 			<dc:date><?php echo date(DATE_ATOM, $comment['added']); ?></dc:date>
 		</item>
 <?php } ?>
