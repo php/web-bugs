@@ -162,9 +162,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		}
 	}
 
-	// Defaults to '' if not logged in
-	$_POST['in']['handle'] = $auth_user->handle;
-
 	$ncomment = trim($_POST['ncomment']);
 	if (!$ncomment) {
 		$errors[] = 'You must provide a comment.';
@@ -183,7 +180,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				$_POST['in']['name'] = '';
 			} else {
 				$_POST['in']['commentemail'] = $auth_user->email;
-				$_POST['in']['handle'] = $auth_user->handle;
 				$_POST['in']['name'] = $auth_user->name;
 			}
 
@@ -191,17 +187,13 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 		} while (false);
 
-		if (isset($auth_user) && $auth_user) {
-			$from = $auth_user->email;
-		} else {
-			$from = '';
-		}
+		$from = spam_protect($_POST['in']['commentemail'], 'text');
 	} else {
 		$from = '';
 	}
 } elseif (isset($_POST['ncomment']) && isset($_POST['preview']) && $edit == 3) {
 	$ncomment = trim($_POST['ncomment']);
-	$from = spam_protect($_POST['in']['commentemail']);
+	$from = $_POST['in']['commentemail'];
 	
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
 	// Edits submitted by original reporter for old bugs
