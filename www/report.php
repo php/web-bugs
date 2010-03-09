@@ -23,7 +23,7 @@ if (!$logged_in) {
 // Handle input
 if (isset($_POST['in'])) {
 
-	$errors = incoming_details_are_valid($_POST['in'], 1);
+	$errors = incoming_details_are_valid($_POST['in'], 1, $logged_in);
 
 	// Check if session answer is set, then compare it with the post captcha value.
 	// If it's not the same, then it's an incorrect password.
@@ -31,6 +31,11 @@ if (isset($_POST['in'])) {
 		if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
 			$errors[] = 'Incorrect Captcha';
 		}
+	}
+
+	// Set password blank for logged in users. This also disables the lost password feature.
+	if ($logged_in) {
+		$_POST['in']['passwd'] = '';
 	}
 
 	// try to verify the user
@@ -349,31 +354,33 @@ display_bug_error($errors);
 	<form method="post" action="report.php?package=<?php echo htmlspecialchars($package); ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
 		<input type="hidden" name="in[did_luser_search]" value="<?php echo isset($_POST['in']['did_luser_search']) ? $_POST['in']['did_luser_search'] : 0; ?>" />
 		<table class="form-holder" cellspacing="1">
-			<tr>
 <?php if ($logged_in) { ?>
+			<tr>
 				<th class="form-label_left">Your handle:</th>
 				<td class="form-input">
 					<?php echo $auth_user->handle; ?>
 					<input type="hidden" name="in[email]" value="<?php echo $auth_user->email; ?>" />
 				</td>
+			</tr>
 <?php } else { ?>
+			<tr>
 				<th class="form-label_left">Y<span class="accesskey">o</span>ur email address:<br /><strong>MUST BE VALID</strong></th>
 					<td class="form-input">
 						<input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo htmlspecialchars($_POST['in']['email'], ENT_COMPAT, 'UTF-8'); ?>" accesskey="o" />
 					</td>
 				</th>
-<?php } ?>
 			</tr>
 
 			<tr>
 				<th class="form-label_left"><span class="accesskey">P</span>assword:</th>
 				<td class="form-input">
 					<input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8');?>" accesskey="p" /><br />
-					You <b>must</b> enter any password here, which will be stored for this bug report.<br />
+					You <strong>must</strong> enter any password here, which will be stored for this bug report.<br />
 					This password allows you to come back and modify your submitted bug report at a later date.
 					[<a href="bug-pwd-finder.php">Lost a bug password?</a>]
 				</td>
 			</tr>
+<?php } ?>
 
 			<tr>
 				<th class="form-label_left">PHP version:</th>

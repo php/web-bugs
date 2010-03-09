@@ -1090,7 +1090,7 @@ function is_valid_email($email, $phpnet_allowed = true)
  *
  * @return void
  */
-function incoming_details_are_valid($in, $initial = 0)
+function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 {
 	global $bug, $dbh, $bug_types;
 
@@ -1104,7 +1104,7 @@ function incoming_details_are_valid($in, $initial = 0)
 			$errors[] = 'Please provide a valid email address.';
 		}
 	}
-	if ($initial && empty($in['passwd'])) {
+	if (!$logged_in && $initial && empty($in['passwd'])) {
 		$errors[] = 'Please provide a password for this bug report.';
 	}
 
