@@ -187,15 +187,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				$_POST['in']['name'] = $auth_user->name;
 			}
 
-			$res = $dbh->prepare('
-				INSERT INTO bugdb_comments (bug, email, comment, reporter_name, ts)
-				VALUES (?, ?, ?, ?, NOW())
-			')->execute(array(
-				$bug_id,
-				$_POST['in']['commentemail'],
-				$ncomment,
-				$_POST['in']['name'],
-			));
+			$res = bugs_add_comment($bug_id, $_POST['in']['commentemail'], $_POST['in']['name'], $ncomment, 'comment');
+
 		} while (false);
 
 		if (isset($auth_user) && $auth_user) {
@@ -272,12 +265,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		));
 
 		if (!empty($ncomment)) {
-			$dbh->prepare("
-				INSERT INTO bugdb_comments (bug, email, comment, ts)
-				VALUES ({$bug_id}, ?, ?, NOW())
-			")->execute(array(
-				$from, $ncomment,
-			));
+			$res = bugs_add_comment($bug_id, $from, '', $ncomment, 'comment');
 		}
 	}
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
@@ -408,27 +396,19 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['php_os'],
 		));
 
+		// Add changelog entry
 		$changed = bug_diff($bug, $_POST['in']);
 		if (!empty($changed)) {
 			$log_comment = bug_diff_render_html($changed);
+
+			if (!empty($log_comment)) {
+				$res = bugs_add_comment($bug_id, $from, $comment_name, $log_comment, 'log');
+			}
 		}
 
-		if (!empty($log_comment)) {
-			$dbh->prepare("
-				INSERT INTO bugdb_comments (bug, email, comment, reporter_name, comment_type, ts)
-				VALUES (?, ?, ?, ?, 'log', NOW())
-			")->execute(array(
-				$bug_id, $from, $log_comment, $comment_name,
-			));
-		}
-
+		// Add normal comment
 		if (!empty($ncomment)) {
-			$dbh->prepare("
-				INSERT INTO bugdb_comments (bug, email, comment, reporter_name, comment_type, ts)
-				VALUES (?, ?, ?, ?, 'comment', NOW())
-			")->execute(array(
-				$bug_id, $from, $ncomment, $comment_name,
-			));
+			$res = bugs_add_comment($bug_id, $from, $comment_name, $ncomment, 'comment');
 		}
 	}
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 1) {

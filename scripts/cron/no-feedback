@@ -35,14 +35,7 @@ if ($dbh)
 			$log_comment = bug_diff_render_html($changed);
 		}
 		if (!empty($log_comment)) {
-			$dbh->prepare('
-				INSERT INTO bugdb_comments (bug, email, comment, reporter_name, comment_type, ts)
-				VALUES (?, ?, ?, "", "log", NOW())
-			')->execute(array(
-				$bug['id'],
-				$mailfrom,
-				$log_comment,
-			));
+			$res = bugs_add_comment($bug['id'], $mailfrom, '', $log_comment, 'log');
 		}
 
 		// No feedback message
@@ -53,14 +46,7 @@ if ($dbh)
 		} else {
 			die('[no-feedback] Could not find resolve reason! (this should not happen!)');
 		}
-		$dbh->prepare('
-			INSERT INTO bugdb_comments (bug, email, comment, reporter_name, comment_type, ts)
-			VALUES (?, ?, ?, "", "comment", NOW())
-		')->execute(array(
-			$bug['id'],
-			$mailfrom,
-			$message,
-		));
+		$res = bugs_add_comment($bug['id'], $mailfrom, '', $message, 'comment');
 
 		// Update status
 		$dbh->prepare('

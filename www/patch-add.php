@@ -127,17 +127,7 @@ Revision:   {$e}
 URL:        {$patch_url}
 TXT;
 
-	$query = '
-		INSERT INTO bugdb_comments (
-			bug, email, comment, reporter_name, comment_type, ts
-		) VALUES (?, ?, ?, ?, "patch", NOW())
-	';
-	$res = $dbh->prepare($query)->execute(array(
-		$bug_id,
-		$auth_user->email,
-		$text,
-		$auth_user->name,
-	));
+	$res = bugs_add_comment($bug_id, $auth_user->email, $auth_user->name, $text, 'patch');
 
 	// Send emails 
 	list($mailto, $mailfrom) = get_package_mail($package_name);

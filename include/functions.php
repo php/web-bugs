@@ -1410,6 +1410,21 @@ function bugs_get_bug_comments ($bug_id)
 }
 
 /**
+ * Add bug comment
+ */
+function bugs_add_comment ($bug_id, $from, $from_name, $comment, $type = 'comment')
+{
+	global $dbh;
+
+	return $dbh->prepare("
+		INSERT INTO bugdb_comments (bug, email, reporter_name, comment, comment_type, ts)
+		VALUES (?, ?, ?, ?, ?, NOW())
+	")->execute(array(
+		$bug_id, $from, $from_name, $comment, $type,
+	));
+}
+
+/**
  * Verify bug password
  *
  * @return bool
