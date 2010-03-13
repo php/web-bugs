@@ -167,6 +167,11 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$errors[] = 'You must provide a comment.';
 	}
 
+	// primitive spam detection
+	if (is_spam($ncomment)) {
+		$errors[] = "Please do not SPAM our bug system.";
+	}
+
 	if (!$errors) {
 		do {
 			if (!$logged_in) {
@@ -193,6 +198,12 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	}
 } elseif (isset($_POST['ncomment']) && isset($_POST['preview']) && $edit == 3) {
 	$ncomment = trim($_POST['ncomment']);
+
+	// primitive spam detection
+	if (is_spam($ncomment)) {
+		$errors[] = "Please do not SPAM our bug system.";
+	}
+	
 	$from = $_POST['in']['commentemail'];
 	
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
@@ -263,6 +274,12 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
 	$ncomment = trim($_POST['ncomment']);
 	$from = $_POST['in']['commentemail'];
+
+	// primitive spam detection
+	if (is_spam($ncomment)) {
+		$errors[] = "Please do not SPAM our bug system.";
+	}
+
 } elseif (isset($_POST['in']) && is_array($_POST['in']) && !isset($_POST['preview']) && $edit == 1) {
 	// Edits submitted by developer
 	if ($logged_in != 'developer') {
