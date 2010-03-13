@@ -1487,6 +1487,7 @@ function response_header($title, $extraHeaders = '')
 <html>
 <head>
 	<?php echo $extraHeaders; ?>
+	<base href="<?php echo (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://', $site_url, $basedir; ?>/" />
 	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
 	<link rel="shortcut icon" href="http://<?php echo $site_url, $basedir; ?>/images/favicon.ico" />
 	<link rel="stylesheet" href="css/style.css" />
