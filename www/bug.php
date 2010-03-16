@@ -514,11 +514,11 @@ display_bug_error($errors);
 <?php	if ($bug['votes']) { ?>
 				<table id="votes">
 					<tr><th class="details">Votes:</th><td><?php echo $bug['votes'] ?></td></tr>
-					<tr><th class="details">Avg. Score:</th><td><?php printf("%.1f &plusmn; %.1f", $bug['average'], $bug['deviation']) ?></td></tr>
-					<tr><th class="details">Reproduced:</th><td><?php printf("%d of %d (%.1f%%)",$bug['reproduced'],$bug['tried'],$bug['tried']?($bug['reproduced']/$bug['tried'])*100:0) ?></td></tr>
+					<tr><th class="details">Avg. Score:</th><td><?php printf("%.1f &plusmn; %.1f", $bug['average'], $bug['deviation']); ?></td></tr>
+					<tr><th class="details">Reproduced:</th><td><?php printf("%d of %d (%.1f%%)", $bug['reproduced'], $bug['tried'], $bug['tried'] ? ($bug['reproduced'] / $bug['tried']) * 100 : 0); ?></td></tr>
 <?php		if ($bug['reproduced']) { ?>
-					<tr><th class="details">Same Version:</th><td><?php printf("%d (%.1f%%)",$bug['samever'],($bug['samever']/$bug['reproduced'])*100) ?></td></tr>
-					<tr><th class="details">Same OS:</th><td><?php printf("%d (%.1f%%)",$bug['sameos'],($bug['sameos']/$bug['reproduced'])*100) ?></td></tr>
+					<tr><th class="details">Same Version:</th><td><?php printf("%d (%.1f%%)", $bug['samever'], ($bug['samever'] / $bug['reproduced']) * 100); ?></td></tr>
+					<tr><th class="details">Same OS:</th><td><?php printf("%d (%.1f%%)", $bug['sameos'], ($bug['sameos'] / $bug['reproduced']) * 100); ?></td></tr>
 <?php		} ?>
 				</table>
 <?php	} ?>
@@ -546,9 +546,9 @@ display_bug_error($errors);
 
 		<tr id="situation">
 			<th class="details">PHP Version:</th>
-			<td><?php echo htmlspecialchars($bug['php_version']) ?></td>
+			<td><?php echo htmlspecialchars($bug['php_version']); ?></td>
 			<th class="details">OS:</th>
-			<td><?php echo htmlspecialchars($bug['php_os']) ?></td>
+			<td><?php echo htmlspecialchars($bug['php_os']); ?></td>
 		</tr>
 	</table>
 </div>
@@ -653,7 +653,7 @@ if ($edit == 1 || $edit == 2) { ?>
 				<table>
 					<tr>
 						<td class="details">Passw<span class="accesskey">o</span>rd:</td>
-						<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20" accesskey="o" /></td>
+						<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o" /></td>
 						<td class="details"><label for="save">Check to remember your password for next time:</label></td>
 						<td><input type="checkbox" id="save" name="save" <?php echo (isset($_POST['save'])) ? ' checked="checked"' : ''; ?> /></td>
 					</tr>
@@ -674,9 +674,9 @@ if ($edit == 1 || $edit == 2) { ?>
 				or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
 				<div class="details">
 					<label for="svnuser">SVN Username:</label>
-					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
+					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user); ?>" size="10" maxlength="20" />
 					<label for="svnpw">SVN Password:</label>
-					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20" />
+					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" />
 					<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
 				</div>
 			</div>
@@ -692,7 +692,7 @@ if ($edit == 1 || $edit == 2) { ?>
 			<th class="details"><label for="in" accesskey="c">Qui<span class="accesskey">c</span>k Fix:</label></th>
 			<td colspan="3">
 				<select name="in[resolve]" id="in">
-					<?php show_reason_types((isset($_POST['in']) && isset($_POST['in']['resolve'])) ? $_POST['in']['resolve'] : -1, 1) ?>
+					<?php show_reason_types((isset($_POST['in']) && isset($_POST['in']['resolve'])) ? $_POST['in']['resolve'] : -1, 1); ?>
 				</select>
 
 <?php	if (isset($_POST['in']) && !empty($_POST['in']['resolve'])) { ?>
@@ -706,16 +706,16 @@ if ($edit == 1 || $edit == 2) { ?>
 
 		<tr>
 			<th class="details">Status:</th>
-			<td <?php echo (($edit != 1) ? 'colspan="3"' : '' ) ?>>
+			<td <?php echo (($edit != 1) ? 'colspan="3"' : '' ); ?>>
 				<select name="in[status]">
-					<?php show_state_options(isset($_POST['in']) && isset($_POST['in']['status']) ? $_POST['in']['status'] : '', $edit, $bug['status']) ?>
+					<?php show_state_options(isset($_POST['in']) && isset($_POST['in']['status']) ? $_POST['in']['status'] : '', $edit, $bug['status']); ?>
 				</select>
 
 <?php if ($edit == 1) { ?>
 			</td>
 			<th class="details">Assign to:</th>
 			<td>
-				<input type="text" size="10" maxlength="16" name="in[assign]" value="<?php echo field('assign') ?>" id="assigned_user"/>
+				<input type="text" size="10" maxlength="16" name="in[assign]" value="<?php echo field('assign'); ?>" id="assigned_user"/>
 <?php } ?>
 
 				<input type="hidden" name="id" value="<?php echo $bug_id ?>" />
@@ -727,7 +727,7 @@ if ($edit == 1 || $edit == 2) { ?>
 			<th class="details">Package:</th>
 			<td colspan="3">
 				<select name="in[package_name]">
-					<?php show_package_options(isset($_POST['in']) && isset($_POST['in']['package_name']) ? $_POST['in']['package_name'] : '', 0, $bug['package_name']) ?>
+					<?php show_package_options(isset($_POST['in']) && isset($_POST['in']['package_name']) ? $_POST['in']['package_name'] : '', 0, $bug['package_name']); ?>
 				</select>
 			</td>
 		</tr>
@@ -742,13 +742,13 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details">Summary:</th>
 			<td colspan="3">
-				<input type="text" size="60" maxlength="80" name="in[sdesc]" value="<?php echo field('sdesc') ?>" />
+				<input type="text" size="60" maxlength="80" name="in[sdesc]" value="<?php echo field('sdesc'); ?>" />
 			</td>
 		</tr>
 		<tr>
 			<th class="details">From:</th>
 			<td colspan="3">
-				<?php echo spam_protect(field('email')) ?>
+				<?php echo spam_protect(field('email')); ?>
 			</td>
 		</tr>
 		<tr>
@@ -761,7 +761,7 @@ if ($edit == 1 || $edit == 2) { ?>
 			<th class="details">PHP Version:</th>
 			<td><input type="text" size="20" maxlength="100" name="in[php_version]" value="<?php echo field('php_version'); ?>" /></td>
 			<th class="details">OS:</th>
-			<td><input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo field('php_os') ?>" /></td>
+			<td><input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo field('php_os'); ?>" /></td>
 		</tr>
 	</table>
 
