@@ -1,5 +1,8 @@
 <?php
 
+// Enable output compression
+ini_set('zlib.output_compression', 1);
+
 function getAllUsers()
 {
 	$opts = array('ignore_errors' => true);

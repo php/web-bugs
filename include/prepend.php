@@ -5,6 +5,9 @@ if (get_magic_quotes_gpc()) {
 	die('Turn off "magic_quotes_gpc" in php.ini!');
 }
 
+// Enable output compression
+ini_set('zlib.output_compression', 1);
+
 $site = 'php';
 $siteBig = 'PHP';
 $ROOT_DIR = realpath(dirname(__FILE__) . '/../');
