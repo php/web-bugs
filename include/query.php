@@ -173,7 +173,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		if ($order_by == $reorder_by) {
 			$direction = $direction == 'ASC' ? 'DESC' : 'ASC';
 		} else {
-			$direction = 'ASC';
+			$direction = $reorder_by == 'ts2' ? 'DESC' : 'ASC';
 			$order_by = $reorder_by;
 		}
 	}
