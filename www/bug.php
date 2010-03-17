@@ -267,6 +267,17 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$from,
 		));
 
+		// Add changelog entry
+		$changed = bug_diff($bug, $_POST['in']);
+		if (!empty($changed)) {
+			$log_comment = bug_diff_render_html($changed);
+
+			if (!empty($log_comment)) {
+				$res = bugs_add_comment($bug_id, $from, '', $log_comment, 'log');
+			}
+		}
+		
+		// Add normal comment
 		if (!empty($ncomment)) {
 			$res = bugs_add_comment($bug_id, $from, '', $ncomment, 'comment');
 		}
