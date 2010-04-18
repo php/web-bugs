@@ -20,6 +20,7 @@ if (file_exists($local_cfg)) {
 		'url' => 'bugs.php.net',
 		'basedir' => '',
 		'email' => 'php-bugs@lists.php.net',
+		'doc_email' => 'doc-bugs@lists.php.net',
 		'security_email' => 'security@php.net',
 		'db_extension' => 'mysqli',
 		'db' => 'phpbugsdb',
@@ -36,6 +37,7 @@ if (file_exists($local_cfg)) {
 $logged_in = false;
 $site_url = $site_data['url'];
 $bugEmail = $site_data['email'];
+$docBugEmail = $site_data['doc_email'];
 $basedir = $site_data['basedir'];
 define('BUG_PATCHTRACKER_TMPDIR', $site_data['patch_tmp']);
 define('DATABASE_DSN', "{$site_data['db_extension']}://{$site_data['db_user']}:{$site_data['db_pass']}@{$site_data['db_host']}/{$site_data['db']}");

@@ -760,7 +760,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 	$from = str_replace(array("\n", "\r"), '', $from);
 
 	/* Default addresses */
-	list($mailto, $mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id);
+	list($mailto, $mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id, oneof($in['bug_type'], $bug['bug_type']));
 
 	$headers[] = array(' ID', $bug['id']);
 
@@ -1154,29 +1154,35 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
  *
  * @return array		an array of email addresses
  */
-function get_package_mail($package_name, $bug_id = false)
+function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 {
-	global $dbh, $bugEmail;
+	global $dbh, $bugEmail, $docBugEmail;
 
 	$to = array();
 	
-	/* Get package mailing list address */
-	$res = $dbh->prepare('
-		SELECT list_email
-		FROM bugdb_pseudo_packages
-		WHERE name = ?
-	')->execute(array($package_name));
-
-	if (PEAR::isError($res)) {
-		throw new Exception('SQL Error in get_package_name(): ' . $res->getMessage());
+	if ($bugType === 'Documentation Problem') {
+		// Documentation problems *always* go to the doc team
+		$to[] = $docBugEmail;
 	}
-
-	$list_email = $res->fetchOne();
-
-	if ($list_email) {
-		$to[] = $list_email;
-	} else { // Fall back to default mailing list
-		$to[] = $bugEmail;
+	else {
+		/* Get package mailing list address */
+		$res = $dbh->prepare('
+			SELECT list_email
+			FROM bugdb_pseudo_packages
+			WHERE name = ?
+		')->execute(array($package_name));
+	
+		if (PEAR::isError($res)) {
+			throw new Exception('SQL Error in get_package_name(): ' . $res->getMessage());
+		}
+	
+		$list_email = $res->fetchOne();
+	
+		if ($list_email) {
+			$to[] = $list_email;
+		} else { // Fall back to default mailing list
+			$to[] = $bugEmail;
+		}
 	}
 
 	/* Include assigned to To list and subscribers in Bcc list */
