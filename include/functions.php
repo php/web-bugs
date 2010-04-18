@@ -1160,7 +1160,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 
 	$to = array();
 	
-	if ($bugType === 'Documentation Problem') {
+	if ($bug_type === 'Documentation Problem') {
 		// Documentation problems *always* go to the doc team
 		$to[] = $docBugEmail;
 	}
