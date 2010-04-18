@@ -27,7 +27,7 @@ if ($dbh)
 	}
 	while ($bug = $res->fetchRow(MDB2_FETCHMODE_ASSOC))
 	{
-		list($mailto, $mailfrom) = get_package_mail($bug['package_name']);
+		list($mailto, $mailfrom) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 
 		// Changelog entry
 		$changed = bug_diff($bug, $_POST['in']);
