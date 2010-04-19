@@ -47,7 +47,7 @@ PHP configured with <code>--enable-debug</code>!
 
 <ul>
 	<li>
-		Set up the core pattern:
+		Set up the core pattern (run this command as <i>root</i>):
 		<ul>
 			<li>echo "&lt;cores dir&gt;/core-%e.%p" &gt; /proc/sys/kernel/core_pattern</li>
 			<li>make sure the directory is writable by PHP</li>
