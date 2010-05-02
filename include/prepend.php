@@ -8,6 +8,9 @@ if (get_magic_quotes_gpc()) {
 // Enable output compression
 ini_set('zlib.output_compression', 1);
 
+// FIXME: Do not display errors, they are logged
+ini_set('display_errors', 0);
+
 $site = 'php';
 $siteBig = 'PHP';
 $ROOT_DIR = realpath(dirname(__FILE__) . '/../');
