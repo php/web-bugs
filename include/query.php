@@ -24,12 +24,12 @@ $boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
 $status = !empty($_GET['status']) ? $_GET['status'] : 'Open';
 $search_for = !empty($_GET['search_for']) ? $_GET['search_for'] : '';
 $bug_type = (!empty($_GET['bug_type']) && $_GET['bug_type'] != 'All') ? $_GET['bug_type'] : '';
-$bug_age = (int) (isset($_GET['bug_age'])) ? $_GET['bug_age'] : 0;
-$bug_updated = (int) (isset($_GET['bug_updated'])) ? $_GET['bug_updated'] : 0;
+$bug_age = (int) (isset($_GET['bug_age']) ? $_GET['bug_age'] : 0);
+$bug_updated = (int) (isset($_GET['bug_updated']) ? $_GET['bug_updated'] : 0);
 $php_os = !empty($_GET['php_os']) ? $_GET['php_os'] : '';
 $php_os_not = !empty($_GET['php_os_not']) ? 'not' : '';
 $phpver = !empty($_GET['phpver']) ? $_GET['phpver'] : '';
-$begin = (int) !empty($_GET['begin']) ? $_GET['begin'] : 0;
+$begin = (int) (!empty($_GET['begin']) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
 if (!empty($_GET['limit'])) {
 	$limit = ($_GET['limit'] == 'All') ? 'All' : (($_GET['limit'] > 0) ? (int) $_GET['limit'] : $limit);
