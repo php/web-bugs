@@ -7,8 +7,8 @@
 		'5.2.13',
 		"5.2SVN-{$date} (snap)",
 		"5.2SVN-{$date} (SVN)",
-		"6SVN-{$date} (snap)",
-		"6SVN-{$date} (SVN)",
+		"trunk-SVN-{$date} (snap)",
+		"trunk-SVN-{$date} (SVN)",
 	);
 
 /*
