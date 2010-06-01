@@ -1,0 +1,81 @@
+#!/local/bin/php -q
+<?php /* vim: set ft=phpbugdb noet ts=4 sw=4 : */
+
+require __DIR__ . '/../../include/prepend.php';
+
+// NOTE: We could adjust to email other combinations. Ex: assign is user 'foo', and status is 'Feedback' ...
+$sql = "SELECT id, package_name, bug_type, sdesc, assign, UNIX_TIMESTAMP(ts1) AS ts_opened, UNIX_TIMESTAMP(ts2) AS ts_changed 
+		FROM `bugdb` 
+		WHERE length(assign) > 1
+		AND status = 'Assigned'
+		ORDER BY id";
+
+$res = $dbh->query($sql);
+
+if (PEAR::isError($res)) {
+	throw new Exception("SQL Error in email-assigned");
+}
+
+// Gather up the data
+while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+	$data[$row['assign']][] = $row;
+}
+
+$num_rows  = $res->numRows();
+$num_users = count($data);
+
+foreach ($data as $assigned => $binfos) {
+
+	$mbody      = format_email_body($binfos);
+	$email_user = $assigned . '@php.net';
+
+	// TESTING
+	if ($assigned === 'philip') {
+		$mbody .= "Num Rows: $num_rows\nNum Users: $num_users\n";
+		mail($email_user, 'Assigned PHP bugs reminder', $mbody, 'From: noreply@lists.php.net');
+		exit;
+	}
+}
+
+function format_email_body($binfos) {
+
+	$links            = '';
+	$count            = count($binfos);
+	$earliest_changed = time();
+	$earliest_opened  = time();
+
+	foreach ($binfos as $binfo) {
+
+		if ($earliest_changed > $binfo['ts_changed']) {
+			$earliest_changed = $binfo['ts_changed'];
+		}
+		if ($earliest_opened > $binfo['ts_opened']) {
+			$earliest_opened = $binfo['ts_opened'];
+		}
+
+		$link_title = strlen($binfo['sdesc']) < 42 ? $binfo['sdesc'] : substr($binfo['sdesc'], 0, 42) . '...';
+
+		$links .= " Title: $link_title\r\n";
+		$links .= " Link:  http://bugs.php.net/{$binfo['id']}\r\n\r\n";
+	}
+
+	$assigned = $binfo['assign'];
+	$salute   = ($count === 1) ? 'one bug report' : "$count bug reports";
+	$date_c   = date('M d, Y', $earliest_changed);
+	$date_o   = date('M d, Y', $earliest_opened);
+
+	$body = <<<MAIL_BODY
+Hello $assigned,
+
+This is a gentle reminder about the $salute assigned to you.
+
+Dates:
+ Earliest opened date:       $date_o
+ Earliest last change date:  $date_c
+
+Your assigned bug information:
+$links
+MAIL_BODY;
+
+	return $body;
+}
