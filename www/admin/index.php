@@ -3,15 +3,21 @@ require_once '../../include/prepend.php';
 session_start();
 
 bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
-response_header("Bugs admin suite");
 
 if (!$logged_in) {
 	response_footer("Please login");
 	exit;
 }
 
-$actions = array('list_lists');
+$actions = array('list_lists', 'phpinfo');
 $action  = !empty($_GET['action']) && in_array($_GET['action'], $actions) ? $_GET['action'] : 'list_lists';
+
+if ($action === 'phpinfo') {
+	phpinfo();
+	exit;
+}
+
+response_header("Bugs admin suite");
 
 if ($action === 'list_lists') {
 
@@ -19,6 +25,7 @@ if ($action === 'list_lists') {
 		SELECT name, list_email 
 		FROM bugdb_pseudo_packages 
 		WHERE project = 'php'
+		AND LENGTH(list_email) > 0
 		ORDER BY list_email
 	");
 
