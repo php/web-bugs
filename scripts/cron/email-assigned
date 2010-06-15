@@ -29,12 +29,8 @@ foreach ($data as $assigned => $binfos) {
 	$mbody      = format_email_body($binfos);
 	$email_user = $assigned . '@php.net';
 
-	// TESTING
-	if ($assigned === 'philip') {
-		$mbody .= "Num Rows: $num_rows\nNum Users: $num_users\n";
-		mail($email_user, 'Assigned PHP bugs reminder', $mbody, 'From: noreply@lists.php.net');
-		exit;
-	}
+	$mbody .= "Num Rows: $num_rows\nNum Users: $num_users\n";
+	mail($email_user, 'Assigned PHP bugs reminder', $mbody, 'From: php-bugs@lists.php.net', '-fphp-bugs@lists.php.net');
 }
 
 function format_email_body($binfos) {
@@ -53,7 +49,7 @@ function format_email_body($binfos) {
 			$earliest_opened = $binfo['ts_opened'];
 		}
 
-		$link_title = strlen($binfo['sdesc']) < 42 ? $binfo['sdesc'] : substr($binfo['sdesc'], 0, 42) . '...';
+		$link_title = strlen($binfo['sdesc']) < 65 ? $binfo['sdesc'] : substr($binfo['sdesc'], 0, 65) . '...';
 
 		$links .= " Title: $link_title\r\n";
 		$links .= " Link:  http://bugs.php.net/{$binfo['id']}\r\n\r\n";
