@@ -29,7 +29,6 @@ foreach ($data as $assigned => $binfos) {
 	$mbody      = format_email_body($binfos);
 	$email_user = $assigned . '@php.net';
 
-	$mbody .= "Num Rows: $num_rows\nNum Users: $num_users\n";
 	mail($email_user, 'Assigned PHP bugs reminder', $mbody, 'From: php-bugs@lists.php.net', '-fphp-bugs@lists.php.net');
 }
 
