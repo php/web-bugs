@@ -21,8 +21,6 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 	 // If it's not the same, then it's an incorrect password.
 	if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
 		$errors[] = 'Incorrect Captcha';
-	} else {
-		exit;
 	}
 
 	// Try to find the email and the password
