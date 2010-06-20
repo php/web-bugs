@@ -29,6 +29,7 @@ $bug_updated = (int) (isset($_GET['bug_updated']) ? $_GET['bug_updated'] : 0);
 $php_os = !empty($_GET['php_os']) ? $_GET['php_os'] : '';
 $php_os_not = !empty($_GET['php_os_not']) ? 'not' : '';
 $phpver = !empty($_GET['phpver']) ? $_GET['phpver'] : '';
+$patch = !empty($_GET['patch']) ? $_GET['patch'] : '';
 $begin = (int) (!empty($_GET['begin']) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
 if (!empty($_GET['limit'])) {
@@ -144,6 +145,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
 	if ($phpver != '') {
 		$where_clause .= " AND bugdb.php_version LIKE '" . $dbh->escape($phpver) . "%'";
+	}
+	
+	if ($patch != '') {
+		$where_clause .= " AND EXISTS (SELECT 1 FROM bugdb_patchtracker WHERE bugdb_id = bugdb.id LIMIT 1)";
 	}
 
 	if ($assign != '') {

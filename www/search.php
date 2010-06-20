@@ -280,6 +280,11 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td>&nbsp;</td><td style="white-space: nowrap">Return bugs updated</td>
   <td><select name="bug_updated"><?php show_byage_options($bug_updated);?></select></td>
 </tr>
+<tr valign="top">
+  <th>Patch</th>
+  <td style="white-space: nowrap">Return only bugs reported with <b>patch attached</b></td>
+  <td><input type="checkbox" name="patch" value="S" <?php echo $patch == 'S' ? " checked" : "" ?> /></td>
+</tr>
 </table>
 </form>
 
