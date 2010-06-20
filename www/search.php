@@ -68,6 +68,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				"&amp;direction=$direction" .
 				"&amp;limit=$limit" .
 				'&amp;phpver=' . urlencode($phpver) .
+				"&amp;patch=$patch" .
 				'&amp;assign=' . urlencode($assign);
 
 		$link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params}";
