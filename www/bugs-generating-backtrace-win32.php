@@ -7,7 +7,7 @@ response_header('Generating a backtrace on Win32');
 
 <p>You'll need to install MSVC6 and you'll also need to</p>
 <ul>
-	<li>either download the debug-pack for your PHP version from <a href="http://windows.php.net/snapshots/">http://windows.php.net/snapshots/</a></li>
+	<li>either download the debug-pack for your PHP version from <a href="http://windows.php.net/download/">http://windows.php.net/download/</a></li>
 	<li>or compile your own PHP with <code>--enable-dbg-pack</code> or <code>--enable-debug</code></li>
 </ul>
 
