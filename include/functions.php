@@ -439,7 +439,7 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
 	global $state_types;
 
 	if (!$state && !$default) {
-		$state = 'Open';
+		$state = $assigned ? 'Assigned' : 'Open';
 	} elseif (!$state) {
 		$state = $default;
 	}
