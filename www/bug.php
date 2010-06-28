@@ -719,7 +719,7 @@ if ($edit == 1 || $edit == 2) { ?>
 			<th class="details">Status:</th>
 			<td <?php echo (($edit != 1) ? 'colspan="3"' : '' ); ?>>
 				<select name="in[status]">
-					<?php show_state_options(isset($_POST['in']) && isset($_POST['in']['status']) ? $_POST['in']['status'] : '', $edit, $bug['status'], (isset($_POST['in']) && isset($_POST['in']['assign']))); ?>
+					<?php show_state_options(isset($_POST['in']) && isset($_POST['in']['status']) ? $_POST['in']['status'] : '', $edit, $bug['status'], $bug['assign']); ?>
 				</select>
 
 <?php if ($edit == 1) { ?>
