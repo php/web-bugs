@@ -434,7 +434,7 @@ function show_type_options($current = 'Bug', $all = false)
  *
  * @return void
  */
-function show_state_options($state, $user_mode = 0, $default = '')
+function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0)
 {
 	global $state_types;
 
@@ -451,9 +451,15 @@ function show_state_options($state, $user_mode = 0, $default = '')
 	if ($state != 'All' && $state_types[$state] == 1 && $user_mode == 2) {
 		switch ($state)
 		{
-			/* If state was 'Feedback', set state to 'Open' automatically. */
+			/* If state was 'Feedback', set state automatically to 'Assigned' if the bug was
+			 * assigned to someone before it to be set to 'Feedback', otherwise set it to 'Open'.
+			 */
 			case 'Feedback':
-				echo "<option>Open</option>\n";
+				if ($assigned) {
+					echo "<option>Assigned</option>\n";
+				} else {	
+					echo "<option>Open</option>\n";
+				}
 				break;
 			case 'No Feedback':
 				echo "<option>Re-Opened</option>\n";
