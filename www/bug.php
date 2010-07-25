@@ -138,10 +138,10 @@ if (!$bug) {
 	exit;
 }
 
-/* Bugs marked as Cancelled just can be commented by the team */
-if (isset($_POST['ncomment']) && $bug['status'] == 'Cancelled' && !($is_trusted_developer || (isset($logged_in) && $logged_in == 'developer' && $edit == 1))) {
+/* Bugs blocked to user comments can only be commented by the team */
+if (isset($_POST['ncomment']) && $bug['block_user_comment'] == 'Y' && !($is_trusted_developer || (isset($logged_in) && $logged_in == 'developer'))) {
 	response_header('Add comment not allowed');
-	display_bug_error("You're not allowed to add coment on bug #{$bug_id}");
+	display_bug_error("You're not allowed to add comment on bug #{$bug_id}");
 	response_footer();
 	exit;	
 }
@@ -403,6 +403,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		if ($status == 'Closed' && $_POST['in']['assign'] == '') {
 			$_POST['in']['assign'] = $auth_user->handle;
 		}
+		$block_comment = isset($_POST['in']['block_user_comment']) ? $_POST['in']['block_user_comment'] : 'N';
 
 		$dbh->prepare($query . "
 				sdesc = ?, 
@@ -412,6 +413,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				assign = ?,
 				php_version = ?,
 				php_os = ?,
+				block_user_comment = ?
 				ts2 = NOW()
 			WHERE id = {$bug_id}
 		")->execute(array (
@@ -422,6 +424,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['assign'],
 			$_POST['in']['php_version'],
 			$_POST['in']['php_os'],
+			$block_comment
 		));
 
 		// Add changelog entry
@@ -719,6 +722,12 @@ if ($edit == 1 || $edit == 2) { ?>
 <?php	} ?>
 
 				<small>(<a href="quick-fix-desc.php">description</a>)</small>
+			</td>
+		</tr>
+		<tr>
+			<th class="details"></th>
+			<td colspan="3">
+				<input type="checkbox" name="in[block_user_comment]" value="Y"> Block user comment
 			</td>
 		</tr>
 <?php } ?>
