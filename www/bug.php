@@ -403,7 +403,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		if ($status == 'Closed' && $_POST['in']['assign'] == '') {
 			$_POST['in']['assign'] = $auth_user->handle;
 		}
-		$block_comment = isset($_POST['in']['block_user_comment']) ? $_POST['in']['block_user_comment'] : 'N';
+		$_POST['in']['block_user_comment'] = isset($_POST['in']['block_user_comment']) ? 'S' : 'N';
 
 		$dbh->prepare($query . "
 				sdesc = ?, 
@@ -424,7 +424,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['assign'],
 			$_POST['in']['php_version'],
 			$_POST['in']['php_os'],
-			$block_comment
+			$_POST['in']['block_user_comment']
 		));
 
 		// Add changelog entry

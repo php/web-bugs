@@ -695,7 +695,8 @@ function bug_diff($bug, $in)
 		'package_name'		=> 'Package',
 		'php_os'			=> 'Operating System',
 		'php_version'		=> 'PHP Version',
-		'assign'			=> 'Assigned To'
+		'assign'			=> 'Assigned To',
+		'block_user_comment' => 'Block user comment'
 	);
 
 	foreach (array_keys($fields) as $name) {
@@ -797,6 +798,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 		'php_os'			=> 'Operating System',
 		'php_version'		=> 'PHP Version',
 		'assign'			=> 'Assigned To',
+		'block_user_comment' => 'Block user comment'
 	);
 
 	foreach ($fields as $name => $desc) {
@@ -1393,7 +1395,7 @@ function bugs_get_bug ($bug_id)
 
 	$query = 'SELECT b.id, b.package_name, b.bug_type, b.email, b.reporter_name,
 		b.sdesc, b.ldesc, b.php_version, b.php_os,
-		b.status, b.ts1, b.ts2, b.assign,
+		b.status, b.ts1, b.ts2, b.assign, b.block_user_comment,
 		UNIX_TIMESTAMP(b.ts1) AS submitted,
 		UNIX_TIMESTAMP(b.ts2) AS modified,
 		COUNT(bug=b.id) AS votes,
