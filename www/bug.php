@@ -138,6 +138,14 @@ if (!$bug) {
 	exit;
 }
 
+/* Bugs marked as Cancelled just can be commented by the team */
+if ($bug['status'] == 'Cancelled' && !($is_trusted_developer || (isset($logged_in) && $logged_in == 'developer' && $edit == 1))) {
+	response_header('Add comment not allowed');
+	display_bug_error("You're not allowed to add coment on bug #{$bug_id}");
+	response_footer();
+	exit;	
+}
+
 // Handle any updates, displaying errors if there were any
 $RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = array();
 
