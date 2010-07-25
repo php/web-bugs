@@ -723,6 +723,7 @@ function bug_diff_render_html($diff)
 		'php_os'			=> 'Operating System',
 		'php_version'		=> 'PHP Version',
 		'assign'			=> 'Assigned To',
+		'block_user_comment' => 'Block user comment'
 	);
 
 	// make diff output aligned
