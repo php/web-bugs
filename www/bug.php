@@ -138,12 +138,16 @@ if (!$bug) {
 	exit;
 }
 
-/* Bugs blocked to user comments can only be commented by the team */
-if (isset($_POST['ncomment']) && $bug['block_user_comment'] == 'Y' && !($is_trusted_developer || (isset($logged_in) && $logged_in == 'developer'))) {
-	response_header('Add comment not allowed');
-	display_bug_error("You're not allowed to add comment on bug #{$bug_id}");
-	response_footer();
-	exit;	
+if (isset($_POST['ncomment'])) {
+	/* Bugs blocked to user comments can only be commented by the team */
+	if ($bug['block_user_comment'] == 'Y' && !($is_trusted_developer || (isset($logged_in) && $logged_in == 'developer'))) {
+		response_header('Add comment not allowed');
+		display_bug_error("You're not allowed to add comment on bug #{$bug_id}");
+		response_footer();
+		exit;
+	} else if (!empty($_POST['in'])) {
+		$_POST['in']['block_user_comment'] = isset($_POST['in']['block_user_comment']) ? 'S' : 'N';	
+	}
 }
 
 // Handle any updates, displaying errors if there were any
@@ -403,7 +407,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		if ($status == 'Closed' && $_POST['in']['assign'] == '') {
 			$_POST['in']['assign'] = $auth_user->handle;
 		}
-		$_POST['in']['block_user_comment'] = isset($_POST['in']['block_user_comment']) ? 'S' : 'N';
 
 		$dbh->prepare($query . "
 				sdesc = ?, 
