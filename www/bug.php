@@ -146,7 +146,7 @@ if (isset($_POST['ncomment'])) {
 		response_footer();
 		exit;
 	} else if (!empty($_POST['in'])) {
-		$_POST['in']['block_user_comment'] = isset($_POST['in']['block_user_comment']) ? 'S' : 'N';	
+		$_POST['in']['block_user_comment'] = isset($_POST['in']['block_user_comment']) ? 'Y' : 'N';	
 	}
 }
 
