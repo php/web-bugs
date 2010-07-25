@@ -416,7 +416,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				assign = ?,
 				php_version = ?,
 				php_os = ?,
-				block_user_comment = ?
+				block_user_comment = ?,
 				ts2 = NOW()
 			WHERE id = {$bug_id}
 		")->execute(array (
