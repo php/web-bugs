@@ -149,6 +149,7 @@ if (isset($_POST['ncomment'])) {
 		$_POST['in']['block_user_comment'] = isset($_POST['in']['block_user_comment']) ? 'Y' : 'N';	
 	}
 }
+$block_user = (!empty($_POST['in']) && isset($_POST['in']['block_user_comment'])) ? $_POST['in']['block_user_comment'] : $bug['block_user_comment'];
 
 // Handle any updates, displaying errors if there were any
 $RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = array();
@@ -730,7 +731,7 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details"></th>
 			<td colspan="3">
-				<input type="checkbox" name="in[block_user_comment]" value="Y" <?php print (isset($_POST['in']) && isset($_POST['in']['block_user_content'])) ? 'checked' : ''; ?>> Block user comment
+				<input type="checkbox" name="in[block_user_comment]" value="Y" <?php print $block_user == 'Y' ? 'checked="checked"' : ''; ?>> Block user comment
 			</td>
 		</tr>
 <?php } ?>
