@@ -51,6 +51,7 @@ function format_email_body($binfos) {
 		$link_title = strlen($binfo['sdesc']) < 65 ? $binfo['sdesc'] : substr($binfo['sdesc'], 0, 65) . '...';
 
 		$links .= " Title: $link_title\r\n";
+		$links .= " Type:  {$binfo['bug_type']}\r\n";
 		$links .= " Link:  http://bugs.php.net/{$binfo['id']}\r\n\r\n";
 	}
 
