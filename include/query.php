@@ -14,6 +14,7 @@ $order_options = array(
 	'php_os'		=> 'os',
 	'sdesc'			=> 'summary',
 	'assign'		=> 'assignment',
+	'avg_score'		=> 'avg. vote score'
 );
 
 // Fetch pseudo packages
@@ -53,6 +54,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		UNIX_TIMESTAMP(ts2) AS modified
 		FROM bugdb
 	';
+	
+	if ($order_by == 'avg_score') {
+		$query .= 'LEFT JOIN bugdb_votes v ON bugdb.id = v.bug';
+	}		
 
 	$where_clause = ' WHERE 1 = 1 ';
 
@@ -181,6 +186,11 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			$direction = $reorder_by == 'ts2' ? 'DESC' : 'ASC';
 			$order_by = $reorder_by;
 		}
+	}
+	
+	if ($order_by == 'avg_score') {
+		$query .= ' GROUP BY v.bug';
+		$order_by = 'AVG(v.score)+3';
 	}
 
 	$query .= " ORDER BY $order_by $direction";
