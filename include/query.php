@@ -194,13 +194,12 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		
 		switch ($order_by) {
 			case 'avg_score':
-				$order_by = "IFNULL(AVG(v.score), 0)+3 $direction, COUNT(v.bug) DESC";
+				$query .= " ORDER BY IFNULL(AVG(v.score), 0)+3 $direction, COUNT(v.bug) DESC";
 				break;
 			case 'votes_count':
-				$order_by = "COUNT(v.bug) $direction";
+				$query .= " ORDER BY COUNT(v.bug) $direction";
 				break;
 		}
-		$query .= " ORDER BY $order_by";
 	} else {
 		$query .= " ORDER BY $order_by $direction";
 	}
