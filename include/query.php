@@ -190,7 +190,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	
 	if ($order_by == 'avg_score') {
 		$query .= ' GROUP BY bugdb.id';
-		$order_by = 'AVG(v.score)+3';
+		$order_by = 'IFNULL(AVG(v.score), 0)+3';
 	}
 
 	$query .= " ORDER BY $order_by $direction";
