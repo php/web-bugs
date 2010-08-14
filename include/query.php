@@ -14,7 +14,8 @@ $order_options = array(
 	'php_os'		=> 'os',
 	'sdesc'			=> 'summary',
 	'assign'		=> 'assignment',
-	'avg_score'		=> 'avg. vote score'
+	'avg_score'		=> 'avg. vote score',
+	'votes_count'	=> 'number of votes'
 );
 
 // Fetch pseudo packages
@@ -55,7 +56,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		FROM bugdb
 	';
 	
-	if ($order_by == 'avg_score') {
+	if (in_array($order_by, array('votes_count', 'avg_score'))) {
 		$query .= 'LEFT JOIN bugdb_votes v ON bugdb.id = v.bug';
 	}		
 
@@ -188,13 +189,22 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		}
 	}
 	
-	if ($order_by == 'avg_score') {
+	if (in_array($order_by, array('votes_count', 'avg_score'))) {
 		$query .= ' GROUP BY bugdb.id';
-		$order_by = 'IFNULL(AVG(v.score), 0)+3';
+		
+		switch ($order_by) {
+			case 'avg_score':
+				$order_by = "IFNULL(AVG(v.score), 0)+3 $direction, COUNT(v.bug) DESC";
+				break;
+			case 'votes_count':
+				$order_by = "COUNT(v.bug) $direction";
+				break;
+		}
+		$query .= " ORDER BY $order_by";
+	} else {
+		$query .= " ORDER BY $order_by $direction";
 	}
-
-	$query .= " ORDER BY $order_by $direction";
-
+	
 	// if status Feedback then sort also after last updated time.
 	if ($status == 'Feedback') {
 		$query .= ", bugdb.ts2 $direction";
