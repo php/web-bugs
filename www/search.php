@@ -35,7 +35,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	} else {
 		// For count only, simply print the count and exit
 		if ($count_only) {
-			echo (int) $rows;
+			echo (int) $total_rows;
 			exit;
 		}
 
