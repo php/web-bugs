@@ -774,7 +774,7 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details">Summary:</th>
 			<td colspan="3">
-				<input type="text" size="60" maxlength="80" name="in[sdesc]" value="<?php echo field('sdesc'); ?>" />
+				<input type="text" size="60" maxlength="80" name="in[sdesc]" value="<?php echo ($bug['status'] !== 'Spam') ? field('sdesc') : 'Hidden because of SPAM'; ?>" />
 			</td>
 		</tr>
 		<tr>
@@ -800,8 +800,15 @@ if ($edit == 1 || $edit == 2) { ?>
 	<p style="margin-bottom: 0em;">
 		<label for="ncomment" accesskey="m"><b>New<?php if ($edit == 1) echo "/Additional"; ?> Co<span class="accesskey">m</span>ment:</b></label>
 	</p>
-
-	<textarea cols="80" rows="8" name="ncomment" id="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
+	<?php
+	if ($bug['status'] !== 'Spam') {
+	?>
+		<textarea cols="80" rows="8" name="ncomment" id="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
+	<?php
+	} else {
+		echo 'This bug has a SPAM status, so no additional comments are needed.';
+	}
+	?>
 
 	<p style="margin-top: 0em">
 		<input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
@@ -811,7 +818,16 @@ if ($edit == 1 || $edit == 2) { ?>
 
 <?php } // if ($edit == 1 || $edit == 2) ?>
 
-<?php if ($edit == 3) { ?>
+<?php 
+	if ($edit == 3) { 
+	
+	if ($bug['status'] === 'Spam') {
+		echo 'This bug has a SPAM status, so no additional comments are needed.';
+		response_footer();
+		exit;
+	}
+	
+?>
 
 	<form name="comment" id="comment" action="bug.php" method="post">
 
@@ -880,7 +896,11 @@ if (!$logged_in) {
 
 // Display original report
 if ($bug['ldesc']) {
-	output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name'], false);
+	if ($bug['status'] !== 'Spam') {
+		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name'], false);
+	} else {
+		echo 'The original report has been hidden, due to the SPAM status.';
+	}
 }
 
 // Display patches
@@ -911,7 +931,7 @@ OUTPUT;
 
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
-if (is_array($bug_comments) && count($bug_comments)) {
+if (is_array($bug_comments) && count($bug_comments) && $bug['status'] !== 'Spam') {
 	$history_tabs = array(
 		'type_all'     => 'All',
 		'type_comment' => 'Comments',
