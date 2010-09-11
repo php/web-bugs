@@ -1536,7 +1536,7 @@ function response_header($title, $extraHeaders = '')
 				<p class="head-search">
 					<input type="hidden" name="cmd" value="display" />
 					<small>go to bug id or search bugs for</small>
-					<input class="small" type="text" name="search_for" value="" size="30" />
+					<input class="small" type="text" name="search_for" value="<?php print isset($_GET['search_for']) ? htmlspecialchars($_GET['search_for']) : ''; ?>" size="30" />
 					<input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
 				</p>
 			</form>
