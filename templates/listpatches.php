@@ -12,7 +12,7 @@
 <?php foreach ($patches as $pname => $revs) { ?>
  <tr>
   <th class="details">
-  		Patch <a href="?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($pname); ?>&amp;revision=latest"><?php echo clean($pname); ?></a>
+   Patch <a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($pname); ?>&amp;revision=latest"><?php echo clean($pname); ?></a>
   </th>
   <td>
    <?php foreach ($revs as $rev) { ?>
