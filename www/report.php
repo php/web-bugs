@@ -306,10 +306,10 @@ if (!isset($_POST['in'])) {
 
 	$_POST['in'] = array(
 			 'package_name' => '',
-			 'bug_type' => '',
+			 'bug_type' => isset($_GET['bug_type']) ? clean($_GET['bug_type']) : '',
 			 'email' => '',
 			 'sdesc' => '',
-			 'ldesc' => '',
+			 'ldesc' => isset($_GET['manpage']) ? clean("\n---\nFrom manual page: http://www.php.net/" . ltrim($_GET['manpage'], '/') . "\n---\n") : '',
 			 'repcode' => '',
 			 'expres' => '',
 			 'actres' => '',
