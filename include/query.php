@@ -38,7 +38,7 @@ if (!empty($_GET['limit'])) {
 	$limit = ($_GET['limit'] == 'All') ? 'All' : (($_GET['limit'] > 0) ? (int) $_GET['limit'] : $limit);
 }
 $direction = (!empty($_GET['direction']) && $_GET['direction'] != 'DESC') ? 'ASC' : 'DESC';
-$order_by = (!empty($_GET['order_by']) && array_key_exists($_GET['order_by'], $order_options)) ? $_GET['order_by'] : 'id';
+$order_by = (!empty($_GET['order_by']) && array_key_exists($_GET['order_by'], $order_options)) ? $_GET['order_by'] : '';
 $reorder_by = (!empty($_GET['reorder_by']) && array_key_exists($_GET['reorder_by'], $order_options)) ? $_GET['reorder_by'] : '';
 $assign = !empty($_GET['assign']) ? $_GET['assign'] : '';
 $author_email = (!empty($_GET['author_email']) && is_valid_email($_GET['author_email'])) ? $_GET['author_email'] : '';
@@ -189,24 +189,31 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		}
 	}
 	
+	$order_by_clauses = array();
 	if (in_array($order_by, array('votes_count', 'avg_score'))) {
 		$query .= ' GROUP BY bugdb.id';
 		
 		switch ($order_by) {
 			case 'avg_score':
-				$query .= " ORDER BY IFNULL(AVG(v.score), 0)+3 $direction, COUNT(v.bug) DESC";
+				$order_by_clauses = array(
+					"IFNULL(AVG(v.score), 0)+3 $direction",
+					"COUNT(v.bug) DESC"
+				);
 				break;
 			case 'votes_count':
-				$query .= " ORDER BY COUNT(v.bug) $direction";
+				$order_by_clauses = array("COUNT(v.bug) $direction");
 				break;
 		}
-	} else {
-		$query .= " ORDER BY $order_by $direction";
+	} elseif ($order_by != '') {
+		$order_by_clauses = array("$order_by $direction");
 	}
-	
-	// if status Feedback then sort also after last updated time.
+
 	if ($status == 'Feedback') {
-		$query .= ", bugdb.ts2 $direction";
+		$order_by_clauses[] = "bugdb.ts2 $direction";
+	}
+
+	if (count($order_by_clauses)) {
+		$query .= ' ORDER BY ' . implode(', ', $order_by_clauses);
 	}
 
 	if ($limit != 'All' && $limit > 0) {
