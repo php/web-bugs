@@ -376,6 +376,12 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	if ($ncomment && is_spam($ncomment)) {
 		$errors[] = "Please do not SPAM our bug system.";
 	}
+	
+	if ($bug['private'] == 'N' && $bug['private'] != $_POST['in']['private']) {
+		if ($_POST['in']['package_name'] != 'Security related') {
+			$errors[] = 'Only Security related bugs can be private.';
+		}
+	}
 
 	// Require comment for open bugs only
 	if ($_POST['in']['status'] == 'Bogus' &&
@@ -816,7 +822,7 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details"></th>
 			<td colspan="3">
-				<input type="checkbox" name="in[private]" value="N" <?php print $is_private == 'Y' ? 'checked="checked"' : ''; ?> /> Private report (Normal user should not see it)
+				<input type="checkbox" name="in[private]" value="Y" <?php print $is_private == 'Y' ? 'checked="checked"' : ''; ?> /> Private report (Normal user should not see it)
 			</td>
 		</tr>
 <?php   } ?>
