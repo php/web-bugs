@@ -772,6 +772,9 @@ td.search-next {
 .Tbd {
 	background-color: #cdb26e;
 }
+.Sec {
+	background-color: #A60000;
+}
 
 /* {{{ Stolen from http://www.devbridge.com/projects/autocomplete/jquery/ */
 .autocomplete-w1 {

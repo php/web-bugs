@@ -13,7 +13,7 @@ if ($search_for_id) {
 $count_only = isset($_REQUEST['count_only']) && $_REQUEST['count_only'];
 
 // Authenticate (Disabled for now, searching does not require knowledge of user level)
-//bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
 
 $newrequest = http_build_query(array_merge($_GET, $_POST));
 
@@ -68,6 +68,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				"&amp;direction=$direction" .
 				"&amp;limit=$limit" .
 				'&amp;phpver=' . urlencode($phpver) .
+				'&amp;cve_id=' . urlencode($cve_id) .
 				"&amp;patch=$patch" .
 				'&amp;assign=' . urlencode($assign);
 
@@ -120,7 +121,9 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 <?php
 
 			while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
-				echo ' <tr valign="top" class="' , $tla[$row['status']], '">' , "\n";
+				$status_class = $row['package_name'] == 'Security related' ? 'Sec' : $tla[$row['status']];
+
+				echo ' <tr valign="top" class="' , $status_class, '">' , "\n";
 
 				// Bug ID
 				echo '  <td align="center"><a href="bug.php?id=', $row['id'], '">', $row['id'], '</a>';
@@ -247,6 +250,12 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">Return bugs reported with <b>PHP version</b></td>
   <td><input type="text" name="phpver" value="<?php echo htmlspecialchars($phpver, ENT_COMPAT, 'UTF-8'); ?>" /></td>
 </tr>
+<tr valign="top">
+  <th>CVE-ID</th>
+  <td style="white-space: nowrap">Return bugs reported with <b>CVE-ID</b></td>
+  <td><input type="text" name="cve_id" value="<?php echo htmlspecialchars($cve_id, ENT_COMPAT, 'UTF-8'); ?>" /></td>
+</tr>
+
 <tr valign="top">
   <th>Assigned</th>
   <td style="white-space: nowrap">Return bugs <b>assigned</b> to</td>

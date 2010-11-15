@@ -161,6 +161,8 @@ OUTPUT;
 				redirect('bug.php?id=preview');
 				exit;
 			}
+			
+			$is_private = ($package_name == 'Security related' ? 'Y' : 'N');
 
 			$res = $dbh->prepare('
 				INSERT INTO bugdb (
@@ -174,8 +176,9 @@ OUTPUT;
 					passwd,
 					reporter_name,
 					status,
-					ts1
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW())
+					ts1,
+					private
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW(), ?)
 			')->execute(array(
 					$package_name,
 					$_POST['in']['bug_type'],
@@ -186,6 +189,7 @@ OUTPUT;
 					$_POST['in']['php_os'],
 					$_POST['in']['passwd'],
 					$_POST['in']['reporter_name'],
+					$is_private
 				)
 			);
 			if (PEAR::isError($res)) {

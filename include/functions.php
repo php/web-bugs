@@ -727,7 +727,9 @@ function bug_diff($bug, $in)
 		'php_os'			=> 'Operating System',
 		'php_version'		=> 'PHP Version',
 		'assign'			=> 'Assigned To',
-		'block_user_comment' => 'Block user comment'
+		'block_user_comment' => 'Block user comment',
+		'private'			=> 'Private report',
+		'cve_id'			=> 'CVE-ID'
 	);
 
 	foreach (array_keys($fields) as $name) {
@@ -754,7 +756,9 @@ function bug_diff_render_html($diff)
 		'php_os'			=> 'Operating System',
 		'php_version'		=> 'PHP Version',
 		'assign'			=> 'Assigned To',
-		'block_user_comment' => 'Block user comment'
+		'block_user_comment' => 'Block user comment',
+		'private'			=> 'Private report',
+		'cve_id'			=> 'CVE-ID'
 	);
 
 	// make diff output aligned
@@ -830,7 +834,9 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 		'php_os'			=> 'Operating System',
 		'php_version'		=> 'PHP Version',
 		'assign'			=> 'Assigned To',
-		'block_user_comment' => 'Block user comment'
+		'block_user_comment' => 'Block user comment',
+		'private'			=> 'Private report',
+		'cve_id'			=> 'CVE-ID',
 	);
 
 	foreach ($fields as $name => $desc) {

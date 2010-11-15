@@ -138,6 +138,13 @@ if (!$bug) {
 	exit;
 }
 
+$show_bug_info = ($bug['private'] == 'Y' ? false : true);
+
+// Just the reporter and trusted developer should see the private report info
+if ($bug['private'] == 'Y' && $edit == 1 && $is_trusted_developer) {
+	$show_bug_info = true;
+}
+
 if (isset($_POST['ncomment'])) {
 	/* Bugs blocked to user comments can only be commented by the team */
 	if ($bug['block_user_comment'] == 'Y' && !($is_trusted_developer || (isset($logged_in) && $logged_in == 'developer'))) {
@@ -150,6 +157,7 @@ if (isset($_POST['ncomment'])) {
 	}
 }
 $block_user = (!empty($_POST['in']) && isset($_POST['in']['block_user_comment'])) ? $_POST['in']['block_user_comment'] : $bug['block_user_comment'];
+$is_private = (!empty($_POST['in']) && isset($_POST['in']['private'])) ? $_POST['in']['private'] : $bug['private'];
 
 // Handle any updates, displaying errors if there were any
 $RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = array();
@@ -166,6 +174,14 @@ if ($edit === 1) {
 
 if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	// Submission of additional comment by others
+
+	// Bug is private (just should be available to trusted developers and to reporter)
+	if (!$is_trusted_developer && $bug['private'] == 'Y') {
+		response_header('Private report');
+		display_bug_error("The bug #{$bug_id} is not available to public, if you are the original reporter use the Edit tab");
+		response_footer();
+		exit;
+	}
 
 	// Check if session answer is set, then compare it with the post captcha value.
 	// If it's not the same, then it's an incorrect password.
@@ -221,9 +237,28 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
 	// Edits submitted by original reporter for old bugs
-
+	
 	if (!verify_bug_passwd($bug_id, $pw)) {
 		$errors[] = 'The password you supplied was incorrect.';
+	} else {
+		// allow the original reporter to see the private report info
+		$show_bug_info = true;
+	}
+	
+	// Bug is private (just should be available to trusted developers and to original reporter)
+	if (!$show_bug_info && $bug['private'] == 'Y') {
+		response_header('Private report');
+		display_bug_error("The bug #{$bug_id} is not available to public");
+		response_footer();
+		exit;
+	}
+	
+	// Just trusted dev can change the package name of a Security related bug to another package
+	if ($bug['private'] == 'Y' && !$is_trusted_developer
+		&& $bug['package_name'] == 'Security related'
+		&& $_POST['in']['package_name'] != $bug['package_name']) {
+	
+		$errors[] = 'You cannot change the package of a Security related bug!';	
 	}
 
 	$ncomment = trim($_POST['ncomment']);
@@ -258,6 +293,16 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	}
 
 	if (!$errors && !($errors = incoming_details_are_valid($_POST['in'], false))) {
+		// Allow the reporter to change the package to 'Security related', hence mark
+		// the report as private
+		if ($bug['private'] == 'N' && $_POST['in']['package_name'] == 'Security related'
+			&& $_POST['in']['package_name'] != $bug['package_name']) {
+					
+			$is_private = $_POST['in']['private'] = 'Y';
+		} else {
+			$is_private = $bug['private'];
+		}
+	
 		$dbh->prepare("
 			UPDATE bugdb
 			SET
@@ -268,7 +313,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				php_version = ?,
 				php_os = ?,
 				email = ?,
-				ts2 = NOW()
+				ts2 = NOW(),
+				private = ?
 			WHERE id={$bug_id}
 		")->execute(array(
 			$_POST['in']['sdesc'],
@@ -278,6 +324,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['php_version'],
 			$_POST['in']['php_os'],
 			$from,
+			$is_private
 		));
 
 		// Add changelog entry
@@ -306,6 +353,15 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 } elseif (isset($_POST['in']) && is_array($_POST['in']) && !isset($_POST['preview']) && $edit == 1) {
 	// Edits submitted by developer
+	
+	// Bug is private (just should be available to trusted developers and to reporter)
+	if (!$is_trusted_developer && $bug['private'] == 'Y') {
+		response_header('Private report');
+		display_bug_error("The bug #{$bug_id} is not available to public");
+		response_footer();
+		exit;
+	}
+	
 	if ($logged_in != 'developer') {
 		$errors[] = 'You have to login first in order to edit the bug report.';
 	}
@@ -391,6 +447,15 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		{
 			$query .= " email='{$_POST['in']['email']}',";
 		}
+		
+		// Changing the package to 'Security related' should mark the bug as private automatically
+		if ($bug['package_name'] != $_POST['in']['package_name']) {
+			if ($_POST['in']['package_name'] == 'Security related') {
+				$is_private = $_POST['in']['private'] = 'Y';
+			} else {
+				$is_private = $_POST['in']['private'] = 'N';
+			}
+		}
 
 		if ($logged_in != 'developer') {
 			// don't reset assigned status
@@ -418,6 +483,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				php_version = ?,
 				php_os = ?,
 				block_user_comment = ?,
+				cve_id = ?,
+				private = ?,
 				ts2 = NOW()
 			WHERE id = {$bug_id}
 		")->execute(array (
@@ -428,7 +495,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['assign'],
 			$_POST['in']['php_version'],
 			$_POST['in']['php_os'],
-			$_POST['in']['block_user_comment']
+			$_POST['in']['block_user_comment'],
+			$_POST['in']['cve_id'],
+			$_POST['in']['private']
 		));
 
 		// Add changelog entry
@@ -535,7 +604,7 @@ display_bug_error($errors);
 			<td style="white-space: nowrap;"><?php echo format_date($bug['submitted']); ?></td>
 			<th class="details">Modified:</th>
 			<td style="white-space: nowrap;"><?php echo ($bug['modified']) ? format_date($bug['modified']) : '-'; ?></td>
-			<td rowspan="5">
+			<td rowspan="6">
 
 <?php	if ($bug['votes']) { ?>
 				<table id="votes">
@@ -575,6 +644,13 @@ display_bug_error($errors);
 			<td><?php echo htmlspecialchars($bug['php_version']); ?></td>
 			<th class="details">OS:</th>
 			<td><?php echo htmlspecialchars($bug['php_os']); ?></td>
+		</tr>
+		
+		<tr id="private">
+			<th class="details">Private report:</th>
+			<td><?php echo $bug['private'] == 'Y' ? 'Yes' : 'No'; ?></td>
+			<th class="details">CVE-ID:</th>
+			<td><?php echo htmlspecialchars($bug['cve_id']); ?></td>
 		</tr>
 	</table>
 </div>
@@ -729,12 +805,28 @@ if ($edit == 1 || $edit == 2) { ?>
 			</td>
 		</tr>
 		<tr>
+			<th class="details">CVE-ID:</th>
+			<td colspan="3">
+				<input type="text" size="15" maxlength="15" name="in[cve_id]" value="<?php echo field('cve_id'); ?>" id="cve_id"/>
+			</td>
+		</tr>
+<?php   if ($is_trusted_developer) { ?>
+		<tr>
+			<th class="details"></th>
+			<td colspan="3">
+				<input type="checkbox" name="in[private]" value="N" <?php print $is_private == 'Y' ? 'checked="checked"' : ''; ?> /> Private report (Normal user should not see it)
+			</td>
+		</tr>
+<?php   } ?>
+		<tr>
 			<th class="details"></th>
 			<td colspan="3">
 				<input type="checkbox" name="in[block_user_comment]" value="Y" <?php print $block_user == 'Y' ? 'checked="checked"' : ''; ?>> Block user comment
 			</td>
 		</tr>
 <?php } ?>
+
+<?php if ($show_bug_info) { ?>
 
 		<tr>
 			<th class="details">Status:</th>
@@ -816,7 +908,9 @@ if ($edit == 1 || $edit == 2) { ?>
 
 </form>
 
-<?php } // if ($edit == 1 || $edit == 2) ?>
+<?php } // if ($show_bug_info)
+} // if ($edit == 1 || $edit == 2) 
+?>
 
 <?php 
 	if ($edit == 3) { 
@@ -904,7 +998,7 @@ if ($bug['ldesc']) {
 }
 
 // Display patches
-if ($bug_id != 'PREVIEW') {
+if ($show_bug_info && $bug_id != 'PREVIEW') {
 	require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 	$patches = new Bug_Patchtracker;
 	$p = $patches->listPatches($bug_id);
@@ -931,7 +1025,7 @@ OUTPUT;
 
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
-if (is_array($bug_comments) && count($bug_comments) && $bug['status'] !== 'Spam') {
+if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['status'] !== 'Spam') {
 	$history_tabs = array(
 		'type_all'     => 'All',
 		'type_comment' => 'Comments',

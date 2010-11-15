@@ -20,6 +20,8 @@ CREATE TABLE bugdb (
   passwd varchar(20) default NULL,
   registered tinyint(1) NOT NULL default '0',
   block_user_comment char(1) default 'N',
+  cve_id varchar(15) default NULL,
+  private char(1) default 'N',
   PRIMARY KEY  (id),
   KEY php_version (php_version(1)),
   KEY status (status),

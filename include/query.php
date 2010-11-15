@@ -31,6 +31,7 @@ $bug_updated = (int) (isset($_GET['bug_updated']) ? $_GET['bug_updated'] : 0);
 $php_os = !empty($_GET['php_os']) ? $_GET['php_os'] : '';
 $php_os_not = !empty($_GET['php_os_not']) ? 'not' : '';
 $phpver = !empty($_GET['phpver']) ? $_GET['phpver'] : '';
+$cve_id = !empty($_GET['cve_id']) ? $_GET['cve_id'] : '';
 $patch = !empty($_GET['patch']) ? $_GET['patch'] : '';
 $begin = (int) (!empty($_GET['begin']) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
@@ -59,8 +60,13 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if (in_array($order_by, array('votes_count', 'avg_score'))) {
 		$query .= 'LEFT JOIN bugdb_votes v ON bugdb.id = v.bug';
 	}		
-
+	
 	$where_clause = ' WHERE 1 = 1 ';
+	
+	if (!$is_trusted_developer) {
+		/* Non trusted developer should see the Security related bug report just when it is public */
+		$where_clause .= ' AND (bugdb.package_name <> "Security related" OR private = "N") ';
+	}
 
 	if (!empty($package_name)) {
 		$where_clause .= ' AND bugdb.package_name';
@@ -151,6 +157,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
 	if ($phpver != '') {
 		$where_clause .= " AND bugdb.php_version LIKE '" . $dbh->escape($phpver) . "%'";
+	}
+	
+	if ($cve_id != '') {
+		$where_clause .= " AND bugdb.cve_id LIKE '" . $dbh->escape($cve_id) . "%'";
 	}
 	
 	if ($patch != '') {
