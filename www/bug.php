@@ -451,7 +451,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		// Changing the package to 'Security related' should mark the bug as private automatically
 		if ($bug['package_name'] != $_POST['in']['package_name']) {
 			if ($_POST['in']['package_name'] == 'Security related') {
-				$is_private = $_POST['in']['private'] = 'Y';
+				if ($_POST['in']['status'] != 'Closed') {
+					$is_private = $_POST['in']['private'] = 'Y';
+				}
 			} else {
 				$is_private = $_POST['in']['private'] = 'N';
 			}
