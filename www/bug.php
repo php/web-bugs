@@ -379,7 +379,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	
 	if ($bug['private'] == 'N' && $bug['private'] != $_POST['in']['private']) {
 		if ($_POST['in']['package_name'] != 'Security related') {
-			$errors[] = 'Only Security related bugs can be private.';
+			$errors[] = 'Only Security related bugs can be marked as private.';
 		}
 	}
 
