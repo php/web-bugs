@@ -998,7 +998,9 @@ if (!$logged_in) {
 
 // Display original report
 if ($bug['ldesc']) {
-	if ($bug['status'] !== 'Spam') {
+	if (!$show_bug_info) {
+		echo 'This bug report is marked as private.';
+	} else if ($bug['status'] !== 'Spam') {
 		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name'], false);
 	} else {
 		echo 'The original report has been hidden, due to the SPAM status.';
