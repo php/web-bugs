@@ -378,6 +378,11 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$errors[] = "Please do not SPAM our bug system.";
 	}
 	
+	if (!empty($_POST['in']['cve_id'])) {
+		// Remove the CVE- prefix
+		$_POST['in']['cve_id'] = preg_replace('/^\s*CVE-/i', '', $_POST['in']['cve_id']);
+	}
+	
 	if ($bug['private'] == 'N' && $bug['private'] != $_POST['in']['private']) {
 		if ($_POST['in']['package_name'] != 'Security related') {
 			$errors[] = 'Only Security related bugs can be marked as private.';
@@ -659,7 +664,7 @@ display_bug_error($errors);
 			<th class="details">Private report:</th>
 			<td><?php echo $bug['private'] == 'Y' ? 'Yes' : 'No'; ?></td>
 			<th class="details">CVE-ID:</th>
-			<td><?php echo htmlspecialchars($bug['cve_id']); ?></td>
+			<td><?php if (!empty($bug['cve_id'])) { printf('<a href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-%s" target="_blank">%1$s</a>', htmlspecialchars($bug['cve_id'])); } ?></td>
 		</tr>
 	</table>
 </div>
