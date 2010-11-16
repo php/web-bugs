@@ -154,6 +154,7 @@ if (isset($_POST['ncomment'])) {
 		exit;
 	} else if (!empty($_POST['in'])) {
 		$_POST['in']['block_user_comment'] = isset($_POST['in']['block_user_comment']) ? 'Y' : 'N';	
+		$_POST['in']['private'] = isset($_POST['in']['private']) ? 'Y' : 'N';
 	}
 }
 $block_user = (!empty($_POST['in']) && isset($_POST['in']['block_user_comment'])) ? $_POST['in']['block_user_comment'] : $bug['block_user_comment'];
