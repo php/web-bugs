@@ -751,7 +751,8 @@ if ($edit == 1 || $edit == 2) { ?>
 <form id="update" action="bug.php?id=<?php echo $bug_id; ?>&amp;edit=<?php echo $edit; ?>" method="post">
 
 <?php if ($edit == 2) {
-		if (!isset($_POST['in']) && $pw && verify_bug_passwd($bug['id'], $pw)) { ?>
+		if (!isset($_POST['in']) && $pw && verify_bug_passwd($bug['id'], $pw)) {
+			$show_bug_info = true;	?>
 			<div class="explain">
 				Welcome back! Since you opted to store your bug's password in a
 				cookie, you can just go ahead and add more information to this
