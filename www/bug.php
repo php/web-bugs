@@ -677,7 +677,7 @@ display_bug_error($errors);
 ?>
 <div class="clear"></div>
 
-<?php if (!$edit && canvote($thanks, $bug['status'])) { ?>
+<?php if ($show_bug_info && !$edit && canvote($thanks, $bug['status'])) { ?>
 <form id="vote" method="post" action="vote.php">
 	<div class="sect">
 		<fieldset>
