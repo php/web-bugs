@@ -152,9 +152,6 @@ if (isset($_POST['ncomment'])) {
 		display_bug_error("You're not allowed to add comment on bug #{$bug_id}");
 		response_footer();
 		exit;
-	} else if (!empty($_POST['in'])) {
-		$_POST['in']['block_user_comment'] = isset($_POST['in']['block_user_comment']) ? 'Y' : 'N';	
-		$_POST['in']['private'] = isset($_POST['in']['private']) ? 'Y' : 'N';
 	}
 }
 $block_user = (!empty($_POST['in']) && isset($_POST['in']['block_user_comment'])) ? $_POST['in']['block_user_comment'] : $bug['block_user_comment'];
@@ -299,9 +296,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		if ($bug['private'] == 'N' && $_POST['in']['package_name'] == 'Security related'
 			&& $_POST['in']['package_name'] != $bug['package_name']) {
 					
-			$is_private = $_POST['in']['private'] = 'Y';
-		} else {
-			$is_private = $bug['private'];
+			$is_private = 'Y';
 		}
 	
 		$dbh->prepare("
@@ -383,7 +378,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$_POST['in']['cve_id'] = preg_replace('/^\s*CVE-/i', '', $_POST['in']['cve_id']);
 	}
 	
-	if ($bug['private'] == 'N' && $bug['private'] != $_POST['in']['private']) {
+	if ($bug['private'] == 'N' && $bug['private'] != $is_private) {
 		if ($_POST['in']['package_name'] != 'Security related') {
 			$errors[] = 'Only Security related bugs can be marked as private.';
 		}
@@ -464,10 +459,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		if ($bug['package_name'] != $_POST['in']['package_name']) {
 			if ($_POST['in']['package_name'] == 'Security related') {
 				if ($_POST['in']['status'] != 'Closed') {
-					$is_private = $_POST['in']['private'] = 'Y';
+					$is_private = 'Y';
 				}
-			} else {
-				$is_private = $_POST['in']['private'] = 'N';
 			}
 		}
 
@@ -509,9 +502,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['assign'],
 			$_POST['in']['php_version'],
 			$_POST['in']['php_os'],
-			$_POST['in']['block_user_comment'],
+			$block_user,
 			$_POST['in']['cve_id'],
-			$_POST['in']['private']
+			$is_private
 		));
 
 		// Add changelog entry
