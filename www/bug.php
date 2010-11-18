@@ -141,7 +141,7 @@ if (!$bug) {
 $show_bug_info = ($bug['private'] == 'Y' ? false : true);
 
 // Just the reporter and trusted developer should see the private report info
-if ($bug['private'] == 'Y' && $edit == 1 && $is_trusted_developer) {
+if ($bug['private'] == 'Y' && $is_trusted_developer) {
 	$show_bug_info = true;
 }
 
@@ -665,7 +665,7 @@ display_bug_error($errors);
 <?php if ($bug_id !== 'PREVIEW') {
 	echo '<div class="controls">', "\n",
 		control(0, 'View'),
-		control(3, 'Add Comment'),
+		($bug['private'] == 'N' ? control(3, 'Add Comment') : ''),
 		control(1, 'Developer'),
 		control(2, 'Edit'),
 		'</div>', "\n";
@@ -921,7 +921,7 @@ if ($edit == 1 || $edit == 2) { ?>
 ?>
 
 <?php 
-	if ($edit == 3) { 
+	if ($edit == 3 && $bug['private'] == 'N') { 
 	
 	if ($bug['status'] === 'Spam') {
 		echo 'This bug has a SPAM status, so no additional comments are needed.';
