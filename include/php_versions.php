@@ -1,11 +1,11 @@
 <?php
 	$date = date('Y-m-d');
 	$versions = array(
-		//'5.3.3RC3',
+		'5.3.1RC1',
 		'5.3.3',
 		"5.3SVN-{$date} (snap)",
 		"5.3SVN-{$date} (SVN)",
-		//'5.2.14RC3',
+		'5.2.15RC1',
 		'5.2.14',
 		"5.2SVN-{$date} (snap)",
 		"5.2SVN-{$date} (SVN)",
