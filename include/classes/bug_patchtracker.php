@@ -173,7 +173,8 @@ class Bug_Patchtracker
 				'text/x-diff',
 				'text/x-patch',
 				'text/x-c++',
-				'text/x-c'
+				'text/x-c',
+				'text/x-m4',
 			);
 
 			// return mime type ala mimetype extension
