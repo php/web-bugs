@@ -141,7 +141,8 @@ if (!$bug) {
 $show_bug_info = ($bug['private'] == 'Y' ? false : true);
 
 // Just the reporter and trusted developer should see the private report info
-if ($bug['private'] == 'Y' && $is_trusted_developer) {
+if (($bug['private'] == 'Y' && isset($logged_in) && $logged_in == 'developer' && $is_trusted_developer)
+	|| ($logged_in != 'developer' && $edit == 0 && verify_bug_passwd($bug_id, $pw))) {
 	$show_bug_info = true;
 }
 
