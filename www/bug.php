@@ -140,15 +140,19 @@ if (!$bug) {
 
 $show_bug_info = ($bug['private'] == 'Y' ? false : true);
 
-// Just the reporter and trusted developer should see the private report info
-if (($bug['private'] == 'Y' && isset($logged_in) && $logged_in == 'developer' && $is_trusted_developer)
-	|| ($logged_in != 'developer' && $edit == 0 && verify_bug_passwd($bug_id, $pw))) {
-	$show_bug_info = true;
+// When the bug is private, just the reporter and trusted developer should see
+// the report info
+if ($show_bug_info === false) {
+	if ($is_trusted_developer) {
+		$show_bug_info = true;
+	} else if ($logged_in != 'developer' && $edit == 0 && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
+		$show_bug_info = true;
+	}
 }
 
 if (isset($_POST['ncomment'])) {
 	/* Bugs blocked to user comments can only be commented by the team */
-	if ($bug['block_user_comment'] == 'Y' && !($is_trusted_developer || (isset($logged_in) && $logged_in == 'developer'))) {
+	if ($bug['block_user_comment'] == 'Y' && $logged_in != 'developer') {
 		response_header('Add comment not allowed');
 		display_bug_error("You're not allowed to add comment on bug #{$bug_id}");
 		response_footer();
@@ -297,7 +301,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		if ($bug['private'] == 'N' && $_POST['in']['package_name'] == 'Security related'
 			&& $_POST['in']['package_name'] != $bug['package_name']) {
 					
-			$is_private = 'Y';
+			$is_private = $_POST['in']['private'] = 'Y';
 		}
 	
 		$dbh->prepare("
@@ -460,7 +464,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		if ($bug['package_name'] != $_POST['in']['package_name']) {
 			if ($_POST['in']['package_name'] == 'Security related') {
 				if ($_POST['in']['status'] != 'Closed') {
-					$is_private = 'Y';
+					$is_private = $_POST['in']['private'] = 'Y';
 				}
 			}
 		}
