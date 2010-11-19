@@ -258,10 +258,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	
 	// Just trusted dev can change the package name of a Security related bug to another package
 	if ($bug['private'] == 'Y' && !$is_trusted_developer
-		&& $bug['package_name'] == 'Security related'
-		&& $_POST['in']['package_name'] != $bug['package_name']) {
+		&& $bug['bug_type'] == 'Security'
+		&& $_POST['in']['bug_type'] != $bug['bug_type']) {
 	
-		$errors[] = 'You cannot change the package of a Security related bug!';	
+		$errors[] = 'You cannot change the bug type of a Security bug!';	
 	}
 
 	$ncomment = trim($_POST['ncomment']);
@@ -296,10 +296,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	}
 
 	if (!$errors && !($errors = incoming_details_are_valid($_POST['in'], false))) {
-		// Allow the reporter to change the package to 'Security related', hence mark
+		// Allow the reporter to change the bug type to 'Security', hence mark
 		// the report as private
-		if ($bug['private'] == 'N' && $_POST['in']['package_name'] == 'Security related'
-			&& $_POST['in']['package_name'] != $bug['package_name']) {
+		if ($bug['private'] == 'N' && $_POST['in']['bug_type'] == 'Security'
+			&& $_POST['in']['bug_type'] != $bug['bug_type']) {
 					
 			$is_private = $_POST['in']['private'] = 'Y';
 		}
@@ -384,8 +384,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	}
 	
 	if ($bug['private'] == 'N' && $bug['private'] != $is_private) {
-		if ($_POST['in']['package_name'] != 'Security related') {
-			$errors[] = 'Only Security related bugs can be marked as private.';
+		if ($_POST['in']['bug_type'] != 'Security') {
+			$errors[] = 'Only Security bugs can be marked as private.';
 		}
 	}
 
@@ -461,8 +461,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		}
 		
 		// Changing the package to 'Security related' should mark the bug as private automatically
-		if ($bug['package_name'] != $_POST['in']['package_name']) {
-			if ($_POST['in']['package_name'] == 'Security related') {
+		if ($bug['bug_type'] != $_POST['in']['bug_type']) {
+			if ($_POST['in']['bug_type'] == 'Security') {
 				if ($_POST['in']['status'] != 'Closed') {
 					$is_private = $_POST['in']['private'] = 'Y';
 				}
@@ -551,6 +551,8 @@ switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))
 	case 'Documentation Problem':
 		$bug_type = 'Doc Bug';
 		break;
+	case 'Security':
+		$bug_type = 'Sec Bug';
 	default:
 	case 'Bug':
 		$bug_type = 'Bug';

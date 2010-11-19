@@ -25,6 +25,7 @@ $bug_types = array(
 	'Bug'						=> 'Bug',
 	'Feature/Change Request'	=> 'Req',
 	'Documentation Problem'		=> 'Doc',
+	'Security'					=> 'Sec Bug'
 );
 
 // Used in show_state_options()
@@ -1209,6 +1210,9 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	if ($bug_type === 'Documentation Problem') {
 		// Documentation problems *always* go to the doc team
 		$to[] = $docBugEmail;
+	} else if ($bug_type == 'Security') {
+		// Security problems *always* go to the sec team
+		$to[] = $secBugEmail;
 	}
 	else {
 		/* Get package mailing list address */

@@ -162,7 +162,8 @@ OUTPUT;
 				exit;
 			}
 			
-			$is_private = ($package_name == 'Security related' ? 'Y' : 'N');
+			// Bug type 'Security' marks automatically the report as private
+			$is_private = ($_POST['in']['bug_type'] == 'Security') ? 'Y' : 'N';
 
 			$res = $dbh->prepare('
 				INSERT INTO bugdb (
