@@ -65,7 +65,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	
 	if (!$is_trusted_developer) {
 		/* Non trusted developer should see the Security related bug report just when it is public */
-		$where_clause .= ' AND (bugdb.package_name <> "Security related" OR private = "N") ';
+		$where_clause .= ' AND (bugdb.bug_type <> "Security" OR private = "N") ';
 	}
 
 	if (!empty($package_name)) {
