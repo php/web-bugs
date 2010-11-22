@@ -917,8 +917,8 @@ DEV_TEXT;
 	$subj = $bug_types[$bug['bug_type']];
 	$sdesc = txfield('sdesc', $bug, $in);
 
-	/* send mail if status was changed or there is a comment */
-	if ($in['status'] != $bug['status'] || $ncomment != '') {
+	/* send mail if status was changed, there is a comment or the bug type was changed to Security */
+	if ($in['status'] != $bug['status'] || $ncomment != '' || (isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type'] && $in['bug_type'] == 'Security')) {
 		if (isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type']) {
 			$subj = $bug_types[$bug['bug_type']] . '->' . $bug_types[$in['bug_type']];
 		}
