@@ -1203,7 +1203,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
  */
 function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 {
-	global $dbh, $bugEmail, $docBugEmail;
+	global $dbh, $bugEmail, $docBugEmail, $secBugEmail;
 
 	$to = array();
 	
