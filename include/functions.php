@@ -90,6 +90,32 @@ function verify_password($user, $pass)
 	return true;
 }
 
+function bugs_has_access ($bug_id, $bug, $pw)
+{
+	global $is_trusted_developer, $auth_user, $logged_in;
+	
+	if ($bug['private'] != 'Y') {
+		return true;
+	}
+
+	// When the bug is private, only the submitter, trusted devs and assigned dev
+	// should see the report info
+
+	if ($is_trusted_developer) {
+		// trusted dev
+		return true;
+	} else if ($logged_in != 'developer' && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
+		// The submitter
+		return true;
+	} else if ($logged_in == 'developer' && $bug['assign'] != '' &&
+		strtolower($bug['assign']) == strtolower($auth_user->handle)) {
+		// The assigned dev
+		return true;
+	}
+	
+	return false;
+}
+
 function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 {
 	global $auth_user, $ROOT_DIR;

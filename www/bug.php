@@ -138,23 +138,7 @@ if (!$bug) {
 	exit;
 }
 
-$show_bug_info = ($bug['private'] == 'Y' ? false : true);
-
-// When the bug is private, just the reporter, trusted developer and assigned
-// dev should see the report info
-if ($show_bug_info === false) {
-	if ($is_trusted_developer) {
-		// trusted dev
-		$show_bug_info = true;
-	} else if ($logged_in != 'developer' && $edit == 0 && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
-		// The submitter
-		$show_bug_info = true;
-	} else if ($logged_in == 'developer' && $bug['assign'] != '' &&
-		strtolower($bug['assign']) == strtolower($auth_user->handle)) {
-		// The assigned dev
-		$show_bug_info = true;
-	}
-}
+$show_bug_info = bugs_has_access($bug_id, $bug, $pw);
 
 if (isset($_POST['ncomment'])) {
 	/* Bugs blocked to user comments can only be commented by the team */

@@ -38,6 +38,15 @@ if (!$logged_in) {
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
 }
 
+$show_bug_info = bugs_has_access($bug_id, $buginfo, $pw);
+
+if (!$show_bug_info) {
+	response_header('Private report');
+	display_bug_error("The bug #{$bug_id} is not available to public");
+	response_footer();
+	exit;
+}
+
 require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patchinfo = new Bug_Patchtracker;
 
