@@ -140,12 +140,18 @@ if (!$bug) {
 
 $show_bug_info = ($bug['private'] == 'Y' ? false : true);
 
-// When the bug is private, just the reporter and trusted developer should see
-// the report info
+// When the bug is private, just the reporter, trusted developer and assigned
+// dev should see the report info
 if ($show_bug_info === false) {
 	if ($is_trusted_developer) {
+		// trusted dev
 		$show_bug_info = true;
 	} else if ($logged_in != 'developer' && $edit == 0 && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
+		// The submitter
+		$show_bug_info = true;
+	} else if ($logged_in == 'developer' && $bug['assign'] != '' &&
+		strtolower($bug['assign']) == strtolower($auth_user->handle)) {
+		// The assigned dev
 		$show_bug_info = true;
 	}
 }
@@ -248,7 +254,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$show_bug_info = true;
 	}
 	
-	// Bug is private (just should be available to trusted developers and to original reporter)
+	// Bug is private (just should be available to trusted developers, original reporter and assigned dev)
 	if (!$show_bug_info && $bug['private'] == 'Y') {
 		response_header('Private report');
 		display_bug_error("The bug #{$bug_id} is not available to public");
@@ -355,8 +361,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 } elseif (isset($_POST['in']) && is_array($_POST['in']) && !isset($_POST['preview']) && $edit == 1) {
 	// Edits submitted by developer
 	
-	// Bug is private (just should be available to trusted developers and to reporter)
-	if (!$is_trusted_developer && $bug['private'] == 'Y') {
+	// Bug is private (just should be available to trusted developers, submitter and assigned dev)
+	if (!$show_bug_info && $bug['private'] == 'Y') {
 		response_header('Private report');
 		display_bug_error("The bug #{$bug_id} is not available to public");
 		response_footer();
@@ -378,9 +384,14 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$errors[] = "Please do not SPAM our bug system.";
 	}
 	
-	if (!empty($_POST['in']['cve_id'])) {
-		// Remove the CVE- prefix
-		$_POST['in']['cve_id'] = preg_replace('/^\s*CVE-/i', '', $_POST['in']['cve_id']);
+	if ($is_trusted_developer) {
+		// Just trusted dev can set CVE-ID
+		if (!empty($_POST['in']['cve_id'])) {
+			// Remove the CVE- prefix
+			$_POST['in']['cve_id'] = preg_replace('/^\s*CVE-/i', '', $_POST['in']['cve_id']);
+		}
+	} else {
+		$_POST['in']['cve_id'] = $bug['cve_id'];
 	}
 	
 	if ($bug['private'] == 'N' && $bug['private'] != $is_private) {
@@ -455,17 +466,14 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$query = 'UPDATE bugdb SET';
 
 		// Update email only if it's passed
-		if ($bug['email'] != $_POST['in']['email'] && !empty($_POST['in']['email']))
-		{
+		if ($bug['email'] != $_POST['in']['email'] && !empty($_POST['in']['email'])) {
 			$query .= " email='{$_POST['in']['email']}',";
 		}
 		
 		// Changing the package to 'Security related' should mark the bug as private automatically
 		if ($bug['bug_type'] != $_POST['in']['bug_type']) {
-			if ($_POST['in']['bug_type'] == 'Security') {
-				if ($_POST['in']['status'] != 'Closed') {
-					$is_private = $_POST['in']['private'] = 'Y';
-				}
+			if ($_POST['in']['bug_type'] == 'Security' && $_POST['in']['status'] != 'Closed') {
+				$is_private = $_POST['in']['private'] = 'Y';
 			}
 		}
 
@@ -819,13 +827,13 @@ if ($edit == 1 || $edit == 2) { ?>
 				<small>(<a href="quick-fix-desc.php">description</a>)</small>
 			</td>
 		</tr>
+<?php   if ($is_trusted_developer) { ?>
 		<tr>
 			<th class="details">CVE-ID:</th>
 			<td colspan="3">
 				<input type="text" size="15" maxlength="15" name="in[cve_id]" value="<?php echo field('cve_id'); ?>" id="cve_id"/>
 			</td>
 		</tr>
-<?php   if ($is_trusted_developer) { ?>
 		<tr>
 			<th class="details"></th>
 			<td colspan="3">
