@@ -18,6 +18,7 @@ $titles = array(
 	'Bogus'		=> 'Bogus',
 	'Duplicate'	=> 'Dupe',
 	'Wont fix'	=> 'Wont&nbsp;Fix',
+	'To be documented' => 'Tbd',
 );
 
 $rev = isset($_GET['rev']) ? $_GET['rev'] : 1;
