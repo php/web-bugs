@@ -14,6 +14,8 @@ $count_only = isset($_REQUEST['count_only']) && $_REQUEST['count_only'];
 
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
+$is_security_developer = ($user_flags & (BUGS_TRUSTED_DEV | BUGS_SECURITY_DEV));
+
 $newrequest = http_build_query(array_merge($_GET, $_POST));
 
 if (!$count_only) {
@@ -296,8 +298,17 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Patch</th>
   <td style="white-space: nowrap">Return only bugs reported with <b>patch attached</b></td>
-  <td><input type="checkbox" name="patch" value="S" <?php echo $patch == 'S' ? " checked" : "" ?> /></td>
+  <td><input type="checkbox" name="patch" value="Y" <?php echo $patch == 'Y' ? " checked" : "" ?> /></td>
 </tr>
+<?php
+	if ($is_security_developer) {
+?>
+<tr valign="top">
+  <th>Private</th>
+  <td style="white-space: nowrap">Return only bugs marked as <b>private</b></td>
+  <td><input type="checkbox" name="private" value="Y" <?php echo $private == 'Y' ? " checked" : "" ?> /></td>
+</tr>
+<?php } ?>
 </table>
 </form>
 

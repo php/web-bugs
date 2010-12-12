@@ -34,6 +34,7 @@ $phpver = !empty($_GET['phpver']) ? $_GET['phpver'] : '';
 $cve_id = !empty($_GET['cve_id']) ? $_GET['cve_id'] : '';
 $cve_id_not = !empty($_GET['cve_id_not']) ? 'not' : '';
 $patch = !empty($_GET['patch']) ? $_GET['patch'] : '';
+$private = !empty($_GET['private']) ? $_GET['private'] : '';
 $begin = (int) (!empty($_GET['begin']) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
 if (!empty($_GET['limit'])) {
@@ -64,7 +65,11 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	
 	$where_clause = ' WHERE 1 = 1 ';
 	
-	if (!($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV))) {
+	if ($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV)) {
+		if ($private != '') {
+			$where_clause .= ' AND bugdb.private = "Y" ';
+		}
+	} else { 
 		/* Non trusted developer should see the Security related bug report just when it is public */
 		$where_clause .= ' AND (bugdb.bug_type <> "Security" OR private = "N") ';
 	}
