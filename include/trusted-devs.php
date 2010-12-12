@@ -13,8 +13,29 @@ $trusted_developers = array(
 	'philip',
 	'felipe',
 	'pajoye',
+);
+
+$security_developers = array(
+	'felipe',
+	'rasmus',
+	'tony2001',
+	'johannes',
+	'derick',
+	'iliaa',
+	'andrei',
+	'pajoye',
 	'stas',
 	'zeev',
+	'wez',
+	'edink',
+	'shane',
+	'sas',
+	'ssb',
+	'helly',
 	'andi',
-	'scottmac'
+	'scottmac',
+	'dmitry',
+	// Distro people
+	'jorton',
+	'geissert',
 );

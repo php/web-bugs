@@ -1,5 +1,11 @@
 <?php
 
+/* User flags */
+define('BUGS_NORMAL_USER',  1<<0);
+define('BUGS_DEV_USER',     1<<1);
+define('BUGS_TRUSTED_DEV',  1<<2);
+define('BUGS_SECURITY_DEV', 1<<3);
+
 /* Contains functions and variables used throughout the bug system */
 
 // used in mail_bug_updates(), below, and class for search results
@@ -90,24 +96,23 @@ function verify_password($user, $pass)
 	return true;
 }
 
-function bugs_has_access ($bug_id, $bug, $pw)
+function bugs_has_access ($bug_id, $bug, $pw, $user_flags)
 {
-	global $is_trusted_developer, $auth_user, $logged_in;
+	global $auth_user;
 	
 	if ($bug['private'] != 'Y') {
 		return true;
 	}
 
-	// When the bug is private, only the submitter, trusted devs and assigned dev
+	// When the bug is private, only the submitter, trusted devs, security devs and assigned dev
 	// should see the report info
-
-	if ($is_trusted_developer) {
-		// trusted dev
+	if ($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV)) {
+		// trusted and security dev
 		return true;
-	} else if ($logged_in != 'developer' && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
+	} else if (($user_flags == BUGS_NORMAL_USER) && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
 		// The submitter
 		return true;
-	} else if ($logged_in == 'developer' && $bug['assign'] != '' &&
+	} else if (($user_flags & BUGS_DEV_USER) && $bug['assign'] != '' &&
 		strtolower($bug['assign']) == strtolower($auth_user->handle)) {
 		// The assigned dev
 		return true;
@@ -116,7 +121,7 @@ function bugs_has_access ($bug_id, $bug, $pw)
 	return false;
 }
 
-function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
+function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 {
 	global $auth_user, $ROOT_DIR;
 
@@ -124,7 +129,8 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 	$user = '';
 	$pw = '';
 	$logged_in = false;
-	$is_trusted_developer = false;
+	
+	$user_flags = BUGS_NORMAL_USER;
 
 	// Set username and password
 	if (!empty($_POST['pw'])) {
@@ -157,6 +163,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 	// Authentication and user level check
 	// User levels are: reader (0), commenter/patcher/etc. (edit = 3), submitter (edit = 2), developer (edit = 1)
 	if ($user != '' && $pw != '' && verify_password($user, $pw)) {
+		$user_flags = BUGS_DEV_USER;
 		$logged_in = 'developer';
 		$auth_user->handle = $user;
 		$auth_user->email = "{$user}@php.net";
@@ -170,7 +177,13 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$is_trusted_developer)
 	// Check if developer is trusted
 	if ($logged_in == 'developer') {
 		require_once "{$ROOT_DIR}/include/trusted-devs.php";
-		$is_trusted_developer = in_array($user, $trusted_developers);
+		
+		if (in_array($user, $trusted_developers)) {
+			$user_flags |= BUGS_TRUSTED_DEV;
+		}
+		if (in_array($user, $security_developers)) {
+			$user_flags |= BUGS_SECURITY_DEV;
+		}
 	}
 }
 

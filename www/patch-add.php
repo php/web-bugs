@@ -30,7 +30,8 @@ if (!($buginfo = bugs_get_bug($bug_id))) {
 $package_name = $buginfo['package_name'];
 
 // Authenticate
-bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
@@ -38,7 +39,7 @@ if (!$logged_in) {
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
 }
 
-$show_bug_info = bugs_has_access($bug_id, $buginfo, $pw);
+$show_bug_info = bugs_has_access($bug_id, $buginfo, $pw, $user_flags);
 
 if (!$show_bug_info) {
 	response_header('Private report');

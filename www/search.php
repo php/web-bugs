@@ -12,7 +12,8 @@ if ($search_for_id) {
 // For bug count only, used in places like doc.php.net
 $count_only = isset($_REQUEST['count_only']) && $_REQUEST['count_only'];
 
-bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+$is_security_developer = ($user_flags & BUGS_SECURITY_DEV);
 
 $newrequest = http_build_query(array_merge($_GET, $_POST));
 

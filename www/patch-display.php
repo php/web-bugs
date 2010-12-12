@@ -11,7 +11,10 @@ if (!isset($_GET['bug_id']) && !isset($_GET['bug'])) {
 }
 
 // Authenticate
-bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
+$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
+
 $canpatch = ($logged_in == 'developer');
 
 $revision = isset($_GET['revision']) ? $_GET['revision'] : null;

@@ -2,7 +2,9 @@
 require_once '../../include/prepend.php';
 session_start();
 
-bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
+$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
 if (!$logged_in) {
 	response_footer("Please login");

@@ -38,7 +38,10 @@ require_once '../include/prepend.php';
 $edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
 
 // Authenticate
-bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
+$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
+$is_security_developer = ($user_flags & BUGS_SECURITY_DEV);
 
 // Handle unsubscription
 if (isset($_GET['unsubscribe'])) {
@@ -138,7 +141,7 @@ if (!$bug) {
 	exit;
 }
 
-$show_bug_info = bugs_has_access($bug_id, $bug, $pw);
+$show_bug_info = bugs_has_access($bug_id, $bug, $pw, $user_flags);
 
 if (isset($_POST['ncomment'])) {
 	/* Bugs blocked to user comments can only be commented by the team */
@@ -169,7 +172,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	// Submission of additional comment by others
 
 	// Bug is private (just should be available to trusted developers and to reporter)
-	if (!$is_trusted_developer && $bug['private'] == 'Y') {
+	if (!$is_security_developer && $bug['private'] == 'Y') {
 		response_header('Private report');
 		display_bug_error("The bug #{$bug_id} is not available to public, if you are the original reporter use the Edit tab");
 		response_footer();
@@ -247,7 +250,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	}
 	
 	// Just trusted dev can change the package name of a Security related bug to another package
-	if ($bug['private'] == 'Y' && !$is_trusted_developer
+	if ($bug['private'] == 'Y' && !$is_security_developer
 		&& $bug['bug_type'] == 'Security'
 		&& $_POST['in']['bug_type'] != $bug['bug_type']) {
 	
@@ -368,7 +371,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$errors[] = "Please do not SPAM our bug system.";
 	}
 	
-	if ($is_trusted_developer) {
+	if ($is_security_developer) {
 		// Just trusted dev can set CVE-ID
 		if (!empty($_POST['in']['cve_id'])) {
 			// Remove the CVE- prefix
@@ -811,7 +814,7 @@ if ($edit == 1 || $edit == 2) { ?>
 				<small>(<a href="quick-fix-desc.php">description</a>)</small>
 			</td>
 		</tr>
-<?php   if ($is_trusted_developer) { ?>
+<?php   if ($is_security_developer) { ?>
 		<tr>
 			<th class="details">CVE-ID:</th>
 			<td colspan="3">

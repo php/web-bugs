@@ -63,7 +63,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	
 	$where_clause = ' WHERE 1 = 1 ';
 	
-	if (!$is_trusted_developer) {
+	if (!$is_security_developer) {
 		/* Non trusted developer should see the Security related bug report just when it is public */
 		$where_clause .= ' AND (bugdb.bug_type <> "Security" OR private = "N") ';
 	}

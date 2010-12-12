@@ -25,7 +25,9 @@ if (!is_array($bug)) {
 // If bug exists, continue..
 $RESOLVE_REASONS = $FIX_VARIATIONS = $errors = array();
 
-bugs_authenticate($user, $pwd, $logged_in, $is_trusted_developer);
+bugs_authenticate($user, $pwd, $logged_in, $user_flags);
+
+$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
 if ($logged_in != 'developer') {
 	$errors[] = 'The username or password you supplied was incorrect.';

@@ -12,7 +12,9 @@ $ok_to_submit_report = false;
 $pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
 
 // Authenticate
-bugs_authenticate($user, $pw, $logged_in, $is_trusted_developer);
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
+$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
