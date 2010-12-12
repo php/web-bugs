@@ -152,8 +152,19 @@ if (isset($_POST['ncomment'])) {
 		exit;
 	}
 }
-$block_user = (!empty($_POST['in']) && isset($_POST['in']['block_user_comment'])) ? $_POST['in']['block_user_comment'] : $bug['block_user_comment'];
-$is_private = (!empty($_POST['in']) && isset($_POST['in']['private'])) ? $_POST['in']['private'] : $bug['private'];
+
+/* Just developers can change private/block_user_comment options */
+if (!empty($_POST['in'])) {
+	if ($user_flags & BUGS_DEV_USER) {
+		$block_user = isset($_POST['in']['block_user_comment']) ? 'Y' : 'N';
+	}
+	if ($is_security_developer) {
+		$is_private = isset($_POST['in']['private']) ? 'Y': 'N';
+	}
+}
+
+$block_user = isset($block_user) ? $block_user : $bug['block_user_comment'];
+$is_private = isset($is_private) ? $is_private : $bug['private'];
 
 // Handle any updates, displaying errors if there were any
 $RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = array();
