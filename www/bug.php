@@ -41,7 +41,7 @@ $edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
-$is_security_developer = ($user_flags & BUGS_SECURITY_DEV);
+$is_security_developer = ($user_flags & (BUGS_TRUSTED_DEV | BUGS_SECURITY_DEV));
 
 // Handle unsubscription
 if (isset($_GET['unsubscribe'])) {
