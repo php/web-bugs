@@ -32,6 +32,7 @@ $php_os = !empty($_GET['php_os']) ? $_GET['php_os'] : '';
 $php_os_not = !empty($_GET['php_os_not']) ? 'not' : '';
 $phpver = !empty($_GET['phpver']) ? $_GET['phpver'] : '';
 $cve_id = !empty($_GET['cve_id']) ? $_GET['cve_id'] : '';
+$cve_id_not = !empty($_GET['cve_id_not']) ? 'not' : '';
 $patch = !empty($_GET['patch']) ? $_GET['patch'] : '';
 $begin = (int) (!empty($_GET['begin']) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
@@ -63,7 +64,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	
 	$where_clause = ' WHERE 1 = 1 ';
 	
-	if (!$is_security_developer) {
+	if ($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV)) {
 		/* Non trusted developer should see the Security related bug report just when it is public */
 		$where_clause .= ' AND (bugdb.bug_type <> "Security" OR private = "N") ';
 	}
@@ -160,7 +161,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	}
 	
 	if ($cve_id != '') {
-		$where_clause .= " AND bugdb.cve_id LIKE '" . $dbh->escape($cve_id) . "%'";
+		$where_clause .= " AND bugdb.cve_id {$cve_id_not} LIKE '" . $dbh->escape($cve_id) . "%'";
 	}
 	
 	if ($patch != '') {

@@ -13,7 +13,6 @@ if ($search_for_id) {
 $count_only = isset($_REQUEST['count_only']) && $_REQUEST['count_only'];
 
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
-$is_security_developer = ($user_flags & BUGS_SECURITY_DEV);
 
 $newrequest = http_build_query(array_merge($_GET, $_POST));
 
@@ -69,6 +68,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				"&amp;limit=$limit" .
 				'&amp;phpver=' . urlencode($phpver) .
 				'&amp;cve_id=' . urlencode($cve_id) .
+				"&amp;cve_id_not=$cve_id_not" .
 				"&amp;patch=$patch" .
 				'&amp;assign=' . urlencode($assign);
 
@@ -253,7 +253,10 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>CVE-ID</th>
   <td style="white-space: nowrap">Return bugs reported with <b>CVE-ID</b></td>
-  <td><input type="text" name="cve_id" value="<?php echo htmlspecialchars($cve_id, ENT_COMPAT, 'UTF-8'); ?>" /></td>
+  <td>
+    <input type="text" name="cve_id" value="<?php echo htmlspecialchars($cve_id, ENT_COMPAT, 'UTF-8'); ?>" />
+    <input style="vertical-align:middle;" type="checkbox" name="cve_id_not" value="1" <?php echo ($cve_id_not == 'not') ? 'checked="checked"' : ''; ?> /> NOT
+  </td>
 </tr>
 
 <tr valign="top">
