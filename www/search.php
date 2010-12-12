@@ -121,7 +121,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 <?php
 
 			while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
-				$status_class = $row['bug_type'] == 'Security' ? 'Sec' : $tla[$row['status']];
+				$status_class = $row['private'] == 'Y' ? 'Sec' : $tla[$row['status']];
 
 				echo ' <tr valign="top" class="' , $status_class, '">' , "\n";
 
