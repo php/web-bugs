@@ -37,6 +37,11 @@ if (!is_array($bug)) {
 	exit;
 }
 
+if (!bugs_has_access($bug_id, $bug, $pwd, $user_flags)) {
+	echo json_encode(array('result' => array('error' => 'No access to bug')));
+	exit;
+}	
+
 if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 	$user = htmlspecialchars(trim($_POST['user']));
 	$ncomment = htmlspecialchars(trim($_POST['ncomment']));

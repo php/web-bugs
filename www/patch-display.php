@@ -38,6 +38,13 @@ if (!($buginfo = bugs_get_bug($bug_id))) {
 	exit;
 }
 
+if (!bugs_has_access($bug_id, $buginfo, $pw, $user_flags)) {
+	response_header('Error :: No access to bug selected');
+	display_bug_error("You have no access to bug #{$bug_id}");
+	response_footer();
+	exit;
+}
+
 $pseudo_pkgs = get_pseudo_packages($site);
 
 if (isset($patch_name) && isset($revision)) {
