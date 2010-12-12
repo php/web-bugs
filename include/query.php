@@ -103,6 +103,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		case 'No Feedback':
 		case 'Feedback':
 		case 'Bogus':
+		case 'To be documented':
 			$where_clause .= "	AND bugdb.status='$status'";
 			break;
 		case 'Old Feedback':
@@ -125,7 +126,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			break;
 		default:
 		case 'Open':
-			$where_clause .= " AND bugdb.status IN ('Open', 'Re-Opened', 'Assigned', 'Analyzed', 'Critical', 'Verified')";
+			$where_clause .= " AND bugdb.status IN ('Open', 'Re-Opened', 'Assigned', 'Analyzed', 'Critical', 'Verified', 'To be documented')";
 	}
 
 	if ($search_for != '') {
