@@ -73,6 +73,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				"&amp;cve_id_not=$cve_id_not" .
 				"&amp;patch=$patch" .
 				'&amp;assign=' . urlencode($assign);
+		
+		if ($is_security_developer) {
+			$link_params .= "&amp;private=$private";
+		}
 
 		$link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params}";
 		$clean_link = "search.php?cmd=display{$link_params}";
