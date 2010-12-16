@@ -545,8 +545,9 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
 		}
 	} else {
 		foreach($state_types as $type => $mode) {
-			if ($state == 'Closed' && $type == 'Open') {
-				$type = 'Re-Opened';
+			if (($state == 'Closed' && $type == 'Open')
+				|| ($state == 'Open' && $type == 'Re-Opened')) {
+				continue;
 			}
 			if ($mode >= $user_mode) {
 				echo '<option';
