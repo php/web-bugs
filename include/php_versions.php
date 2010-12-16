@@ -4,7 +4,7 @@
 		'5.3.4',
 		"5.3SVN-{$date} (snap)",
 		"5.3SVN-{$date} (SVN)",
-		'5.2.15',
+		'5.2.16',
 		"5.2SVN-{$date} (snap)",
 		"5.2SVN-{$date} (SVN)",
 		"trunk-SVN-{$date} (snap)",
