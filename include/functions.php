@@ -208,7 +208,7 @@ function get_pseudo_packages ($project, $return_disabled = true)
 		'Memory_MDB2simple',
 		DATABASE_DSN,
 		array (
-			'order' => 'id',
+			'order' => 'disabled, id',
 			'whereAddOn' => $where,
 			'table' => 'bugdb_pseudo_packages',
 			'columnNameMaps' => array (
@@ -223,10 +223,16 @@ function get_pseudo_packages ($project, $return_disabled = true)
 		if (isset($data['children']))
 		{
 			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
+			$long_names = array();
+			foreach ($data['children'] as $k => $v) {
+				$long_names[$k] = strtolower($v['long_name']);
+			}
+			array_multisort($long_names, SORT_ASC, SORT_STRING, $data['children']);
 			foreach ($data['children'] as $child)
 			{
 				$pseudo_pkgs[$child['name']] = array("&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}", $child['disabled']);
 			}
+			
 		} else if (!isset($pseudo_pkgs[$data['name']]))
 			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
 	}
