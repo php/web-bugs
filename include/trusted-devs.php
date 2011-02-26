@@ -15,6 +15,13 @@ $trusted_developers = array(
 	'pajoye',
 );
 
+// Distro people (security related)
+$security_distro_people = array(
+	'jorton'   => 'jorton@php.net',
+	'geissert' => 'geissert@php.net',
+	'oden'     => 'oden@php.net',	
+);
+
 $security_developers = array(
 	'felipe',
 	'rasmus',
@@ -35,8 +42,7 @@ $security_developers = array(
 	'andi',
 	'scottmac',
 	'dmitry',
-	// Distro people
-	'jorton',
-	'geissert',
-	'oden',
 );
+
+$security_developers = array_merge($security_developers, array_keys($security_distro_people));
+
