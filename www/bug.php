@@ -670,7 +670,7 @@ display_bug_error($errors);
 			<th class="details">Private report:</th>
 			<td><?php echo $bug['private'] == 'Y' ? 'Yes' : 'No'; ?></td>
 			<th class="details">CVE-ID:</th>
-			<td><?php if (!empty($bug['cve_id'])) { printf('<a href="http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-%s" target="_blank">%1$s</a>', htmlspecialchars($bug['cve_id'])); } ?></td>
+			<td><?php if (!empty($bug['cve_id'])) { printf('<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-%s" target="_blank">%1$s</a>', htmlspecialchars($bug['cve_id'])); } ?></td>
 		</tr>
 	</table>
 </div>
