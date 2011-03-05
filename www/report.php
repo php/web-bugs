@@ -345,10 +345,10 @@ if (!isset($_POST['in'])) {
 	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="http://pear.php.net/bugs/">here</a></p>
 
 	<p>
-		<strong>If you feel this bug concerns a security issue, eg a buffer overflow, weak encryption, etc, then email
+		<strong>If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, then email
 
 		<?php echo make_mailto_link("{$site_data['security_email']}?subject=%5BSECURITY%5D+possible+new+bug%21", $site_data['security_email']); ?>
-		who will assess the situation.</strong>
+		who will assess the situation or use <strong>Security</strong> as bug type in the form below.</strong>
 	</p>
 
 <?php
