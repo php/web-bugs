@@ -15,6 +15,7 @@ $pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packa
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
+$is_security_developer = ($user_flags & BUGS_SECURITY_DEV);
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
@@ -52,6 +53,10 @@ if (isset($_POST['in'])) {
 			$_POST['in']['did_luser_search'] = 1;
 
 			$where_clause = "WHERE package_name != 'Feature/Change Request'";
+			
+			if (!$is_security_developer) {
+				$where_clause .= " AND private = 'N' ";
+			}
 
 			// search for a match using keywords from the subject
 			list($sql_search, $ignored) = format_search_string($_POST['in']['sdesc']);
