@@ -1035,7 +1035,7 @@ DEV_TEXT;
 		}
 
 		bugs_mail(
-			$email,
+			$email .'@php.net',
 			$subj . txfield('sdesc', $bug, $in),
 			"{$in['assign']} you have just been assigned to this bug by {$from}\n\n{$dev_text}",
 			"From: {$from}\n" .
