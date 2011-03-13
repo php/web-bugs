@@ -1027,7 +1027,7 @@ DEV_TEXT;
 	/* if a developer assigns someone else, let that other person know about it */
 	if ($edit == 1 && $in['assign'] && $in['assign'] != $bug['assign']) {
 
-		$email = $in['assign'];
+		$email = $in['assign'] .'@php.net';
 
 		// If the developer assigns him self then skip
 		if ($email == $from) {
@@ -1035,7 +1035,7 @@ DEV_TEXT;
 		}
 
 		bugs_mail(
-			$email .'@php.net',
+			$email,
 			$subj . txfield('sdesc', $bug, $in),
 			"{$in['assign']} you have just been assigned to this bug by {$from}\n\n{$dev_text}",
 			"From: {$from}\n" .
