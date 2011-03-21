@@ -20,6 +20,7 @@ $security_distro_people = array(
 	'jorton'   => 'jorton@php.net',
 	'geissert' => 'geissert@php.net',
 	'oden'     => 'oden@php.net',	
+	'vdanen'   => 'vdanen@php.net',
 );
 
 $security_developers = array(
