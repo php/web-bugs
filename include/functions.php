@@ -1005,23 +1005,33 @@ DEV_TEXT;
 		foreach (array('bug_type', 'php_version', 'package_name', 'php_os') as $field) {
 			$tmp[$field] = strtok($tmp[$field], "\r\n");
 		}
-
-		// but we go ahead and let the default sender get used for the list
-		bugs_mail(
-			$mailto,
-			"{$subj}: {$sdesc}",
-			$dev_text,
-			"From: {$from}\n".
-			"X-PHP-Bug: {$bug['id']}\n" .
-			"X-PHP-Site: {$siteBig}\n" .
-			"X-PHP-Type: {$tmp['bug_type']}\n" .
-			"X-PHP-Version: {$tmp['php_version']}\n" .
-			"X-PHP-Category: {$tmp['package_name']}\n" .
-			"X-PHP-OS: {$tmp['php_os']}\n" .
-			"X-PHP-Status: {$tmp['new_status']}\n" .
-			"X-PHP-Old-Status: {$tmp['old_status']}\n" .
-			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
-		);
+		
+		if ($mailto == 'security@php.net') {
+			// Send the mail to security@php.net
+			bugs_mail(
+				$mailto,
+				"{$subj}: {$sdesc}",
+				$dev_text,
+				"From: {$from}"
+			);
+		} else {
+			// but we go ahead and let the default sender get used for the list
+			bugs_mail(
+				$mailto,
+				"{$subj}: {$sdesc}",
+				$dev_text,
+				"From: {$from}\n".
+				"X-PHP-Bug: {$bug['id']}\n" .
+				"X-PHP-Site: {$siteBig}\n" .
+				"X-PHP-Type: {$tmp['bug_type']}\n" .
+				"X-PHP-Version: {$tmp['php_version']}\n" .
+				"X-PHP-Category: {$tmp['package_name']}\n" .
+				"X-PHP-OS: {$tmp['php_os']}\n" .
+				"X-PHP-Status: {$tmp['new_status']}\n" .
+				"X-PHP-Old-Status: {$tmp['old_status']}\n" .
+				"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
+			);
+		}
 	}
 
 	/* if a developer assigns someone else, let that other person know about it */
