@@ -1,5 +1,8 @@
 <?php
 
+// Start session 
+session_start();
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
