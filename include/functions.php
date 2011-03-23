@@ -93,6 +93,8 @@ function verify_password($user, $pass)
 		return false;
 	}
 
+    $_SESSION["credentials"] = array($user, $pass);
+
 	return true;
 }
 
@@ -153,6 +155,8 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
 		$user = $auth_user->handle;
 		$pw = $auth_user->password;
+    } elseif (isset($_SESSION["credentials"]) && count($_SESSION["credentials"]) == 2) {
+		list($user, $pw) = $_SESSION["credentials"];
     // FIXME: Killed magic cookie login..
 	} elseif (false && isset($_COOKIE['MAGIC_COOKIE'])) {
 		@list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']), 2);
@@ -1633,7 +1637,6 @@ function response_header($title, $extraHeaders = '')
 			<a href="search.php" class="menuWhite">advanced search</a>&nbsp;|&nbsp;
 			<a href="search-howto.php" class="menuWhite">search howto</a>&nbsp;|&nbsp;
 			<a href="stats.php" class="menuWhite">statistics</a>&nbsp;|&nbsp;
-			<a href="http://master.php.net/login.php" class="menuWhite">login</a>
 		</td>
 	</tr>
 
