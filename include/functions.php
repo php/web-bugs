@@ -141,19 +141,20 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 		}
 		$pw = $_POST['pw'];
 
-		// Remember password / user next time
-		if (isset($_POST['save'])) { # non-developers don't have $user set
+		// FIXME: Remember password / user next time
+		if (false && isset($_POST['save'])) { # non-developers don't have $user set
 			if (DEVBOX) {
 				$domain = null;
 			} else {
 				$domain = '.php.net';
 			}
-			setcookie('MAGIC_COOKIE', base64_encode("{$user}:{$pw}"), time() + 3600 * 24 * 12, '/', $domain);
+            //setcookie(".....");
 		}
 	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
 		$user = $auth_user->handle;
 		$pw = $auth_user->password;
-	} elseif (isset($_COOKIE['MAGIC_COOKIE'])) {
+    // FIXME: Killed magic cookie login..
+	} elseif (false && isset($_COOKIE['MAGIC_COOKIE'])) {
 		@list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']), 2);
 		if ($pw === null) {
 			$pw = '';
