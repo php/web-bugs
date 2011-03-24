@@ -43,7 +43,7 @@ $security_developers = array(
 	'andi',
 	'scottmac',
 	'dmitry',
-	'cataphrac',
+	'cataphract',
 );
 
 $security_developers = array_merge($security_developers, array_keys($security_distro_people));

@@ -183,10 +183,10 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 	if ($logged_in == 'developer') {
 		require_once "{$ROOT_DIR}/include/trusted-devs.php";
 		
-		if (in_array($user, $trusted_developers)) {
+		if (in_array(strtolower($user), $trusted_developers)) {
 			$user_flags |= BUGS_TRUSTED_DEV;
 		}
-		if (in_array($user, $security_developers)) {
+		if (in_array(strtolower($user), $security_developers)) {
 			$user_flags |= BUGS_SECURITY_DEV;
 		}
 	}
