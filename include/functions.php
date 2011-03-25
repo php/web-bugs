@@ -789,6 +789,10 @@ function bug_diff($bug, $in)
 			$to   = trim($in[$name]);
 			$from = trim($bug[$name]);
 			if ($from != $to) {
+				if (in_array($name, array('private', 'block_user_comment'))) {
+					$from = $from == 'Y' ? 'Yes' : 'No';
+					$to = $to == 'Y' ? 'Yes' : 'No';
+				}
 				$changed[$name]['from'] = $from;
 				$changed[$name]['to'] = $to;
 			}
