@@ -36,6 +36,10 @@ if (file_exists($local_cfg)) {
 }
 // CONFIG END
 
+if (!isset($site_data['security_email'])) {
+	$site_data['security_email'] = 'security@php.net';
+}
+
 // DO NOT EDIT ANYTHING BELOW THIS LINE, edit $site_data above instead!
 $logged_in = false;
 $site_url = $site_data['url'];

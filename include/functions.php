@@ -1017,7 +1017,9 @@ DEV_TEXT;
 				$mailto,
 				"{$subj}: {$sdesc}",
 				$dev_text,
-				"From: {$from}"
+				"From: {$from}\n" .
+				"X-PHP-Bug: {$bug['id']}\n" .
+				"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
 			);
 		} else {
 			// but we go ahead and let the default sender get used for the list
