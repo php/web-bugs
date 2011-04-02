@@ -1015,34 +1015,22 @@ DEV_TEXT;
 			$tmp[$field] = strtok($tmp[$field], "\r\n");
 		}
 		
-		if ($mailto == 'security@php.net') {
-			// Send the mail to security@php.net
-			bugs_mail(
-				$mailto,
-				"{$subj}: {$sdesc}",
-				$dev_text,
-				"From: {$from}\n" .
-				"X-PHP-Bug: {$bug['id']}\n" .
-				"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
-			);
-		} else {
-			// but we go ahead and let the default sender get used for the list
-			bugs_mail(
-				$mailto,
-				"{$subj}: {$sdesc}",
-				$dev_text,
-				"From: {$from}\n".
-				"X-PHP-Bug: {$bug['id']}\n" .
-				"X-PHP-Site: {$siteBig}\n" .
-				"X-PHP-Type: {$tmp['bug_type']}\n" .
-				"X-PHP-Version: {$tmp['php_version']}\n" .
-				"X-PHP-Category: {$tmp['package_name']}\n" .
-				"X-PHP-OS: {$tmp['php_os']}\n" .
-				"X-PHP-Status: {$tmp['new_status']}\n" .
-				"X-PHP-Old-Status: {$tmp['old_status']}\n" .
-				"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
-			);
-		}
+		// but we go ahead and let the default sender get used for the list
+		bugs_mail(
+			$mailto,
+			"{$subj}: {$sdesc}",
+			$dev_text,
+			"From: {$from}\n".
+			"X-PHP-Bug: {$bug['id']}\n" .
+			"X-PHP-Site: {$siteBig}\n" .
+			"X-PHP-Type: {$tmp['bug_type']}\n" .
+			"X-PHP-Version: {$tmp['php_version']}\n" .
+			"X-PHP-Category: {$tmp['package_name']}\n" .
+			"X-PHP-OS: {$tmp['php_os']}\n" .
+			"X-PHP-Status: {$tmp['new_status']}\n" .
+			"X-PHP-Old-Status: {$tmp['old_status']}\n" .
+			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
+		);
 	}
 
 	/* if a developer assigns someone else, let that other person know about it */
@@ -1273,7 +1261,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
  */
 function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 {
-	global $dbh, $bugEmail, $docBugEmail, $secBugEmail, $security_distro_people;
+	global $dbh, $bugEmail, $docBugEmail, $secBugEmail, $security_developers;
 
 	$to = array();
 	
@@ -1320,7 +1308,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 
 		// Add the security distro people
 		if ($bug_type == 'Security') {
-			$bcc = array_merge($bcc, $security_distro_people);
+			$bcc = array_merge($bcc, array_map(create_function('$x', 'return $x."@php.net";'), $security_developers));
 		}
 		$bcc = array_diff($bcc, $to);
 		$bcc = array_unique($bcc);

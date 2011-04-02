@@ -17,10 +17,10 @@ $trusted_developers = array(
 
 // Distro people (security related)
 $security_distro_people = array(
-	'jorton'   => 'jorton@php.net',
-	'geissert' => 'geissert@php.net',
-	'oden'     => 'oden@php.net',	
-	'vdanen'   => 'vdanen@php.net',
+	'jorton',
+	'geissert',
+	'oden',
+	'vdanen',
 );
 
 $security_developers = array(
