@@ -46,5 +46,5 @@ $security_developers = array(
 	'cataphract',
 );
 
-$security_developers = array_merge($security_developers, array_keys($security_distro_people));
+$security_developers = array_merge($security_developers, $security_distro_people);
 
