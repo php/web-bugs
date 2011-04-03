@@ -1308,7 +1308,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 
 		// Add the security distro people
 		if ($bug_type == 'Security') {
-			$bcc = array_merge($bcc, array_map(create_function('$x', 'return $x."@php.net";'), $security_developers));
+			$bcc = array_merge((array) $bcc, array_map(create_function('$x', 'return $x."@php.net";'), $security_developers));
 		}
 		$bcc = array_diff($bcc, $to);
 		$bcc = array_unique($bcc);
