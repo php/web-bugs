@@ -801,6 +801,9 @@ if ($edit == 1 || $edit == 2) { ?>
 					<label for="svnpw">SVN Password:</label>
 					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" />
 					<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
+					<?php if (!$show_bug_info) { ?>
+					<input type="submit" value="Submit" />
+					<?php } ?>
 				</div>
 			</div>
 <?php
