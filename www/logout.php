@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require_once '../include/prepend.php';
 
 setcookie("MAGIC_COOKIE","",time()-3600,'/','.php.net');
