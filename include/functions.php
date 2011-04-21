@@ -145,12 +145,12 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 
 		// FIXME: Remember password / user next time
 		//if (isset($_POST['save'])) { # non-developers don't have $user set
-			if (DEVBOX) {
+			/*if (DEVBOX) {
 				$domain = null;
 			} else {
 				$domain = '.php.net';
-			}
-			$_SESSION["credentials"] = array(NULL, $pw);
+			}*/
+			$_SESSION["credentials"] = array('', $pw);
 		//}
 	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
 		$user = $auth_user->handle;
