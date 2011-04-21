@@ -144,14 +144,14 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 		$pw = $_POST['pw'];
 
 		// FIXME: Remember password / user next time
-		if (false && isset($_POST['save'])) { # non-developers don't have $user set
+		//if (isset($_POST['save'])) { # non-developers don't have $user set
 			if (DEVBOX) {
 				$domain = null;
 			} else {
 				$domain = '.php.net';
 			}
-            //setcookie(".....");
-		}
+			$_SESSION["credentials"] = array(NULL, $pw);
+		//}
 	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
 		$user = $auth_user->handle;
 		$pw = $auth_user->password;
