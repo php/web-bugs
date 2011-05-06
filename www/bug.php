@@ -768,17 +768,19 @@ if ($edit == 1 || $edit == 2) { ?>
 			<div class="explain">
 			<?php if (!isset($_POST['in'])) { ?>
 				Welcome back! If you're the original bug submitter, here's
-				where you can edit the bug or add additional notes. If this
-				is not your bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.
+				where you can edit the bug or add additional notes.
+                <br />If this is not your bug, you can
+                <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.<br />
 				If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php?id=<?php echo $bug_id; ?>">you can retrieve your password here</a>.
+                <br />
 			<?php } ?>
 
 				<table>
 					<tr>
 						<td class="details">Passw<span class="accesskey">o</span>rd:</td>
 						<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o" /></td>
-						<td class="details"><label for="save">Check to remember your password for next time:</label></td>
-						<td><input type="checkbox" id="save" name="save" <?php echo (isset($_POST['save'])) ? ' checked="checked"' : ''; ?> /></td>
+						<!--<td class="details"><label for="save">Check to remember your password for next time:</label></td>-->
+						<!--<td><input type="checkbox" id="save" name="save" <?php echo (isset($_POST['save'])) ? ' checked="checked"' : ''; ?> /></td>-->
 						<?php if (!$show_bug_info) { ?>
 						<input type="submit" value="Submit" />
 						<?php } ?>
