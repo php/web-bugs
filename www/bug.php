@@ -805,7 +805,7 @@ if ($edit == 1 || $edit == 2) { ?>
 					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user); ?>" size="10" maxlength="20" />
 					<label for="svnpw">SVN Password:</label>
 					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" />
-					<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
+					<!--<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />-->
 					<?php if (!$show_bug_info) { ?>
 					<input type="submit" value="Submit" />
 					<?php } ?>
@@ -818,7 +818,7 @@ if ($edit == 1 || $edit == 2) { ?>
 ?>
 	<table>
 
-<?php if ($edit == 1 && $logged_in == 'developer') { /* Developer Edit Form */ ?>
+<?php if ($edit == 1) { /* Developer Edit Form */ ?>
 		<tr>
 			<th class="details"><label for="in" accesskey="c">Qui<span class="accesskey">c</span>k Fix:</label></th>
 			<td colspan="3">
