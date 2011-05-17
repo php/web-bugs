@@ -78,14 +78,14 @@ if (isset($_POST['in'])) {
 				<p>
 					Are you sure that you searched before you submitted your bug report? We
 					found the following bugs that seem to be similar to yours; please check
-					them before sumitting the report as they might contain the solution you
+					them before submitting the report as they might contain the solution you
 					are looking for.
 				</p>
 
 				<p>
 					If you're sure that your report is a genuine bug that has not been reported
-					before, you can scroll down and click the submit button to really enter the
-					details into our database.
+					before, you can scroll down and click the "Send Bug Report" button again to
+					really enter the details into our database.
 				</p>
 
 				<div class="warnings">
