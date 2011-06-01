@@ -940,8 +940,8 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 
 	$text[] = $old_comments;
 
-	/* format mail so it looks nice, use 72 to make piners happy */
-	$wrapped_text = wordwrap(join("\n", $text), 72);
+	#$wrapped_text = wordwrap(join("\n", $text), 72);
+	$wrapped_text = join("\n", $text);
 
 	/* user text with attention, headers and previous messages */
 	$user_text = <<< USER_TEXT
