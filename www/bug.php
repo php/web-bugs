@@ -1029,7 +1029,7 @@ if ($bug['ldesc']) {
 }
 
 // Display patches
-if ($show_bug_info && $bug_id != 'PREVIEW') {
+if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
 	require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 	$patches = new Bug_Patchtracker;
 	$p = $patches->listPatches($bug_id);
