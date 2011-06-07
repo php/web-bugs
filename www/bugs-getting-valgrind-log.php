@@ -41,7 +41,7 @@ and disable Zend memory manager.
 
 <pre>
  <code>
- valgrind --tool=memcheck --num-callers=30 --log-file-exactly=php.log /path/to/php-cli script.php
+ valgrind --tool=memcheck --num-callers=30 --log-file=php.log /path/to/php-cli script.php
  </code>
 </pre>
 
@@ -71,7 +71,7 @@ and disable Zend memory manager.
 
 <pre>
  <code>
- valgrind --tool=memcheck --num-callers=30 --log-file-exactly=apache.log /usr/local/apache/bin/httpd -X
+ valgrind --tool=memcheck --num-callers=30 --log-file=apache.log /usr/local/apache/bin/httpd -X
  </code>
 </pre>
 
