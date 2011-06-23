@@ -382,13 +382,12 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$errors[] = "Please do not SPAM our bug system.";
 	}
 	
-	if ($is_security_developer) {
-		// Just trusted dev can set CVE-ID
-		if (!empty($_POST['in']['cve_id'])) {
-			// Remove the CVE- prefix
-			$_POST['in']['cve_id'] = preg_replace('/^\s*CVE-/i', '', $_POST['in']['cve_id']);
-		}
-	} else {
+	// Just trusted dev can set CVE-ID
+	if ($is_security_developer && !empty($_POST['in']['cve_id'])) {
+		// Remove the CVE- prefix
+		$_POST['in']['cve_id'] = preg_replace('/^\s*CVE-/i', '', $_POST['in']['cve_id']);
+	}
+	if (empty($_POST['in']['cve_id'])) {
 		$_POST['in']['cve_id'] = $bug['cve_id'];
 	}
 	
