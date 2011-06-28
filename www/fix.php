@@ -43,7 +43,7 @@ if (!$reason || !isset($RESOLVE_REASONS[$reason])) {
 	$errors[] = 'You have to use a valid reason to resolve this bug.';
 }
 
-if ($RESOLVE_REASONS[$reason]['status'] == 'Bogus' && $ncomment == '') {
+if (isset($RESOLVE_REASONS[$reason]) && $RESOLVE_REASONS[$reason]['status'] == 'Bogus' && $ncomment == '') {
 	$errors[] = 'You must provide a comment when marking a bug \'Bogus\'';
 }
 
