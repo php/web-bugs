@@ -8,7 +8,7 @@ if ($bug['handle']) {
 	$desc .= substr($bug['email'], 0, strpos($bug['email'], '@')) . "@...\n";
 }
 $desc .= date(DATE_RSS, $bug['submitted']) . "\n";
-$desc .= "PHP: {$bug['php_version']}, OS: {$bug['php_os']}, Package Version: {$bug['package_version']}\n\n";
+$desc .= "PHP: {$bug['php_version']}, OS: {$bug['php_os']}\n\n";
 $desc .= $bug['ldesc'];
 $desc = '<pre>' . clean($desc) . '</pre>';
  
