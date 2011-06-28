@@ -72,7 +72,7 @@ if ($logged_in == 'developer') {
 			<label for="svnuser">SVN Username:</label>
 			<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
 			<label for="svnpw">SVN Password:</label>
-			<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw) ?>" size="10" maxlength="20" />
+			<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pwd) ?>" size="10" maxlength="20" />
 			<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
 		</div>
 	</div>
