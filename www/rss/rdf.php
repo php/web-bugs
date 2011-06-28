@@ -69,7 +69,7 @@ print '<?xml version="1.0"?>';
 		<dc:creator><?php echo $site; ?>-webmaster@lists.php.net</dc:creator>
 		<dc:publisher><?php echo $site; ?>-webmaster@lists.php.net</dc:publisher>
 
-		<admin:generatorAgent rdf:resource="http://<?php echo $site_url, $basedir; ?>" />
+		<admin:generatorAgent rdf:resource="https://<?php echo $site_url, $basedir; ?>" />
 		<sy:updatePeriod>hourly</sy:updatePeriod>
 		<sy:updateFrequency>1</sy:updateFrequency>
 		<sy:updateBase>2000-01-01T12:00+00:00</sy:updateBase>

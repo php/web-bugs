@@ -592,7 +592,7 @@ switch ($thanks)
 		display_bug_success('Your comment was added to the bug successfully.');
 		break;
 	case 4:
-		$bug_url = "http://{$site_url}{$basedir}/bug.php?id={$bug_id}";
+		$bug_url = "https://{$site_url}{$basedir}/bug.php?id={$bug_id}";
 		display_bug_success("
 			Thank you for your help!
 			If the status of the bug report you submitted changes, you will be notified.
@@ -1111,7 +1111,7 @@ if ($bug_id == 'PREVIEW') {
 
 $bug_JS = <<< bug_JS
 <script type='text/javascript' src='js/util.js'></script>
-<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
 <script type="text/javascript">
 function do_comment(nd)

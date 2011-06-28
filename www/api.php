@@ -3,7 +3,7 @@
 	Hack note: This is for emailing the documentation team about commit/bugs emails, but could be expanded in the future.
 
 	The API itself will probably be abandoned in the future, but here's the current URL:
-	- http://bugs.php.net/api.php?type=docs&action=closed&interval=week
+	- https://bugs.php.net/api.php?type=docs&action=closed&interval=week
 */
 require_once '../include/prepend.php';
 

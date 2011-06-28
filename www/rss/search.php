@@ -37,14 +37,14 @@ href="http://www.w3.org/2000/08/w3c-synd/style.css" type="text/css"
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/"
 xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
 xmlns:admin="http://webns.net/mvcb/" xmlns:content="http://purl.org/rss/1.0/modules/content/">';
-echo "\n  <channel rdf:about=\"http://{$site_url}{$basedir}/rss/search.php\">\n";
+echo "\n  <channel rdf:about=\"https://{$site_url}{$basedir}/rss/search.php\">\n";
 echo "	<title>{$siteBig} Bug Search Results</title>\n";
-echo "	<link>http://{$site_url}{$basedir}/rss/search.php?" , clean(http_build_query($_GET)) , "</link>\n";
+echo "	<link>https://{$site_url}{$basedir}/rss/search.php?" , clean(http_build_query($_GET)) , "</link>\n";
 echo "	<description>Search Results</description>\n";
 echo "	<dc:language>en-us</dc:language>\n";
 echo "	<dc:creator>{$site}-webmaster@lists.php.net</dc:creator>\n";
 echo "	<dc:publisher>{$site}-webmaster@lists.php.net</dc:publisher>\n";
-echo "	<admin:generatorAgent rdf:resource=\"http://{$site_url}{$basedir}\"/>\n";
+echo "	<admin:generatorAgent rdf:resource=\"https://{$site_url}{$basedir}\"/>\n";
 echo "	<sy:updatePeriod>hourly</sy:updatePeriod>\n";
 echo "	<sy:updateFrequency>1</sy:updateFrequency>\n";
 echo "	<sy:updateBase>2000-01-01T12:00+00:00</sy:updateBase>\n";
@@ -69,10 +69,10 @@ if ($total_rows > 0) {
 		$desc .= $row['ldesc'];
 		$desc = '<pre>' . clean($desc) . '</pre>';
 
-		echo "	  <rdf:li rdf:resource=\"http://{$site_url}{$basedir}/{$row['id']}\" />\n";
-		$items .= "  <item rdf:about=\"http://{$site_url}{$basedir}/{$row['id']}\">\n";
+		echo "	  <rdf:li rdf:resource=\"https://{$site_url}{$basedir}/{$row['id']}\" />\n";
+		$items .= "  <item rdf:about=\"https://{$site_url}{$basedir}/{$row['id']}\">\n";
 		$items .= '	<title>' . clean("{$row['bug_type']} {$row['id']} [{$row['status']}] {$row['sdesc']}") . "</title>\n";
-		$items .= "	<link>http://{$site_url}{$basedir}/{$row['id']}</link>\n";
+		$items .= "	<link>https://{$site_url}{$basedir}/{$row['id']}</link>\n";
 		$items .= '	<content:encoded><![CDATA[' .  $desc . "]]></content:encoded>\n";
 		$items .= '	<description><![CDATA[' . $desc . "]]></description>\n";
 		if (!$row['unchanged']) {
@@ -93,10 +93,10 @@ echo <<< DATA
 	</items>
   </channel>
 
-  <image rdf:about="http://{$site_url}{$basedir}/images/{$site}-logo.gif">
+  <image rdf:about="https://{$site_url}{$basedir}/images/{$site}-logo.gif">
 	<title>{$siteBig} Bugs</title>
-	<url>http://{$site_url}{$basedir}/images/{$site}-logo.gif</url>
-	<link>http://{$site_url}{$basedir}</link>
+	<url>https://{$site_url}{$basedir}/images/{$site}-logo.gif</url>
+	<link>https://{$site_url}{$basedir}</link>
   </image>
 
 {$items}

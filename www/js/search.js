@@ -4,7 +4,7 @@ var fnFormatSearchResult = function(value, data, currentValue) {
 	var listing = users[value]["name"] + " (" + users[value]["username"] + ")";
 
 	listing = listing.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>');
-	return '<img src="http://www.gravatar.com/avatar/' + users[value]["email"] + '.jpg?s=25" /> ' + listing;
+	return '<img src="https://secure.gravatar.com/avatar/' + users[value]["email"] + '.jpg?s=25" /> ' + listing;
 };
 
 $('#assigned_user').autocomplete({ 

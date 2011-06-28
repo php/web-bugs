@@ -20,7 +20,7 @@ $desc = '<pre>' . clean($desc) . '</pre>';
 		<description><?php echo clean("[{$bug['status']}] {$bug['sdesc']}"); ?></description>
 		<pubDate><?php echo date('r', $bug['submitted']); ?></pubDate>
 		<lastBuildDate><?php echo date('r', ($bug['modified']) ? $bug['modified'] : $bug['submitted']); ?></lastBuildDate>
-		<atom:link href="<?php echo "http://{$site_url}{$basedir}/rss/bug.php?id={$bug['id']}&amp;format=rss2"; ?>" rel="self" type="application/rss+xml" />
+		<atom:link href="<?php echo "https://{$site_url}{$basedir}/rss/bug.php?id={$bug['id']}&amp;format=rss2"; ?>" rel="self" type="application/rss+xml" />
 		<item>
 			<title><?php echo ($bug['handle']) ? clean($bug['handle']) : clean(substr($bug['email'], 0, strpos($bug['email'], '@'))), "@... [{$bug['ts1']}]"; ?></title>
 			<description><![CDATA[ <?php echo $desc; ?> ]]></description>

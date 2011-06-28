@@ -28,12 +28,12 @@ if ($format == 'xml') {
 	exit;
 } elseif ($format == "rss2") {
 	header('Content-type: application/rss+xml; charset=utf-8');
-	$uri = "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
+	$uri = "https://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
 	include './rss.php';
 	exit;
 } else {
 	header('Content-type: application/rdf+xml; charset=utf-8');
-	$uri = "http://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
+	$uri = "https://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
 	include './rdf.php';
 	exit;
 }

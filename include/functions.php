@@ -947,7 +947,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 	$user_text = <<< USER_TEXT
 ATTENTION! Do NOT reply to this email!
 To reply, use the web interface found at
-http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=2
+https://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=2
 
 {$header_text}
 {$wrapped_text}
@@ -955,13 +955,13 @@ USER_TEXT;
 
 	/* developer text with headers, previous messages, and edit link */
 	$dev_text = <<< DEV_TEXT
-Edit report at http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
+Edit report at https://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
 
 {$header_text}
 {$wrapped_text}
 
 -- 
-Edit this bug report at http://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
+Edit this bug report at https://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
 DEV_TEXT;
 
 	if (preg_match('/.*@php\.net\z/', $bug['email'])) {
@@ -1141,7 +1141,7 @@ Previous Comments:
 The remainder of the comments for this report are too long. To view
 the rest of the comments, please view the bug report online at
 
-    http://{$site_url}{$basedir}/bug.php?id={$bug_id}
+    https://{$site_url}{$basedir}/bug.php?id={$bug_id}
 ";
 	}
 
@@ -1397,10 +1397,10 @@ A request has been made to remove your subscription to
 {$siteBig} bug #{$bug_id}
 
 To view the bug in question please use this link:
-http://{$site_url}{$basedir}/bug.php?id={$bug_id}
+https://{$site_url}{$basedir}/bug.php?id={$bug_id}
 
 To confirm the removal please use this link:
-http://{$site_url}{$basedir}/bug.php?id={$bug_id}&unsubscribe=1&t={$hash}
+https://{$site_url}{$basedir}/bug.php?id={$bug_id}&unsubscribe=1&t={$hash}
 
 
 USER_TEXT;
@@ -1607,10 +1607,10 @@ function response_header($title, $extraHeaders = '')
 <html>
 <head>
 	<?php echo $extraHeaders; ?>
-	<base href="<?php echo (!empty($_SERVER['HTTPS'])) ? 'https://' : 'http://', $site_url, $basedir; ?>/" />
+	<base href="https://<?php echo $site_url, $basedir; ?>/" />
 	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
-	<link rel="shortcut icon" href="http://<?php echo $site_url, $basedir; ?>/images/favicon.ico" />
-	<link rel="stylesheet" href="css/style.css" />
+	<link rel="shortcut icon" href="https://<?php echo $site_url, $basedir; ?>/images/favicon.ico" />
+	<link rel="stylesheet" href="https://<?php echo $site_url, $basedir; ?>/css/style.css" />
 </head>
 
 <body>
