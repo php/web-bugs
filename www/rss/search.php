@@ -65,7 +65,7 @@ if ($total_rows > 0) {
 	   		$desc .= substr($row['email'], 0, strpos($row['email'], '@')) . "@...\n";
 		}
 		$desc .= date(DATE_ATOM, $row['submitted']) . "\n";
-		$desc .= "PHP: {$row['php_version']}, OS: {$row['php_os']}, Package Version: {$row['package_version']}\n\n";
+		$desc .= "PHP: {$row['php_version']}, OS: {$row['php_os']}\n\n";
 		$desc .= $row['ldesc'];
 		$desc = '<pre>' . clean($desc) . '</pre>';
 
