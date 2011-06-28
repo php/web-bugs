@@ -22,7 +22,7 @@ $desc = '<pre>' . clean($desc) . '</pre>';
 		<lastBuildDate><?php echo date('r', ($bug['modified']) ? $bug['modified'] : $bug['submitted']); ?></lastBuildDate>
 		<atom:link href="<?php echo "https://{$site_url}{$basedir}/rss/bug.php?id={$bug['id']}&amp;format=rss2"; ?>" rel="self" type="application/rss+xml" />
 		<item>
-			<title><?php echo ($bug['handle']) ? clean($bug['handle']) : clean(substr($bug['email'], 0, strpos($bug['email'], '@'))), "@... [{$bug['ts1']}]"; ?></title>
+			<title><?php echo ($bug['assign']) ? clean($bug['assign']) : clean(substr($bug['email'], 0, strpos($bug['email'], '@'))), "@... [{$bug['ts1']}]"; ?></title>
 			<description><![CDATA[ <?php echo $desc; ?> ]]></description>
 			<pubDate><?php echo date('r', $bug['submitted']); ?></pubDate>
 			<guid><?php echo $uri; ?></guid>
@@ -33,7 +33,7 @@ $desc = '<pre>' . clean($desc) . '</pre>';
 		$displayts = date(DATE_RSS, $comment['added']);
 ?>
 			<item>
-				<title><?php echo clean(($comment['handle']) ? $comment['handle'] . " [$displayts]" : substr($comment['email'], 0, strpos($comment['email'], '@')) . "@... [$displayts]"); ?></title>
+				<title><?php echo clean($comment['email'] . " [$displayts]"); ?></title>
 				<description><![CDATA[ <?php echo '<pre>', clean($comment['comment']), '</pre>'; ?>]]></description>
 				<pubDate><?php echo date('r', $comment['added']); ?></pubDate>		
 				<guid><?php echo $uri, '#', $comment['added']; ?></guid>
