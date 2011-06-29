@@ -2,8 +2,8 @@
 echo '<?xml version="1.0"?>';
 
 $desc = "{$bug['package_name']} {$bug['bug_type']}\nReported by ";
-if ($bug['handle']) {
-	$desc .= "{$bug['handle']}\n";
+if (preg_match('/@php.net$/i', $bug['email'])) {
+	$desc .= substr($bug['email'], 0, strpos($bug['email'], '@')) ."\n";
 } else {
 	$desc .= substr($bug['email'], 0, strpos($bug['email'], '@')) . "@...\n";
 }
