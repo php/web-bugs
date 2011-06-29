@@ -37,14 +37,6 @@ require_once '../include/prepend.php';
 // Set edit mode
 $edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
 
-if ($edit && $bug_id < 60000 ) {
-    $errors[] = 'Editing old bugs is temporary unavailable!';
-    response_header('Editing old bugs is temporary unavailable!');
-    display_bug_error($errors);
-    response_footer();
-    exit;
-}
-
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
