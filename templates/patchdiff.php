@@ -8,7 +8,7 @@ if (count($obsoletedby)) {
     foreach ($obsoletedby as $betterpatch) {
         echo '<li><a href="patch-display.php?patch=',
              urlencode($betterpatch['patch']),
-             '&amp;bug_id=', $bug, '&amp;revision=', $betterpatch['revision'],
+             '&amp;bug_id=', $bug_id, '&amp;revision=', $betterpatch['revision'],
              '">', htmlspecialchars($betterpatch['patch']), ', revision ',
              format_date($betterpatch['revision']), '</a></li>';
     }
@@ -20,7 +20,7 @@ if (count($obsoletes)) {
     foreach ($obsoletes as $betterpatch) {
         echo '<li><a href="patch-display.php?patch=',
              urlencode($betterpatch['obsolete_patch']),
-             '&amp;bug_id=', $bug,
+             '&amp;bug_id=', $bug_id,
              '&amp;revision=', $betterpatch['obsolete_revision'],
              '">', htmlspecialchars($betterpatch['obsolete_patch']), ', revision ',
              format_date($betterpatch['obsolete_revision']), '</a></li>';
