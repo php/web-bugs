@@ -558,6 +558,7 @@ switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))
 		break;
 	case 'Security':
 		$bug_type = 'Sec Bug';
+		break;
 	default:
 	case 'Bug':
 		$bug_type = 'Bug';
