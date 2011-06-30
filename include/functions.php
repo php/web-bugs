@@ -859,7 +859,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 	$from = str_replace(array("\n", "\r"), '', $from);
 
 	/* Default addresses */
-	list($mailto, $mailfrom, $Bcc) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id, oneof($in['bug_type'], $bug['bug_type']));
+	list($mailto, $mailfrom, $Bcc, $params) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id, oneof($in['bug_type'], $bug['bug_type']));
 
 	$headers[] = array(' ID', $bug['id']);
 
@@ -1029,7 +1029,8 @@ DEV_TEXT;
 			"X-PHP-OS: {$tmp['php_os']}\n" .
 			"X-PHP-Status: {$tmp['new_status']}\n" .
 			"X-PHP-Old-Status: {$tmp['old_status']}\n" .
-			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
+			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
+			$params
 		);
 	}
 
@@ -1264,6 +1265,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	global $dbh, $bugEmail, $docBugEmail, $secBugEmail;
 
 	$to = array();
+	$params = '';
 	
 	if ($bug_type === 'Documentation Problem') {
 		// Documentation problems *always* go to the doc team
@@ -1271,6 +1273,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	} else if ($bug_type == 'Security') {
 		// Security problems *always* go to the sec team
 		$to[] = $secBugEmail;
+		$params = '-f bounce-no-user@php.net';
 	}
 	else {
 		/* Get package mailing list address */
@@ -1307,9 +1310,9 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 		$bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute(array($bug_id))->fetchCol();
 
 		$bcc = array_unique($bcc);
-		return array(implode(', ', $to), $bugEmail, implode(', ', $bcc));
+		return array(implode(', ', $to), $bugEmail, implode(', ', $bcc), $params);
 	} else {
-		return array(implode(', ', $to), $bugEmail);
+		return array(implode(', ', $to), $bugEmail, $params);
 	}
 }
 
@@ -1565,8 +1568,11 @@ function verify_bug_passwd($bug_id, $passwd)
  * @return bool
  *
  */
-function bugs_mail($to, $subject, $message, $headers = '', $params = '-f noreply@php.net')
+function bugs_mail($to, $subject, $message, $headers = '', $params = '')
 {
+	if (empty($params)) {
+		$params = '-f noreply@php.net';
+	}
 	if (DEVBOX === true) {
 		if (defined('DEBUG_MAILS')) {
 			echo '<pre>';
