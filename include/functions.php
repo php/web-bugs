@@ -1261,7 +1261,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
  */
 function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 {
-	global $dbh, $bugEmail, $docBugEmail, $secBugEmail, $security_developers;
+	global $dbh, $bugEmail, $docBugEmail, $secBugEmail;
 
 	$to = array();
 	
@@ -1306,11 +1306,6 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 		}
 		$bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute(array($bug_id))->fetchCol();
 
-		// Add the security distro people
-		if ($bug_type == 'Security') {
-			$bcc = array_merge((array) $bcc, array_map(create_function('$x', 'return $x."@php.net";'), $security_developers));
-		}
-		$bcc = array_diff($bcc, $to);
 		$bcc = array_unique($bcc);
 		return array(implode(', ', $to), $bugEmail, implode(', ', $bcc));
 	} else {

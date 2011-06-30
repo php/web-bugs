@@ -349,7 +349,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	}
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
 	$ncomment = trim($_POST['ncomment']);
-	$from = $_POST['in']['commentemail'];
+	$from = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
 
 	// primitive spam detection
 	if (is_spam($ncomment)) {
