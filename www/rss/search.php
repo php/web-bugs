@@ -20,7 +20,7 @@ define ('MAX_BUGS_RETURN', 150);
 require_once '../../include/prepend.php';
 require "{$ROOT_DIR}/include/query.php";
 
-if (!$res) {
+if (!isset($res)) {
 	die('Invalid query');
 } else {
 	$res  = $dbh->prepare($query)->execute();
@@ -59,8 +59,8 @@ if ($total_rows > 0) {
 		$i++;
 
 		$desc = "{$row['package_name']} ({$row['bug_type']})\nReported by ";
-		if ($row['handle']) {
-			$desc .= "{$row['handle']}\n";
+		if (preg_match('/@php.net$/i', $row['email'])) {
+			$desc .= substr($row['email'], 0, strpos($row['email'], '@')) ."\n";
 	   	} else {
 	   		$desc .= substr($row['email'], 0, strpos($row['email'], '@')) . "@...\n";
 		}
