@@ -65,7 +65,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	
 	$where_clause = ' WHERE 1 = 1 ';
 	
-	if ($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV)) {
+	if (isset($user_flags) && ($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV))) {
 		if ($private != '') {
 			$where_clause .= ' AND bugdb.private = "Y" ';
 		}

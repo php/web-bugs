@@ -353,7 +353,7 @@ function oneof()
 function field($n)
 {
 	return oneof(isset($_POST['in']) ?
-		htmlspecialchars($_POST['in'][$n]) : null,
+		htmlspecialchars(isset($_POST['in'][$n]) ? $_POST['in'][$n] : '') : null,
 			htmlspecialchars($GLOBALS['bug'][$n]));
 }
 
