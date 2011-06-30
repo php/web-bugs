@@ -1565,7 +1565,7 @@ function verify_bug_passwd($bug_id, $passwd)
  * @return bool
  *
  */
-function bugs_mail($to, $subject, $message, $headers = '')
+function bugs_mail($to, $subject, $message, $headers = '', $params = '-f noreply@php.net')
 {
 	if (DEVBOX === true) {
 		if (defined('DEBUG_MAILS')) {
@@ -1575,7 +1575,7 @@ function bugs_mail($to, $subject, $message, $headers = '')
 		}
 		return true;
 	}
-	return @mail($to, $subject, $message, $headers, '-f noreply@php.net');
+	return @mail($to, $subject, $message, $headers, $params);
 }
 
 /**
