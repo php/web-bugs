@@ -56,8 +56,6 @@ if ($total_rows > 0) {
 	$items = '';
 
 	foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
-		$i++;
-
 		$desc = "{$row['package_name']} ({$row['bug_type']})\nReported by ";
 		if (preg_match('/@php.net$/i', $row['email'])) {
 			$desc .= substr($row['email'], 0, strpos($row['email'], '@')) ."\n";
