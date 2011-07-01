@@ -36,10 +36,6 @@ if (!$json = apc_fetch('svnusers')) {
 }
 $modified = apc_fetch('svnusers_update');
 
-if (!$json) {
-	return;
-}
-
 $tsstring = gmdate('D, d M Y H:i:s ', $modified);
 if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $tsstring) {
 	header('HTTP/1.1 304 Not Modified');
@@ -52,18 +48,20 @@ if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINC
 
 $lookup = $user = array();
 
-foreach ($json as $row) {
-	$lookup[] = $row['name'];
-	$lookup[] = $row['username'];
-
-	$data = array(
-		'email'		=> md5($row['username'] . '@php.net'),
-		'name'		=> $row['name'],
-		'username'	=> $row['username'],
-	);
-
-	$user[$row['username']]	= $data;
-	$user[$row['name']]		= $data;
+if ($json) {
+	foreach ($json as $row) {
+		$lookup[] = $row['name'];
+		$lookup[] = $row['username'];
+	
+		$data = array(
+			'email'		=> md5($row['username'] . '@php.net'),
+			'name'		=> $row['name'],
+			'username'	=> $row['username'],
+		);
+	
+		$user[$row['username']]	= $data;
+		$user[$row['name']]		= $data;
+	}
 }
 
 echo 'var users = ', json_encode($user), ";\n",
