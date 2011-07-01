@@ -42,7 +42,7 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 				'UPDATE bugdb
 				 SET passwd = ?
 				 WHERE id = ?
-				')->execute(array(sha1($new_passwd), $bug_id));
+				')->execute(array(bugs_get_hash($new_passwd), $bug_id));
 				
 				$resp = bugs_mail($row['email'],
 						 "Password for {$siteBig} bug report #{$bug_id}",
