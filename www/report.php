@@ -232,7 +232,7 @@ REPORT;
 			$ascii_report.= "\n-- \nEdit bug report at ";
 			$ascii_report.= "https://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
 
-			list($mailto, $mailfrom) = get_package_mail($package_name, false, $_POST['in']['bug_type']);
+			list($mailto, $mailfrom, $params) = get_package_mail($package_name, false, $_POST['in']['bug_type']);
 
 			$protected_email = '"' . spam_protect($_POST['in']['email'], 'text') . '"' .  "<{$mailfrom}>";
 
@@ -286,7 +286,7 @@ REPORT;
 				"[$siteBig-BUG] $type #$cid [NEW]: {$_POST['in']['sdesc']}",
 				$ascii_report . "1\n-- \n{$dev_extra}",
 				$extra_headers,
-				'-f bounce-no-user@php.net'
+				$params
 			);
 
 			if ($redirectToPatchAdd) {
