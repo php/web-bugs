@@ -245,7 +245,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
 	// Edits submitted by original reporter for old bugs
 	
-	if (!verify_bug_passwd($bug_id, $pw)) {
+	if (!verify_bug_passwd($bug_id, sha1($pw))) {
 		$errors[] = 'The password you supplied was incorrect.';
 	} else {
 		// allow the original reporter to see the private report info
@@ -757,7 +757,7 @@ if ($edit == 1 || $edit == 2) { ?>
 <form id="update" action="bug.php?id=<?php echo $bug_id; ?>&amp;edit=<?php echo $edit; ?>" method="post">
 
 <?php if ($edit == 2) {
-		if (!isset($_POST['in']) && $pw && verify_bug_passwd($bug['id'], $pw)) {
+		if (!isset($_POST['in']) && $pw && verify_bug_passwd($bug['id'], sha1($pw))) {
 			$show_bug_info = true;	?>
 			<div class="explain">
 				Welcome back! Since you opted to store your bug's password in a

@@ -36,9 +36,17 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 			if (empty($row['passwd'])) {
 				$errors[] = "No password found for #$bug_id bug report, sorry.";
 			} else {
+				$new_passwd = gen_passwd();
+				
+				$dbh->prepare(
+				'UPDATE bugdb
+				 SET passwd = ?
+				 WHERE id = ?
+				')->execute(array(sha1($new_passwd), $bug_id));
+				
 				$resp = bugs_mail($row['email'],
 						 "Password for {$siteBig} bug report #{$bug_id}",
-						 "The password for {$siteBig} bug report #{$bug_id} is {$row['passwd']}",
+						 "The password for {$siteBig} bug report #{$bug_id} has been set to: {$new_passwd}",
 						 'From: noreply@php.net');
 
 				if ($resp) {

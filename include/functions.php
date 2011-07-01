@@ -1765,3 +1765,12 @@ function handle_pear_errors ($error_obj)
 	response_footer($error);
 	exit;
 }
+
+
+/**
+ * Generates a random password
+ */
+function gen_passwd($length = 8)
+{
+	return substr(md5(uniqid(time(), true)), 0, $length);
+}
