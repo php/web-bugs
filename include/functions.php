@@ -1265,7 +1265,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	global $dbh, $bugEmail, $docBugEmail, $secBugEmail;
 
 	$to = array();
-	$params = '';
+	$params = '-f noreply@php.net';
 	
 	if ($bug_type === 'Documentation Problem') {
 		// Documentation problems *always* go to the doc team
