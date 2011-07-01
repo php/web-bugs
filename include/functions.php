@@ -1774,3 +1774,8 @@ function gen_passwd($length = 8)
 {
 	return substr(md5(uniqid(time(), true)), 0, $length);
 }
+
+function bugs_get_hash($passwd) 
+{
+	return hash_hmac('sha256', $passwd, getenv('USER_PWD_SALT'));
+}
