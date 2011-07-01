@@ -36,7 +36,7 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 			if (empty($row['passwd'])) {
 				$errors[] = "No password found for #$bug_id bug report, sorry.";
 			} else {
-				$new_passwd = gen_passwd();
+				$new_passwd = bugs_gen_passwd();
 				
 				$dbh->prepare(
 				'UPDATE bugdb
