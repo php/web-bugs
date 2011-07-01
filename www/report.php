@@ -195,7 +195,7 @@ OUTPUT;
 					$fdesc,
 					$_POST['in']['php_version'],
 					$_POST['in']['php_os'],
-					$_POST['in']['passwd'],
+					sha1($_POST['in']['passwd']),
 					$_POST['in']['reporter_name'],
 					$is_private
 				)
