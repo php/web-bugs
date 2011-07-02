@@ -1472,8 +1472,11 @@ function get_resolve_reasons ($project = false)
 	if ($project !== false)
 		$where.= "WHERE (project = '{$project}' OR project = '')";
 
+	/* Put trysvn* in the beginning of the list */
+	$order_by = "CASE ID WHEN 1 THEN -4 WHEN 2 THEN -3 WHEN 3 THEN -1 WHEN 29 THEN -2 ELSE ID END";
+
 	$resolves = $variations = array();
-	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array());
+	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where $order_by")->execute(array());
 	if (PEAR::isError($res)) {
 		throw new Exception("SQL Error in get_resolve_reasons");
 	}
