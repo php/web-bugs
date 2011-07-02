@@ -973,7 +973,7 @@ DEV_TEXT;
 	$sdesc = txfield('sdesc', $bug, $in);
 
 	/* send mail if status was changed, there is a comment, private turned on/off or the bug type was changed to/from Security */
-	if (!empty($in['status']) || $in['status'] != $bug['status'] || $ncomment != '' ||
+	if (empty($in['status']) || $in['status'] != $bug['status'] || $ncomment != '' ||
 		(isset($in['private']) && $in['private'] != $bug['private']) ||
 		(isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type'] &&
 			($in['bug_type'] == 'Security' || $bug['bug_type'] == 'Security'))) {
