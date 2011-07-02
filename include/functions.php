@@ -766,7 +766,7 @@ function bug_diff($bug, $in)
 {
 	$changed = array();
 
-	if ($in['email'] && (trim($in['email']) != trim($bug['email']))) {
+	if (!empty($in['email']) && (trim($in['email']) != trim($bug['email']))) {
 		$changed['reported_by']['from'] = $bug['email'];
 		$changed['reported_by']['to'] = spam_protect(txfield('email', $bug, $in), 'text');
 	}
@@ -859,7 +859,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 	$from = str_replace(array("\n", "\r"), '', $from);
 
 	/* Default addresses */
-	list($mailto, $mailfrom, $Bcc, $params) = get_package_mail(oneof($in['package_name'], $bug['package_name']), $id, oneof($in['bug_type'], $bug['bug_type']));
+	list($mailto, $mailfrom, $Bcc, $params) = get_package_mail(oneof(@$in['package_name'], $bug['package_name']), $id, oneof(@$in['bug_type'], $bug['bug_type']));
 
 	$headers[] = array(' ID', $bug['id']);
 
@@ -973,7 +973,7 @@ DEV_TEXT;
 	$sdesc = txfield('sdesc', $bug, $in);
 
 	/* send mail if status was changed, there is a comment, private turned on/off or the bug type was changed to/from Security */
-	if ($in['status'] != $bug['status'] || $ncomment != '' ||
+	if (!empty($in['status']) || $in['status'] != $bug['status'] || $ncomment != '' ||
 		(isset($in['private']) && $in['private'] != $bug['private']) ||
 		(isset($in['bug_type']) && $in['bug_type'] != $bug['bug_type'] &&
 			($in['bug_type'] == 'Security' || $bug['bug_type'] == 'Security'))) {
@@ -984,7 +984,7 @@ DEV_TEXT;
 		$old_status = $bug['status'];
 		$new_status = $bug['status'];
 
-		if ($in['status'] != $bug['status'] && $edit != 3) {	/* status changed */
+		if (isset($in['status']) && $in['status'] != $bug['status'] && $edit != 3) {	/* status changed */
 			$new_status = $in['status'];
 			$subj .= " #{$bug['id']} [{$tla[$old_status]}->{$tla[$new_status]}]";
 		} elseif ($edit == 4) {	/* patch */
