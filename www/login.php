@@ -16,9 +16,16 @@ if (isset($_SESSION['credentials']) && count($_SESSION['credentials']) == 2) {
 response_header('Login');
 
 if (isset($_POST['user'])) {
+  $referer = $_POST['referer'];
+  
   bugs_authenticate (&$user, &$pwd, &$logged_in, &$user_flags);
 
   if ($logged_in === 'developer') {
+	if (!empty($_POST['referer']) &&
+		preg_match('/^https:\/\/'. preg_quote($site_url) .'/i', $referer)) {
+		header('location: '. $referer);
+		exit;
+	}
     header('location: index.php');
     exit;
   } else {
@@ -26,11 +33,14 @@ if (isset($_POST['user'])) {
     <div style="background: #AB1616; padding: 3px; width: 300px; color: #FFF; margin: 3px;">Wrong username or password!</div>
 <?php
   }
+} else {
+	$referer = $_SERVER['HTTP_REFERER'];
 }
 
 ?>
 
 <form method="post" action="login.php">
+<input type="hidden" name="referer" value="<?php print htmlspecialchars($referer); ?>" />
 <table>
  <tr>
   <th align="right">Username:</th>
