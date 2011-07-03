@@ -34,7 +34,7 @@ if (isset($_POST['user'])) {
 <?php
   }
 } else {
-	$referer = $_SERVER['HTTP_REFERER'];
+	$referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 }
 
 ?>
