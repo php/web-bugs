@@ -59,7 +59,10 @@ if ($json) {
 			'username'	=> $row['username'],
 		);
 	
-		$user[$row['username']]	= $data;
+		/* Only add the user name in the array if it is not the same as the begin of the real name */
+		if (!preg_match('/^'. preg_quote($row['username']) .'/i', $row['name'])) {
+			$user[$row['username']]	= $data;
+		}
 		$user[$row['name']]		= $data;
 	}
 }
