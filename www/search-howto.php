@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 require '../include/prepend.php';
 response_header("How to search the bug database");
 ?>
