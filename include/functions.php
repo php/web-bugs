@@ -157,12 +157,6 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 		$pw = $auth_user->password;
     } elseif (isset($_SESSION["credentials"]) && count($_SESSION["credentials"]) == 2) {
 		list($user, $pw) = $_SESSION["credentials"];
-    // FIXME: Killed magic cookie login..
-	} elseif (false && isset($_COOKIE['MAGIC_COOKIE'])) {
-		@list($user, $pw) = explode(':', base64_decode($_COOKIE['MAGIC_COOKIE']), 2);
-		if ($pw === null) {
-			$pw = '';
-		}
 	}
 
 	// Authentication and user level check
