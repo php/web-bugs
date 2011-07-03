@@ -31,7 +31,6 @@ if (isset($_POST['user'])) {
 ?>
 
 <form method="post" action="login.php">
-<input type="hidden" name="save" value="1" />
 <table>
  <tr>
   <th align="right">Username:</th>

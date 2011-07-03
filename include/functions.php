@@ -1631,7 +1631,12 @@ function response_header($title, $extraHeaders = '')
 			<a href="report.php" class="menuWhite">report a bug</a>&nbsp;|&nbsp;
 			<a href="search.php" class="menuWhite">advanced search</a>&nbsp;|&nbsp;
 			<a href="search-howto.php" class="menuWhite">search howto</a>&nbsp;|&nbsp;
-			<a href="stats.php" class="menuWhite">statistics</a>
+			<a href="stats.php" class="menuWhite">statistics</a>&nbsp;|&nbsp;
+<?php if ($logged_in === 'developer') { ?>
+			<a href="logout.php" class="menuWhite">logout</a>
+<?php } else {
+			<a href="login.php" class="menuWhite">login</a>	
+<?php } ?>
 		</td>
 	</tr>
 
