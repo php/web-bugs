@@ -1628,7 +1628,7 @@ function response_header($title, $extraHeaders = '')
 			<a href="stats.php" class="menuWhite">statistics</a>&nbsp;|&nbsp;
 <?php if ($logged_in === 'developer') { ?>
 			<a href="logout.php" class="menuWhite">logout</a>
-<?php } else {
+<?php } else { ?>
 			<a href="login.php" class="menuWhite">login</a>	
 <?php } ?>
 		</td>
