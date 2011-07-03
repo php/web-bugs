@@ -161,6 +161,10 @@ OUTPUT;
 				$fdesc .= $_POST['in']['actres'] . "\n";
 			}
 			
+			// Bug type 'Security' marks automatically the report as private
+			$_POST['in']['private'] = ($_POST['in']['bug_type'] == 'Security') ? 'Y' : 'N';
+			$_POST['in']['block_user_comment'] = 'N';
+			
 			if (isset($_POST['preview'])) {
 				$_POST['in']['status'] = 'Open';
 				$_SESSION['bug_preview'] = $_POST['in'];
@@ -168,9 +172,6 @@ OUTPUT;
 				redirect('bug.php?id=preview');
 				exit;
 			}
-			
-			// Bug type 'Security' marks automatically the report as private
-			$is_private = ($_POST['in']['bug_type'] == 'Security') ? 'Y' : 'N';
 
 			$res = $dbh->prepare('
 				INSERT INTO bugdb (
@@ -197,7 +198,7 @@ OUTPUT;
 					$_POST['in']['php_os'],
 					bugs_get_hash($_POST['in']['passwd']),
 					$_POST['in']['reporter_name'],
-					$is_private
+					$_POST['in']['private']
 				)
 			);
 			if (PEAR::isError($res)) {
