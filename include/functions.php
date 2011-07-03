@@ -1587,9 +1587,17 @@ function bugs_mail($to, $subject, $message, $headers = '', $params = '')
 function response_header($title, $extraHeaders = '')
 {
 	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $site_url, $basedir;
+	
+	$is_logged = false;
 
 	if ($_header_done) {
 		return;
+	}
+	
+	if ($logged_in === 'developer') {
+		$is_logged = true;
+	} else if (isset($_SESSION['credentials']) && count($_SESSION['credentials']) == 2) {
+		$is_logged = empty($_SESSION['credentials'][0]) ? false : true;
 	}
 
 	$_header_done	= true;
@@ -1626,7 +1634,7 @@ function response_header($title, $extraHeaders = '')
 			<a href="search.php" class="menuWhite">advanced search</a>&nbsp;|&nbsp;
 			<a href="search-howto.php" class="menuWhite">search howto</a>&nbsp;|&nbsp;
 			<a href="stats.php" class="menuWhite">statistics</a>&nbsp;|&nbsp;
-<?php if ($logged_in === 'developer') { ?>
+<?php if ($is_logged) { ?>
 			<a href="logout.php" class="menuWhite">logout</a>
 <?php } else { ?>
 			<a href="login.php" class="menuWhite">login</a>	

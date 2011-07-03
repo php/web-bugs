@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 /* The bug system home page */
 
 // Obtain common includes
