@@ -20,6 +20,11 @@ if (!$bug) {
 	die('Nothing found');
 }
 
+if ($bug['private'] == 'Y') {
+	header('HTTP/1.0 403 Forbidden');
+	die('Access restricted');
+}
+
 $comments = bugs_get_bug_comments($bug_id);
 
 if ($format == 'xml') {
