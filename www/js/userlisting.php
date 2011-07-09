@@ -50,8 +50,7 @@ $lookup = $user = array();
 
 if ($json) {
 	foreach ($json as $row) {
-		$lookup[] = $row['name'];
-		$lookup[] = $row['username'];
+		$lookup[] = $row['name'];		
 	
 		$data = array(
 			'email'		=> md5($row['username'] . '@php.net'),
@@ -61,9 +60,10 @@ if ($json) {
 	
 		/* Only add the user name in the array if it is not the same as the begin of the real name */
 		if (!preg_match('/^'. preg_quote($row['username']) .'/i', $row['name'])) {
+			$lookup[] = $row['username'];
 			$user[$row['username']]	= $data;
 		}
-		$user[$row['name']]		= $data;
+		$user[$row['name']] = $data;
 	}
 }
 
