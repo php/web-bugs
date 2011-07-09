@@ -141,6 +141,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 		} else {
 			$user = htmlspecialchars($_POST['user']);
 		}
+		$user = strtolower($user);
 		$pw = $_POST['pw'];
 
 		// FIXME: Remember password / user next time
