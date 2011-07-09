@@ -1284,6 +1284,9 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 		$list_email = $res->fetchOne();
 	
 		if ($list_email) {
+			if ($list_email == 'systems@php.net') {
+				$params = '-f bounce-no-user@php.net';
+			}
 			$to[] = $list_email;
 		} else { // Fall back to default mailing list
 			$to[] = $bugEmail;
