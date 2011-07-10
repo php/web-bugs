@@ -1233,7 +1233,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 		$errors[] = 'Please select an appropriate package.';
 	}
 
-	if (!array_key_exists($in['bug_type'], $bug_types)) {
+	if (empty($in['bug_type']) || !array_key_exists($in['bug_type'], $bug_types)) {
 		$errors[] = 'Please select a valid bug type.';
 	}
 
