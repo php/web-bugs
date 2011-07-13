@@ -3,15 +3,15 @@
 	Hack note: This is for emailing the documentation team about commit/bugs emails, but could be expanded in the future.
 
 	The API itself will probably be abandoned in the future, but here's the current URL:
-	- https://bugs.php.net/api.php?type=docs&action=closed&interval=week
+	- https://bugs.php.net/api.php?type=docs&action=closed&interval=7
 */
 require_once '../include/prepend.php';
 
 $type     = isset($_GET['type'])     ? $_GET['type']           : 'unknown';
 $action   = isset($_GET['action'])   ? $_GET['action']         : 'unknown';
-$interval = isset($_GET['interval']) ? $_GET['interval']       : 'unknown';
+$interval = isset($_GET['interval']) ? (int) $_GET['interval'] : 7;
 
-if ($type === 'docs' && $action === 'closed' && $interval === 'week') {
+if ($type === 'docs' && $action === 'closed' && $interval) {
 
 	$query = 
 	"
@@ -20,7 +20,7 @@ if ($type === 'docs' && $action === 'closed' && $interval === 'week') {
 		WHERE comment_type =  'log' 
 		AND package_name IN ('Doc Build problem', 'Documentation problem', 'Translation problem', 'Online Doc Editor problem') 
 		AND comment LIKE  '%+Status:      Closed</span>%'
-		AND date_sub(curdate(), INTERVAL 7 DAY) <= ts
+		AND date_sub(curdate(), INTERVAL {$interval} DAY) <= ts
 		AND bugdb.id = bugdb_comments.bug
 		GROUP BY bugdb_comments.reporter_name
 		ORDER BY count DESC
