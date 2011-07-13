@@ -1,5 +1,2 @@
-User-agent: msnbot
-Disallow: *
-
 User-agent: *
 Disallow: /bug-pwd-finder.php
