@@ -4,6 +4,7 @@
 		"5.4SVN-{$date} (snap)",
 		"5.4SVN-{$date} (SVN)",
 		'5.4.0alpha1',
+		'5.4.0alpha2',
 		'5.3.6',
 		"5.3SVN-{$date} (snap)",
 		"5.3SVN-{$date} (SVN)",
