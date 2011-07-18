@@ -9,7 +9,7 @@
 	- between a minor version we order by the micro if available: first the qa releases: alpha/beta/rc, then the stable, then the svn versions(snaps, svn)
 	*/
 
-	if (!$versions = apc_fetch('bugs.versions') && false) {
+	if (!$versions = apc_fetch('bugs.versions')) {
 		$versions = buildVersions();
 		if ($versions) {
  			apc_store('bugs.versions', $versions, 3600);
@@ -39,19 +39,19 @@
 			// then it is a qa version (alpha|beta|rc)
 			else {
 				$versions[$dev_version_parts['major']][$dev_version_parts['minor']][$dev_version_parts['micro']] = $dev_version_parts;
-		ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
+        ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
 			}
 		}
 
-	// add the latest stable for the active branches
+    // add the latest stable for the active branches
 		foreach ($versions as $major_number => $major) {
 			$stable_releases = unserialize(file_get_contents('http://www.php.net/releases/index.php?serialize=1&max=20&version='.$major_number));
 			foreach ($major as $minor_number => $minor) {
 				foreach ($stable_releases as $stable_release_number => $stable_release) {
 				  if (strpos($stable_release_number, $major_number.'.'.$minor_number) === 0) {
-			$dev_version_parts = parseVersion($stable_release_number);
-			$versions[$dev_version_parts['major']][$dev_version_parts['minor']][$dev_version_parts['micro']] = $dev_version_parts;
-			ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
+            $dev_version_parts = parseVersion($stable_release_number);
+            $versions[$dev_version_parts['major']][$dev_version_parts['minor']][$dev_version_parts['micro']] = $dev_version_parts;
+            ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
 				    break;
 				  }
 				}
