@@ -17,7 +17,7 @@
 	}
 
 	function buildVersions() {
-		$dev_versions = json_decode(file_get_contents('http://qa.php.net/api.php?type=qa-releases&format=json&only=dev_versions'));  
+		$dev_versions = json_decode(file_get_contents('http://qa.php.net/api.php?type=qa-releases&format=json&only=dev_versions'));
 
 		$versions = array();
 
@@ -26,7 +26,7 @@
 			"SVN-{$date} (snap)",
 			"SVN-{$date} (SVN)",
 		);
-   
+
 		foreach ($dev_versions as $dev_version) {
 			$dev_version_parts = parseVersion($dev_version);
 
@@ -39,21 +39,21 @@
 			// then it is a qa version (alpha|beta|rc)
 			else {
 				$versions[$dev_version_parts['major']][$dev_version_parts['minor']][$dev_version_parts['micro']] = $dev_version_parts;
-        ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
+				ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
 			}
 		}
 
-    // add the latest stable for the active branches
+		// add the latest stable for the active branches
 		foreach ($versions as $major_number => $major) {
 			$stable_releases = unserialize(file_get_contents('http://www.php.net/releases/index.php?serialize=1&max=20&version='.$major_number));
 			foreach ($major as $minor_number => $minor) {
 				foreach ($stable_releases as $stable_release_number => $stable_release) {
-				  if (strpos($stable_release_number, $major_number.'.'.$minor_number) === 0) {
-            $dev_version_parts = parseVersion($stable_release_number);
-            $versions[$dev_version_parts['major']][$dev_version_parts['minor']][$dev_version_parts['micro']] = $dev_version_parts;
-            ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
-				    break;
-				  }
+					if (strpos($stable_release_number, $major_number.'.'.$minor_number) === 0) {
+						$dev_version_parts = parseVersion($stable_release_number);
+						$versions[$dev_version_parts['major']][$dev_version_parts['minor']][$dev_version_parts['micro']] = $dev_version_parts;
+						ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
+						break;
+					}
 				}
 			}
 		}
@@ -86,16 +86,16 @@
 
 
 	function parseVersion($version){
-		$version_parts = array();
-		$raw_parts     = array();
+		$version_parts	= array();
+		$raw_parts	= array();
 		preg_match('#(?P<major>\d)\.(?P<minor>\d).(?P<micro>\d)[-]?(?P<type>RC|alpha|beta|dev)?(?P<number>[\d]?).*#ui', $version, $raw_parts);
 		$version_parts = array(
-			'major'               => $raw_parts['major'],
-			'minor'               => $raw_parts['minor'],
-			'micro'               => $raw_parts['micro'],
-			'type'                => strtolower($raw_parts['type']?$raw_parts['type']:'stable'),
-			'number'              => $raw_parts['number'],
-			'original_version'    => $version,
+			'major'			=> $raw_parts['major'],
+			'minor'			=> $raw_parts['minor'],
+			'micro'			=> $raw_parts['micro'],
+			'type'			=> strtolower($raw_parts['type']?$raw_parts['type']:'stable'),
+			'number'		=> $raw_parts['number'],
+			'original_version'	=> $version,
 		);
 		return $version_parts;
 	}
