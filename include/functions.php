@@ -610,7 +610,7 @@ function show_version_options($current, $default = '')
 
 	echo '<option value="">--Please Select--</option>' , "\n";
 	require_once "{$ROOT_DIR}/include/php_versions.php";
-	while (list(,$v) = each($versions)) {
+	foreach($versions as $v) {
 		echo '<option';
 		if ($current == $v) {
 			echo ' selected="selected"';
