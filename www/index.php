@@ -62,6 +62,38 @@ at the top of the page for a basic default search.  Read the
 <a href="search-howto.php">search howto</a> for instructions on 
 how search works.</p>
 
+<p>Common searches</p>
+<ul>
+<?php
+	$base_default = 'https://bugs.php.net/search.php?boolean=0&limit=30&order_by=id&direction=DESC&cmd=display&status=Open&bug_age=0&bug_updated=0';
+	$searches = array(
+		'Most recent open bugs (all)' => array(
+			'base'   => $base_default,
+			'suffix' => '&bug_type=All',
+		),
+		'Most recent open bugs (PHP 5.3)' => array(
+			'base'   => $base_default,
+			'suffix' => '&bug_type=All&phpver=5.3',
+		),
+		'Most recent open bugs (PHP 5.4)' => array(
+			'base'   => $base_default,
+			'suffix' => '&bug_type=All&phpver=5.4',
+		),
+		'Open Documentation bugs' => array(
+			'base'   => $base_default,
+			'suffix' => '&bug_type=Documentation+Problem',
+		),
+		'Open Documentation bugs (with patches)' => array(
+			'base'   => $base_default,
+			'suffix' => '&bug_type=Documentation+Problem&patch=Y',
+		),
+	);
+	foreach ($searches as $title => $linfo) {
+		echo '<li><a href="', $linfo['base'], $linfo['suffix'], '">', $title, '</a></li>', PHP_EOL;
+	}
+?>
+</ul>
+
 <h1>Bug System Statistics</h1>
 
 <p>You can view a variety of statistics about the bugs that have been
