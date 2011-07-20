@@ -170,7 +170,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>', "\n";
 
 				// Short description
-				echo '  <td>', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</td>', "\n";
+				echo '  <td><a href="bug.php?id=', $row['id'], '">', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</a></td>', "\n";
 
 				// Assigned to
 				echo '  <td>',  ($row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=" . urlencode($row['assign']) . '">' . htmlspecialchars($row['assign']) . '</a>') : '&nbsp;'), '</td>';
