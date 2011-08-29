@@ -22,6 +22,7 @@ CREATE TABLE bugdb (
   block_user_comment char(1) default 'N',
   cve_id varchar(15) default NULL,
   private char(1) default 'N',
+  visitor_ip int(8) UNSIGNED NOT NULL,
   PRIMARY KEY  (id),
   KEY php_version (php_version(1)),
   KEY status (status),
@@ -37,6 +38,7 @@ CREATE TABLE bugdb_comments (
   ts datetime NOT NULL default '0000-00-00 00:00:00',
   comment text NOT NULL,
   comment_type varchar(10) default 'comment',
+  visitor_ip int(8) UNSIGNED NOT NULL,
   PRIMARY KEY  (id),
   KEY bug (bug,id,ts),
   FULLTEXT KEY comment (comment)

@@ -186,8 +186,9 @@ OUTPUT;
 					reporter_name,
 					status,
 					ts1,
-					private
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW(), ?)
+					private,
+					visitor_ip
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW(), ?, INET_ATON(?))
 			')->execute(array(
 					$package_name,
 					$_POST['in']['bug_type'],
@@ -198,7 +199,8 @@ OUTPUT;
 					$_POST['in']['php_os'],
 					bugs_get_hash($_POST['in']['passwd']),
 					$_POST['in']['reporter_name'],
-					$_POST['in']['private']
+					$_POST['in']['private'],
+					$_SERVER['REMOTE_ADDR']
 				)
 			);
 			if (PEAR::isError($res)) {

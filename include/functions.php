@@ -1540,10 +1540,10 @@ function bugs_add_comment ($bug_id, $from, $from_name, $comment, $type = 'commen
 	global $dbh;
 
 	return $dbh->prepare("
-		INSERT INTO bugdb_comments (bug, email, reporter_name, comment, comment_type, ts)
-		VALUES (?, ?, ?, ?, ?, NOW())
+		INSERT INTO bugdb_comments (bug, email, reporter_name, comment, comment_type, ts, visitor_ip)
+		VALUES (?, ?, ?, ?, ?, NOW(), INET_ATON(?))
 	")->execute(array(
-		$bug_id, $from, $from_name, $comment, $type,
+		$bug_id, $from, $from_name, $comment, $type, $_SERVER['REMOTE_ADDR']
 	));
 }
 
