@@ -24,7 +24,6 @@ $tla = array(
 	'Closed'		=> 'Csd',
 	'Spam'			=> 'Spm',
 	'Re-Opened'		=> 'ReO',
-	'To be documented' => 'Tbd',
 );
 
 $bug_types = array(
@@ -53,7 +52,6 @@ $state_types = array (
 	'Stale'			=> 0,
 	'Fresh'			=> 0,
 	'Bogus'			=> 1,
-	'To be documented' => 1,
 	'Spam'			=> 1,
 	'All'			=> 0,
 );

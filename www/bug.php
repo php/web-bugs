@@ -406,19 +406,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			strlen(trim($ncomment)) == 0
 		) {
 			$errors[] = "You must provide a comment when marking a bug 'Bogus'";
-		} elseif (($_POST['in']['status'] == 'To be documented' && $bug['status'] != $_POST['in']['status']) ||
-			(!empty($_POST['in']['resolve']) && $RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == 'To be documented')
-		) {
-			// Require explanation
-			if (strlen(trim($ncomment)) == 0) {
-				$errors[] = "You must provide a comment to help in the feature/issue documentation";
-			} else if ($bug['status'] != 'To be documented' && $bug['assign'] == $_POST['in']['assign']) {
-				// Reset the assigned value when changing the status to 'To be documented',
-				// as more probably the developer (which was marked as assigned) won't document
-				// the fix.
-				$_POST['in']['assign'] = '';
-			}
-			$_POST['in']['status'] = 'To be documented';
 		} elseif (!empty($_POST['in']['resolve'])) {
 			if (!$trytoforce && isset($RESOLVE_REASONS[$_POST['in']['resolve']]) &&
 				$RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == $bug['status'])
@@ -428,9 +415,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				if ($_POST['in']['status'] == $bug['status']) {
 					$_POST['in']['status'] = $RESOLVE_REASONS[$_POST['in']['resolve']]['status'];
 				}
-				if ($_POST['in']['status'] == 'Closed' && $bug['status'] == 'To be documented') {
-					$reason = $FIX_VARIATIONS['fixed']['Documentation problem'];
-				} elseif (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS[$_POST['in']['resolve']][$bug['package_name']])) {
+				if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS[$_POST['in']['resolve']][$bug['package_name']])) {
 					$reason = $FIX_VARIATIONS[$_POST['in']['resolve']][$bug['package_name']];
 				} else {
 					$reason = isset($RESOLVE_REASONS[$_POST['in']['resolve']]) ? $RESOLVE_REASONS[$_POST['in']['resolve']]['message'] : '';
