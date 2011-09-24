@@ -1152,7 +1152,7 @@ the rest of the comments, please view the bug report online at
 function addlinks($text)
 {
 	$text = htmlspecialchars($text);
-	$text = preg_replace("/((mailto|http|https|ftp|nntp|news):.+?)(&gt;|\\s|\\)|\\.\\s|$)/i","<a href=\"\\1\">\\1</a>\\3",$text);
+	$text = preg_replace("/((mailto|http|https|ftp|nntp|news):.+?)(&gt;|\\s|\\)|\\.\\s|$)/i","<a href=\"\\1\" rel=\"nofollow\">\\1</a>\\3",$text);
 
 	# what the heck is this for?
 	$text = preg_replace("/[.,]?-=-\"/", '"', $text);
