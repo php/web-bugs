@@ -26,8 +26,7 @@ and disable Zend memory manager.
  what your shell supports).
 </p>
 <p>
- This works since PHP 5.2 (with debug builds only),
- in older versions you had to reconfigure PHP with
+ This works since PHP 5.2, in older versions you had to reconfigure PHP with
  <code>--disable-zend-memory-manager</code> option.
 </p>
 
