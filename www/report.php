@@ -349,7 +349,6 @@ if (!isset($_POST['in'])) {
 		<strong>Failure to follow these instructions may result in your bug simply being marked as &quot;bogus.&quot;</strong>
 	</p>
 
-	<p>Report <img src="images/pecl_item.gif"><b>PECL</b> related bugs <a href="http://pecl.php.net/bugs/">here</a></p>
 	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="http://pear.php.net/bugs/">here</a></p>
 
 	<p>
