@@ -61,6 +61,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
 		$link_params =
 				'&amp;search_for='  . urlencode($search_for) .
+				'&amp;project='     . urlencode($project) . 
 				'&amp;php_os='      . urlencode($php_os) .
 				"&amp;php_os_not=$php_os_not" .
 				'&amp;author_email='. urlencode($author_email) .
