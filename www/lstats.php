@@ -43,7 +43,8 @@ if (!isset($_GET['phpver'])) {
 
 if (isset($_GET['per_category']))
 {
-	$pseudo_pkgs = get_pseudo_packages($site);
+	$project = !empty($_GET['project']) ? $_GET['project'] : false;
+	$pseudo_pkgs = get_pseudo_packages($project);
 	
 	$totals = array();
 	foreach ($pseudo_pkgs as $category => $data) {

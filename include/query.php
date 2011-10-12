@@ -19,7 +19,7 @@ $order_options = array(
 );
 
 // Fetch pseudo packages
-$pseudo_pkgs = get_pseudo_packages($site);
+$pseudo_pkgs = get_pseudo_packages(false);
 
 // Setup input variables..
 $boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;

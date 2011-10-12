@@ -47,7 +47,7 @@ if (!bugs_has_access($bug_id, $buginfo, $pw, $user_flags)) {
 	exit;
 }
 
-$pseudo_pkgs = get_pseudo_packages($site);
+$pseudo_pkgs = get_pseudo_packages(false);
 
 if (isset($patch_name) && isset($revision)) {
 	if ($revision == 'latest') {

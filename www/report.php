@@ -9,7 +9,9 @@ session_start();
 // Init variables
 $errors = array();
 $ok_to_submit_report = false;
-$pseudo_pkgs = get_pseudo_packages($site, false); // false == no read-only packages included
+
+$project = !empty($_GET['project']) ? $_GET['project'] : false;
+$pseudo_pkgs = get_pseudo_packages($project, false); // false == no read-only packages included
 
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
