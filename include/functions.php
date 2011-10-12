@@ -1328,7 +1328,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 			throw new Exception('SQL Error in get_package_name(): ' . $res->getMessage());
 		}
 	
-		list($list_email, $project) = $res->->fetchRow(MDB2_FETCHMODE_ASSOC);
+		list($list_email, $project) = $res->fetchRow(MDB2_FETCHMODE_ASSOC);
 		
 		if ($project == 'pecl') {
 			$mailfrom = 'pecl-dev@lists.php.net';
