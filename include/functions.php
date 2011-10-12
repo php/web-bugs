@@ -1372,9 +1372,9 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 		$bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute(array($bug_id))->fetchCol();
 
 		$bcc = array_unique($bcc);
-		return array(implode(', ', $to), $bugEmail, implode(', ', $bcc), $params);
+		return array(implode(', ', $to), $mailfrom, implode(', ', $bcc), $params);
 	} else {
-		return array(implode(', ', $to), $bugEmail, $params);
+		return array(implode(', ', $to), $mailfrom, $params);
 	}
 }
 
