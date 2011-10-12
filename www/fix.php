@@ -33,6 +33,8 @@ if ($logged_in != 'developer') {
 	$errors[] = 'The username or password you supplied was incorrect.';
 }
 
+$project = !empty($_GET['project']) ? $_GET['project'] : false;
+
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
 
 // Handle reason / comments

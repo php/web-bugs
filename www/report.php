@@ -254,9 +254,11 @@ REPORT;
 			} else {
 				$type = 'unknown';
 			}
+			
+			$project = !empty($_GET['project']) ? $_GET['project'] : false;
 
 			// provide shortcut URLS for "quick bug fixes"
-			list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+			list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($project);
 
 			$dev_extra = '';
 			$maxkeysize = 0;

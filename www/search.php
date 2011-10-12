@@ -202,7 +202,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 (<a href="search-howto.php" target="_new">?</a>)
    </small>
   </td>
-  <td rowspan="3">
+  <td rowspan="4">
    <select name="limit"><?php show_limit_options($limit);?></select>
    &nbsp;
    <select name="order_by"><?php show_order_options($limit);?></select>
@@ -232,6 +232,13 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
    <label for="bug_type">Return bugs with <b>type</b></label>
   </td>
   <td><select id="bug_type" name="bug_type"><?php show_type_options($bug_type, true);?></select></td>
+</tr>
+<tr valign="top">
+  <th>Project</th>
+  <td style="white-space: nowrap">
+   <label for="bug_type">Return bugs with <b>project</b></label>
+  </td>
+  <td><select id="project" name="project"><?php show_project_options($project, true);?></select></td>
 </tr>
 </table>
 

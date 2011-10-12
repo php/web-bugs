@@ -33,6 +33,11 @@ $bug_types = array(
 	'Security'					=> 'Sec Bug'
 );
 
+$project_types = array(
+	'PHP'	=> 'php',
+	'PECL'	=> 'pecl'
+);
+
 // Used in show_state_options()
 $state_types = array (
 	'Open'			=> 2,
@@ -195,11 +200,19 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
  */
 function get_pseudo_packages ($project, $return_disabled = true)
 {
+	global $project_types;
+
 	require_once 'Tree/Tree.php';
 
-	$where = "project IN ('', '$project')";
-	if (!$return_disabled)
+	$where = '1=1';
+	$project = strtolower($project);
+
+	if ($project !== false && in_array($project, $project_types)) {
+		$where .= " AND project IN ('',  '". $project ."')";
+	}
+	if (!$return_disabled) {
 		$where.= " AND disabled = 0";
+	}
 
 	$pseudo_pkgs = array();
 	$tree = Tree::setup (
@@ -464,6 +477,40 @@ function show_limit_options($limit = 30)
 		echo ' selected="selected"';
 	}
 	echo ">All</option>\n";
+}
+
+/**
+ * Prints bug project <option>'s for use in a <select>
+ *
+ * Options include "PHP" and "PECL".
+ *
+ * @param string	$current	bug's current project
+ * @param bool		$all		whether or not 'All' should be an option
+ *
+ * @retun void
+ */
+function show_project_options($current = 'php', $all = false)
+{
+	global $project_types;
+
+	if ($all) {
+		if (!$current) {
+			$current = 'All';
+		}
+		echo '<option value="All"';
+		if ($current == 'All') {
+			echo ' selected="selected"';
+		}
+		echo ">All</option>\n";
+	} elseif (!$current) {
+		$current = 'php';
+	} else {
+		$current = strtolower($current);
+	}
+
+	foreach ($project_types as $k => $v) {
+		echo '<option value="', $k, '"', (($current == strtolower($k)) ? ' selected="selected"' : ''), ">{$k}</option>\n";
+	}
 }
 
 /**
@@ -1259,6 +1306,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 
 	$to = array();
 	$params = '-f noreply@php.net';
+	$mailfrom = $bugEmail;
 	
 	if ($bug_type === 'Documentation Problem') {
 		// Documentation problems *always* go to the doc team
@@ -1271,7 +1319,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	else {
 		/* Get package mailing list address */
 		$res = $dbh->prepare('
-			SELECT list_email
+			SELECT list_email, project
 			FROM bugdb_pseudo_packages
 			WHERE name = ?
 		')->execute(array($package_name));
@@ -1280,15 +1328,33 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 			throw new Exception('SQL Error in get_package_name(): ' . $res->getMessage());
 		}
 	
-		$list_email = $res->fetchOne();
+		list($list_email, $project) = $res->->fetchRow(MDB2_FETCHMODE_ASSOC);
+		
+		if ($project == 'pecl') {
+			$mailfrom = 'pecl-dev@lists.php.net';
+		}
 	
 		if ($list_email) {
 			if ($list_email == 'systems@php.net') {
 				$params = '-f bounce-no-user@php.net';
 			}
 			$to[] = $list_email;
-		} else { // Fall back to default mailing list
-			$to[] = $bugEmail;
+		} else {
+			// Get the maintainers handle
+			if ($project == 'pecl') {
+				$handles = $dbh->prepare("SELECT GROUP_CONCAT(handle) FROM bugdb_packages_maintainers WHERE package_name = ?")->execute(array($package_name))->fetchOne();
+				
+				if ($handles) {
+					foreach (explode(',', $handles) as $handle) {
+						$to[] = $handle .'@php.net';
+					}
+				} else {
+					$to[] = $mailfrom;
+				}
+			} else {
+				// Fall back to default mailing list
+				$to[] = $bugEmail;
+			}
 		}
 	}
 

@@ -37,6 +37,7 @@ $patch = !empty($_GET['patch']) ? $_GET['patch'] : '';
 $private = !empty($_GET['private']) ? $_GET['private'] : '';
 $begin = (int) (!empty($_GET['begin']) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
+$project = (!empty($_GET['project']) && $_GET['project'] != 'All') ? $_GET['project'] : '';
 if (!empty($_GET['limit'])) {
 	$limit = ($_GET['limit'] == 'All') ? 'All' : (($_GET['limit'] > 0) ? (int) $_GET['limit'] : $limit);
 }
@@ -163,6 +164,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
 	if ($phpver != '') {
 		$where_clause .= " AND bugdb.php_version LIKE '" . $dbh->escape($phpver) . "%'";
+	}
+	
+	if ($project != '') {
+		$where_clause .= " AND EXISTS (SELECT 1 FROM bugdb_pseudo_packages b WHERE b.name = bugdb.package_name AND  b.project = '". $dbh->escape($project) ."' LIMIT 1)";
 	}
 	
 	if ($cve_id != '') {
