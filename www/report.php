@@ -170,6 +170,8 @@ OUTPUT;
 			if (isset($_POST['preview'])) {
 				$_POST['in']['status'] = 'Open';
 				$_SESSION['bug_preview'] = $_POST['in'];
+				$_SESSION['bug_preview']['ldesc_orig'] = $_POST['in']['ldesc'];
+				$_SESSION['bug_preview']['ldesc'] = $fdesc;
 				$_SESSION['captcha'] = $_POST['captcha'];
 				redirect('bug.php?id=preview');
 				exit;

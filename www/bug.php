@@ -1084,7 +1084,12 @@ if ($bug_id == 'PREVIEW') {
 
 <form action="report.php?package=<?php htmlspecialchars($_SESSION['bug_preview']['package_name']); ?>" method="post">
 <?php foreach($_SESSION['bug_preview'] as $k => $v) {
-	echo "<input type='hidden' name='in[", htmlspecialchars($k, ENT_QUOTES), "]' value='", htmlentities($v, ENT_QUOTES, 'UTF-8'), "'/>";
+	if ($k !== 'ldesc') {
+		if ($k === 'ldesc_orig') {
+			$k = 'ldesc';
+		}
+		echo "<input type='hidden' name='in[", htmlspecialchars($k, ENT_QUOTES), "]' value='", htmlentities($v, ENT_QUOTES, 'UTF-8'), "'/>";
+	}
 }
 	echo "<input type='hidden' name='captcha' value='", htmlspecialchars($_SESSION['captcha'], ENT_QUOTES), "'/>";
 ?>
