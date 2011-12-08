@@ -311,7 +311,7 @@ REPORT;
 	}
 } // end of if input
 
-$package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : (!empty($package_name) ? $package_name : '');
+$package = !empty($package_name) ? $package_name : (!empty($_REQUEST['package']) ? $_REQUEST['package'] : '');
 
 if (!is_string($package)) {
 	response_header('Report - Problems');
