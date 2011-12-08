@@ -1082,11 +1082,11 @@ if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['s
 if ($bug_id == 'PREVIEW') {
 ?>
 
-<form action="report.php?package=<?php $_SESSION['bug_preview']['package_name']; ?>" method="post">
+<form action="report.php?package=<?php htmlspecialchars($_SESSION['bug_preview']['package_name']); ?>" method="post">
 <?php foreach($_SESSION['bug_preview'] as $k => $v) {
-	echo "<input type='hidden' name='in[{$k}]' value='", htmlentities($v, ENT_QUOTES, 'UTF-8'), "'/>";
+	echo "<input type='hidden' name='in[", htmlspecialchars($k, ENT_QUOTES), "]' value='", htmlentities($v, ENT_QUOTES, 'UTF-8'), "'/>";
 }
-	echo "<input type='hidden' name='captcha' value='{$_SESSION['captcha']}'/>";
+	echo "<input type='hidden' name='captcha' value='", htmlspecialchars($_SESSION['captcha'], ENT_QUOTES), "'/>";
 ?>
 	<input type='submit' value='Send bug report' /> <input type='submit' name='edit_after_preview' value='Edit' />
 </form>
