@@ -18,7 +18,7 @@ if ($type === 'docs' && $action === 'closed' && $interval) {
 		SELECT bugdb_comments.reporter_name, COUNT(*) as count
 		FROM bugdb_comments, bugdb 
 		WHERE comment_type =  'log' 
-		AND package_name IN ('Doc Build problem', 'Documentation problem', 'Translation problem', 'Online Doc Editor problem') 
+		AND (package_name IN ('Doc Build problem', 'Documentation problem', 'Translation problem', 'Online Doc Editor problem')) OR (bug_type = 'Documentation Problem')
 		AND comment LIKE  '%+Status:      Closed</span>%'
 		AND date_sub(curdate(), INTERVAL {$interval} DAY) <= ts
 		AND bugdb.id = bugdb_comments.bug
