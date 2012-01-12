@@ -51,7 +51,8 @@ if (!$show_bug_info) {
 require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 $patchinfo = new Bug_Patchtracker;
 
-$patch_name = (!empty($_POST['name']) && is_string($_POST['name'])) ? $_POST['name'] : '';
+$patch_name = (!empty($_GET['patchname']) && is_string($_GET['patchname'])) ? $_GET['patchname'] : '';
+$patch_name = (!empty($_POST['name']) && is_string($_POST['name'])) ? $_POST['name'] : $patch_name;
 $patch_name_url = urlencode($patch_name);
 
 if (isset($_POST['addpatch'])) {
