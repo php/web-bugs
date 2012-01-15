@@ -4,8 +4,6 @@ session_start();
 
 require_once '../include/prepend.php';
 
-setcookie("MAGIC_COOKIE","",time()-3600,'/','.php.net');
-setcookie("MAGIC_COOKIE","",time()-3600,'/');
 $_SESSION["credentials"] = array();
 session_destroy();
 
