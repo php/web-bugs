@@ -96,7 +96,7 @@ function verify_password($user, $pass)
 		return false;
 	}
 
-    $_SESSION["credentials"] = array($user, $pass);
+    $_SESSION["user"] = $user;
 
 	return true;
 }
@@ -146,26 +146,21 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 		}
 		$user = strtolower($user);
 		$pw = $_POST['pw'];
-
-		// FIXME: Remember password / user next time
-		//if (isset($_POST['save'])) { # non-developers don't have $user set
-			/*if (DEVBOX) {
-				$domain = null;
-			} else {
-				$domain = '.php.net';
-			}*/
-			$_SESSION["credentials"] = array('', $pw);
-		//}
 	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
 		$user = $auth_user->handle;
 		$pw = $auth_user->password;
-    } elseif (isset($_SESSION["credentials"]) && count($_SESSION["credentials"]) == 2) {
-		list($user, $pw) = $_SESSION["credentials"];
-	}
+    }
 
 	// Authentication and user level check
 	// User levels are: reader (0), commenter/patcher/etc. (edit = 3), submitter (edit = 2), developer (edit = 1)
-	if ($user != '' && $pw != '' && verify_password($user, $pw)) {
+	if (!empty($_SESSION["user"])) {
+		$user = $_SESSION["user"];
+		$user_flags = BUGS_DEV_USER;
+		$logged_in = 'developer';
+		$auth_user->handle = $user;
+		$auth_user->email = "{$user}@php.net";
+		$auth_user->name = $user;
+	} elseif ($user != '' && $pw != '' && verify_password($user, $pw)) {
 		$user_flags = BUGS_DEV_USER;
 		$logged_in = 'developer';
 		$auth_user->handle = $user;
@@ -1664,8 +1659,8 @@ function response_header($title, $extraHeaders = '')
 	
 	if ($logged_in === 'developer') {
 		$is_logged = true;
-	} else if (isset($_SESSION['credentials']) && count($_SESSION['credentials']) == 2) {
-		$is_logged = empty($_SESSION['credentials'][0]) ? false : true;
+	} else if (!empty($_SESSION['user'])) {
+		$is_logged = true;
 	}
 
 	$_header_done	= true;

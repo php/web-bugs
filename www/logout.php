@@ -4,7 +4,7 @@ session_start();
 
 require_once '../include/prepend.php';
 
-$_SESSION["credentials"] = array();
+unset($_SESSION['user']);
 session_destroy();
 
 response_header('Logout');

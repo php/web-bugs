@@ -4,13 +4,9 @@ session_start();
 
 require_once '../include/prepend.php';
 
-if (isset($_SESSION['credentials']) && count($_SESSION['credentials']) == 2) {
-  if (!empty($_SESSION['credentials'][0])) {
+if (!empty($_SESSION['user'])) {
     header('location: index.php');
     exit;
-  } else {
-    $_SESSION['credentials'] = NULL;
-  }
 }
 
 response_header('Login');
