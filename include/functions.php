@@ -84,7 +84,7 @@ function verify_password($user, $pass)
 
 	$ctx = stream_context_create(array('http' => $opts));
 
-	$s = file_get_contents('https://master.php.net/fetch/cvsauth.php', false, $ctx);
+	$s = file_get_contents('https://master2.php.net/fetch/cvsauth.php', false, $ctx);
 
 	$a = @unserialize($s);
 	if (!is_array($a)) {
