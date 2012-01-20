@@ -75,7 +75,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				'&amp;phpver=' . urlencode($phpver) .
 				'&amp;cve_id=' . urlencode($cve_id) .
 				"&amp;cve_id_not=$cve_id_not" .
-				"&amp;patch=$patch" .
+				'&amp;patch=' . urlencode($patch) .
 				'&amp;assign=' . urlencode($assign);
 		
 		if ($is_security_developer) {
