@@ -276,7 +276,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	}
 
 	// check that they aren't being bad and setting a status they aren't allowed to (oh, the horrors.)
-	if ($_POST['in']['status'] != $bug['status'] && $state_types[$_POST['in']['status']] != 2) {
+	if (isset($_POST['in']['status'])
+		&& isset($state_types[$_POST['in']['status']])
+		&& $_POST['in']['status'] != $bug['status'] && $state_types[$_POST['in']['status']] != 2) {
 		$errors[] = 'You aren\'t allowed to change a bug to that state.';
 	}
 
