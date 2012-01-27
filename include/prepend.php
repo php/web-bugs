@@ -20,6 +20,7 @@ if (file_exists($local_cfg)) {
 	require $local_cfg;
 } else {
 	$site_data = array (
+		'method' => 'https',
 		'url' => 'bugs.php.net',
 		'basedir' => '',
 		'email' => 'php-bugs@lists.php.net',
@@ -42,6 +43,7 @@ if (!isset($site_data['security_email'])) {
 
 // DO NOT EDIT ANYTHING BELOW THIS LINE, edit $site_data above instead!
 $logged_in = false;
+$site_method = $site_data['method'];
 $site_url = $site_data['url'];
 $bugEmail = $site_data['email'];
 $docBugEmail = $site_data['doc_email'];

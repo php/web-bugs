@@ -65,7 +65,7 @@ how search works.</p>
 <p>Common searches</p>
 <ul>
 <?php
-	$base_default = 'https://bugs.php.net/search.php?boolean=0&limit=30&order_by=id&direction=DESC&cmd=display&status=Open&bug_age=0&bug_updated=0';
+	$base_default = "{$site_method}://{$site_url}/search.php?boolean=0&limit=30&order_by=id&direction=DESC&cmd=display&status=Open&bug_age=0&bug_updated=0";
 	$searches = array(
 		'Most recent open bugs (all)' => array(
 			'base'   => $base_default,

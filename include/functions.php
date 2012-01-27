@@ -11,7 +11,7 @@ define('BUGS_SECURITY_DEV', 1<<3);
 // used in mail_bug_updates(), below, and class for search results
 $tla = array(
 	'Open'			=> 'Opn',
-	'Bogus'			=> 'Bgs',
+	'Not a bug'		=> 'Nab',
 	'Feedback'		=> 'Fbk',
 	'No Feedback'	=> 'NoF',
 	'Wont fix'		=> 'Wfx',
@@ -56,7 +56,7 @@ $state_types = array (
 	'Old Feedback'	=> 0,
 	'Stale'			=> 0,
 	'Fresh'			=> 0,
-	'Bogus'			=> 1,
+	'Not a bug'		=> 1,
 	'Spam'			=> 1,
 	'All'			=> 0,
 );
@@ -84,7 +84,7 @@ function verify_password($user, $pass)
 
 	$ctx = stream_context_create(array('http' => $opts));
 
-	$s = file_get_contents('https://master2.php.net/fetch/cvsauth.php', false, $ctx);
+	$s = file_get_contents('https://master.php.net/fetch/cvsauth.php', false, $ctx);
 
 	$a = @unserialize($s);
 	if (!is_array($a)) {
@@ -585,8 +585,8 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
 				echo "<option>$state</option>\n";
 				break;
 		}
-		/* Allow state 'Closed' always when current state is not 'Bogus' */
-		if ($state != 'Bogus') {
+		/* Allow state 'Closed' always when current state is not 'Not a bug' */
+		if ($state != 'Not a bug') {
 			echo "<option>Closed</option>\n";
 		}
 	} else {
@@ -886,7 +886,7 @@ function bug_diff_render_html($diff)
  */
 function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 {
-	global $tla, $bug_types, $siteBig, $site_url, $basedir;
+	global $tla, $bug_types, $siteBig, $site_method, $site_url, $basedir;
 
 	$text = array();
 	$headers = array();
@@ -982,7 +982,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 	$user_text = <<< USER_TEXT
 ATTENTION! Do NOT reply to this email!
 To reply, use the web interface found at
-https://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=2
+{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=2
 
 {$header_text}
 {$wrapped_text}
@@ -990,13 +990,13 @@ USER_TEXT;
 
 	/* developer text with headers, previous messages, and edit link */
 	$dev_text = <<< DEV_TEXT
-Edit report at https://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
+Edit report at {$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
 
 {$header_text}
 {$wrapped_text}
 
 -- 
-Edit this bug report at https://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
+Edit this bug report at {$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
 DEV_TEXT;
 
 	if (preg_match('/.*@php\.net\z/', $bug['email'])) {
@@ -1118,7 +1118,7 @@ function format_date($ts = null, $format = 'Y-m-d H:i e')
  */
 function get_old_comments($bug_id, $all = 0)
 {
-	global $dbh, $site_url, $basedir;
+	global $dbh, $site_method, $site_url, $basedir;
 
 	$divider = str_repeat('-', 72);
 	$max_message_length = 10 * 1024;
@@ -1177,7 +1177,7 @@ Previous Comments:
 The remainder of the comments for this report are too long. To view
 the rest of the comments, please view the bug report online at
 
-    https://{$site_url}{$basedir}/bug.php?id={$bug_id}
+    {$site_method}://{$site_url}{$basedir}/bug.php?id={$bug_id}
 ";
 	}
 
@@ -1426,7 +1426,7 @@ function format_search_string($search, $boolean_search = false)
  */
 function unsubscribe_hash($bug_id, $email)
 {
-	global $dbh, $siteBig, $site_url, $bugEmail;
+	global $dbh, $siteBig, $site_method, $site_url, $bugEmail;
 
 	$now = time();
 	$hash = crypt($email . $bug_id, $now);
@@ -1452,10 +1452,10 @@ A request has been made to remove your subscription to
 {$siteBig} bug #{$bug_id}
 
 To view the bug in question please use this link:
-https://{$site_url}{$basedir}/bug.php?id={$bug_id}
+{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug_id}
 
 To confirm the removal please use this link:
-https://{$site_url}{$basedir}/bug.php?id={$bug_id}&unsubscribe=1&t={$hash}
+{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug_id}&unsubscribe=1&t={$hash}
 
 
 USER_TEXT;
@@ -1649,7 +1649,7 @@ function bugs_mail($to, $subject, $message, $headers = '', $params = '')
  */
 function response_header($title, $extraHeaders = '')
 {
-	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $site_url, $basedir;
+	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $site_method, $site_url, $basedir;
 	
 	$is_logged = false;
 
@@ -1673,10 +1673,10 @@ function response_header($title, $extraHeaders = '')
 <html>
 <head>
 	<?php echo $extraHeaders; ?>
-	<base href="https://<?php echo $site_url, $basedir; ?>/" />
+	<base href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/" />
 	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
-	<link rel="shortcut icon" href="https://<?php echo $site_url, $basedir; ?>/images/favicon.ico" />
-	<link rel="stylesheet" href="https://<?php echo $site_url, $basedir; ?>/css/style.css" />
+	<link rel="shortcut icon" href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/images/favicon.ico" />
+	<link rel="stylesheet" href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/css/style.css" />
 </head>
 
 <body>
@@ -1831,7 +1831,6 @@ function handle_pear_errors ($error_obj)
 	$error .= "<p>It's our guess that the database is down. Argh!!!</p>\n";
 	
 	// FIXME: If logged in, show other stuff....
-
 	response_footer($error);
 	exit;
 }

@@ -48,7 +48,7 @@ if (isset($_GET['per_category']))
 	
 	$totals = array();
 	foreach ($pseudo_pkgs as $category => $data) {
-		$count = get_status_count ("status NOT IN('to be documented', 'closed', 'bogus', 'duplicate', 'wont fix', 'no feedback')", $category);
+		$count = get_status_count ("status NOT IN('to be documented', 'closed', 'not a bug', 'duplicate', 'wont fix', 'no feedback')", $category);
 		if ($count > 0) {
 			$totals[$category] = $count;
 		}

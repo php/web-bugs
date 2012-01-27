@@ -108,7 +108,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		case 'Wont fix':
 		case 'No Feedback':
 		case 'Feedback':
-		case 'Bogus':
+		case 'Not a bug':
 			$where_clause .= "	AND bugdb.status='$status'";
 			break;
 		case 'Old Feedback':
@@ -116,15 +116,15 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 								AND TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) > 60";
 			break;
 		case 'Fresh':
-			$where_clause .= "	AND bugdb.status NOT IN ('Closed', 'Duplicate', 'Bogus')
+			$where_clause .= "	AND bugdb.status NOT IN ('Closed', 'Duplicate', 'Not a bug')
 								AND TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) < 30";
 			break;
 		case 'Stale':
-			$where_clause .= "	AND bugdb.status NOT IN ('Closed', 'Duplicate', 'Bogus')
+			$where_clause .= "	AND bugdb.status NOT IN ('Closed', 'Duplicate', 'Not a bug')
 								AND TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) > 30";
 			break;
 		case 'Not Assigned':
-			$where_clause .= " AND bugdb.status NOT IN ('Closed', 'Duplicate', 'Bogus', 'Assigned', 'Wont Fix', 'Suspended')";
+			$where_clause .= " AND bugdb.status NOT IN ('Closed', 'Duplicate', 'Not a bug', 'Assigned', 'Wont Fix', 'Suspended')";
 			break;
 		case 'OpenFeedback':
 			$where_clause .= " AND bugdb.status IN ('Open', 'Re-Opened', 'Assigned','Analyzed', 'Critical', 'Verified', 'Feedback')";

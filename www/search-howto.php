@@ -80,15 +80,15 @@ options.
 				<li><strong>Old feedback</strong>: Bugs that have been requesting feedback for over60 days.</li>
 				<li>
 					<strong>Fresh</strong> : Bugs commented on in the last 30 days that are not closed,
-					duplicates, or bogus. Only developers and the original author can affect this
+					duplicates, or not-a-bug. Only developers and the original author can affect this
 					date as public comments do not.
 				</li>
 				<li>
 					<strong>Stale</strong>: Bugs last commented on at least 30 days ago that are not 
-					closed, duplicates, or bogus. Only developers and the original author can affect 
+					closed, duplicates, or not-a-bug. Only developers and the original author can affect 
 					this date as public comments do not count.
 				</li>
-				<li><strong>All</strong>: All types, even bogus.</li>
+				<li><strong>All</strong>: All types, even not-a-bug.</li>
 			</ul>
 		</td>
 		<td>If you're only interested in critical bugs, or want to see which have been verified, or perhaps just those seeking feedback.</td>

@@ -237,7 +237,7 @@ REPORT;
 
 			$ascii_report = "{$report}{$_POST['in']['sdesc']}\n\n" . wordwrap($fdesc);
 			$ascii_report.= "\n-- \nEdit bug report at ";
-			$ascii_report.= "https://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
+			$ascii_report.= "{$site_method}://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
 
 			list($mailto, $mailfrom, $params) = get_package_mail($package_name, false, $_POST['in']['bug_type']);
 
@@ -274,7 +274,7 @@ REPORT;
 			}
 			foreach ($RESOLVE_REASONS as $k => $v) {
 				if (!$v['webonly']) {
-					$dev_extra .= str_pad("{$v['title']}:", $maxkeysize) . " https://bugs.php.net/fix.php?id={$cid}&r={$k}\n";
+					$dev_extra .= str_pad("{$v['title']}:", $maxkeysize) . " {$site_method}://{$site_url}/fix.php?id={$cid}&r={$k}\n";
 				}
 			}
 
@@ -352,7 +352,7 @@ if (!isset($_POST['in'])) {
 	</p>
 
 	<p>
-		<strong>Failure to follow these instructions may result in your bug simply being marked as &quot;bogus.&quot;</strong>
+		<strong>Failure to follow these instructions may result in your bug simply being marked as &quot;not a bug.&quot;</strong>
 	</p>
 
 	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="http://pear.php.net/bugs/">here</a></p>

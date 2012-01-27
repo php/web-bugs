@@ -403,11 +403,11 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	if (empty($_POST['in']['status'])) {
 		$errors[] = "You must provide a status";
 	} else {
-		if ($_POST['in']['status'] == 'Bogus' &&
-			!in_array($bug['status'], array ('Bogus', 'Closed', 'Duplicate', 'No feedback', 'Wont fix')) &&
+		if ($_POST['in']['status'] == 'Not a bug' &&
+			!in_array($bug['status'], array ('Not a bug', 'Closed', 'Duplicate', 'No feedback', 'Wont fix')) &&
 			strlen(trim($ncomment)) == 0
 		) {
-			$errors[] = "You must provide a comment when marking a bug 'Bogus'";
+			$errors[] = "You must provide a comment when marking a bug 'Not a bug'";
 		} elseif (!empty($_POST['in']['resolve'])) {
 			if (!$trytoforce && isset($RESOLVE_REASONS[$_POST['in']['resolve']]) &&
 				$RESOLVE_REASONS[$_POST['in']['resolve']]['status'] == $bug['status'])
@@ -576,7 +576,7 @@ switch ($thanks)
 		display_bug_success('Your comment was added to the bug successfully.');
 		break;
 	case 4:
-		$bug_url = "https://{$site_url}{$basedir}/bug.php?id={$bug_id}";
+		$bug_url = "{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug_id}";
 		display_bug_success("
 			Thank you for your help!
 			If the status of the bug report you submitted changes, you will be notified.
@@ -1189,5 +1189,5 @@ function control($num, $desc)
 
 function canvote($thanks, $status)
 {
-	return ($thanks != 4 && $thanks != 6 && $status != 'Closed' && $status != 'Bogus' && $status != 'Duplicate');
+	return ($thanks != 4 && $thanks != 6 && $status != 'Closed' && $status != 'Not a bug' && $status != 'Duplicate');
 }

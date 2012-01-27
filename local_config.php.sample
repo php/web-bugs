@@ -5,6 +5,7 @@
  */
 
 $site_data = array (
+	'method' => 'https',
 	'url' => 'bugs.php.net',
 	'basedir' => '/bugs',
 	'email' => 'php-bugs@lists.php.net',

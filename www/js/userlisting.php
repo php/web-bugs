@@ -9,7 +9,7 @@ function getAllUsers()
 	$ctx = stream_context_create(array('http' => $opts));
 	$token = getenv('USER_TOKEN');
 
-	$retval = @file_get_contents('https://master2.php.net/fetch/allusers.php?&token=' . rawurlencode($token), false, $ctx);
+	$retval = @file_get_contents('https://master.php.net/fetch/allusers.php?&token=' . rawurlencode($token), false, $ctx);
 
 	if (!$retval) {
 		return;

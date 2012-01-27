@@ -18,7 +18,7 @@ if (isset($_POST['user'])) {
 
   if ($logged_in === 'developer') {
 	if (!empty($_POST['referer']) &&
-		preg_match('/^https:\/\/'. preg_quote($site_url) .'/i', $referer)) {
+		preg_match("/^{$site_method}:\/\/". preg_quote($site_url) .'/i', $referer)) {
 		header('location: '. $referer);
 		exit;
 	}

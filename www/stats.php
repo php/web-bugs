@@ -17,7 +17,7 @@ $titles = array(
 	'Feedback'	=> 'Fdbk',
 	'No Feedback'	=> 'No&nbsp;Fdbk',
 	'Suspended'	=> 'Susp',
-	'Bogus'		=> 'Bogus',
+	'Not a bug'	=> 'Not&nbsp;a&nbsp;bug',
 	'Duplicate'	=> 'Dupe',
 	'Wont fix'	=> 'Wont&nbsp;Fix',
 );
