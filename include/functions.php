@@ -565,7 +565,7 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
 
 
 	/* regular users can only pick states with type 2 for unclosed bugs */
-	if ($state != 'All' && $state_types[$state] == 1 && $user_mode == 2) {
+	if ($state != 'All' && isset($state_types[$state]) == 1 && $user_mode == 2) {
 		switch ($state)
 		{
 			/* If state was 'Feedback', set state automatically to 'Assigned' if the bug was
