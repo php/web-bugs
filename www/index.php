@@ -71,6 +71,10 @@ how search works.</p>
 			'base'   => $base_default,
 			'suffix' => '&bug_type=All',
 		),
+		'Most recent open bugs (all) with patches' => array(
+			'base'   => $base_default,
+			'suffix' => '&bug_type=All&patch=Y',
+		),
 		'Most recent open bugs (PHP 5.3)' => array(
 			'base'   => $base_default,
 			'suffix' => '&bug_type=All&phpver=5.3',
