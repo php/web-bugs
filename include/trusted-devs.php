@@ -21,6 +21,7 @@ $security_distro_people = array(
 	'geissert',
 	'oden',
 	'vdanen',
+	'sbeattie',
 );
 
 $security_developers = array(
