@@ -269,14 +269,14 @@ function is_spam($string)
  * turns "." into character entities that get interpreted as "dot".
  *
  * @param string $txt		the email address to be obfuscated
- * @param string $format	how the output will be displayed ('html', 'text')
+ * @param string $format	how the output will be displayed ('html', 'text', 'reverse')
  *
  * @return string	the altered email address
  */
 function spam_protect($txt, $format = 'html')
 {
 	/* php.net addresses are not protected! */
-	if (preg_match('/^(.+)@php\.net/i', $txt)) {
+	if (preg_match('/^(.+)@php\.net$/i', $txt)) {
 		return $txt;
 	}
 	if ($format == 'html') {
@@ -289,6 +289,9 @@ function spam_protect($txt, $format = 'html')
 			'@' => ' at ',
 			'.' => ' dot ',
 		);
+		if ($format == 'reverse') {
+			$translate = array_flip($translate);
+		}
 	}
 	return strtr($txt, $translate);
 }

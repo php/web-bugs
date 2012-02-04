@@ -45,7 +45,7 @@ $direction = (!empty($_GET['direction']) && $_GET['direction'] != 'DESC') ? 'ASC
 $order_by = (!empty($_GET['order_by']) && array_key_exists($_GET['order_by'], $order_options)) ? $_GET['order_by'] : '';
 $reorder_by = (!empty($_GET['reorder_by']) && array_key_exists($_GET['reorder_by'], $order_options)) ? $_GET['reorder_by'] : '';
 $assign = !empty($_GET['assign']) ? $_GET['assign'] : '';
-$author_email = (!empty($_GET['author_email']) && is_valid_email($_GET['author_email'])) ? $_GET['author_email'] : '';
+$author_email = !empty($_GET['author_email']) ? spam_protect($_GET['author_email'], 'reverse') : '';
 $package_name = (isset($_GET['package_name']) && is_array($_GET['package_name'])) ? $_GET['package_name'] : array();
 $package_nname = (isset($_GET['package_nname']) && is_array($_GET['package_nname'])) ? $_GET['package_nname'] : array();
 
