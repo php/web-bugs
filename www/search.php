@@ -296,7 +296,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <?php
 	if (!empty($auth_user->handle)) {
 		$u = htmlspecialchars($auth_user->handle);
-		echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u'\" />";
+		echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u@php.net'\" />";
 	}
 ?>
   </td>
