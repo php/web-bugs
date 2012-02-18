@@ -157,16 +157,19 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 		$user = $_SESSION["user"];
 		$user_flags = BUGS_DEV_USER;
 		$logged_in = 'developer';
+		$auth_user = new stdClass;
 		$auth_user->handle = $user;
 		$auth_user->email = "{$user}@php.net";
 		$auth_user->name = $user;
 	} elseif ($user != '' && $pw != '' && verify_password($user, $pw)) {
 		$user_flags = BUGS_DEV_USER;
 		$logged_in = 'developer';
+		$auth_user = new stdClass;
 		$auth_user->handle = $user;
 		$auth_user->email = "{$user}@php.net";
 		$auth_user->name = $user;
 	} else {
+		$auth_user = new stdClass;
 		$auth_user->email = isset($_POST['in']['email']) ? $_POST['in']['email'] : '';
 		$auth_user->handle = '';
 		$auth_user->name = '';

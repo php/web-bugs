@@ -14,6 +14,15 @@ if ($id) {
 	exit;
 }
 
+if($_SERVER['REQUEST_URI'] == '/random') {
+	$query  = "select id from bugdb where status!='Closed' and status!='Not a bug' and status!='Duplicate' and status!='Spam' and status!='Wont fix' order by rand() limit 1";
+
+	$result = $dbh->prepare($query)->execute();
+	$id = $result->fetchRow();
+	redirect("bug.php?id={$id[0]}");
+	exit;
+}
+
 response_header('Bugs');
 
 ?>
@@ -61,6 +70,12 @@ page</a>.</p>
 at the top of the page for a basic default search.  Read the 
 <a href="search-howto.php">search howto</a> for instructions on 
 how search works.</p>
+
+<p>If you have 10 minutes to kill and you want to help us out, grab a
+random open bug and see if you can help resolve it. We have made it 
+easy. Hit <a href="<?php echo $site_method?>://<?php echo $site_url?>/random">
+<?php echo $site_method?>://<?php echo $site_url?>/random</a> to go directly
+to a random open bug.</p>
 
 <p>Common searches</p>
 <ul>
