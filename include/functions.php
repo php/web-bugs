@@ -1703,6 +1703,7 @@ function response_header($title, $extraHeaders = '')
 			<a href="search.php" class="menuWhite">advanced search</a>&nbsp;|&nbsp;
 			<a href="search-howto.php" class="menuWhite">search howto</a>&nbsp;|&nbsp;
 			<a href="stats.php" class="menuWhite">statistics</a>&nbsp;|&nbsp;
+			<a href="random" class="menuWhite">random bug</a>&nbsp;|&nbsp;
 <?php if ($is_logged) { ?>
 			<a href="logout.php" class="menuWhite">logout</a>
 <?php } else { ?>
