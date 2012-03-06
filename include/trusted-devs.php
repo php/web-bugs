@@ -24,6 +24,7 @@ $security_distro_people = array(
 	'sbeattie',  /* Ubuntu */
 	'remi',      /* fedora */
 	'ondrej',    /* debian */
+	'olemarkus', /* Gentoo */
 );
 
 $security_developers = array(
