@@ -26,6 +26,15 @@ if($_SERVER['REQUEST_URI'] == '/random') {
 response_header('Bugs');
 
 ?>
+
+<script type="text/javascript">
+var bugid = window.location.hash.substr(1) * 1;
+if (bugid > 0) {
+	var loc = window.location;
+	loc.href = loc.protocol + '//' + loc.host+(loc.port ? ':'+loc.port : '')+'/'+bugid;
+}
+</script>
+
 <h1>PHP Bug Tracking System</h1>
 
 <p>Before you report a bug, please make sure you have completed the following steps:</p>
