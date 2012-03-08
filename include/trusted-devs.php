@@ -18,12 +18,13 @@ $trusted_developers = array(
 // Distro people (security related)
 $security_distro_people = array(
 	'jorton',    /* RH */
-	'geissert',  /* debian */
-	'oden',      /* Mandriva */
+	'huzaifas',  /* RH */
 	'vdanen',    /* RH */
+	'geissert',  /* debian */
+	'ondrej',    /* debian */
+	'oden',      /* Mandriva */
 	'sbeattie',  /* Ubuntu */
 	'remi',      /* fedora */
-	'ondrej',    /* debian */
 	'olemarkus', /* Gentoo */
 );
 
