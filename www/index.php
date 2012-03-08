@@ -116,6 +116,14 @@ to a random open bug.</p>
 			'suffix' => '&bug_type=Documentation+Problem&patch=Y',
 		),
 	);
+
+	if (!empty($_SESSION["user"])) {
+		$searches['Your assigned bugs'] = array(
+			'base'   => $base_default,
+			'suffix' => '&assign='.urlencode($_SESSION["user"])
+		);
+	}
+
 	foreach ($searches as $title => $linfo) {
 		echo '<li><a href="', $linfo['base'], $linfo['suffix'], '">', $title, '</a></li>', PHP_EOL;
 	}
