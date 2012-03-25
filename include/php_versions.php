@@ -5,8 +5,8 @@
 	if you want to add a new version, add it there at include/release-qa.php
 	the result is cached for an hour, you can force it to refresh, if you delete the 'bugs.versions' item from apc
 	the versions are weighted by the following:
-	- major+minor version desc (6>5.4>5.3>trunk)
-	- between a minor version we order by the micro if available: first the qa releases: alpha/beta/rc, then the stable, then the svn versions(snaps, svn)
+	- major+minor version desc (6>5.4>5.3>master)
+	- between a minor version we order by the micro if available: first the qa releases: alpha/beta/rc, then the stable, then the Git versions(snaps, Git)
 	*/
 
 	if (!$versions = apc_fetch('bugs.versions')) {
@@ -25,8 +25,8 @@
 
 		$date = date('Y-m-d');
 		$default_versions = array(
-			"SVN-{$date} (snap)",
-			"SVN-{$date} (SVN)",
+			"Git-{$date} (snap)",
+			"Git-{$date} (Git)",
 		);
 
 		foreach ($dev_versions as $dev_version) {
@@ -62,9 +62,9 @@
 
 		$flat_versions = array();
 
-		// add trunk to the end of the list
+		// add master to the end of the list
 		foreach ($default_versions as $default_version) {
-			$flat_versions[] = 'trunk-'.$default_version;
+			$flat_versions[] = 'master-'.$default_version;
 		}
 
 		// add the fetched versions to the list

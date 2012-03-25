@@ -67,13 +67,13 @@ if ($logged_in == 'developer') {
 	</div>
 <?php } else { ?>
 	<div class="explain">
-		Welcome! If you don't have a SVN account, you can't do anything here.<br />
+		Welcome! If you don't have a Git account, you can't do anything here.<br />
 		You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
 		or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
 		<div class="details">
-			<label for="svnuser">SVN Username:</label>
+			<label for="svnuser">Git Username:</label>
 			<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
-			<label for="svnpw">SVN Password:</label>
+			<label for="svnpw">Git Password:</label>
 			<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pwd) ?>" size="10" maxlength="20" />
 			<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
 		</div>

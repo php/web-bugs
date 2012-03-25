@@ -46,7 +46,7 @@ if (bugid > 0) {
 	</li>
 
 	<li>
-		Made sure you are using the latest stable version or a build from SVN, if
+		Made sure you are using the latest stable version or a build from Git, if
 		similar bugs have recently been fixed and committed. You can download snapshots at
 		<a href="http://snaps.php.net/">http://snaps.php.net</a>
 	</li>
