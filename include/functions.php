@@ -21,27 +21,27 @@ $tla = array(
 	'Analyzed'		=> 'Ana',
 	'Verified'		=> 'Ver',
 	'Suspended'		=> 'Sus',
-	'Closed'		=> 'Csd',
+	'Closed'			=> 'Csd',
 	'Spam'			=> 'Spm',
 	'Re-Opened'		=> 'ReO',
 );
 
 $bug_types = array(
-	'Bug'						=> 'Bug',
+	'Bug'								=> 'Bug',
 	'Feature/Change Request'	=> 'Req',
 	'Documentation Problem'		=> 'Doc',
-	'Security'					=> 'Sec Bug'
+	'Security'						=> 'Sec Bug'
 );
 
 $project_types = array(
-	'PHP'	=> 'php',
+	'PHP'		=> 'php',
 	'PECL'	=> 'pecl'
 );
 
 // Used in show_state_options()
 $state_types = array (
 	'Open'			=> 2,
-	'Closed'		=> 2,
+	'Closed'			=> 2,
 	'Re-Opened'		=> 1,
 	'Duplicate'		=> 1,
 	'Critical'		=> 1,
@@ -58,7 +58,7 @@ $state_types = array (
 	'Fresh'			=> 0,
 	'Not a bug'		=> 1,
 	'Spam'			=> 1,
-	'All'			=> 0,
+	'All'				=> 0,
 );
 
 /**
@@ -70,60 +70,61 @@ function verify_password($user, $pass)
 
 	$post = http_build_query(
 		array(
-			'token' => getenv('AUTH_TOKEN'),
-			'username' => $user,
-			'password' => $pass,
+			'token'		=> getenv('AUTH_TOKEN'),
+			'username'	=> $user,
+			'password'	=> $pass,
 		)
 	);
 
 	$opts = array(
-		'method'	=> 'POST',
-		'header'	=> 'Content-type: application/x-www-form-urlencoded',
+		'method'		=> 'POST',
+		'header'		=> 'Content-type: application/x-www-form-urlencoded',
 		'content'	=> $post,
 	);
 
 	$ctx = stream_context_create(array('http' => $opts));
 
-	$s = file_get_contents('https://master.php.net/fetch/cvsauth.php', false, $ctx);
+	$s = file_get_contents('https://master.php.net/fetch/cvsauth.php', FALSE, $ctx);
 
 	$a = @unserialize($s);
+
 	if (!is_array($a)) {
 		$errors[] = "Failed to get authentication information.\nMaybe master is down?\n";
-		return false;
+		return FALSE;
 	}
 	if (isset($a['errno'])) {
 		$errors[] = "Authentication failed: {$a['errstr']}\n";
-		return false;
+		return FALSE;
 	}
 
-    $_SESSION["user"] = $user;
+    $_SESSION['user'] = $user;
 
-	return true;
+	return TRUE;
 }
 
 function bugs_has_access ($bug_id, $bug, $pw, $user_flags)
 {
-	global $auth_user;
-	
 	if ($bug['private'] != 'Y') {
-		return true;
+		return TRUE;
 	}
+
+	global $auth_user;
 
 	// When the bug is private, only the submitter, trusted devs, security devs and assigned dev
 	// should see the report info
 	if ($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV)) {
 		// trusted and security dev
-		return true;
+		return TRUE;
 	} else if (($user_flags == BUGS_NORMAL_USER) && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
 		// The submitter
-		return true;
+		return TRUE;
 	} else if (($user_flags & BUGS_DEV_USER) && $bug['assign'] != '' &&
 		strtolower($bug['assign']) == strtolower($auth_user->handle)) {
 		// The assigned dev
-		return true;
+		return TRUE;
 	}
 	
-	return false;
+	return FALSE;
 }
 
 function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
@@ -133,7 +134,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 	// Default values
 	$user = '';
 	$pw = '';
-	$logged_in = false;
+	$logged_in = FALSE;
 	
 	$user_flags = BUGS_NORMAL_USER;
 
@@ -192,11 +193,11 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
  * Fetches pseudo packages from database
  *
  * @param string	$project			define what project pseudo packages are returned
- * @param bool		$return_disabled	whether to return read-only items, defaults to true
+ * @param bool		$return_disabled	whether to return read-only items, defaults to TRUE
  *
  * @return array	array of pseudo packages
  */
-function get_pseudo_packages ($project, $return_disabled = true)
+function get_pseudo_packages ($project, $return_disabled = TRUE)
 {
 	global $project_types;
 
@@ -205,7 +206,7 @@ function get_pseudo_packages ($project, $return_disabled = true)
 	$where = '1=1';
 	$project = strtolower($project);
 
-	if ($project !== false && in_array($project, $project_types)) {
+	if ($project !== FALSE && in_array($project, $project_types)) {
 		$where .= " AND project IN ('',  '". $project ."')";
 	}
 	if (!$return_disabled) {
@@ -252,16 +253,13 @@ function get_pseudo_packages ($project, $return_disabled = true)
 /* Primitive check for SPAM. Add more later. */
 function is_spam($string)
 {
-	if (substr_count(strtolower($string), 'http://') > 5) {
-		return true;
+	if ((substr_count(strtolower($string), 'http://') > 5)
+		|| preg_match("/(asian)|(spy)|(bdsm)|(massage)|(mortage)|(sex)(?<!OutOfBoundsEx(?=ception))|(11nong)|(oxycontin)|(distance-education)|(sismatech)|(justiceplan)|(prednisolone)|(baclofen)|(diflucan)|(unbra.se)|(objectis)|(angosso)|(colchicine)|(zovirax)/i", $string)
+		|| preg_match("~/Members/~", $string)) {
+		return TRUE;
 	}
-	if (preg_match("/(asian)|(spy)|(bdsm)|(massage)|(mortage)|(sex)(?<!OutOfBoundsEx(?=ception))|(11nong)|(oxycontin)|(distance-education)|(sismatech)|(justiceplan)|(prednisolone)|(baclofen)|(diflucan)|(unbra.se)|(objectis)|(angosso)|(colchicine)|(zovirax)/i", $string)) {
-		return true;
-	}
-	if (preg_match("~/Members/~", $string)) {
-		return true;
-	}
-	return false;
+
+	return FALSE;
 }
 
 
@@ -318,9 +316,9 @@ function escapeSQL($in)
 			$out[$key] = $dbh->escape($value);
 		}
 		return $out;
-	} else {
-		return $dbh->escape($in);
 	}
+
+	return $dbh->escape($in);
 }
 
 /**
@@ -422,12 +420,12 @@ function clean($in)
  */
 function txfield($n, $bug = null, $in = null)
 {
-	$one = (isset($in) && isset($in[$n])) ? $in[$n] : false;
+	$one = (isset($in) && isset($in[$n])) ? $in[$n] : FALSE;
 	if ($one) {
 		return $one;
 	}
 
-	$two = (isset($bug) && isset($bug[$n])) ? $bug[$n] : false;
+	$two = (isset($bug) && isset($bug[$n])) ? $bug[$n] : FALSE;
 	if ($two) {
 		return $two;
 	}
@@ -443,15 +441,15 @@ function txfield($n, $bug = null, $in = null)
 function show_byage_options($current)
 {
 	$opts = array(
-		'0' => 'the beginning',
-		'1'	=> 'yesterday',
-		'7'	=> '7 days ago',
+		'0'  => 'the beginning',
+		'1'  => 'yesterday',
+		'7'  => '7 days ago',
 		'15' => '15 days ago',
 		'30' => '30 days ago',
 		'90' => '90 days ago',
 	);
-	while (list($k,$v) = each($opts)) {
-		echo "<option value=\"$k\"", ($current==$k ? ' selected="selected"' : ''), ">$v</option>\n";
+	while (list($k, $v) = each($opts)) {
+		echo "<option value=\"$k\"", ($current == $k ? ' selected="selected"' : ''), ">$v</option>\n";
 	}
 }
 
@@ -470,7 +468,7 @@ function show_limit_options($limit = 30)
 		if ($limit == $i) {
 			echo ' selected="selected"';
 		}
-		echo ">$i bugs</option>\n";
+		echo ">{$i} bugs</option>\n";
 	}
 
 	echo '<option value="All"';
@@ -490,7 +488,7 @@ function show_limit_options($limit = 30)
  *
  * @retun void
  */
-function show_project_options($current = 'php', $all = false)
+function show_project_options($current = 'php', $all = FALSE)
 {
 	global $project_types;
 
@@ -524,7 +522,7 @@ function show_project_options($current = 'php', $all = false)
  *
  * @retun void
  */
-function show_type_options($current = 'Bug', $all = false)
+function show_type_options($current = 'Bug', $all = FALSE)
 {
 	global $bug_types;
 
@@ -588,7 +586,7 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
 				echo "<option>Re-Opened</option>\n";
 				break;
 			default:
-				echo "<option>$state</option>\n";
+				echo "<option>{$state}</option>\n";
 				break;
 		}
 		/* Allow state 'Closed' always when current state is not 'Not a bug' */
@@ -606,7 +604,7 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
 				if ($type == $state) {
 					echo ' selected="selected"';
 				}
-				echo ">$type</option>\n";
+				echo ">{$type}</option>\n";
 			}
 		}
 	}
@@ -685,7 +683,7 @@ function show_version_options($current, $default = '')
  */
 function show_package_options($current, $show_any, $default = '')
 {
-	global $dbh, $pseudo_pkgs;
+	global $pseudo_pkgs;
 	static $bug_items;
 
 	if (!isset($bug_items)) {
@@ -751,18 +749,18 @@ function show_boolean_options($current)
  *				If array is empty, nothing is displayed.
  *				If a value contains a PEAR_Error object,
  *	 + PEAR_Error: prints the value of getMessage() and getUserInfo()
- *				if DEVBOX is true, otherwise prints data from getMessage().
+ *				if DEVBOX is TRUE, otherwise prints data from getMessage().
  *
  * @param string|array|PEAR_Error $in see long description
  * @param string $class		name of the HTML class for the <div> tag. ("errors", "warnings")
  * @param string $head		string to be put above the message
  *
- * @return bool		true if errors were submitted, false if not
+ * @return bool		TRUE if errors were submitted, FALSE if not
  */
 function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 {
 	if (PEAR::isError($in)) {
-		if (DEVBOX == true) {
+		if (DEVBOX == TRUE) {
 			$in = array($in->getMessage() . '... ' . $in->getUserInfo());
 		} else {
 			$in = array($in->getMessage());
@@ -770,13 +768,13 @@ function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 	} elseif (!is_array($in)) {
 		$in = array($in);
 	} elseif (!count($in)) {
-		return false;
+		return FALSE;
 	}
 
 	echo "<div class='{$class}'>{$head}<ul>";
 	foreach ($in as $msg) {
 		if (PEAR::isError($msg)) {
-			if (DEVBOX == true) {
+			if (DEVBOX == TRUE) {
 				$msg = $msg->getMessage() . '... ' . $msg->getUserInfo();
 			} else {
 				$msg = $msg->getMessage();
@@ -785,7 +783,7 @@ function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 		echo '<li>' , htmlspecialchars($msg) , "</li>\n";
 	}
 	echo "</ul></div>\n";
-	return true;
+	return TRUE;
 }
 
 /**
@@ -890,7 +888,7 @@ function bug_diff_render_html($diff)
  *
  * @return void
  */
-function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
+function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = FALSE)
 {
 	global $tla, $bug_types, $siteBig, $site_method, $site_url, $basedir;
 
@@ -1219,22 +1217,22 @@ function package_exists($package_name)
 	global $dbh, $pseudo_pkgs;
 
 	if (empty($package_name)) {
-		return false;
+		return FALSE;
 	}
 	if (isset($pseudo_pkgs[$package_name])) {
-		return true;
+		return TRUE;
 	}
-	return false;
+	return FALSE;
 }
 
 /**
  * Validate an email address
  */
-function is_valid_email($email, $phpnet_allowed = true)
+function is_valid_email($email, $phpnet_allowed = TRUE)
 {
 	if (!$phpnet_allowed) {
-		if (false !== stripos($email, '@php.net')) {
-			return false;
+		if (FALSE !== stripos($email, '@php.net')) {
+			return FALSE;
 		}
 	}
 	return (bool) preg_match("/^[.\\w+-]+@[.\\w-]+\\.\\w{2,}\z/i", $email);
@@ -1247,7 +1245,7 @@ function is_valid_email($email, $phpnet_allowed = true)
  *
  * @return void
  */
-function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
+function incoming_details_are_valid($in, $initial = 0, $logged_in = FALSE)
 {
 	global $bug, $dbh, $bug_types;
 
@@ -1301,7 +1299,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
  *
  * @return array		an array of email addresses
  */
-function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
+function get_package_mail($package_name, $bug_id = FALSE, $bug_type = 'Bug')
 {
 	global $dbh, $bugEmail, $docBugEmail, $secBugEmail;
 
@@ -1386,7 +1384,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
  *
  * @return array
  */
-function format_search_string($search, $boolean_search = false)
+function format_search_string($search, $boolean_search = FALSE)
 {
 	// Function will be updated to make results more relevant.
 	// Quick hack for indicating ignored words.
@@ -1502,14 +1500,14 @@ function unsubscribe($bug_id, $hash)
 	$sub = $dbh->prepare($query)->execute(array($bug_id,$hash))->fetch(MDB2_FETCHMODE_ASSOC);
 
 	if (!$sub) {
-		return false;
+		return FALSE;
 	}
 
 	$now = time();
 	$requested_on = $sub['unsubscribe_date'];
 	/* 24hours delay to answer the mail */
 	if (($now - $requested_on) > (24*60*60)) {
-		return false;
+		return FALSE;
 	}
 
 	$query = "
@@ -1517,7 +1515,7 @@ function unsubscribe($bug_id, $hash)
 		WHERE bug_id = ? AND unsubscribe_hash = ? AND email = ?
 	";
 	$dbh->prepare($query)->execute(array($bug_id,$hash,$sub['email']));
-	return true;
+	return TRUE;
 }
 
 
@@ -1526,13 +1524,13 @@ function unsubscribe($bug_id, $hash)
  *
  * @return array array of resolves
  */
-function get_resolve_reasons ($project = false)
+function get_resolve_reasons ($project = FALSE)
 {
 	global $dbh;
 
 	$where = '';
 
-	if ($project !== false)
+	if ($project !== FALSE)
 		$where.= "WHERE (project = '{$project}' OR project = '')";
 
 	$resolves = $variations = array();
@@ -1636,13 +1634,13 @@ function bugs_mail($to, $subject, $message, $headers = '', $params = '')
 	if (empty($params)) {
 		$params = '-f noreply@php.net';
 	}
-	if (DEVBOX === true) {
+	if (DEVBOX === TRUE) {
 		if (defined('DEBUG_MAILS')) {
 			echo '<pre>';
 			var_dump(htmlspecialchars($to), htmlspecialchars($subject), htmlspecialchars($message), htmlspecialchars($headers));
 			echo '</pre>';
 		}
-		return true;
+		return TRUE;
 	}
 	return @mail($to, $subject, $message, $headers, $params);
 }
@@ -1657,19 +1655,19 @@ function response_header($title, $extraHeaders = '')
 {
 	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $site_method, $site_url, $basedir;
 	
-	$is_logged = false;
+	$is_logged = FALSE;
 
 	if ($_header_done) {
 		return;
 	}
 	
 	if ($logged_in === 'developer') {
-		$is_logged = true;
+		$is_logged = TRUE;
 	} else if (!empty($_SESSION['user'])) {
-		$is_logged = true;
+		$is_logged = TRUE;
 	}
 
-	$_header_done	= true;
+	$_header_done	= TRUE;
 
 	header('Content-Type: text/html; charset=UTF-8');
 	echo '<?xml version="1.0" encoding="UTF-8" ?>';
@@ -1740,7 +1738,7 @@ function response_footer($extra_html = '')
 	if ($_footer_done) {
 		return;
 	}
-	$_footer_done = true;
+	$_footer_done = TRUE;
 ?>
 		</td>
 	</tr>
@@ -1779,7 +1777,10 @@ function response_footer($extra_html = '')
  */
 function redirect($url)
 {
+	if (!headers_sent()) {
 	header("Location: {$url}");
+	exit;
+	}
 }
 
 
@@ -1831,7 +1832,7 @@ function make_ticket_links($text)
 
 function handle_pear_errors ($error_obj)
 {
-	response_header("Oops! We are sorry that you are unable to report an undocumented feature today.");
+	response_header('Oops! We are sorry that you are unable to report an undocumented feature today.');
 	
 	$error  = "<p>Greetings! We are experiencing an error, and in the spirit of Open Source would like you to fix it. ";
 	$error .= "Or more likely, just wait and someone else will find and solve this.</p>\n";
@@ -1848,7 +1849,7 @@ function handle_pear_errors ($error_obj)
  */
 function bugs_gen_passwd($length = 8)
 {
-	return substr(md5(uniqid(time(), true)), 0, $length);
+	return substr(md5(uniqid(time(), TRUE)), 0, $length);
 }
 
 function bugs_get_hash($passwd) 
