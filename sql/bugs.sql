@@ -1,10 +1,9 @@
-
 -- ts1     bug created date
 -- ts2     bug last updated date
 -- passwd  user password
 
 CREATE TABLE bugdb (
-  id int(8) NOT NULL auto_increment,
+  id int(8) UNSIGNED NOT NULL auto_increment,
   package_name varchar(80) default NULL,
   bug_type varchar(32) NOT NULL default 'Bug',
   email varchar(40) NOT NULL default '',
@@ -31,7 +30,7 @@ CREATE TABLE bugdb (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
 CREATE TABLE bugdb_comments (
-  id int(8) NOT NULL auto_increment,
+  id int(8) UNSIGNED NOT NULL auto_increment,
   bug int(8) NOT NULL default '0',
   email varchar(40) NOT NULL default '',
   reporter_name varchar(80) default '',
@@ -45,7 +44,7 @@ CREATE TABLE bugdb_comments (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1;
 
 CREATE TABLE bugdb_obsoletes_patches (
-  bugdb_id int(8) NOT NULL,
+  bugdb_id int(8) UNSIGNED NOT NULL,
   patch varchar(80) NOT NULL,
   revision int(8) NOT NULL,
   obsolete_patch varchar(80) NOT NULL,
@@ -54,7 +53,7 @@ CREATE TABLE bugdb_obsoletes_patches (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_patchtracker (
-  bugdb_id int(8) NOT NULL,
+  bugdb_id int(8) UNSIGNED NOT NULL,
   patch varchar(80) NOT NULL,
   revision int(8) NOT NULL,
   developer varchar(40) NOT NULL,
@@ -62,8 +61,8 @@ CREATE TABLE bugdb_patchtracker (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_pseudo_packages (
-  id int(11) NOT NULL auto_increment,
-  parent int(11) NOT NULL default '0',
+  id bigint(11) UNSIGNED NOT NULL auto_increment,
+  parent bigint(11) NOT NULL default '0',
   name varchar(80) NOT NULL default '',
   long_name varchar(100) NOT NULL default '',
   project varchar(40) NOT NULL default '',
@@ -74,7 +73,7 @@ CREATE TABLE bugdb_pseudo_packages (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_resolves (
-  id int(11) NOT NULL auto_increment,
+  id bigint(11) UNSIGNED NOT NULL auto_increment,
   name varchar(100) NOT NULL,
   status varchar(16) default NULL,
   title varchar(100) NOT NULL,
@@ -86,9 +85,9 @@ CREATE TABLE bugdb_resolves (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE bugdb_subscribe (
-  bug_id int(8) NOT NULL default '0',
+  bug_id int(8) UNSIGNED NOT NULL default '0',
   email varchar(40) NOT NULL default '',
-  unsubscribe_date int(11) default NULL,
+  unsubscribe_date bigint(11) default NULL,
   unsubscribe_hash varchar(80) default '',
   PRIMARY KEY  (bug_id,email),
   KEY unsubscribe_hash (unsubscribe_hash)
@@ -96,7 +95,7 @@ CREATE TABLE bugdb_subscribe (
 
 -- score's value can be 1 through 5
 CREATE TABLE bugdb_votes (
-  bug int(8) NOT NULL default '0',
+  bug int(8) UNSIGNED NOT NULL default '0',
   ts timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   ip int(10) unsigned NOT NULL default '0',
   score int(3) NOT NULL default '0',
