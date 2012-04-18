@@ -794,9 +794,9 @@ if ($edit == 1 || $edit == 2) { ?>
 				You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
 				or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
 				<div class="details">
-					<label for="svnuser">Git Username:</label>
+					<label for="svnuser">php.net Username:</label>
 					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user); ?>" size="10" maxlength="20" />
-					<label for="svnpw">Git Password:</label>
+					<label for="svnpw">php.net Password:</label>
 					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" />
 					<!--<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />-->
 					<?php if (!$show_bug_info) { ?>
