@@ -1013,6 +1013,7 @@ if (!$logged_in) {
 // Display original report
 if ($bug['ldesc']) {
 	if (!$show_bug_info) {
+		echo '<input type="checkbox" name="in[private]" value="Y" '.($is_private == 'Y' ? 'checked="checked"' : '').' /> ';
 		echo 'This bug report is marked as private.';
 	} else if ($bug['status'] !== 'Spam') {
 		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name'], false);
