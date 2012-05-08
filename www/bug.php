@@ -145,7 +145,6 @@ $show_bug_info = bugs_has_access($bug_id, $bug, $pw, $user_flags);
 if ($edit == 2 && !$show_bug_info && $pw && verify_bug_passwd($bug_id, bugs_get_hash($pw))) {
 	$show_bug_info = true;
 }
-var_dump($show_bug_info);
 
 if (isset($_POST['ncomment'])) {
 	/* Bugs blocked to user comments can only be commented by the team */
@@ -607,6 +606,9 @@ switch ($thanks)
 
 display_bug_error($errors);
 
+if (!$show_bug_info) {
+	echo '<div id="bugheader"></div>';
+} else{
 ?>
 <div id="bugheader">
 	<table id="details">
@@ -670,7 +672,9 @@ display_bug_error($errors);
 	</table>
 </div>
 
-<?php if ($bug_id !== 'PREVIEW') {
+<?php
+}
+if ($bug_id !== 'PREVIEW') {
 	echo '<div class="controls">', "\n",
 		control(0, 'View'),
 		($bug['private'] == 'N' ? control(3, 'Add Comment') : ''),
