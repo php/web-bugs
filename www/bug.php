@@ -142,6 +142,10 @@ if (!$bug) {
 }
 
 $show_bug_info = bugs_has_access($bug_id, $bug, $pw, $user_flags);
+if ($edit == 2 && !$show_bug_info && $pw && verify_bug_passwd($bug_id, bugs_get_hash($pw))) {
+	$show_bug_info = true;
+}
+var_dump($show_bug_info);
 
 if (isset($_POST['ncomment'])) {
 	/* Bugs blocked to user comments can only be commented by the team */
@@ -248,11 +252,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
 	// Edits submitted by original reporter for old bugs
 	
-	if (!verify_bug_passwd($bug_id, bugs_get_hash($pw))) {
+	if (!$show_bug_info) {
 		$errors[] = 'The password you supplied was incorrect.';
-	} else {
-		// allow the original reporter to see the private report info
-		$show_bug_info = true;
 	}
 	
 	// Bug is private (just should be available to trusted developers, original reporter and assigned dev)
@@ -751,8 +752,7 @@ if ($edit == 1 || $edit == 2) { ?>
 <form id="update" action="bug.php?id=<?php echo $bug_id; ?>&amp;edit=<?php echo $edit; ?>" method="post">
 
 <?php if ($edit == 2) {
-		if ($pw && verify_bug_passwd($bug['id'], bugs_get_hash($pw))) {
-			$show_bug_info = true;	?>
+		if ($show_bug_info) { ?>
                         <div class="explain">
                                 <table>
                                         <tr>
