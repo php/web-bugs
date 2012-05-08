@@ -773,8 +773,6 @@ if ($edit == 1 || $edit == 2) { ?>
 					<tr>
 						<td class="details">Passw<span class="accesskey">o</span>rd:</td>
 						<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o" /></td>
-						<!--<td class="details"><label for="save">Check to remember your password for next time:</label></td>-->
-						<!--<td><input type="checkbox" id="save" name="save" <?php echo (isset($_POST['save'])) ? ' checked="checked"' : ''; ?> /></td>-->
 						<?php if (!$show_bug_info) { ?>
 						<input type="submit" value="Submit" />
 						<?php } ?>
