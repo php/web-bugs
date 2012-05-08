@@ -812,7 +812,7 @@ if ($edit == 1 || $edit == 2) { ?>
 ?>
 	<table>
 
-<?php if ($edit == 1) { /* Developer Edit Form */ ?>
+<?php if ($edit == 1 && $has_access) { /* Developer Edit Form */ ?>
 		<tr>
 			<th class="details"><label for="in" accesskey="c">Qui<span class="accesskey">c</span>k Fix:</label></th>
 			<td colspan="3">
