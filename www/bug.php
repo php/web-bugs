@@ -158,8 +158,9 @@ if (!empty($_POST['in'])) {
 	if ($user_flags & BUGS_DEV_USER) {
 		$block_user = isset($_POST['in']['block_user_comment']) ? 'Y' : 'N';
 	}
-	if ($is_security_developer) {
-		$is_private = isset($_POST['in']['private']) ? 'Y': 'N';
+	// security devs can change the private flag, if the field is set 'N' will make it private, everything else 'Y'. fail secure
+	if ($is_security_developer && isset($_POST['in']['private'])) {
+		$is_private = $_POST['in']['private'] == 'N' ? 'N': 'Y';
 	}
 }
 
@@ -1013,7 +1014,6 @@ if (!$logged_in) {
 // Display original report
 if ($bug['ldesc']) {
 	if (!$show_bug_info) {
-		echo '<input type="checkbox" name="in[private]" value="Y" '.($is_private == 'Y' ? 'checked="checked"' : '').' /> ';
 		echo 'This bug report is marked as private.';
 	} else if ($bug['status'] !== 'Spam') {
 		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name'], false);
