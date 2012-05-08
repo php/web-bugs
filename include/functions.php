@@ -117,6 +117,10 @@ function bugs_has_access ($bug_id, $bug, $pw, $user_flags)
 	} else if (($user_flags == BUGS_NORMAL_USER) && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
 		// The submitter
 		return true;
+	} else if (($user_flags & BUGS_DEV_USER) && $bug['reporter_name'] != '' &&
+		strtolower($bug['reporter_name']) == strtolower($auth_user->handle)) {
+		// The submitter (php developer)
+		return true;
 	} else if (($user_flags & BUGS_DEV_USER) && $bug['assign'] != '' &&
 		strtolower($bug['assign']) == strtolower($auth_user->handle)) {
 		// The assigned dev
