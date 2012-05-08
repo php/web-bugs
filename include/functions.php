@@ -114,7 +114,7 @@ function bugs_has_access ($bug_id, $bug, $pw, $user_flags)
 	if ($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV)) {
 		// trusted and security dev
 		return true;
-	} else if (($user_flags == BUGS_NORMAL_USER) && $pw != '' && verify_bug_passwd($bug_id, $pw)) {
+	} else if (($user_flags == BUGS_NORMAL_USER) && $pw != '' && verify_bug_passwd($bug_id, bugs_get_hash($pw))) {
 		// The submitter
 		return true;
 	} else if (($user_flags & BUGS_DEV_USER) && $bug['reporter_name'] != '' &&
