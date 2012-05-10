@@ -259,12 +259,37 @@ function is_spam($string)
 	if (substr_count(strtolower($string), 'http://') > 5) {
 		return true;
 	}
-	if (preg_match("/(asian)|(spy)|(bdsm)|(massage)|(mortage)|(sex)(?<!OutOfBoundsEx(?=ception))|(11nong)|(oxycontin)|(distance-education)|(sismatech)|(justiceplan)|(prednisolone)|(baclofen)|(diflucan)|(unbra.se)|(objectis)|(angosso)|(colchicine)|(zovirax)|(korsbest)|(coachbags)|(chaneljpoutlet)/i", $string)) {
+
+	$keywords = array(
+		'asian',
+		'spy',
+		'bdsm',
+		'massage',
+		'mortage',
+		'sex(?<!OutOfBoundsEx(?=ception))',
+		'11nong',
+		'oxycontin',
+		'distance-education',
+		'sismatech',
+		'justiceplan',
+		'prednisolone',
+		'baclofen',
+		'diflucan',
+		'unbra.se',
+		'objectis',
+		'angosso',
+		'colchicine',
+		'zovirax',
+		'korsbest',
+		'coachbags',
+		'chaneljpoutlet',
+		'\/Members\/',
+	);
+	
+	if (preg_match('/('. implode('|', $keywords) . ')/i', $string)) {
 		return true;
 	}
-	if (preg_match("~/Members/~", $string)) {
-		return true;
-	}
+
 	return false;
 }
 
@@ -1827,7 +1852,7 @@ function make_mailto_link($email, $linktext = '', $extras = '')
 function make_ticket_links($text)
 {
 	return preg_replace(
-		'/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
+		'/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?|duplicated of)\s+#?([0-9]+)/i',
 		"<a href='bug.php?id=\\2'>\\0</a>",
 		$text
 	);
