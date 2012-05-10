@@ -1852,7 +1852,7 @@ function make_mailto_link($email, $linktext = '', $extras = '')
 function make_ticket_links($text)
 {
 	return preg_replace(
-		'/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?)\s+#?([0-9]+)/i',
+		'/(?<![>a-z])(bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?|duplicated of)\s+#?([0-9]+)/i',
 		"<a href='bug.php?id=\\2'>\\0</a>",
 		$text
 	);
