@@ -259,12 +259,37 @@ function is_spam($string)
 	if (substr_count(strtolower($string), 'http://') > 5) {
 		return true;
 	}
-	if (preg_match("/(asian)|(spy)|(bdsm)|(massage)|(mortage)|(sex)(?<!OutOfBoundsEx(?=ception))|(11nong)|(oxycontin)|(distance-education)|(sismatech)|(justiceplan)|(prednisolone)|(baclofen)|(diflucan)|(unbra.se)|(objectis)|(angosso)|(colchicine)|(zovirax)|(korsbest)|(coachbags)/i", $string)) {
+
+	$keywords = array(
+		'asian',
+		'spy',
+		'bdsm',
+		'massage',
+		'mortage',
+		'sex(?<!OutOfBoundsEx(?=ception))',
+		'11nong',
+		'oxycontin',
+		'distance-education',
+		'sismatech',
+		'justiceplan',
+		'prednisolone',
+		'baclofen',
+		'diflucan',
+		'unbra.se',
+		'objectis',
+		'angosso',
+		'colchicine',
+		'zovirax',
+		'korsbest',
+		'coachbags',
+		'chaneljpoutlet',
+		'\/Members\/',
+	);
+	
+	if (preg_match('/('. implode('|', $keywords) . ')/i', $string)) {
 		return true;
 	}
-	if (preg_match("~/Members/~", $string)) {
-		return true;
-	}
+
 	return false;
 }
 
