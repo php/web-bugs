@@ -560,7 +560,7 @@ switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))
 }
 
 response_header(
-	"{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']),
+	$show_bug_info ? "{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']) : "You must be logged in",
 	($bug_id != 'PREVIEW') ? "
 		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}' />
 		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2' />
