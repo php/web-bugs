@@ -284,6 +284,7 @@ function is_spam($string)
 		'coachbags',
 		'chaneljpoutlet',
 		'\/Members\/',
+		'michaelkorsshop\.org',
 	);
 	
 	if (preg_match('/('. implode('|', $keywords) . ')/i', $string)) {
