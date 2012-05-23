@@ -34,7 +34,7 @@ require "{$ROOT_DIR}/include/query.php";
 
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 {
-	if (!$res) {
+	if (!isset($res)) {
 		$errors[] = 'Invalid query';
 	} else {
 		// For count only, simply print the count and exit
