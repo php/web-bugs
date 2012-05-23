@@ -225,9 +225,15 @@ OUTPUT;
 					$redirectToPatchAdd = true;
 				}
 			}
+			
+			if (empty($_POST['in']['handle'])) {
+				$mailfrom = spam_protect($_POST['in']['email'], 'text');
+			} else {
+				$mailfrom = $_POST['in']['handle'];
+			}
 
 			$report = <<< REPORT
-From:             {$_POST['in']['handle']}
+From:             {$mailfrom}
 Operating system: {$_POST['in']['php_os']}
 PHP version:      {$_POST['in']['php_version']}
 Package:          {$package_name}
