@@ -290,6 +290,7 @@ function is_spam($string)
 		'gadboisphotos',
 		'oakleysunglasseslol',
 		'partydressuk',
+		'leslunettesdesoleil',
 	);
 	
 	if (preg_match('/('. implode('|', $keywords) . ')/i', $string)) {
