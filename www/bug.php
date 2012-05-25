@@ -251,7 +251,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
 	// Edits submitted by original reporter for old bugs
 	
-	if (!$show_bug_info) {
+	if (!$show_bug_info || !verify_bug_passwd($bug_id, bugs_get_hash($pw))) {
 		$errors[] = 'The password you supplied was incorrect.';
 	}
 	
