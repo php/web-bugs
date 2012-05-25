@@ -844,7 +844,7 @@ function bug_diff($bug, $in)
 	$changed = array();
 
 	if (!empty($in['email']) && (trim($in['email']) != trim($bug['email']))) {
-		$changed['reported_by']['from'] = $bug['email'];
+		$changed['reported_by']['from'] = spam_protect($bug['email'], 'text');
 		$changed['reported_by']['to'] = spam_protect(txfield('email', $bug, $in), 'text');
 	}
 
