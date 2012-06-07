@@ -256,6 +256,11 @@ function get_pseudo_packages ($project, $return_disabled = true)
 /* Primitive check for SPAM. Add more later. */
 function is_spam($string)
 {
+	// @php.net users are given permission to spam... we gotta eat! See also bug #48126
+	if (!empty($GLOBALS['auth_user']->handle)) {
+		return false;
+	}
+	
 	if (substr_count(strtolower($string), 'http://') > 5) {
 		return true;
 	}
