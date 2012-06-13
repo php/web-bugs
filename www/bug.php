@@ -653,7 +653,7 @@ if (!$show_bug_info) {
 			<th class="details">Status:</th>
 			<td><?php echo htmlspecialchars($bug['status']); ?></td>
 			<th class="details">Package:</th>
-			<td><a href="search.php?cmd=display&amp;package_name[]=<?php echo urlencode($bug['package_name']), '">', htmlspecialchars($bug['package_name']); ?></a></td>
+			<td><a href="search.php?cmd=display&amp;package_name[]=<?php echo urlencode($bug['package_name']), '">', htmlspecialchars($bug['package_name']); ?></a><?php echo $bug['project'] == 'pecl' ? ' (<a href="http://pecl.php.net/package/'. htmlspecialchars($bug['package_name']) . '" target="_blank">PECL</a>' : ''; ?></td>
 		</tr>
 
 		<tr id="situation">
