@@ -38,9 +38,9 @@ if (isset($_POST['in'])) {
 		}
 	}
 
-	// Set password blank for logged in users. This also disables the lost password feature.
-	if ($logged_in) {
-		$_POST['in']['passwd'] = '';
+	// Set auto-generated password when not supplied or logged in
+	if ($logged_in || $_POST['in']['passwd'] == '') {
+		$_POST['in']['passwd'] = uniqid();
 	}
 
 	// try to verify the user
