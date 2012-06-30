@@ -161,9 +161,8 @@ if (!empty($_POST['in'])) {
 	if ($user_flags & BUGS_DEV_USER) {
 		$block_user = isset($_POST['in']['block_user_comment']) ? 'Y' : 'N';
 	}
-	// security devs can change the private flag, if the field is set 'N' will make it private, everything else 'Y'. fail secure
-	if ($is_security_developer && isset($_POST['in']['private'])) {
-		$is_private = $_POST['in']['private'] == 'N' ? 'N': 'Y';
+	if ($is_security_developer) {
+		$is_private = isset($_POST['in']['private']) ? 'Y': 'N';
 	}
 }
 
