@@ -15,7 +15,8 @@ $order_options = array(
 	'sdesc'			=> 'summary',
 	'assign'		=> 'assignment',
 	'avg_score'		=> 'avg. vote score',
-	'votes_count'	=> 'number of votes'
+	'votes_count'	=> 'number of votes',
+	'RAND()'	=> 'random',
 );
 
 // Fetch pseudo packages
