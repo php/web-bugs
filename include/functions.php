@@ -1485,9 +1485,7 @@ function unsubscribe_hash($bug_id, $email)
 		WHERE bug_id = ? AND email = ?
 	";
 
-	$res = $dbh->prepare($query)->execute(array($hash,$bug_id, $email));
-
-	$affected = $dbh->affectedRows($res);
+	$affected = $dbh->prepare($query, null, MDB2_PREPARE_MANIP)->execute(array($hash,$bug_id, $email));
 
 	if ($affected > 0) {
 		$hash = urlencode($hash);
