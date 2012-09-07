@@ -36,6 +36,11 @@ if (isset($_POST['in'])) {
 		if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
 			$errors[] = 'Incorrect Captcha';
 		}
+		if (is_spam($_POST['in']['ldesc']) ||
+			is_spam($_POST['in']['expres']) ||
+			is_spam($_POST['in']['repcode'])) {
+			$errors[] = 'Spam detected';
+		}
 	}
 
 	// Set auto-generated password when not supplied or logged in
