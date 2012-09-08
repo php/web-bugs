@@ -63,6 +63,13 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 				  LIMIT 1
 			");
 			$prep->execute(array($bug_id));
+			
+			$in = $bug;
+			/* Just change the bug status */
+			$in['status'] = $_POST['status'];
+			
+			/* Send a mail notification when automatically closing a bug */
+			mail_bug_updates($bug, $in, "{$user}@php.net", $ncomment, 2, $bug_id);
 		}
 		
 		echo json_encode(array('result' => array('status' => $bug)));
