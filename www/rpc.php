@@ -52,6 +52,19 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 	$res = $prep->execute(array ($bug_id, "{$user}@php.net", $ncomment, $user));
 
 	if ($res) {
+		/* Close the bug report as requested if it is not already closed */
+		if (!empty($_POST['status'])
+			&& $bug['status'] !== 'Closed' 
+			&& $_POST['status'] === 'Closed') {
+			$prep = $dbh->prepare("
+				UPDATE bugdb
+				  SET status = 'Closed'
+				  WHERE id = ?
+				  LIMIT 1
+			");
+			$prep->execute(array($bug_id));
+		}
+		
 		echo json_encode(array('result' => array('status' => $bug)));
 		exit;
 	} else {
