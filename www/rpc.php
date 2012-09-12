@@ -48,7 +48,7 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 	$from = "{$user}@php.net";
 
 	/* svn log comment */
-	bugs_add_comment($bug_id, $from, $user, $ncomment, 'svn');
+	$res = bugs_add_comment($bug_id, $from, $user, $ncomment, 'svn');
 
 	if ($res) {
 		/* Close the bug report as requested if it is not already closed */
