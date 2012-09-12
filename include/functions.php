@@ -1654,6 +1654,18 @@ function bugs_add_comment ($bug_id, $from, $from_name, $comment, $type = 'commen
 }
 
 /**
+ * Change bug status
+ */
+function bugs_status_change ($bug_id, $new_status)
+{
+	global $dbh;
+	
+	return $dbh->prepare("
+		UPDATE bugdb SET status = ? WHERE id = ? LIMIT 1
+	")->execute(array($new_status, $bug_id));
+}
+
+/**
  * Verify bug password
  *
  * @return bool
