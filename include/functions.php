@@ -1356,6 +1356,9 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	} else if ($bug_type == 'Security') {
 		// Security problems *always* go to the sec team
 		$to[] = $secBugEmail;
+		foreach ($security_distro_people as $user) {
+		    $to[] = "${user}@php.net";
+		}
 		$params = '-f bounce-no-user@php.net';
 	}
 	else {
