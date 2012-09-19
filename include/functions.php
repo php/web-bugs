@@ -1656,7 +1656,7 @@ function bugs_add_comment ($bug_id, $from, $from_name, $comment, $type = 'commen
 /**
  * Change bug status
  */
-function bugs_status_change ($bug_id, $email, $new_status)
+function bugs_status_change ($bug_id, $new_status)
 {
 	global $dbh;
 	
