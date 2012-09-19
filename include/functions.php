@@ -1661,7 +1661,7 @@ function bugs_status_change ($bug_id, $email, $new_status)
 	global $dbh;
 	
 	return $dbh->prepare("
-		UPDATE bugdb SET status = ?, email = ? WHERE id = ? LIMIT 1
+		UPDATE bugdb SET status = ? WHERE id = ? LIMIT 1
 	")->execute(array($new_status, $email, $bug_id));
 }
 

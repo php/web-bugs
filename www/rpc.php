@@ -56,12 +56,11 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 			&& $bug['status'] !== 'Closed' 
 			&& $_POST['status'] === 'Closed') {
 			/* Change the bug status to Closed */
-			bugs_status_change($bug_id, $from, 'Closed');
+			bugs_status_change($bug_id, 'Closed');
 			
 			$in = $bug;
 			/* Just change the bug status */
 			$in['status'] = $_POST['status'];
-			$in['email'] = $from;
 			
 			$changed = bug_diff($bug, $in);
 			if (!empty($changed)) {
@@ -73,7 +72,7 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 			}
 			
 			/* Send a mail notification when automatically closing a bug */
-			mail_bug_updates($bug, $in, $from, $ncomment, 2, $bug_id);
+			mail_bug_updates($bug, $in, $from, $ncomment, 1, $bug_id);
 		}
 		
 		echo json_encode(array('result' => array('status' => $bug)));
