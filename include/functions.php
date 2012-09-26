@@ -1344,7 +1344,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
  */
 function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 {
-	global $dbh, $bugEmail, $docBugEmail, $secBugEmail;
+	global $dbh, $bugEmail, $docBugEmail, $secBugEmail, $security_distro_people;
 
 	$to = array();
 	$params = '-f noreply@php.net';
