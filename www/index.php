@@ -107,6 +107,10 @@ to a random open bug.</p>
 			'base'   => $base_default,
 			'suffix' => '&bug_type=All&phpver=5.4',
 		),
+		'Most recent open bugs (PHP 5.5)' => array(
+			'base'   => $base_default,
+			'suffix' => '&bug_type=All&phpver=5.5',
+		),
 		'Open Documentation bugs' => array(
 			'base'   => $base_default,
 			'suffix' => '&bug_type=Documentation+Problem',
