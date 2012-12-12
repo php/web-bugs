@@ -639,7 +639,7 @@ if (!$show_bug_info) {
 
 		<tr id="submitter">
 			<th class="details">From:</th>
-			<td><?php echo spam_protect(htmlspecialchars($bug['email'])); ?></td>
+			<td><?php echo ($bug['status'] !== 'Spam') ? spam_protect(htmlspecialchars($bug['email'])) : 'Hidden because of SPAM'; ?></td>
 			<th class="details">Assigned:</th>
 <?php if (!empty($bug['assign'])) { ?>
 			<td><a href="search.php?cmd=display&amp;assign=<?php echo urlencode($bug['assign']), '">', htmlspecialchars($bug['assign']); ?></a></td>
@@ -902,7 +902,7 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details">From:</th>
 			<td colspan="3">
-				<?php echo spam_protect(field('email')); ?>
+				<?php echo ($bug['status'] !== 'Spam') ? spam_protect(field('email')) : 'Hidden because of SPAM'; ?>
 			</td>
 		</tr>
 		<tr>
