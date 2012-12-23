@@ -230,6 +230,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			}
 
 			$res = bugs_add_comment($bug_id, $_POST['in']['commentemail'], $_POST['in']['name'], $ncomment, 'comment');
+			
+			mark_related_bugs($_POST['in']['commentemail'], $_POST['in']['name'], $ncomment);
 
 		} while (false);
 
@@ -349,6 +351,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		// Add normal comment
 		if (!empty($ncomment)) {
 			$res = bugs_add_comment($bug_id, $from, '', $ncomment, 'comment');
+			
+			mark_related_bugs($from, '', $ncomment);
 		}
 	}
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 2) {
@@ -523,6 +527,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		// Add normal comment
 		if (!empty($ncomment)) {
 			$res = bugs_add_comment($bug_id, $from, $comment_name, $ncomment, 'comment');
+			
+			mark_related_bugs($from, $comment_name, $ncomment);
 		}
 	}
 } elseif (isset($_POST['in']) && isset($_POST['preview']) && $edit == 1) {
@@ -1062,7 +1068,8 @@ if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['s
 		'type_all'     => 'All',
 		'type_comment' => 'Comments',
 		'type_log'     => 'Changes',
-		'type_svn'     => 'Git/SVN commits'
+		'type_svn'     => 'Git/SVN commits',
+		'type_related' => 'Related reports'
 	);
 
 	if (!isset($_COOKIE['history_tab']) || !isset($history_tabs[$_COOKIE['history_tab']])) {
@@ -1148,6 +1155,21 @@ if ($edit == 1) {
 response_footer($bug_JS);
 
 // Helper functions
+
+function mark_related_bugs($from, $comment_name, $ncomment)
+{
+	global $bug_id;
+
+	$related = get_ticket_links($ncomment);
+	
+	/**
+	 * Adds a new comment on the related bug pointing to the current report
+	 */
+	for ($i = 0; $i < count($related[0]); ++$i) {
+		bugs_add_comment($related[1][$i], $from, $comment_name, 
+			'Related To: Bug #'. $bug_id, 'related');
+	}
+}
 
 function output_note($com_id, $ts, $email, $comment, $comment_type, $comment_name, $is_hidden = false)
 {

@@ -1882,6 +1882,15 @@ function make_ticket_links($text)
 	);
 }
 
+function get_ticket_links($text)
+{
+	$matches = array();
+	
+	preg_match_all('/(?<![>a-z])(?:bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?|duplicated of)\s+#?([0-9]+)/i', $text, $matches);
+	
+	return $matches;	
+}
+
 function handle_pear_errors ($error_obj)
 {
 	response_header("Oops! We are sorry that you are unable to report an undocumented feature today.");
