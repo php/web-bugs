@@ -36,7 +36,7 @@ $cve_id = !empty($_GET['cve_id']) ? $_GET['cve_id'] : '';
 $cve_id_not = !empty($_GET['cve_id_not']) ? 'not' : '';
 $patch = !empty($_GET['patch']) ? $_GET['patch'] : '';
 $private = !empty($_GET['private']) ? $_GET['private'] : '';
-$begin = (int) (!empty($_GET['begin']) ? $_GET['begin'] : 0);
+$begin = (int) ((!empty($_GET['begin']) && $_GET['begin'] > 0) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
 $project = (!empty($_GET['project']) && $_GET['project'] != 'All') ? $_GET['project'] : '';
 if (!empty($_GET['limit'])) {
