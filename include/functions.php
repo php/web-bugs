@@ -1718,8 +1718,10 @@ function response_header($title, $extraHeaders = '')
 	
 	if ($logged_in === 'developer') {
 		$is_logged = true;
+		$username = $auth_user->handle;
 	} else if (!empty($_SESSION['user'])) {
 		$is_logged = true;
+		$username = $_SESSION['user']->handle;
 	}
 
 	$_header_done	= true;
@@ -1758,7 +1760,7 @@ function response_header($title, $extraHeaders = '')
 			<a href="stats.php" class="menuWhite">statistics</a>&nbsp;|&nbsp;
 			<a href="random" class="menuWhite">random bug</a>&nbsp;|&nbsp;
 <?php if ($is_logged) { ?>
-			<a href="search.php?cmd=display&amp;assign=<?php echo $auth_user->handle;?>" class="menuWhite">my bugs</a>&nbsp;|&nbsp;
+			<a href="search.php?cmd=display&amp;assign=<?php echo $username;?>" class="menuWhite">my bugs</a>&nbsp;|&nbsp;
 			<a href="logout.php" class="menuWhite">logout</a>
 <?php } else { ?>
 			<a href="login.php" class="menuWhite">login</a>	
