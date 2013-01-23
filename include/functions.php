@@ -1718,11 +1718,20 @@ function response_header($title, $extraHeaders = '')
 	
 	if ($logged_in === 'developer') {
 		$is_logged = true;
-		$username = $auth_user->handle;
 	} else if (!empty($_SESSION['user'])) {
 		$is_logged = true;
-		$username = $_SESSION['user']->handle;
 	}
+
+	if ($logged_in) {
+		$username = false;
+		if (!empty($auth_user->handle)) {
+			$username = $auth_user->handle;
+		}
+		elseif (!empty($_SESSION['user']->handle)) {
+			$username = $_SESSION['user']->handle;
+		}
+	}
+
 
 	$_header_done	= true;
 
