@@ -1073,7 +1073,7 @@ if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['s
 	);
 
 	if (!isset($_COOKIE['history_tab']) || !isset($history_tabs[$_COOKIE['history_tab']])) {
-		$active_history_tab = 'type_comment';
+		$active_history_tab = 'type_all';
 	} else {
 		$active_history_tab = $_COOKIE['history_tab'];
 	}
