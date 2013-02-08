@@ -1059,6 +1059,14 @@ if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
 OUTPUT;
 	}
 	echo "<p><a href='patch-add.php?bug_id={$bug_id}'>Add a Patch</a></p>";
+
+	require_once "{$ROOT_DIR}/include/classes/bug_ghpulltracker.php";
+	$pulltracker = new Bug_Pulltracker();
+	$pulls = $pulltracker->listPulls($bug_id);
+	echo "<h2>Pull Requests</h2>\n";
+
+	require "{$ROOT_DIR}/templates/listpulls.php";
+	echo "<p><a href='gh-pull-add.php?bug_id={$bug_id}'>Add a Pull Request</a></p>";
 }
 
 // Display comments

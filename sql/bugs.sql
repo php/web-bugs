@@ -106,6 +106,15 @@ CREATE TABLE bugdb_votes (
   samever int(1) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE bugdb_github (
+  bugdb_id int(8) NOT NULL default '0',
+  github_repo varchar(255) NOT NULL,
+  github_pull_id int NOT NULL,
+  github_title varchar(255) NOT NULL,
+  developer varchar(40) NOT NULL,
+  PRIMARY KEY (bugdb_id, github_repo, github_pull_id)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 # Default pseudo packages (common for all projects)
 INSERT INTO bugdb_pseudo_packages SET id = '1', parent = '0', name = 'Web Site',   long_name = 'Web Site',   project = '';
 INSERT INTO bugdb_pseudo_packages SET id = '2', parent = '1', name = 'Bug System', long_name = 'Bug System', project = '';
