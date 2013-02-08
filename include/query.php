@@ -35,6 +35,7 @@ $phpver = !empty($_GET['phpver']) ? $_GET['phpver'] : '';
 $cve_id = !empty($_GET['cve_id']) ? $_GET['cve_id'] : '';
 $cve_id_not = !empty($_GET['cve_id_not']) ? 'not' : '';
 $patch = !empty($_GET['patch']) ? $_GET['patch'] : '';
+$pull = !empty($_GET['pull']) ? $_GET['pull'] : '';
 $private = !empty($_GET['private']) ? $_GET['private'] : '';
 $begin = (int) ((!empty($_GET['begin']) && $_GET['begin'] > 0) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
@@ -177,6 +178,10 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	
 	if ($patch != '') {
 		$where_clause .= " AND EXISTS (SELECT 1 FROM bugdb_patchtracker WHERE bugdb_id = bugdb.id LIMIT 1)";
+	}
+
+	if ($pull != '') {
+		$where_clause .= " AND EXISTS (SELECT 1 FROM bugdb_github WHERE bugdb_id = bugdb.id LIMIT 1)";
 	}
 
 	if ($assign != '') {

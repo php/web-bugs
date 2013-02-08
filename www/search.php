@@ -76,6 +76,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				'&amp;cve_id=' . urlencode($cve_id) .
 				"&amp;cve_id_not=$cve_id_not" .
 				'&amp;patch=' . urlencode($patch) .
+				'&amp;pull=' . urlencode($pull) .
 				'&amp;assign=' . urlencode($assign);
 		
 		if ($is_security_developer) {
@@ -314,6 +315,11 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <th>Patch</th>
   <td style="white-space: nowrap">Return only bugs reported with <b>patch attached</b></td>
   <td><input type="checkbox" name="patch" value="Y" <?php echo $patch == 'Y' ? " checked" : "" ?> /></td>
+</tr>
+<tr valign="top">
+  <th>Pull Request</th>
+  <td style="white-space: nowrap">Return only bugs with a <b>pull request</b></td>
+  <td><input type="checkbox" name="pull" value="Y" <?php echo $pull == 'Y' ? " checked" : "" ?> /></td>
 </tr>
 <?php
 	if ($is_security_developer) {
