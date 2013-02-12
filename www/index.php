@@ -101,7 +101,7 @@ to a random open bug.</p>
 		),
 		'Most recent open bugs (all) with pull request' => array(
 			'base'   => $base_default,
-			'suffix' => '&bug_type=All&pull=YY',
+			'suffix' => '&bug_type=All&pull=Y',
 		),
 		'Most recent open bugs (PHP 5.3)' => array(
 			'base'   => $base_default,
