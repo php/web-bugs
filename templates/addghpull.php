@@ -53,6 +53,7 @@ if (!$logged_in) {
    Pull Request:
   </th>
   <td class="form-input">
+   <img src="images/loading-blue.gif" id="loading" />
    <select name="pull_id" id="pull_id_field"></select>
    <div id="pull_details"></div>
   </td>
@@ -64,11 +65,16 @@ if (!$logged_in) {
 <script>
 var gh_pulls = false;
 var converter;
+if (typeof($) != "function") {
+  window.alert("Failed to load jQuery!");
+}
 $(document).ready(function() {
   var org = "php";
   var baseurl = "https://api.github.com/";
   var url = baseurl+'orgs/'+org+'/repos';
   converter = new Markdown.getSanitizingConverter();
+  $("#pull_id_field").empty().hide();
+  $('#pull_details').empty();
   $.ajax({ dataType: 'jsonp', url: url, success: function(d) {
     var repos = new Array();
     for (var i in d.data) {
@@ -78,15 +84,19 @@ $(document).ready(function() {
     for (var i in repos) {
       $("#repository_field").append("<option>"+repos[i]+"</option>");
     }
+    $("#loading").hide();
   } });
 });
 
 $("#repository_field").change(function() {
-  $("#pull_id_field").empty();
+  $("#pull_id_field").empty().hide();
+  $('#pull_details').empty();
+  $('#loading').show();
   gh_pulls = false;
   $("#pull_id_field").append("<option value=''></option>");
   var repo = $("#repository_field").val();
   if (repo == "") {
+    $('#loading').hide();
     return;
   }
   var org = "php";
@@ -98,6 +108,8 @@ $("#repository_field").change(function() {
       $("#pull_id_field").append("<option value="+(d.data[i].number+0)+">"+d.data[i].number+" - "+d.data[i].title+"</option>");
     }
     gh_pulls = d.data;
+    $("#pull_id_field").show();
+    $("#loading").hide();
   }});
 });
 
@@ -115,14 +127,12 @@ $("#pull_id_field").change(function() {
     }
   }
   if (pr) {
-    $('#pull_details').append('<b>'+pr.title+'</b><br>'+converter.makeHtml(pr.body));
+    $('#pull_details').append('<b>'+pr.title+'</b><br>'+converter.makeHtml(pr.body)+'<p><a href="'+pr.html_url+'">View on GitHub</a></p>');
   }
 });
 </script>
-<?php if (!empty($patches)) { ?>
-<h2>Existing patches: TODO</h2>
+<br/>
 <?php
-}
 
 $canpatch = false;
 require "{$ROOT_DIR}/templates/listpulls.php";
