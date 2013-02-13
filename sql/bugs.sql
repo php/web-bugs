@@ -112,6 +112,7 @@ CREATE TABLE bugdb_pulls (
   github_pull_id int NOT NULL,
   github_title varchar(255) NOT NULL,
   developer varchar(40) NOT NULL,
+  github_html_url varchar(255) NOT NULL,
   PRIMARY KEY (bugdb_id, github_repo, github_pull_id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
