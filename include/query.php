@@ -177,15 +177,18 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	}
 
 	/* A search for patch&pull should be (patch or pull) */
-	$where_clause .= " AND (1=2";
+	if ($patch != '' || $pull != '') {
+		$where_clause .= " AND (1=2";
+	}
 	if ($patch != '') {
 		$where_clause .= " OR EXISTS (SELECT 1 FROM bugdb_patchtracker WHERE bugdb_id = bugdb.id LIMIT 1)";
 	}
 	if ($pull != '') {
 		$where_clause .= " OR EXISTS (SELECT 1 FROM bugdb_pulls WHERE bugdb_id = bugdb.id LIMIT 1)";
 	}
-	$where_clause .= ")";
-
+	if ($patch != '' || $pull != '') {
+		$where_clause .= ")";
+	}
 	if ($assign != '') {
 		$where_clause .= ' AND bugdb.assign = ' . $dbh->quote($assign);
 	}
