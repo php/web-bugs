@@ -95,13 +95,9 @@ to a random open bug.</p>
 			'base'   => $base_default,
 			'suffix' => '&bug_type=All',
 		),
-		'Most recent open bugs (all) with patches' => array(
+		'Most recent open bugs (all) with patch or pull request' => array(
 			'base'   => $base_default,
-			'suffix' => '&bug_type=All&patch=Y',
-		),
-		'Most recent open bugs (all) with pull request' => array(
-			'base'   => $base_default,
-			'suffix' => '&bug_type=All&pull=Y',
+			'suffix' => '&bug_type=All&patch=Y&pull=Y',
 		),
 		'Most recent open bugs (PHP 5.3)' => array(
 			'base'   => $base_default,
