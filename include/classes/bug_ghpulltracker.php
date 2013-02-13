@@ -28,7 +28,7 @@ class Bug_Pulltracker
 			return PEAR::raiseError('Failed to retrieve pull request from GitHub');
 		}
 		PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-		$e = $this->_dbh->prepare('INSERT INTO bugdb_github
+		$e = $this->_dbh->prepare('INSERT INTO bugdb_pulls
 			(bugdb_id, github_repo, github_pull_id, github_title, github_html_url, developer) VALUES (?, ?, ?, ?, ?, ?)')->execute(
 				array($bugid, $repo, $pull_id, $data->title, $data->html_url, $developer));
 		PEAR::popErrorHandling();
@@ -44,7 +44,7 @@ class Bug_Pulltracker
 	 */
 	function detach($bugid, $repo, $pull_id)
 	{
-		$this->_dbh->prepare('DELETE FROM bugdb_github
+		$this->_dbh->prepare('DELETE FROM bugdb_pulls
 			WHERE bugdb_id = ? and github_repo = ? and github_pull_id = ?')->execute(
 			array($bugid, $repo, $pull_id));
 	}
@@ -59,7 +59,7 @@ class Bug_Pulltracker
 	{
 		$query = '
 			SELECT github_repo, github_pull_id, github_title, github_html_url, developer
-			FROM bugdb_github
+			FROM bugdb_pulls
 			WHERE bugdb_id = ?
 			ORDER BY github_repo, github_pull_id DESC
 		';

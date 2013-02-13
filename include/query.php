@@ -182,7 +182,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		$where_clause .= " OR EXISTS (SELECT 1 FROM bugdb_patchtracker WHERE bugdb_id = bugdb.id LIMIT 1)";
 	}
 	if ($pull != '') {
-		$where_clause .= " OR EXISTS (SELECT 1 FROM bugdb_github WHERE bugdb_id = bugdb.id LIMIT 1)";
+		$where_clause .= " OR EXISTS (SELECT 1 FROM bugdb_pulls WHERE bugdb_id = bugdb.id LIMIT 1)";
 	}
 	$where_clause .= ")";
 

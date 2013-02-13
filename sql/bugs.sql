@@ -106,7 +106,7 @@ CREATE TABLE bugdb_votes (
   samever int(1) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE bugdb_github (
+CREATE TABLE bugdb_pulls (
   bugdb_id int(8) NOT NULL default '0',
   github_repo varchar(255) NOT NULL,
   github_pull_id int NOT NULL,
