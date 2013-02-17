@@ -27,7 +27,7 @@ if ($dbh)
 	}
 	while ($bug = $res->fetchRow(MDB2_FETCHMODE_ASSOC))
 	{
-		list($mailto, $mailfrom) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
+		list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 
 		// No feedback message
 		if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS['nofeedback'][$bug['package_name']])) {

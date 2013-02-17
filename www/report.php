@@ -250,7 +250,7 @@ REPORT;
 			$ascii_report.= "\n-- \nEdit bug report at ";
 			$ascii_report.= "{$site_method}://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
 
-			list($mailto, $mailfrom, $params) = get_package_mail($package_name, false, $_POST['in']['bug_type']);
+			list($mailto, $mailfrom, $bcc, $params) = get_package_mail($package_name, false, $_POST['in']['bug_type']);
 
 			$protected_email = '"' . spam_protect($_POST['in']['email'], 'text') . '"' .  "<{$mailfrom}>";
 

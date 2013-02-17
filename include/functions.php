@@ -942,7 +942,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 	$from = str_replace(array("\n", "\r"), '', $from);
 
 	/* Default addresses */
-	list($mailto, $mailfrom, $Bcc, $params) = get_package_mail(oneof(@$in['package_name'], $bug['package_name']), $id, oneof(@$in['bug_type'], $bug['bug_type']));
+	list($mailto, $mailfrom, $bcc, $params) = get_package_mail(oneof(@$in['package_name'], $bug['package_name']), $id, oneof(@$in['bug_type'], $bug['bug_type']));
 
 	$headers[] = array(' ID', $bug['id']);
 
@@ -1084,7 +1084,7 @@ DEV_TEXT;
 			"{$subj}: {$sdesc}",
 			$user_text,
 			"From: {$siteBig} Bug Database <{$mailfrom}>\n" .
-			"Bcc: {$Bcc}\n" .
+			"Bcc: {$bcc}\n" .
 			"X-PHP-Bug: {$bug['id']}\n" .
 			"X-PHP-Site: {$siteBig}\n" .
 			"In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
@@ -1417,7 +1417,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 		$bcc = array_unique($bcc);
 		return array(implode(', ', $to), $mailfrom, implode(', ', $bcc), $params);
 	} else {
-		return array(implode(', ', $to), $mailfrom, $params);
+		return array(implode(', ', $to), $mailfrom, '', $params);
 	}
 }
 
