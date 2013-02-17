@@ -1896,6 +1896,7 @@ function get_ticket_links($text)
 
 function handle_pear_errors ($error_obj)
 {
+	error_log($error_obj->getMessage());
 	response_header("Oops! We are sorry that you are unable to report an undocumented feature today.");
 	
 	$error  = "<p>Greetings! We are experiencing an error, and in the spirit of Open Source would like you to fix it. ";
