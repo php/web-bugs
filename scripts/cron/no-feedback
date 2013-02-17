@@ -29,15 +29,6 @@ if ($dbh)
 	{
 		list($mailto, $mailfrom) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 
-		// Changelog entry
-		$changed = bug_diff($bug, $_POST['in']);
-		if (!empty($changed)) {
-			$log_comment = bug_diff_render_html($changed);
-		}
-		if (!empty($log_comment)) {
-			$res = bugs_add_comment($bug['id'], $mailfrom, '', $log_comment, 'log');
-		}
-
 		// No feedback message
 		if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS['nofeedback'][$bug['package_name']])) {
 			$message = $FIX_VARIATIONS['nofeedback'][$bug['package_name']];
