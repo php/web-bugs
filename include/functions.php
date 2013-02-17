@@ -1649,7 +1649,7 @@ function bugs_add_comment ($bug_id, $from, $from_name, $comment, $type = 'commen
 		INSERT INTO bugdb_comments (bug, email, reporter_name, comment, comment_type, ts, visitor_ip)
 		VALUES (?, ?, ?, ?, ?, NOW(), INET_ATON(?))
 	")->execute(array(
-		$bug_id, $from, $from_name, $comment, $type, $_SERVER['REMOTE_ADDR']
+		$bug_id, $from, $from_name, $comment, $type, (!empty($_SERVER['REMOTE_ADDR'])?$_SERVER['REMOTE_ADDR']:'127.0.0.1')
 	));
 }
 
