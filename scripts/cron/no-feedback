@@ -38,7 +38,7 @@ if ($dbh)
 		} else {
 			die('[no-feedback] Could not find resolve reason! (this should not happen!)');
 		}
-		$res = bugs_add_comment($bug['id'], $mailfrom, '', $message, 'comment');
+		bugs_add_comment($bug['id'], $mailfrom, '', $message, 'comment');
 
 		// Update status
 		$dbh->prepare('
