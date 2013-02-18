@@ -18,7 +18,8 @@ if ($dbh)
 
 	$res = $dbh->prepare("
 		SELECT id, package_name, bug_type, email, passwd, sdesc, ldesc, php_version,
-			php_os, status, ts1, ts2, assign, UNIX_TIMESTAMP(ts1) AS submitted, UNIX_TIMESTAMP(ts2) AS modified
+			php_os, status, ts1, ts2, assign, UNIX_TIMESTAMP(ts1) AS submitted,
+			private, reporter_name, UNIX_TIMESTAMP(ts2) AS modified
 		FROM bugdb
 		WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})
 	")->execute(array());
