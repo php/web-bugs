@@ -31,7 +31,20 @@ and disable Zend memory manager.
 </p>
 
 
-<h3>Running PHP CLI or PHP CGI through valgrind</h3>
+<h3>Using Shared Extensions</h3>
+
+<p>
+ To correctly show the stack frames for extensions compiled as shared libraries, set:
+ <pre><code>export ZEND_DONT_UNLOAD_MODULES=1</code></pre> or 
+ <pre><code>setenv ZEND_DONT_UNLOAD_MODULES 1</code></pre> (the syntax depends on 
+ what your shell supports).
+</p>
+
+<p>
+  This works from PHP 5.3.11 onwards.
+</p>
+
+<h3>Running PHP CLI, Built-in Web Server or PHP CGI through valgrind</h3>
 
 <p>
  To generate the valgrind log using PHP CLI/CGI, 
@@ -46,6 +59,12 @@ and disable Zend memory manager.
 
 <p>
  This should put the log into php.log file in the current working directory.
+</p>
+
+<p>
+ To valgrind the built-in web server, use the appropriate -S and -t
+ options to the CLI executable. Run your application via a browser and
+ review php.log for any valgrind errors.
 </p>
 
 <h3>Running PHP Apache module through valgrind</h3>
@@ -75,7 +94,7 @@ and disable Zend memory manager.
 </pre>
 
 <p>
- This should put all the memory errors into into apache.log file.
+ Run your application via a browser. All the memory errors will be in apache.log.
 </p>
 
 <?php response_footer();
