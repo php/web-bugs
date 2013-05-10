@@ -3,6 +3,8 @@
 class Bug_Pulltracker
 {
 	var $_dbh;
+	private $userAgent = 'bugs.php.net Pulltracker';
+
 
 	function __construct()
 	{
@@ -11,7 +13,13 @@ class Bug_Pulltracker
 
 	private function getDataFromGithub($repo, $pull_id)
 	{
-		$data = @json_decode(file_get_contents("https://api.github.com/repos/php/".urlencode($repo).'/pulls/'.((int)$pull_id)));
+		$ctxt = stream_context_create(array(
+			'http' => array(
+				'ignore_errors' => '1',
+				'user_agent' => $this->userAgent,
+			)
+		));
+		$data = @json_decode(file_get_contents("https://api.github.com/repos/php/".urlencode($repo).'/pulls/'.((int)$pull_id)), null, $ctxt);
 		if (!is_object($data)) {
 			return false;
 		}
