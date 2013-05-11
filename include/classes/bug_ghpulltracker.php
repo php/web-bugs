@@ -19,7 +19,7 @@ class Bug_Pulltracker
 				'user_agent' => $this->userAgent,
 			)
 		));
-		$data = @json_decode(file_get_contents("https://api.github.com/repos/php/".urlencode($repo).'/pulls/'.((int)$pull_id)), null, $ctxt);
+		$data = @json_decode(file_get_contents("https://api.github.com/repos/php/".urlencode($repo).'/pulls/'.((int)$pull_id), null, $ctxt));
 		if (!is_object($data)) {
 			return false;
 		}
