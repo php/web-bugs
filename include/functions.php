@@ -266,12 +266,11 @@ function is_spam($string)
 	}
 
 	$keywords = array(
-		'asian',
 		'spy',
 		'bdsm',
 		'massage',
 		'mortage',
-		'sex(?<!OutOfBoundsEx(?=ception))',
+		'sex',
 		'11nong',
 		'oxycontin',
 		'distance-education',
@@ -297,9 +296,10 @@ function is_spam($string)
 		'partydressuk',
 		'leslunettesdesoleil',
 		'PaulRGuthrie',
+		'[a-z]*?fuck[a-z]*?',
 	);
 	
-	if (preg_match('/('. implode('|', $keywords) . ')/i', $string)) {
+	if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
 		return true;
 	}
 
