@@ -532,7 +532,7 @@ display_bug_error($errors);
 ?>
 			<tr>
 				<th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
-				<td class="form-input" autocomplete="off"><input type="text" name="captcha" /></td>
+				<td class="form-input"><input type="text" name="captcha" autocomplete="off"/></td>
 			</tr>
 <?php } ?>
 
