@@ -20,8 +20,6 @@
 		$dev_versions = json_decode(file_get_contents('http://qa.php.net/api.php?type=qa-releases&format=json&only=dev_versions'));
 
 		$versions = array();
-		// FIXME: manually adding the 5.3 branch as we don't have active qa release for it currently
-		$versions = array('5' => array('3' => array()));
 
 		$date = date('Y-m-d');
 		$default_versions = array(
