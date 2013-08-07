@@ -146,13 +146,13 @@ OUTPUT;
 
 echo "</table>\n<hr>\n<b>PHP Versions for recent bug reports:";
 
-$query  = "  SELECT DATE_FORMAT(ts1, '%Y-%m') as d, 
-                    IF(b.php_version LIKE '_._Git%', SUBSTR(b.php_version, 1, 6), b.php_version) AS php_version,
+$query  = "  SELECT DATE_FORMAT(ts1, '%Y-%m') as d,
+                    IF(b.php_version LIKE '%Git%', LEFT(b.php_version, LOCATE('Git', b.php_version)+2), b.php_version) AS formatted_version,
                     COUNT(*) AS quant
                FROM bugdb AS b
               WHERE ts1 >= CONCAT(YEAR(NOW())-1, '-', MONTH(NOW()), '-01 00:00:00')
                     {$where}
-           GROUP BY d, php_version
+           GROUP BY d, formatted_version
            ORDER BY d, quant";
 
 $result = $dbh->prepare($query)->execute();
@@ -166,7 +166,7 @@ while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 		echo "<b>{$row[d]}:</b><br>\n<table>\n";
 		$last_date = $row['d'];
 	}
-	echo "<tr><td class='bug_head'>{$row[php_version]}</td><td class='bug_bg1'>{$row[quant]}</td></tr>\n";
+	echo "<tr><td class='bug_head'>{$row[formatted_version]}</td><td class='bug_bg1'>{$row[quant]}</td></tr>\n";
 }
 if ($last_date) {
 	echo "</table>\n\n";
