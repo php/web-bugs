@@ -166,7 +166,8 @@ while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 		echo "<b>{$row[d]}:</b><br>\n<table>\n";
 		$last_date = $row['d'];
 	}
-	echo "<tr><td class='bug_head'>{$row[formatted_version]}</td><td class='bug_bg1'>{$row[quant]}</td></tr>\n";
+	$version = htmlentities($row[formatted_version]);
+	echo "<tr><td class='bug_head'>{$version}</td><td class='bug_bg1'>{$row[quant]}</td></tr>\n";
 }
 if ($last_date) {
 	echo "</table>\n\n";
