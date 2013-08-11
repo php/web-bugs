@@ -144,7 +144,7 @@ OUTPUT;
 	}
 }
 
-echo "</table>\n<hr>\n<b>PHP Versions for recent bug reports:";
+echo "</table>\n<hr>\n<p><b>PHP Versions for recent bug reports:</b></p><div>";
 
 $query  = "  SELECT DATE_FORMAT(ts1, '%Y-%m') as d,
                     IF(b.php_version LIKE '%Git%', LEFT(b.php_version, LOCATE('Git', b.php_version)+2), b.php_version) AS formatted_version,
@@ -163,15 +163,17 @@ while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 		if ($last_date !== null) {
 			echo "</table>\n\n";
 		}
-		echo "<b>{$row[d]}:</b><br>\n<table>\n";
+		echo "<table style='float:left; margin-right:20px'>\n".
+		     "<tr><th colspan='2' class='bug_header'>{$row[d]}</th></tr>\n";
 		$last_date = $row['d'];
 	}
-	$version = htmlentities($row[formatted_version]);
+	$version = htmlentities($row[formatted_version], ENT_QUOTES, 'UTF-8');
 	echo "<tr><td class='bug_head'>{$version}</td><td class='bug_bg1'>{$row[quant]}</td></tr>\n";
 }
 if ($last_date) {
-	echo "</table>\n\n";
+	echo "</table>\n";
 }
+echo "</div>\n";
 
 response_footer();
 
