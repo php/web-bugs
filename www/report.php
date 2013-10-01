@@ -246,7 +246,7 @@ Bug Type:         {$_POST['in']['bug_type']}
 Bug description:
 REPORT;
 
-			$ascii_report = "{$report}{$_POST['in']['sdesc']}\n\n" . wordwrap($fdesc);
+			$ascii_report = "{$report}{$_POST['in']['sdesc']}\n\n" . wordwrap($fdesc, 72);
 			$ascii_report.= "\n-- \nEdit bug report at ";
 			$ascii_report.= "{$site_method}://{$site_url}{$basedir}/bug.php?id=$cid&edit=";
 
@@ -478,7 +478,7 @@ display_bug_error($errors);
 					</p>
 				</th>
 				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[ldesc]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['ldesc'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+					<textarea cols="80" rows="15" name="in[ldesc]" wrap="soft"><?php echo htmlspecialchars($_POST['in']['ldesc'], ENT_COMPAT, 'UTF-8'); ?></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -509,7 +509,7 @@ display_bug_error($errors);
 					</p>
 				</th>
 				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[expres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['expres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+					<textarea cols="80" rows="15" name="in[expres]" wrap="soft"><?php echo htmlspecialchars($_POST['in']['expres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
 				</td>
 			</tr>
 
@@ -522,7 +522,7 @@ display_bug_error($errors);
 					</p>
 				</th>
 				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[actres]" wrap="physical"><?php echo htmlspecialchars($_POST['in']['actres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+					<textarea cols="80" rows="15" name="in[actres]" wrap="soft"><?php echo htmlspecialchars($_POST['in']['actres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
 				</td>
 			</tr>
 

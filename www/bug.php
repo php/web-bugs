@@ -931,7 +931,7 @@ if ($edit == 1 || $edit == 2) { ?>
 	<?php
 	if ($bug['status'] !== 'Spam') {
 	?>
-		<textarea cols="80" rows="8" name="ncomment" id="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
+		<textarea cols="80" rows="8" name="ncomment" id="ncomment" wrap="soft"><?php echo htmlspecialchars($ncomment); ?></textarea>
 	<?php
 	} else {
 		echo 'This bug has a SPAM status, so no additional comments are needed.';
@@ -1014,7 +1014,7 @@ if (!$logged_in) {
 	<div>
 		<input type="hidden" name="id" value="<?php echo $bug_id; ?>" />
 		<input type="hidden" name="edit" value="<?php echo $edit; ?>" />
-		<textarea cols="80" rows="10" name="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea>
+		<textarea cols="80" rows="10" name="ncomment" wrap="soft"><?php echo htmlspecialchars($ncomment); ?></textarea>
 		<br /><input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
 	</div>
 
