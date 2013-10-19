@@ -69,7 +69,7 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 	}
 
 	if (empty($errors)) {
-		if ($logged_in && $auth_user->registered && !empty($auth_user->email)) {
+		if ($logged_in && !empty($auth_user->email)) {
 			$email = $auth_user->email;
 		} else {
 			$email = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
@@ -963,7 +963,11 @@ if ($edit == 1 || $edit == 2) { ?>
 
 <?php if ($logged_in) { ?>
 	<div class="explain">
-		<h1><a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a></h1>
+		<h1>
+			<a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a>
+			<input type="submit" name="subscribe_to_bug" value="Subscribe" />
+			<input type="submit" name="unsubscribe_to_bug" value="Unsubscribe" />
+		</h1>
 	</div>
 <?php } ?>
 
