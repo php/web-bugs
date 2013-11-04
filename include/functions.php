@@ -711,6 +711,7 @@ function show_version_options($current, $default = '')
 	if (!$use && $current) {
 		echo '<option selected="selected">' , htmlspecialchars($current) , "</option>\n";
 	}
+	echo '<option>str_size_and_int64 branch</option>', "\n";
 	echo '<option>Irrelevant</option>', "\n";
 	echo '<option value="earlier">Earlier? Upgrade first!</option>', "\n";
 }
