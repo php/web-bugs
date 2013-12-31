@@ -1183,6 +1183,16 @@ function mark_related_bugs($from, $comment_name, $ncomment)
 	}
 }
 
+function link_to_people($email, $text)
+{
+    $domain = strstr($email, "@");
+    if ($domain == "@php.net") {
+        $username = strstr($email, "@", true);
+        return '<a href="//people.php.net/user.php?username=' . $username . '">' . $text . '</a>';
+    }
+    return $text;
+}
+
 function output_note($com_id, $ts, $email, $comment, $comment_type, $comment_name, $is_hidden = false)
 {
 	global $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
@@ -1192,7 +1202,7 @@ function output_note($com_id, $ts, $email, $comment, $comment_type, $comment_nam
 	echo "<div class='comment type_{$comment_type}' {$display}>";
 	echo '<a name="' , urlencode($ts) , '">&nbsp;</a>';
 	echo "<strong>[" , format_date($ts) , "] ";
-	echo spam_protect(htmlspecialchars($email)) , "</strong>\n";
+	echo link_to_people($email, spam_protect(htmlspecialchars($email))) , "</strong>\n";
 
 	switch ($comment_type)
 	{
