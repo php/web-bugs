@@ -929,12 +929,14 @@ if ($edit == 1 || $edit == 2) { ?>
 		<label for="ncomment" accesskey="m"><b>New<?php if ($edit == 1) echo "/Additional"; ?> Co<span class="accesskey">m</span>ment:</b></label>
 	</p>
 	<?php
-	if ($bug['status'] !== 'Spam') {
+	if ($bug['block_user_comment'] == 'Y' && $logged_in != 'developer') {
+		echo 'Further comment on this bug is unnecessary.';
+	} elseif ($bug['status'] === 'Spam' && $logged_in != 'developer') {
+		echo 'This bug has a SPAM status, so no additional comments are needed.';
+	} else {
 	?>
 		<textarea cols="80" rows="8" name="ncomment" id="ncomment" wrap="soft"><?php echo htmlspecialchars($ncomment); ?></textarea>
 	<?php
-	} else {
-		echo 'This bug has a SPAM status, so no additional comments are needed.';
 	}
 	?>
 
