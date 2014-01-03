@@ -149,8 +149,8 @@ if ($edit == 2 && !$show_bug_info && $pw && verify_bug_passwd($bug_id, bugs_get_
 if (isset($_POST['ncomment'])) {
 	/* Bugs blocked to user comments can only be commented by the team */
 	if ($bug['block_user_comment'] == 'Y' && $logged_in != 'developer') {
-		response_header('Add comment not allowed');
-		display_bug_error("You're not allowed to add comment on bug #{$bug_id}");
+		response_header('Adding comments not allowed');
+		display_bug_error("You're not allowed to add a comment to bug #{$bug_id}");
 		response_footer();
 		exit;
 	}
