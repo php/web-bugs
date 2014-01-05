@@ -1009,7 +1009,7 @@ if (!$logged_in) {
 		<tr>
 <?php
 if (!empty($_POST['captcha']) && empty($ok_to_submit_report)) {
-	$captcha_label = 'Please solve this <em>new</em> problem:';
+	$captcha_label = '<strong>Solve this <em>new</em> problem:</strong>';
 } else {
 	$captcha_label = 'Solve the problem:';
 }
