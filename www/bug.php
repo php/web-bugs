@@ -1031,7 +1031,19 @@ if (!empty($_POST['captcha']) && empty($ok_to_submit_report)) {
 	<div>
 		<input type="hidden" name="id" value="<?php echo $bug_id; ?>" />
 		<input type="hidden" name="edit" value="<?php echo $edit; ?>" />
+
+	<?php
+	if ($bug['block_user_comment'] == 'Y' && $logged_in != 'developer') {
+		echo 'Further comment on this bug is unnecessary.';
+	} elseif ($bug['status'] === 'Spam' && $logged_in != 'developer') {
+		echo 'This bug has a SPAM status, so no additional comments are needed.';
+	} else {
+	?>
 		<textarea cols="80" rows="10" name="ncomment" wrap="soft"><?php echo htmlspecialchars($ncomment); ?></textarea>
+	<?php
+	}
+	?>
+
 		<br /><input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
 	</div>
 
