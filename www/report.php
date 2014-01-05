@@ -531,9 +531,14 @@ display_bug_error($errors);
 <?php if (!$logged_in) { 
 	$captcha = $numeralCaptcha->getOperation();
 	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+	if (!empty($_POST['captcha']) && empty($ok_to_submit_report)) {
+		$captcha_label = '<strong>Solve this <em>new</em> problem:</strong>';
+	} else {
+		$captcha_label = 'Solve the problem:';
+	}
 ?>
 			<tr>
-				<th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
+				<th><?php echo $captcha_label; ?><br /><?php echo htmlspecialchars($captcha); ?> = ?</th>
 				<td class="form-input"><input type="text" name="captcha" autocomplete="off"/></td>
 			</tr>
 <?php } ?>

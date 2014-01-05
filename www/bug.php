@@ -1007,14 +1007,7 @@ if (!$logged_in) {
 			</td>
 		</tr>
 		<tr>
-<?php
-if (!empty($_POST['captcha']) && empty($ok_to_submit_report)) {
-	$captcha_label = '<strong>Solve this <em>new</em> problem:</strong>';
-} else {
-	$captcha_label = 'Solve the problem:';
-}
-?>
-			<th><?php echo $captcha_label; ?><br /><?php echo htmlspecialchars($captcha); ?> = ?</th>
+			<th>Solve the problem:<br /><?php echo htmlspecialchars($captcha); ?> = ?</th>
 			<td class="form-input"><input type="text" name="captcha" /></td>
 		</tr>
 		<tr>
