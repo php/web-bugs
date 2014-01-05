@@ -33,7 +33,9 @@ if (isset($_POST['in'])) {
 	// Check if session answer is set, then compare it with the post captcha value.
 	// If it's not the same, then it's an incorrect password.
 	if (!$logged_in) {
-		if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+		if (!isset($_SESSION['answer'])) {
+			$errors[] = 'Please enable cookies so the Captcha system can work';
+		} elseif ($_POST['captcha'] != $_SESSION['answer']) {
 			$errors[] = 'Incorrect Captcha';
 		}
 		if (is_spam($_POST['in']['ldesc']) ||

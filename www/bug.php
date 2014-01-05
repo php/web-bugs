@@ -63,7 +63,9 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 	// Check if session answer is set, then compare it with the post captcha value.
 	// If it's not the same, then it's an incorrect password.
 	if (!$logged_in) {
-		if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+		if (!isset($_SESSION['answer'])) {
+			$errors[] = 'Please enable cookies so the Captcha system can work';
+		} elseif ($_POST['captcha'] != $_SESSION['answer']) {
 			$errors[] = 'Incorrect Captcha';
 		}
 	}
@@ -1005,7 +1007,14 @@ if (!$logged_in) {
 			</td>
 		</tr>
 		<tr>
-			<th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
+<?php
+if (!empty($_POST['captcha']) && empty($ok_to_submit_report)) {
+	$captcha_label = 'Please solve this <em>new</em> problem:';
+} else {
+	$captcha_label = 'Solve the problem:';
+}
+?>
+			<th><?php echo $captcha_label; ?><br /><?php echo htmlspecialchars($captcha); ?> = ?</th>
 			<td class="form-input"><input type="text" name="captcha" /></td>
 		</tr>
 		<tr>
