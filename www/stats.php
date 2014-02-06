@@ -164,11 +164,11 @@ while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 			echo "</table>\n\n";
 		}
 		echo "<table style='float:left; margin-right:20px'>\n".
-		     "<tr><th colspan='2' class='bug_header'>{$row[d]}</th></tr>\n";
+		     "<tr><th colspan='2' class='bug_header'>{$row["d"]}</th></tr>\n";
 		$last_date = $row['d'];
 	}
-	$version = htmlentities($row[formatted_version], ENT_QUOTES, 'UTF-8');
-	echo "<tr><td class='bug_head'>{$version}</td><td class='bug_bg1'>{$row[quant]}</td></tr>\n";
+	$version = htmlentities($row["formatted_version"], ENT_QUOTES, 'UTF-8');
+	echo "<tr><td class='bug_head'>{$version}</td><td class='bug_bg1'>{$row["quant"]}</td></tr>\n";
 }
 if ($last_date) {
 	echo "</table>\n";
