@@ -1746,9 +1746,7 @@ function response_header($title, $extraHeaders = '')
 
 <body>
 
-<div><a id="TOP"></a></div>
-
-<table id="head-menu" class="head" cellspacing="0" cellpadding="0">
+<table id="top" class="head" cellspacing="0" cellpadding="0">
 	<tr>
 		<td class="head-logo">
 			<a href="/"><img src="images/logo.gif" alt="Bugs" vspace="2" hspace="2" /></a>
