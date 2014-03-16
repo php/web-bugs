@@ -89,47 +89,24 @@ to a random open bug.</p>
 <p>Common searches</p>
 <ul>
 <?php
-	$base_default = "{$site_method}://{$site_url}/search.php?boolean=0&limit=30&order_by=id&direction=DESC&cmd=display&status=Open&bug_age=0&bug_updated=0";
+	$base_default = "{$site_method}://{$site_url}/search.php?boolean=0&amp;limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open&amp;bug_age=0&amp;bug_updated=0";
+	
 	$searches = array(
-		'Most recent open bugs (all)' => array(
-			'base'   => $base_default,
-			'suffix' => '&bug_type=All',
-		),
-		'Most recent open bugs (all) with patch or pull request' => array(
-			'base'   => $base_default,
-			'suffix' => '&bug_type=All&patch=Y&pull=Y',
-		),
-		'Most recent open bugs (PHP 5.3)' => array(
-			'base'   => $base_default,
-			'suffix' => '&bug_type=All&phpver=5.3',
-		),
-		'Most recent open bugs (PHP 5.4)' => array(
-			'base'   => $base_default,
-			'suffix' => '&bug_type=All&phpver=5.4',
-		),
-		'Most recent open bugs (PHP 5.5)' => array(
-			'base'   => $base_default,
-			'suffix' => '&bug_type=All&phpver=5.5',
-		),
-		'Open Documentation bugs' => array(
-			'base'   => $base_default,
-			'suffix' => '&bug_type=Documentation+Problem',
-		),
-		'Open Documentation bugs (with patches)' => array(
-			'base'   => $base_default,
-			'suffix' => '&bug_type=Documentation+Problem&patch=Y',
-		),
+		'Most recent open bugs (all)' => '&bug_type=All',
+		'Most recent open bugs (all) with patch or pull request' => '&bug_type=All&patch=Y&pull=Y',
+		'Most recent open bugs (PHP 5.3)' => '&bug_type=All&phpver=5.3',
+		'Most recent open bugs (PHP 5.4)' => '&bug_type=All&phpver=5.4',
+		'Most recent open bugs (PHP 5.5)' => '&bug_type=All&phpver=5.5',
+		'Open Documentation bugs' => '&bug_type=Documentation+Problem',
+		'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y'
 	);
-
+	
 	if (!empty($_SESSION["user"])) {
-		$searches['Your assigned bugs'] = array(
-			'base'   => $base_default,
-			'suffix' => '&assign='.urlencode($_SESSION["user"])
-		);
+		$searches['Your assigned bugs'] = '&amp;assign='.urlencode($_SESSION['user']);
 	}
 
-	foreach ($searches as $title => $linfo) {
-		echo '<li><a href="', $linfo['base'], $linfo['suffix'], '">', $title, '</a></li>', PHP_EOL;
+	foreach ($searches as $title => $sufix) {
+		echo '<li><a href="' . $base_default . htmlspecialchars($sufix) . '">' . $title . '</a></li>' . "\n";
 	}
 ?>
 </ul>
