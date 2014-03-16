@@ -66,21 +66,20 @@ p.head-search select {
 }
 
 td.head-menu {
-	color: #000000;
+	color: #000;
 	font-weight: bold;
 	font-size: 75%;
 }
 
-.menuWhite {
-	color: #FFFFFF;
+td.head-menu a {
+	color: #FFF;
 	font-weight: normal;
 }
 
-a:link.menuWhite,
-a:hover.menuWhite,
-a:visited.menuWhite {
+td.head-menu a:link,
+td.head-menu a:hover,
+td.head-menu a:visited {
 	text-decoration: none;
-	color: #FFFFFF;
 }
 
 /* ========= Sidebars ========= */

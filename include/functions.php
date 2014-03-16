@@ -1755,19 +1755,19 @@ function response_header($title, $extraHeaders = '')
 		</td>
 
 		<td class="head-menu">
-			<a href="http://www.php.net/" class="menuWhite">php.net</a>&nbsp;|&nbsp;
-			<a href="http://www.php.net/support.php" class="menuWhite">support</a>&nbsp;|&nbsp;
-			<a href="http://www.php.net/docs.php" class="menuWhite">documentation</a>&nbsp;|&nbsp;
-			<a href="report.php" class="menuWhite">report a bug</a>&nbsp;|&nbsp;
-			<a href="search.php" class="menuWhite">advanced search</a>&nbsp;|&nbsp;
-			<a href="search-howto.php" class="menuWhite">search howto</a>&nbsp;|&nbsp;
-			<a href="stats.php" class="menuWhite">statistics</a>&nbsp;|&nbsp;
-			<a href="random" class="menuWhite">random bug</a>&nbsp;|&nbsp;
+			<a href="http://www.php.net/">php.net</a>&nbsp;|&nbsp;
+			<a href="http://www.php.net/support.php">support</a>&nbsp;|&nbsp;
+			<a href="http://www.php.net/docs.php">documentation</a>&nbsp;|&nbsp;
+			<a href="report.php">report a bug</a>&nbsp;|&nbsp;
+			<a href="search.php">advanced search</a>&nbsp;|&nbsp;
+			<a href="search-howto.php">search howto</a>&nbsp;|&nbsp;
+			<a href="stats.php">statistics</a>&nbsp;|&nbsp;
+			<a href="random">random bug</a>&nbsp;|&nbsp;
 <?php if ($is_logged) { ?>
-			<a href="search.php?cmd=display&amp;assign=<?php echo $username;?>" class="menuWhite">my bugs</a>&nbsp;|&nbsp;
-			<a href="logout.php" class="menuWhite">logout</a>
+			<a href="search.php?cmd=display&amp;assign=<?php echo $username;?>">my bugs</a>&nbsp;|&nbsp;
+			<a href="logout.php">logout</a>
 <?php } else { ?>
-			<a href="login.php" class="menuWhite">login</a>	
+			<a href="login.php">login</a>	
 <?php } ?>
 		</td>
 	</tr>
