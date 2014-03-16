@@ -15,7 +15,7 @@ if ($id) {
 }
 
 if($_SERVER['REQUEST_URI'] == '/random') {
-	$query  = "select id from bugdb where status!='Closed' and status!='Not a bug' and status!='Duplicate' and status!='Spam' and status!='Wont fix' and status!='No Feedback' order by rand() limit 1";
+	$query  = "SELECT id FROM bugdb WHERE status NOT IN('Closed', 'Not a bug', 'Duplicate', 'Spam', 'Wont fix', 'No Feedback') AND private = 'N' ORDER BY RAND() LIMIT 1";
 
 	$result = $dbh->prepare($query)->execute();
 	$id = $result->fetchRow();
