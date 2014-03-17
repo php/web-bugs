@@ -100,9 +100,9 @@ to a random open bug.</p>
 		'Open Documentation bugs' => '&bug_type=Documentation+Problem',
 		'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y'
 	);
-	
+
 	if (!empty($_SESSION["user"])) {
-		$searches['Your assigned bugs'] = '&amp;assign='.urlencode($_SESSION['user']);
+		$searches['Your assigned bugs'] = '&assign='.urlencode($_SESSION['user']);
 	}
 
 	foreach ($searches as $title => $sufix) {
