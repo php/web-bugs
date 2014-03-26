@@ -1130,7 +1130,7 @@ DEV_TEXT;
 
 		bugs_mail(
 			$email,
-			$subj . txfield('sdesc', $bug, $in),
+			$bug_types[$bug['bug_type']] . ' #' . $bug['id'] . ' ' . txfield('sdesc', $bug, $in),
 			"{$in['assign']} you have just been assigned to this bug by {$from}\n\n{$dev_text}",
 			"From: {$from}\n" .
 			"X-PHP-Bug: {$bug['id']}\n" .
