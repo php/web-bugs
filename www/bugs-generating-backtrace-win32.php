@@ -68,7 +68,9 @@ list using the "browse" button:</p>
 
 <p>Add a "sleep(10);" for the first run (from the cmd: "php.exe
 crashme.php"), it will let you enough time to click "next" and select
-the php process:</p>
+the php process. I you are debugging the Apache module, start Apache with -X option and choose
+httpd.exe instead of php.exe from the process list.
+Then proceed further:</p>
 <p><img src="/images/backtrace-images-win32/dbg_select_php.png" alt="Select the php process"></p>
 
 <p>Click again next and let it crash. If everything went well, you should see your new rule as shown in the image below:</p>
