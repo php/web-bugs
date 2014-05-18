@@ -2,6 +2,10 @@ PHP Bug Tracking System
 =======================
 This was a collaboration between PEAR, PECL and PHP core to create a unified bug tracker.
 
+Requirements
+============
+- PHP 5.4+
+
 Installation
 ============
 1. Copy `local_config.php.sample` to `local_config.php` and modify accordingly

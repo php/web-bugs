@@ -1,10 +1,5 @@
 <?php
 
-// magic_quotes_gpc is no longer supported!
-if (get_magic_quotes_gpc()) {
-	die('Turn off "magic_quotes_gpc" in php.ini!');
-}
-
 // Enable output compression
 ini_set('zlib.output_compression', 1);
 
@@ -31,7 +26,7 @@ if (file_exists($local_cfg)) {
 		'db_user' => 'nobody',
 		'db_pass' => '',
 		'db_host' => 'localhost',
-		'patch_tmp' => "{$ROOT_DIR}/uploads/patches/", 
+		'patch_tmp' => "{$ROOT_DIR}/uploads/patches/",
 	);
 	define('DEVBOX', false);
 }
@@ -71,4 +66,3 @@ if (empty($dbh))
 // Last Updated..
 $tmp = filectime($_SERVER['SCRIPT_FILENAME']);
 $LAST_UPDATED = date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC';
-
