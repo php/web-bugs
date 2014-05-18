@@ -1280,7 +1280,7 @@ function is_valid_email($email, $phpnet_allowed = true)
 			return false;
 		}
 	}
-	return (bool) preg_match("/^[.\\w+-]+@[.\\w-]+\\.\\w{2,}\z/i", $email);
+	return (bool)filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
 /**
