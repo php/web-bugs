@@ -10,55 +10,55 @@ define('BUGS_SECURITY_DEV', 1<<3);
 
 // used in mail_bug_updates(), below, and class for search results
 $tla = array(
-	'Open'			=> 'Opn',
-	'Not a bug'		=> 'Nab',
-	'Feedback'		=> 'Fbk',
-	'No Feedback'	=> 'NoF',
-	'Wont fix'		=> 'Wfx',
-	'Duplicate'		=> 'Dup',
-	'Critical'		=> 'Ctl',
-	'Assigned'		=> 'Asn',
-	'Analyzed'		=> 'Ana',
-	'Verified'		=> 'Ver',
-	'Suspended'		=> 'Sus',
-	'Closed'		=> 'Csd',
-	'Spam'			=> 'Spm',
-	'Re-Opened'		=> 'ReO',
+	'Open'          => 'Opn',
+	'Not a bug'     => 'Nab',
+	'Feedback'      => 'Fbk',
+	'No Feedback'   => 'NoF',
+	'Wont fix'      => 'Wfx',
+	'Duplicate'     => 'Dup',
+	'Critical'      => 'Ctl',
+	'Assigned'      => 'Asn',
+	'Analyzed'      => 'Ana',
+	'Verified'      => 'Ver',
+	'Suspended'     => 'Sus',
+	'Closed'        => 'Csd',
+	'Spam'          => 'Spm',
+	'Re-Opened'     => 'ReO',
 );
 
 $bug_types = array(
-	'Bug'						=> 'Bug',
-	'Feature/Change Request'	=> 'Req',
-	'Documentation Problem'		=> 'Doc',
-	'Security'					=> 'Sec Bug'
+	'Bug'                      => 'Bug',
+	'Feature/Change Request'   => 'Req',
+	'Documentation Problem'    => 'Doc',
+	'Security'                 => 'Sec Bug'
 );
 
 $project_types = array(
-	'PHP'	=> 'php',
-	'PECL'	=> 'pecl'
+	'PHP'   => 'php',
+	'PECL'  => 'pecl'
 );
 
 // Used in show_state_options()
 $state_types = array (
-	'Open'			=> 2,
-	'Closed'		=> 2,
-	'Re-Opened'		=> 1,
-	'Duplicate'		=> 1,
-	'Critical'		=> 1,
-	'Assigned'		=> 2,
-	'Not Assigned'	=> 0,
-	'Analyzed'		=> 1,
-	'Verified'		=> 1,
-	'Suspended'		=> 1,
-	'Wont fix'		=> 1,
-	'No Feedback'	=> 1,
-	'Feedback'		=> 1,
-	'Old Feedback'	=> 0,
-	'Stale'			=> 0,
-	'Fresh'			=> 0,
-	'Not a bug'		=> 1,
-	'Spam'			=> 1,
-	'All'			=> 0,
+	'Open'          => 2,
+	'Closed'        => 2,
+	'Re-Opened'     => 1,
+	'Duplicate'     => 1,
+	'Critical'      => 1,
+	'Assigned'      => 2,
+	'Not Assigned'  => 0,
+	'Analyzed'      => 1,
+	'Verified'      => 1,
+	'Suspended'     => 1,
+	'Wont fix'      => 1,
+	'No Feedback'   => 1,
+	'Feedback'      => 1,
+	'Old Feedback'  => 0,
+	'Stale'         => 0,
+	'Fresh'         => 0,
+	'Not a bug'     => 1,
+	'Spam'          => 1,
+	'All'           => 0,
 );
 
 /**
@@ -104,7 +104,7 @@ function verify_password($user, $pass)
 function bugs_has_access ($bug_id, $bug, $pw, $user_flags)
 {
 	global $auth_user;
-	
+
 	if ($bug['private'] != 'Y') {
 		return true;
 	}
@@ -126,7 +126,7 @@ function bugs_has_access ($bug_id, $bug, $pw, $user_flags)
 		// The assigned dev
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -138,7 +138,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 	$user = '';
 	$pw = '';
 	$logged_in = false;
-	
+
 	$user_flags = BUGS_NORMAL_USER;
 
 	// Set username and password
@@ -182,7 +182,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 	// Check if developer is trusted
 	if ($logged_in == 'developer') {
 		require_once "{$ROOT_DIR}/include/trusted-devs.php";
-		
+
 		if (in_array(strtolower($user), $trusted_developers)) {
 			$user_flags |= BUGS_TRUSTED_DEV;
 		}
@@ -200,7 +200,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
  *
  * @return array	array of pseudo packages
  */
-function get_pseudo_packages ($project, $return_disabled = true)
+function get_pseudo_packages($project, $return_disabled = true)
 {
 	global $project_types;
 
@@ -245,7 +245,7 @@ function get_pseudo_packages ($project, $return_disabled = true)
 			{
 				$pseudo_pkgs[$child['name']] = array("&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}", $child['disabled']);
 			}
-			
+
 		} else if (!isset($pseudo_pkgs[$data['name']]))
 			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
 	}
@@ -260,7 +260,7 @@ function is_spam($string)
 	if (!empty($GLOBALS['auth_user']->handle)) {
 		return false;
 	}
-	
+
 	if (substr_count(strtolower($string), 'http://') > 5) {
 		return true;
 	}
@@ -298,7 +298,7 @@ function is_spam($string)
 		'PaulRGuthrie',
 		'[a-z]*?fuck[a-z]*?',
 	);
-	
+
 	if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
 		return true;
 	}
@@ -609,9 +609,6 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
 		$state = $default;
 	}
 
-// echo '</select>', "state: $state, user_mode: $user_mode, default: $default", '<select>';
-
-
 	/* regular users can only pick states with type 2 for unclosed bugs */
 	if ($state != 'All' && isset($state_types[$state]) && $state_types[$state] == 1 && $user_mode == 2) {
 		switch ($state)
@@ -622,7 +619,7 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
 			case 'Feedback':
 				if ($assigned) {
 					echo "<option>Assigned</option>\n";
-				} else {	
+				} else {
 					echo "<option>Open</option>\n";
 				}
 				break;
@@ -1024,7 +1021,6 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 
 	$text[] = $old_comments;
 
-	#$wrapped_text = wordwrap(join("\n", $text), 72);
 	$wrapped_text = join("\n", $text);
 
 	/* user text with attention, headers and previous messages */
@@ -1044,7 +1040,7 @@ Edit report at {$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}&ed
 {$header_text}
 {$wrapped_text}
 
--- 
+--
 Edit this bug report at {$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}&edit=1
 DEV_TEXT;
 
@@ -1098,7 +1094,7 @@ DEV_TEXT;
 		foreach (array('bug_type', 'php_version', 'package_name', 'php_os') as $field) {
 			$tmp[$field] = strtok($tmp[$field], "\r\n");
 		}
-		
+
 		// but we go ahead and let the default sender get used for the list
 		bugs_mail(
 			$mailto,
@@ -1121,7 +1117,7 @@ DEV_TEXT;
 	/* if a developer assigns someone else, let that other person know about it */
 	if ($edit == 1 && $in['assign'] && $in['assign'] != $bug['assign']) {
 
-		$email = $in['assign'] .'@php.net';
+		$email = $in['assign'] . '@php.net';
 
 		// If the developer assigns him self then skip
 		if ($email == $from) {
@@ -1180,7 +1176,7 @@ function get_old_comments($bug_id, $all = 0)
 		FROM bugdb_comments
 		WHERE bug = ? AND comment_type != 'log'
 		ORDER BY ts DESC
-	")->execute(array($bug_id));
+	")->execute([$bug_id]);
 
 	// skip the most recent unless the caller wanted all comments
 	if (!$all) {
@@ -1196,7 +1192,7 @@ function get_old_comments($bug_id, $all = 0)
 	}
 
 	if (strlen($output) < $max_message_length && $count < $max_comments) {
-		$res = $dbh->prepare("SELECT ts1, email, ldesc FROM bugdb WHERE id = ?")->execute(array($bug_id));
+		$res = $dbh->prepare("SELECT ts1, email, ldesc FROM bugdb WHERE id = ?")->execute([$bug_id]);
 		if (!$res) {
 			return $output;
 		}
@@ -1351,7 +1347,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	$to = array();
 	$params = '-f noreply@php.net';
 	$mailfrom = $bugEmail;
-	
+
 	if ($bug_type === 'Documentation Problem') {
 		// Documentation problems *always* go to the doc team
 		$to[] = $docBugEmail;
@@ -1369,18 +1365,18 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 			SELECT list_email, project
 			FROM bugdb_pseudo_packages
 			WHERE name = ?
-		')->execute(array($package_name));
-	
+		')->execute([$package_name]);
+
 		if (PEAR::isError($res)) {
 			throw new Exception('SQL Error in get_package_name(): ' . $res->getMessage());
 		}
-	
+
 		list($list_email, $project) = $res->fetchRow();
-		
+
 		if ($project == 'pecl') {
 			$mailfrom = 'pecl-dev@lists.php.net';
 		}
-	
+
 		if ($list_email) {
 			if ($list_email == 'systems@php.net') {
 				$params = '-f bounce-no-user@php.net';
@@ -1389,8 +1385,8 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 		} else {
 			// Get the maintainers handle
 			if ($project == 'pecl') {
-				$handles = $dbh->prepare("SELECT GROUP_CONCAT(handle) FROM bugdb_packages_maintainers WHERE package_name = ?")->execute(array($package_name))->fetchOne();
-				
+				$handles = $dbh->prepare("SELECT GROUP_CONCAT(handle) FROM bugdb_packages_maintainers WHERE package_name = ?")->execute([$package_name])->fetchOne();
+
 				if ($handles) {
 					foreach (explode(',', $handles) as $handle) {
 						$to[] = $handle .'@php.net';
@@ -1409,14 +1405,14 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	if ($bug_id) {
 		$bug_id = (int) $bug_id;
 
-		$assigned = $dbh->prepare("SELECT assign FROM bugdb WHERE id= ? ")->execute(array($bug_id))->fetchOne();
+		$assigned = $dbh->prepare("SELECT assign FROM bugdb WHERE id= ? ")->execute([$bug_id])->fetchOne();
 		if ($assigned) {
 			$assigned .= '@php.net';
 			if ($assigned && !in_array($assigned, $to)) {
 				$to[] = $assigned;
 			}
 		}
-		$bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute(array($bug_id))->fetchCol();
+		$bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute([$bug_id])->fetchCol();
 
 		$bcc = array_unique($bcc);
 		return array(implode(', ', $to), $mailfrom, implode(', ', $bcc), $params);
@@ -1440,7 +1436,7 @@ function format_search_string($search, $boolean_search = false)
 
 	$words = preg_split("/\s+/", $search);
 	$ignored = $used = array();
-	foreach($words AS $match)
+	foreach($words as $match)
 	{
 		if (strlen($match) < $min_word_len) {
 			array_push($ignored, $match);
@@ -1490,7 +1486,7 @@ function unsubscribe_hash($bug_id, $email)
 		WHERE bug_id = ? AND email = ?
 	";
 
-	$affected = $dbh->prepare($query, null, MDB2_PREPARE_MANIP)->execute(array($hash,$bug_id, $email));
+	$affected = $dbh->prepare($query, null, MDB2_PREPARE_MANIP)->execute([$hash, $bug_id, $email]);
 
 	if ($affected > 0) {
 		$hash = urlencode($hash);
@@ -1543,7 +1539,7 @@ function unsubscribe($bug_id, $hash)
 		WHERE bug_id = ? AND unsubscribe_hash = ? LIMIT 1
 	";
 
-	$sub = $dbh->prepare($query)->execute(array($bug_id,$hash))->fetch(MDB2_FETCHMODE_ASSOC);
+	$sub = $dbh->prepare($query)->execute([$bug_id, $hash])->fetch(MDB2_FETCHMODE_ASSOC);
 
 	if (!$sub) {
 		return false;
@@ -1552,7 +1548,7 @@ function unsubscribe($bug_id, $hash)
 	$now = time();
 	$requested_on = $sub['unsubscribe_date'];
 	/* 24hours delay to answer the mail */
-	if (($now - $requested_on) > (24*60*60)) {
+	if (($now - $requested_on) > 86400) {
 		return false;
 	}
 
@@ -1560,7 +1556,7 @@ function unsubscribe($bug_id, $hash)
 		DELETE FROM bugdb_subscribe
 		WHERE bug_id = ? AND unsubscribe_hash = ? AND email = ?
 	";
-	$dbh->prepare($query)->execute(array($bug_id,$hash,$sub['email']));
+	$dbh->prepare($query)->execute([$bug_id, $hash, $sub['email']]);
 	return true;
 }
 
@@ -1570,7 +1566,7 @@ function unsubscribe($bug_id, $hash)
  *
  * @return array array of resolves
  */
-function get_resolve_reasons ($project = false)
+function get_resolve_reasons($project = false)
 {
 	global $dbh;
 
@@ -1599,7 +1595,7 @@ function get_resolve_reasons ($project = false)
  *
  * @return mixed array of bug data or object with error info
  */
-function bugs_get_bug ($bug_id)
+function bugs_get_bug($bug_id)
 {
 	global $dbh;
 
@@ -1619,7 +1615,7 @@ function bugs_get_bug ($bug_id)
 		WHERE b.id = ?
 		GROUP BY bug';
 
-	return $dbh->prepare($query)->execute(array($bug_id))->fetchRow(MDB2_FETCHMODE_ASSOC);
+	return $dbh->prepare($query)->execute([$bug_id])->fetchRow(MDB2_FETCHMODE_ASSOC);
 }
 
 /**
@@ -1627,7 +1623,7 @@ function bugs_get_bug ($bug_id)
  *
  * @return mixed array of bug comments or object with error info
  */
-function bugs_get_bug_comments ($bug_id)
+function bugs_get_bug_comments($bug_id)
 {
 	global $dbh;
 
@@ -1639,13 +1635,13 @@ function bugs_get_bug_comments ($bug_id)
 		WHERE c.bug = ?
 		GROUP BY c.id ORDER BY c.ts
 	";
-	return $dbh->prepare($query)->execute(array($bug_id))->fetchAll(MDB2_FETCHMODE_ASSOC);
+	return $dbh->prepare($query)->execute([$bug_id])->fetchAll(MDB2_FETCHMODE_ASSOC);
 }
 
 /**
  * Add bug comment
  */
-function bugs_add_comment ($bug_id, $from, $from_name, $comment, $type = 'comment')
+function bugs_add_comment($bug_id, $from, $from_name, $comment, $type = 'comment')
 {
 	global $dbh;
 
@@ -1660,13 +1656,13 @@ function bugs_add_comment ($bug_id, $from, $from_name, $comment, $type = 'commen
 /**
  * Change bug status
  */
-function bugs_status_change ($bug_id, $new_status)
+function bugs_status_change($bug_id, $new_status)
 {
 	global $dbh;
-	
+
 	return $dbh->prepare("
 		UPDATE bugdb SET status = ? WHERE id = ? LIMIT 1
-	")->execute(array($new_status, $bug_id));
+	")->execute([$new_status, $bug_id]);
 }
 
 /**
@@ -1679,12 +1675,12 @@ function verify_bug_passwd($bug_id, $passwd)
 {
 	global $dbh;
 
-	return (bool) $dbh->prepare('SELECT 1 FROM bugdb WHERE id = ? AND passwd = ?')->execute(array($bug_id, $passwd))->fetchOne();
+	return (bool) $dbh->prepare('SELECT 1 FROM bugdb WHERE id = ? AND passwd = ?')->execute([$bug_id, $passwd])->fetchOne();
 }
 
 /**
- * Mailer function. When DEVBOX is defined, this only outputs the parameters as-is. 
- * 
+ * Mailer function. When DEVBOX is defined, this only outputs the parameters as-is.
+ *
  * @return bool
  *
  */
@@ -1713,13 +1709,13 @@ function bugs_mail($to, $subject, $message, $headers = '', $params = '')
 function response_header($title, $extraHeaders = '')
 {
 	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $site_method, $site_url, $basedir;
-	
+
 	$is_logged = false;
 
 	if ($_header_done) {
 		return;
 	}
-	
+
 	if ($logged_in === 'developer') {
 		$is_logged = true;
 		$username = $auth_user->handle;
@@ -1728,7 +1724,7 @@ function response_header($title, $extraHeaders = '')
 		$username = $_SESSION['user'];
 	}
 
-	$_header_done	= true;
+	$_header_done = true;
 
 	header('Content-Type: text/html; charset=UTF-8');
 	echo '<?xml version="1.0" encoding="UTF-8" ?>';
@@ -1765,7 +1761,7 @@ function response_header($title, $extraHeaders = '')
 			<a href="search.php?cmd=display&amp;assign=<?php echo $username;?>">my bugs</a>&nbsp;|&nbsp;
 			<a href="logout.php">logout</a>
 <?php } else { ?>
-			<a href="login.php">login</a>	
+			<a href="login.php">login</a>
 <?php } ?>
 		</td>
 	</tr>
@@ -1890,21 +1886,21 @@ function make_ticket_links($text)
 function get_ticket_links($text)
 {
 	$matches = array();
-	
+
 	preg_match_all('/(?<![>a-z])(?:bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?|duplicated of)\s+#?([0-9]+)/i', $text, $matches);
-	
-	return $matches;	
+
+	return $matches;
 }
 
-function handle_pear_errors ($error_obj)
+function handle_pear_errors($error_obj)
 {
 	error_log($error_obj->getMessage());
 	response_header("Oops! We are sorry that you are unable to report an undocumented feature today.");
-	
+
 	$error  = "<p>Greetings! We are experiencing an error, and in the spirit of Open Source would like you to fix it. ";
 	$error .= "Or more likely, just wait and someone else will find and solve this.</p>\n";
 	$error .= "<p>It's our guess that the database is down. Argh!!!</p>\n";
-	
+
 	// FIXME: If logged in, show other stuff....
 	response_footer($error);
 	exit;
@@ -1919,7 +1915,7 @@ function bugs_gen_passwd($length = 8)
 	return substr(md5(uniqid(time(), true)), 0, $length);
 }
 
-function bugs_get_hash($passwd) 
+function bugs_get_hash($passwd)
 {
 	return hash_hmac('sha256', $passwd, getenv('USER_PWD_SALT'));
 }
