@@ -1,6 +1,6 @@
 <?php
 
-// Start session 
+// Start session
 session_start();
 
 // Obtain common includes
@@ -59,32 +59,45 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			}
 		}
 
-		$link_params =
-				'&amp;search_for='  . urlencode($search_for) .
-				'&amp;project='     . urlencode($project) . 
-				'&amp;php_os='      . urlencode($php_os) .
-				"&amp;php_os_not=$php_os_not" .
-				'&amp;author_email='. urlencode($author_email) .
-				'&amp;bug_type='    . urlencode($bug_type) .
-				"&amp;boolean=$boolean_search" .
-				"&amp;bug_age=$bug_age" .
-				"&amp;bug_updated=$bug_updated" .
-				"&amp;order_by=$order_by" .
-				"&amp;direction=$direction" .
-				"&amp;limit=$limit" .
-				'&amp;phpver=' . urlencode($phpver) .
-				'&amp;cve_id=' . urlencode($cve_id) .
-				"&amp;cve_id_not=$cve_id_not" .
-				'&amp;patch=' . urlencode($patch) .
-				'&amp;pull=' . urlencode($pull) .
-				'&amp;assign=' . urlencode($assign);
-		
+		$link_params = [
+			'search_for'  => urlencode($search_for),
+			'project'     => urlencode($project),
+			'php_os'      => urlencode($php_os),
+			'php_os_not'  => $php_os_not,
+			'author_mail' => urlencode($author_email),
+			'bug_type'    => urlencode($bug_type),
+			'boolean'     => $boolean_search,
+			'bug_age'     => $bug_age,
+			'bug_updated' => $bug_updated,
+			'order_by'    => $order_by,
+			'direction'   => $direction,
+			'limit'       => $limit,
+			'phpver'      => urlencode($phpver),
+			'cve_id'      => urlencode($cve_id),
+			'cve_id_not'  => $cve_id_not,
+			'patch'       => urlencode($patch),
+			'pull'        => urlencode($pull),
+			'assign'      => urlencode($assign)
+		];
+
 		if ($is_security_developer) {
-			$link_params .= "&amp;private=$private";
+			$link_params[] = ['private' => $private];
 		}
 
-		$link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params}";
-		$clean_link = "search.php?cmd=display{$link_params}";
+		// Remove empty URL parameters
+		foreach ($link_params as $index => $param) {
+			if (empty($param))
+				unset($link_params[$index]);
+		}
+
+		// Create link params string
+		$link_params_string = '';
+		foreach ($link_params as $index => $param) {
+			$link_params_string .= "&amp;$index=$param";
+		}
+
+		$link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params_string}";
+		$clean_link = "search.php?cmd=display{$link_params_string}";
 
 		if (isset($_GET['showmenu'])) {
 			$link .= '&amp;showmenu=1';

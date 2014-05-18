@@ -89,7 +89,7 @@ to a random open bug.</p>
 <p>Common searches</p>
 <ul>
 <?php
-	$base_default = "{$site_method}://{$site_url}/search.php?boolean=0&amp;limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open&amp;bug_age=0&amp;bug_updated=0";
+	$base_default = "{$site_method}://{$site_url}/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open";
 	
 	$searches = array(
 		'Most recent open bugs (all)' => '&bug_type=All',
