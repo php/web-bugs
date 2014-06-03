@@ -97,6 +97,7 @@ to a random open bug.</p>
 		'Most recent open bugs (PHP 5.3)' => '&bug_type=All&phpver=5.3',
 		'Most recent open bugs (PHP 5.4)' => '&bug_type=All&phpver=5.4',
 		'Most recent open bugs (PHP 5.5)' => '&bug_type=All&phpver=5.5',
+		'Most recent open bugs (PHP 5.6)' => '&bug_type=All&phpver=5.6',
 		'Open Documentation bugs' => '&bug_type=Documentation+Problem',
 		'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y'
 	);
