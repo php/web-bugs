@@ -918,7 +918,7 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details">New email:</th>
 			<td colspan="3">
-				<input type="text" size="40" maxlength="40" name="in[email]" value="<?php echo isset($_POST['in']) && isset($_POST['in']['email']) ? $_POST['in']['email'] : ''; ?>" />
+				<input type="text" size="40" maxlength="40" name="in[email]" value="<?php echo isset($_POST['in']) && isset($_POST['in']['email']) ? htmlspecialchars($_POST['in']['email']) : ''; ?>" />
 			</td>
 		</tr>
 		<tr>
@@ -1206,7 +1206,7 @@ function link_to_people($email, $text)
     $domain = strstr($email, "@");
     if ($domain == "@php.net") {
         $username = strstr($email, "@", true);
-        return '<a href="//people.php.net/user.php?username=' . $username . '">' . $text . '</a>';
+        return '<a href="//people.php.net/user.php?username=' . urlencode($username) . '">' . $text . '</a>';
     }
     return $text;
 }
