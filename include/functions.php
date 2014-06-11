@@ -1572,6 +1572,8 @@ function get_resolve_reasons($project = false)
 
 	$where = '';
 
+	$project = escapeSQL($project);
+
 	if ($project !== false)
 		$where.= "WHERE (project = '{$project}' OR project = '')";
 
