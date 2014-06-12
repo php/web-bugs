@@ -174,7 +174,7 @@ $is_private = isset($is_private) ? $is_private : $bug['private'];
 // Handle any updates, displaying errors if there were any
 $RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = array();
 
-$project = !empty($_GET['project']) ? $_GET['project'] : false;
+$project = $bug['project'];
 
 // Only fetch stuff when it's really needed
 if ($edit && $edit < 3) {
