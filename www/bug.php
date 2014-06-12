@@ -172,11 +172,18 @@ $block_user = isset($block_user) ? $block_user : $bug['block_user_comment'];
 $is_private = isset($is_private) ? $is_private : $bug['private'];
 
 // Handle any updates, displaying errors if there were any
-$RESOLVE_REASONS = $FIX_VARIATIONS = array();
+$RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = array();
+
+$project = $bug['project'];
+
+// Only fetch stuff when it's really needed
+if ($edit && $edit < 3) {
+	$pseudo_pkgs = get_pseudo_packages($project, false); // false == no read-only packages included
+}
 
 // Fetch RESOLVE_REASONS array
 if ($edit === 1) {
-	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($bug['project']);
+	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($project);
 }
 
 if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
