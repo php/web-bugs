@@ -1288,7 +1288,7 @@ function is_valid_email($email, $phpnet_allowed = true)
  */
 function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 {
-	global $bug, $dbh, $bug_types;
+	global $bug, $dbh, $bug_types, $ROOT_DIR;
 
 	$errors = array();
 	if (!is_array($in)) {
@@ -1308,7 +1308,8 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 		$errors[] = 'Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.';
 	}
 
-	if (empty($in['php_version'])) {
+	require_once "{$ROOT_DIR}/include/php_versions.php";
+	if (empty($in['php_version']) || ($initial && !in_array($in['php_version'], $versions))) { 
 		$errors[] = 'Please select a valid PHP version.';
 	}
 
