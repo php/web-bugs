@@ -1309,6 +1309,10 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 	}
 
 	require_once "{$ROOT_DIR}/include/php_versions.php";
+
+	// Workaround for side report from bug #67513
+	$versions = array_merge($versions, ['str_size_and_int64 branch', 'Irrelevant']);
+
 	if (empty($in['php_version']) || ($initial && !in_array($in['php_version'], $versions))) { 
 		$errors[] = 'Please select a valid PHP version.';
 	}
