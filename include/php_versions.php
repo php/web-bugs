@@ -9,12 +9,20 @@
 	- between a minor version we order by the micro if available: first the qa releases: alpha/beta/rc, then the stable, then the Git versions(snaps, Git)
 	*/
 
+	// Custom versions appended to the list
+	$custom_versions = array(
+		'str_size_and_int64 branch',
+		'Irrelevant'
+	);
+
 	if (!$versions = apc_fetch('bugs.versions')) {
 		$versions = buildVersions();
 		if ($versions) {
  			apc_store('bugs.versions', $versions, 3600);
 		}
 	}
+
+	$versions = array_merge($versions, $custom_versions);
 
 	function buildVersions() {
 		$dev_versions = json_decode(file_get_contents('http://qa.php.net/api.php?type=qa-releases&format=json&only=dev_versions'));
