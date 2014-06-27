@@ -26,5 +26,4 @@ Command to install all required packages:
 TODO
 ====
 - AJAXify where it's useful
-- Automate (and centralize, @master.php.net?) PHP versions fetching
-- Add project support (f.e. PHP-GTK, PHP, PEAR, PECL..)
+- Add project support (f.e. PHP-GTK, PHP, PEAR..)
