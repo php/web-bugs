@@ -815,7 +815,7 @@ if ($edit == 1 || $edit == 2) { ?>
 					<label for="svnuser">php.net Username:</label>
 					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user); ?>" size="10" maxlength="20" />
 					<label for="svnpw">php.net Password:</label>
-					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" />
+					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" />
 					<!--<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />-->
 					<?php if (!$show_bug_info) { ?>
 					<input type="submit" value="Submit" />
