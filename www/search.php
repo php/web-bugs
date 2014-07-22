@@ -64,7 +64,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			'project'     => urlencode($project),
 			'php_os'      => urlencode($php_os),
 			'php_os_not'  => $php_os_not,
-			'author_mail' => urlencode($author_email),
+			'author_email' => urlencode($author_email),
 			'bug_type'    => urlencode($bug_type),
 			'boolean'     => $boolean_search,
 			'bug_age'     => $bug_age,
