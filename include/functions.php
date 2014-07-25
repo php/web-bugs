@@ -723,14 +723,12 @@ function show_version_options($current, $default = '')
  */
 function show_package_options($current, $show_any, $default = '')
 {
-	global $dbh, $pseudo_pkgs;
+	global $pseudo_pkgs;
 	static $bug_items;
 
 	if (!isset($bug_items)) {
 		$bug_items = $pseudo_pkgs;
 	}
-
-	$use = 0;
 
 	if (!$current && (!$default || $default == 'none') && !$show_any) {
 		echo "<option value=\"none\">--Please Select--</option>\n";
@@ -740,22 +738,18 @@ function show_package_options($current, $show_any, $default = '')
 		$current = $default;
 	}
 
-	if (!is_array($bug_items))
+	if (!is_array($bug_items)) {
 		return;
+	}
 
 	foreach ($bug_items as $key => $value) {
 		if ($show_any == 1 || $key != 'Any') {
 			echo "<option value=\"$key\"";
-			if ((is_array($current) && in_array($key, $current)) ||
-				($key == $current))
-			{
+			if ((is_array($current) && in_array($key, $current)) || ($key == $current)) {
 				echo ' selected="selected"';
 			}
 			// Show disabled categories with different background color in listing
 			echo (($value[1]) ? ' style="background-color:#eee;"' : ''), ">{$value[0]}</option>\n";
-			if ($key == $current) {
-				$use++;
-			}
 		}
 	}
 }
@@ -1308,7 +1302,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 
 	require_once "{$ROOT_DIR}/include/php_versions.php";
 
-	if (empty($in['php_version']) || ($initial && !in_array($in['php_version'], $versions))) { 
+	if (empty($in['php_version']) || ($initial && !in_array($in['php_version'], $versions))) {
 		$errors[] = 'Please select a valid PHP version.';
 	}
 
