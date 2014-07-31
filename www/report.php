@@ -428,7 +428,7 @@ display_bug_error($errors);
 				<th class="form-label_left">Package affected:</th>
 				<td class="form-input">
 					<select name="in[package_name]">
-						<?php show_package_options(null, 0, htmlspecialchars($package)); ?>
+						<?php show_package_options($_POST['in']['package_name'], 0, htmlspecialchars($package)); ?>
 					</select>
 				</td>
 			</tr>
