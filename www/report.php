@@ -339,7 +339,7 @@ if (!is_string($package)) {
 if (!isset($_POST['in'])) {
 
 	$_POST['in'] = array(
-			 'package_name' => '',
+			 'package_name' => isset($_GET['package_name']) ? clean($_GET['package_name']) : '',
 			 'bug_type' => isset($_GET['bug_type']) ? clean($_GET['bug_type']) : '',
 			 'email' => '',
 			 'sdesc' => '',
