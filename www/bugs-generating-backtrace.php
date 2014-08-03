@@ -167,8 +167,8 @@ $16 = 0x816afbc "/home/yohgaki/php/DEV/segfault.php"
 
 <p>In this session, frame 3 is the last <b><code>execute()</code></b>
 call. The <b><code>frame 3</code></b> command moves the current working stack
-to the proper frame.<br />
-<b><code>print (char *)(executor_globals.function_state_ptr->function)->common.function_name</code></b><br />
+to the proper frame.<br>
+<b><code>print (char *)(executor_globals.function_state_ptr->function)->common.function_name</code></b><br>
 prints the function name. In the sample gdb session, the
 <code>pg_result_error()</code> call
 is causing the segfault. You can print any internal data that you like,

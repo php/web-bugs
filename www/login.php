@@ -36,18 +36,18 @@ if (isset($_POST['user'])) {
 ?>
 
 <form method="post" action="login.php">
-<input type="hidden" name="referer" value="<?php print htmlspecialchars($referer); ?>" />
+<input type="hidden" name="referer" value="<?php print htmlspecialchars($referer); ?>">
 <table>
  <tr>
   <th align="right">Username:</th>
-  <td><input type="text" name="user" value="<?php print isset($user) ? htmlspecialchars($user) : ''; ?>" />@php.net
+  <td><input type="text" name="user" value="<?php print isset($user) ? htmlspecialchars($user) : ''; ?>">@php.net
  </tr>
  <tr>
   <th align="right">Password:</th>
-  <td><input type="password" name="pw" value="<?php print isset($pwd) ? htmlspecialchars($pwd) : ''; ?>" />
+  <td><input type="password" name="pw" value="<?php print isset($pwd) ? htmlspecialchars($pwd) : ''; ?>">
  </tr>
  <tr>
-  <td align="center" colspan="2"><input type="submit" value="Login" /></td>
+  <td align="center" colspan="2"><input type="submit" value="Login"></td>
  </tr>
 </table>
 </form>

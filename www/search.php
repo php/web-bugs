@@ -24,8 +24,8 @@ $newrequest = http_build_query(array_merge($_GET, $_POST));
 if (!$count_only) {
 	response_header(
 		'Bugs :: Search', "
-			<link rel='alternate' type='application/rss+xml' title='Search bugs - RDF' href='rss/search.php?{$newrequest}' />
-			<link rel='alternate' type='application/rss+xml' title='Search bugs - RSS 2.0' href='rss/search.php?format=rss2&{$newrequest}' />
+			<link rel='alternate' type='application/rss+xml' title='Search bugs - RDF' href='rss/search.php?{$newrequest}'>
+			<link rel='alternate' type='application/rss+xml' title='Search bugs - RSS 2.0' href='rss/search.php?format=rss2&{$newrequest}'>
 	");
 }
 
@@ -151,7 +151,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
 				// Bug ID
 				echo '  <td align="center"><a href="bug.php?id=', $row['id'], '">', $row['id'], '</a>';
-				echo '<br /><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a></td>', "\n";
+				echo '<br><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a></td>', "\n";
 
 				// Date
 				echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
@@ -174,7 +174,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				// Status
 				echo '  <td>', htmlspecialchars($row['status']);
 				if ($row['status'] == 'Feedback' && $row['unchanged'] > 0) {
-					printf ("<br />%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
+					printf ("<br>%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
 				}
 				echo '</td>', "\n";
 
@@ -211,7 +211,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Find bugs</th>
   <td style="white-space: nowrap">with all or any of the w<span class="accesskey">o</span>rds</td>
-  <td style="white-space: nowrap"><input type="text" name="search_for" value="<?php echo htmlspecialchars($search_for, ENT_COMPAT, 'UTF-8'); ?>" size="20" maxlength="255" accesskey="o" /><br />
+  <td style="white-space: nowrap"><input type="text" name="search_for" value="<?php echo htmlspecialchars($search_for, ENT_COMPAT, 'UTF-8'); ?>" size="20" maxlength="255" accesskey="o"><br>
    <small>
 <?php show_boolean_options($boolean_search) ?>
 (<a href="search-howto.php" target="_new">?</a>)
@@ -221,16 +221,16 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
    <select name="limit"><?php show_limit_options($limit);?></select>
    &nbsp;
    <select name="order_by"><?php show_order_options($limit);?></select>
-   <br />
+   <br>
    <small>
-	<input type="radio" name="direction" value="ASC" <?php if($direction != "DESC") { echo('checked="checked"'); }?>/>Ascending
+	<input type="radio" name="direction" value="ASC" <?php if($direction != "DESC") { echo('checked="checked"'); }?>>Ascending
 	&nbsp;
-	<input type="radio" name="direction" value="DESC" <?php if($direction == "DESC") { echo('checked="checked"'); }?>/>Descending
+	<input type="radio" name="direction" value="DESC" <?php if($direction == "DESC") { echo('checked="checked"'); }?>>Descending
    </small>
-   <br /><br />
-   <input type="hidden" name="cmd" value="display" />
+   <br><br>
+   <input type="hidden" name="cmd" value="display">
    <label for="submit" accesskey="r">Sea<span class="accesskey">r</span>ch:</label>
-   <input id="submit" type="submit" value="Search" />
+   <input id="submit" type="submit" value="Search">
   </td>
 </tr>
 <tr valign="top">
@@ -272,32 +272,32 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <th>OS</th>
   <td style="white-space: nowrap">Return bugs with <b>operating system</b></td>
   <td>
-    <input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os, ENT_COMPAT, 'UTF-8'); ?>" />
-    <input style="vertical-align:middle;" type="checkbox" name="php_os_not" value="1" <?php echo ($php_os_not == 'not') ? 'checked="checked"' : ''; ?> /> NOT
+    <input type="text" name="php_os" value="<?php echo htmlspecialchars($php_os, ENT_COMPAT, 'UTF-8'); ?>">
+    <input style="vertical-align:middle;" type="checkbox" name="php_os_not" value="1" <?php echo ($php_os_not == 'not') ? 'checked="checked"' : ''; ?>> NOT
   </td>
 </tr>
 <tr valign="top">
   <th>PHP Version</th>
   <td style="white-space: nowrap">Return bugs reported with <b>PHP version</b></td>
-  <td><input type="text" name="phpver" value="<?php echo htmlspecialchars($phpver, ENT_COMPAT, 'UTF-8'); ?>" /></td>
+  <td><input type="text" name="phpver" value="<?php echo htmlspecialchars($phpver, ENT_COMPAT, 'UTF-8'); ?>"></td>
 </tr>
 <tr valign="top">
   <th>CVE-ID</th>
   <td style="white-space: nowrap">Return bugs reported with <b>CVE-ID</b></td>
   <td>
-    <input type="text" name="cve_id" value="<?php echo htmlspecialchars($cve_id, ENT_COMPAT, 'UTF-8'); ?>" />
-    <input style="vertical-align:middle;" type="checkbox" name="cve_id_not" value="1" <?php echo ($cve_id_not == 'not') ? 'checked="checked"' : ''; ?> /> NOT
+    <input type="text" name="cve_id" value="<?php echo htmlspecialchars($cve_id, ENT_COMPAT, 'UTF-8'); ?>">
+    <input style="vertical-align:middle;" type="checkbox" name="cve_id_not" value="1" <?php echo ($cve_id_not == 'not') ? 'checked="checked"' : ''; ?>> NOT
   </td>
 </tr>
 
 <tr valign="top">
   <th>Assigned</th>
   <td style="white-space: nowrap">Return bugs <b>assigned</b> to</td>
-  <td><input type="text" name="assign" value="<?php echo htmlspecialchars($assign, ENT_COMPAT, 'UTF-8'); ?>" />
+  <td><input type="text" name="assign" value="<?php echo htmlspecialchars($assign, ENT_COMPAT, 'UTF-8'); ?>">
 <?php
 	if (!empty($auth_user->handle)) {
 		$u = htmlspecialchars($auth_user->handle);
-		echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\" />";
+		echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\">";
 	}
 ?>
   </td>
@@ -306,11 +306,11 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Author e<span class="accesskey">m</span>ail</th>
   <td style="white-space: nowrap">Return bugs with author email</td>
-  <td><input accesskey="m" type="text" name="author_email" value="<?php echo htmlspecialchars($author_email, ENT_COMPAT, 'UTF-8'); ?>" />
+  <td><input accesskey="m" type="text" name="author_email" value="<?php echo htmlspecialchars($author_email, ENT_COMPAT, 'UTF-8'); ?>">
 <?php
 	if (!empty($auth_user->handle)) {
 		$u = htmlspecialchars($auth_user->handle);
-		echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u@php.net'\" />";
+		echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u@php.net'\">";
 	}
 ?>
   </td>
@@ -327,12 +327,12 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Patch</th>
   <td style="white-space: nowrap">Return only bugs reported with <b>patch attached</b></td>
-  <td><input type="checkbox" name="patch" value="Y" <?php echo $patch == 'Y' ? " checked" : "" ?> /></td>
+  <td><input type="checkbox" name="patch" value="Y" <?php echo $patch == 'Y' ? " checked" : "" ?>></td>
 </tr>
 <tr valign="top">
   <th>Pull Request</th>
   <td style="white-space: nowrap">Return only bugs with a <b>pull request</b></td>
-  <td><input type="checkbox" name="pull" value="Y" <?php echo $pull == 'Y' ? " checked" : "" ?> /></td>
+  <td><input type="checkbox" name="pull" value="Y" <?php echo $pull == 'Y' ? " checked" : "" ?>></td>
 </tr>
 <?php
 	if ($is_security_developer) {
@@ -340,7 +340,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
 <tr valign="top">
   <th>Private</th>
   <td style="white-space: nowrap">Return only bugs marked as <b>private</b></td>
-  <td><input type="checkbox" name="private" value="Y" <?php echo $private == 'Y' ? " checked" : "" ?> /></td>
+  <td><input type="checkbox" name="private" value="Y" <?php echo $private == 'Y' ? " checked" : "" ?>></td>
 </tr>
 <?php } ?>
 </table>

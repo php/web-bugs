@@ -11,8 +11,8 @@ response_header('Add Pull Request :: ' . clean($package_name));
  <li>Choose a meaningful request name (i.e. include bug id and title)</li>
 </ul>
 <form name="patchform" method="post" action="gh-pull-add.php" enctype="multipart/form-data">
-<input type="hidden" name="MAX_FILE_SIZE" value="102400" />
-<input type="hidden" name="bug" value="<?php echo $bug_id; ?>" />
+<input type="hidden" name="MAX_FILE_SIZE" value="102400">
+<input type="hidden" name="bug" value="<?php echo $bug_id; ?>">
 <?php
 if (!empty($errors)) {
     foreach ($errors as $err) {
@@ -31,12 +31,12 @@ if (!$logged_in) {
    Email Address (MUST BE VALID)
   </th>
   <td class="form-input">
-   <input type="text" name="email" value="<?php echo clean($email); ?>" />
+   <input type="text" name="email" value="<?php echo clean($email); ?>">
   </td>
  </tr>
  <tr>
-  <th>Solve the problem:<br /><?php echo $captcha; ?> = ?</th>
-  <td class="form-input"><input type="text" name="captcha" /></td>
+  <th>Solve the problem:<br><?php echo $captcha; ?> = ?</th>
+  <td class="form-input"><input type="text" name="captcha"></td>
  </tr>
 <?php } ?>
  <tr>
@@ -53,14 +53,14 @@ if (!$logged_in) {
    Pull Request:
   </th>
   <td class="form-input">
-   <img src="images/loading-blue.gif" id="loading" />
+   <img src="images/loading-blue.gif" id="loading">
    <select name="pull_id" id="pull_id_field"></select>
    <div id="pull_details"></div>
   </td>
  </tr>
 </table>
-<br />
-<input type="submit" name="addpull" value="Save" />
+<br>
+<input type="submit" name="addpull" value="Save">
 </form>
 <script>
 var gh_pulls = false;
@@ -131,7 +131,7 @@ $("#pull_id_field").change(function() {
   }
 });
 </script>
-<br/>
+<br>
 <?php
 
 $canpatch = false;
