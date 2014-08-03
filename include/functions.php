@@ -1723,12 +1723,11 @@ function response_header($title, $extraHeaders = '')
 	$_header_done = true;
 
 	header('Content-Type: text/html; charset=UTF-8');
-	echo '<?xml version="1.0" encoding="UTF-8" ?>';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<meta charset="utf-8">
 	<?php echo $extraHeaders; ?>
 	<base href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/">
 	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
