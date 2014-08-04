@@ -571,8 +571,8 @@ switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))
 response_header(
 	$show_bug_info ? "{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']) : "You must be logged in",
 	($bug_id != 'PREVIEW') ? "
-		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}' />
-		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2' />
+		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}'>
+		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2'>
 	" : ''
 );
 
@@ -592,7 +592,7 @@ switch ($thanks)
 		display_bug_success("
 			Thank you for your help!
 			If the status of the bug report you submitted changes, you will be notified.
-			You may return here and check the status or update your report at any time.<br />
+			You may return here and check the status or update your report at any time.<br>
 			The URL for your bug report is: <a href='{$bug_url}'>{$bug_url}</a>.
 		");
 		break;
@@ -699,20 +699,20 @@ if ($bug_id !== 'PREVIEW') {
 		<fieldset>
 			<legend>Have you experienced this issue?</legend>
 			<div>
-				<input type="radio" id="rep-y" name="reproduced" value="1" onchange="show('canreproduce')" /> <label for="rep-y">yes</label>
-				<input type="radio" id="rep-n" name="reproduced" value="0" onchange="hide('canreproduce')" /> <label for="rep-n">no</label>
-				<input type="radio" id="rep-d" name="reproduced" value="2" onchange="hide('canreproduce')" checked="checked" /> <label for="rep-d">don't know</label>
+				<input type="radio" id="rep-y" name="reproduced" value="1" onchange="show('canreproduce')"> <label for="rep-y">yes</label>
+				<input type="radio" id="rep-n" name="reproduced" value="0" onchange="hide('canreproduce')"> <label for="rep-n">no</label>
+				<input type="radio" id="rep-d" name="reproduced" value="2" onchange="hide('canreproduce')" checked="checked"> <label for="rep-d">don't know</label>
 			</div>
 		</fieldset>
 		<fieldset>
 			<legend>Rate the importance of this bug to you:</legend>
 			<div>
 				<label for="score-5">high</label>
-				<input type="radio" id="score-5" name="score" value="2" />
-				<input type="radio" id="score-4" name="score" value="1" />
-				<input type="radio" id="score-3" name="score" value="0" checked="checked" />
-				<input type="radio" id="score-2" name="score" value="-1" />
-				<input type="radio" id="score-1" name="score" value="-2" />
+				<input type="radio" id="score-5" name="score" value="2">
+				<input type="radio" id="score-4" name="score" value="1">
+				<input type="radio" id="score-3" name="score" value="0" checked="checked">
+				<input type="radio" id="score-2" name="score" value="-1">
+				<input type="radio" id="score-1" name="score" value="-2">
 				<label for="score-1">low</label>
 			</div>
 		</fieldset>
@@ -721,24 +721,24 @@ if ($bug_id !== 'PREVIEW') {
 		<fieldset>
 			<legend>Are you using the same PHP version?</legend>
 			<div>
-				<input type="radio" id="ver-y" name="samever" value="1" /> <label for="ver-y">yes</label>
-				<input type="radio" id="ver-n" name="samever" value="0" checked="checked" /> <label for="ver-n">no</label>
+				<input type="radio" id="ver-y" name="samever" value="1"> <label for="ver-y">yes</label>
+				<input type="radio" id="ver-n" name="samever" value="0" checked="checked"> <label for="ver-n">no</label>
 			</div>
 		</fieldset>
 		<fieldset>
 			<legend>Are you using the same operating system?</legend>
 			<div>
-				<input type="radio" id="os-y" name="sameos" value="1" /> <label for="os-y">yes</label>
-				<input type="radio" id="os-n" name="sameos" value="0" checked="checked" /> <label for="os-n">no</label>
+				<input type="radio" id="os-y" name="sameos" value="1"> <label for="os-y">yes</label>
+				<input type="radio" id="os-n" name="sameos" value="0" checked="checked"> <label for="os-n">no</label>
 			</div>
 		</fieldset>
 	</div>
 	<div id="submit" class="sect">
-		<input type="hidden" name="id" value="<?php echo $bug_id?>" />
-		<input type="submit" value="Vote" />
+		<input type="hidden" name="id" value="<?php echo $bug_id?>">
+		<input type="submit" value="Vote">
 	</div>
 </form>
-<br clear="all" />
+<br clear="all">
 <?php	} 
 
 } // if ($bug_id != 'PREVIEW') { 
@@ -770,9 +770,9 @@ if ($edit == 1 || $edit == 2) { ?>
                                 <table>
                                         <tr>
                                                 <td class="details">Passw<span class="accesskey">o</span>rd:</td>
-                                                <td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o" /></td>
+                                                <td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o"></td>
                                                 <?php if (!$show_bug_info) { ?>
-                                                <input type="submit" value="Submit" />
+                                                <input type="submit" value="Submit">
                                                 <?php } ?>
                                         </tr>
                                 </table>
@@ -782,18 +782,18 @@ if ($edit == 1 || $edit == 2) { ?>
 			<?php if (!isset($_POST['in'])) { ?>
 				Welcome back! If you're the original bug submitter, here's
 				where you can edit the bug or add additional notes.
-                <br />If this is not your bug, you can
-                <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.<br />
+                <br>If this is not your bug, you can
+                <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.<br>
 				If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php?id=<?php echo $bug_id; ?>">you can retrieve your password here</a>.
-                <br />
+                <br>
 			<?php } ?>
 
 				<table>
 					<tr>
 						<td class="details">Passw<span class="accesskey">o</span>rd:</td>
-						<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o" /></td>
+						<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o"></td>
 						<?php if (!$show_bug_info) { ?>
-						<input type="submit" value="Submit" />
+						<input type="submit" value="Submit">
 						<?php } ?>
 					</tr>
 				</table>
@@ -808,17 +808,17 @@ if ($edit == 1 || $edit == 2) { ?>
 				</div>
 <?php	} else { ?>
 			<div class="explain">
-				Welcome! If you don't have a Git account, you can't do anything here.<br />
+				Welcome! If you don't have a Git account, you can't do anything here.<br>
 				You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
 				or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
 				<div class="details">
 					<label for="svnuser">php.net Username:</label>
-					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user); ?>" size="10" maxlength="20" />
+					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user); ?>" size="10" maxlength="20">
 					<label for="svnpw">php.net Password:</label>
-					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" />
-					<!--<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />-->
+					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10">
+					<!--<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?>>-->
 					<?php if (!$show_bug_info) { ?>
-					<input type="submit" value="Submit" />
+					<input type="submit" value="Submit">
 					<?php } ?>
 				</div>
 			</div>
@@ -838,7 +838,7 @@ if ($edit == 1 || $edit == 2) { ?>
 				</select>
 
 <?php	if (isset($_POST['in']) && !empty($_POST['in']['resolve'])) { ?>
-				<input type="hidden" name="trytoforce" value="1" />
+				<input type="hidden" name="trytoforce" value="1">
 <?php	} ?>
 
 				<small>(<a href="quick-fix-desc.php">description</a>)</small>
@@ -848,13 +848,13 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details">CVE-ID:</th>
 			<td colspan="3">
-				<input type="text" size="15" maxlength="15" name="in[cve_id]" value="<?php echo field('cve_id'); ?>" id="cve_id"/>
+				<input type="text" size="15" maxlength="15" name="in[cve_id]" value="<?php echo field('cve_id'); ?>" id="cve_id">
 			</td>
 		</tr>
 		<tr>
 			<th class="details"></th>
 			<td colspan="3">
-				<input type="checkbox" name="in[private]" value="Y" <?php print $is_private == 'Y' ? 'checked="checked"' : ''; ?> /> Private report (Normal user should not see it)
+				<input type="checkbox" name="in[private]" value="Y" <?php print $is_private == 'Y' ? 'checked="checked"' : ''; ?>> Private report (Normal user should not see it)
 			</td>
 		</tr>
 <?php   } ?>
@@ -879,12 +879,12 @@ if ($edit == 1 || $edit == 2) { ?>
 			</td>
 			<th class="details">Assign to:</th>
 			<td>
-				<input type="text" size="10" maxlength="16" name="in[assign]" value="<?php echo field('assign'); ?>" id="assigned_user"/>
+				<input type="text" size="10" maxlength="16" name="in[assign]" value="<?php echo field('assign'); ?>" id="assigned_user">
 <?php } ?>
 
-				<input type="hidden" name="id" value="<?php echo $bug_id ?>" />
-				<input type="hidden" name="edit" value="<?php echo $edit ?>" />
-				<input type="submit" value="Submit" />
+				<input type="hidden" name="id" value="<?php echo $bug_id ?>">
+				<input type="hidden" name="edit" value="<?php echo $edit ?>">
+				<input type="submit" value="Submit">
 			</td>
 		</tr>
 		<tr>
@@ -906,7 +906,7 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details">Summary:</th>
 			<td colspan="3">
-				<input type="text" size="60" maxlength="80" name="in[sdesc]" value="<?php echo ($bug['status'] !== 'Spam') ? field('sdesc') : 'Hidden because of SPAM'; ?>" />
+				<input type="text" size="60" maxlength="80" name="in[sdesc]" value="<?php echo ($bug['status'] !== 'Spam') ? field('sdesc') : 'Hidden because of SPAM'; ?>">
 			</td>
 		</tr>
 		<tr>
@@ -918,14 +918,14 @@ if ($edit == 1 || $edit == 2) { ?>
 		<tr>
 			<th class="details">New email:</th>
 			<td colspan="3">
-				<input type="text" size="40" maxlength="40" name="in[email]" value="<?php echo isset($_POST['in']) && isset($_POST['in']['email']) ? htmlspecialchars($_POST['in']['email']) : ''; ?>" />
+				<input type="text" size="40" maxlength="40" name="in[email]" value="<?php echo isset($_POST['in']) && isset($_POST['in']['email']) ? htmlspecialchars($_POST['in']['email']) : ''; ?>">
 			</td>
 		</tr>
 		<tr>
 			<th class="details">PHP Version:</th>
-			<td><input type="text" size="20" maxlength="100" name="in[php_version]" value="<?php echo field('php_version'); ?>" /></td>
+			<td><input type="text" size="20" maxlength="100" name="in[php_version]" value="<?php echo field('php_version'); ?>"></td>
 			<th class="details">OS:</th>
-			<td><input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo field('php_os'); ?>" /></td>
+			<td><input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo field('php_os'); ?>"></td>
 		</tr>
 	</table>
 
@@ -945,7 +945,7 @@ if ($edit == 1 || $edit == 2) { ?>
 	?>
 
 	<p style="margin-top: 0em">
-		<input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
+		<input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit">
 	</p>
 
 </form>
@@ -971,8 +971,8 @@ if ($edit == 1 || $edit == 2) { ?>
 	<div class="explain">
 		<h1>
 			<a href="patch-add.php?bug_id=<?php echo $bug_id; ?>">Click Here to Submit a Patch</a>
-			<input type="submit" name="subscribe_to_bug" value="Subscribe" />
-			<input type="submit" name="unsubscribe_to_bug" value="Unsubscribe" />
+			<input type="submit" name="subscribe_to_bug" value="Subscribe">
+			<input type="submit" name="unsubscribe_to_bug" value="Unsubscribe">
 		</h1>
 	</div>
 <?php } ?>
@@ -981,7 +981,7 @@ if ($edit == 1 || $edit == 2) { ?>
 
 		<div class="explain">
 			Anyone can comment on a bug. Have a simpler test case? Does it
-			work for you on a different platform? Let us know!<br />
+			work for you on a different platform? Let us know!<br>
 			Just going to say 'Me too!'? Don't clutter the database with that please
 
 <?php
@@ -1001,20 +1001,20 @@ if (!$logged_in) {
 ?>
 	<table>
 		<tr>
-			<th class="details">Y<span class="accesskey">o</span>ur email address:<br /><strong>MUST BE VALID</strong></th>
+			<th class="details">Y<span class="accesskey">o</span>ur email address:<br><strong>MUST BE VALID</strong></th>
 			<td class="form-input">
-				<input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo isset($_POST['in']['commentemail']) ? htmlspecialchars($_POST['in']['commentemail'], ENT_COMPAT, 'UTF-8') : ''; ?>" accesskey="o" />
+				<input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo isset($_POST['in']['commentemail']) ? htmlspecialchars($_POST['in']['commentemail'], ENT_COMPAT, 'UTF-8') : ''; ?>" accesskey="o">
 			</td>
 		</tr>
 		<tr>
-			<th>Solve the problem:<br /><?php echo htmlspecialchars($captcha); ?> = ?</th>
-			<td class="form-input"><input type="text" name="captcha" /></td>
+			<th>Solve the problem:<br><?php echo htmlspecialchars($captcha); ?> = ?</th>
+			<td class="form-input"><input type="text" name="captcha"></td>
 		</tr>
 		<tr>
 			<th class="details">Subscribe to this entry?</th>
 			<td class="form-input">
-				<input type="submit" name="subscribe_to_bug" value="Subscribe" />
-				<input type="submit" name="unsubscribe_to_bug" value="Unsubscribe" />
+				<input type="submit" name="subscribe_to_bug" value="Subscribe">
+				<input type="submit" name="unsubscribe_to_bug" value="Unsubscribe">
 			</td>
 		</tr>
 	</table>
@@ -1022,8 +1022,8 @@ if (!$logged_in) {
 <?php } ?>
 
 	<div>
-		<input type="hidden" name="id" value="<?php echo $bug_id; ?>" />
-		<input type="hidden" name="edit" value="<?php echo $edit; ?>" />
+		<input type="hidden" name="id" value="<?php echo $bug_id; ?>">
+		<input type="hidden" name="edit" value="<?php echo $edit; ?>">
 
 	<?php
 	if ($bug['block_user_comment'] == 'Y' && $logged_in != 'developer') {
@@ -1037,7 +1037,7 @@ if (!$logged_in) {
 	}
 	?>
 
-		<br /><input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit" />
+		<br><input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit">
 	</div>
 
 	</form>
@@ -1077,7 +1077,7 @@ if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
 		echo <<< OUTPUT
 <a href="patch-display.php?bug_id={$bug_id}&amp;patch={$url_name}&amp;revision=latest" {$style}>{$clean_name}</a>
 (last revision {$formatted_date}) by {$submitter})
-<br />
+<br>
 OUTPUT;
 	}
 	echo "<p><a href='patch-add.php?bug_id={$bug_id}'>Add a Patch</a></p>";
@@ -1135,12 +1135,12 @@ if ($bug_id == 'PREVIEW') {
 		if ($k === 'ldesc_orig') {
 			$k = 'ldesc';
 		}
-		echo "<input type='hidden' name='in[", htmlspecialchars($k, ENT_QUOTES), "]' value='", htmlentities($v, ENT_QUOTES, 'UTF-8'), "'/>";
+		echo "<input type='hidden' name='in[", htmlspecialchars($k, ENT_QUOTES), "]' value='", htmlentities($v, ENT_QUOTES, 'UTF-8'), "'>";
 	}
 }
-	echo "<input type='hidden' name='captcha' value='", htmlspecialchars($_SESSION['captcha'], ENT_QUOTES), "'/>";
+	echo "<input type='hidden' name='captcha' value='", htmlspecialchars($_SESSION['captcha'], ENT_QUOTES), "'>";
 ?>
-	<input type='submit' value='Send bug report' /> <input type='submit' name='edit_after_preview' value='Edit' />
+	<input type='submit' value='Send bug report'> <input type='submit' name='edit_after_preview' value='Edit'>
 </form>
 
 <?php }

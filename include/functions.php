@@ -770,7 +770,7 @@ function show_boolean_options($current)
 		if ($val === $current) {
 			echo ' checked="checked"';
 		}
-		echo " />$type&nbsp;\n";
+		echo ">$type&nbsp;\n";
 	}
 }
 
@@ -1723,17 +1723,16 @@ function response_header($title, $extraHeaders = '')
 	$_header_done = true;
 
 	header('Content-Type: text/html; charset=UTF-8');
-	echo '<?xml version="1.0" encoding="UTF-8" ?>';
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta charset="utf-8">
 	<?php echo $extraHeaders; ?>
-	<base href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/" />
+	<base href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/">
 	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
-	<link rel="shortcut icon" href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/images/favicon.ico" />
-	<link rel="stylesheet" href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/css/style.css" />
+	<link rel="shortcut icon" href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/images/favicon.ico">
+	<link rel="stylesheet" href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/css/style.css">
 </head>
 
 <body>
@@ -1741,7 +1740,7 @@ function response_header($title, $extraHeaders = '')
 <table id="top" class="head" cellspacing="0" cellpadding="0">
 	<tr>
 		<td class="head-logo">
-			<a href="/"><img src="images/logo.gif" alt="Bugs" vspace="2" hspace="2" /></a>
+			<a href="/"><img src="images/logo.gif" alt="Bugs" vspace="2" hspace="2"></a>
 		</td>
 
 		<td class="head-menu">
@@ -1766,10 +1765,10 @@ function response_header($title, $extraHeaders = '')
 		<td class="head-search" colspan="2">
 			<form method="get" action="search.php">
 				<p class="head-search">
-					<input type="hidden" name="cmd" value="display" />
+					<input type="hidden" name="cmd" value="display">
 					<small>go to bug id or search bugs for</small>
-					<input class="small" type="text" name="search_for" value="<?php print isset($_GET['search_for']) ? htmlspecialchars($_GET['search_for']) : ''; ?>" size="30" />
-					<input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;" />
+					<input class="small" type="text" name="search_for" value="<?php print isset($_GET['search_for']) ? htmlspecialchars($_GET['search_for']) : ''; ?>" size="30">
+					<input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;">
 				</p>
 			</form>
 		</td>
@@ -1806,8 +1805,8 @@ function response_footer($extra_html = '')
 	<tr>
 		<td class="foot-copy">
 			<small>
-				<a href="http://www.php.net/"><img src="images/logo-small.gif" align="left" valign="middle" hspace="3" alt="PHP" /></a>
-				<a href="http://www.php.net/copyright.php">Copyright &copy; 2001-<?php echo date('Y'); ?> The PHP Group</a><br />
+				<a href="http://www.php.net/"><img src="images/logo-small.gif" align="left" valign="middle" hspace="3" alt="PHP"></a>
+				<a href="http://www.php.net/copyright.php">Copyright &copy; 2001-<?php echo date('Y'); ?> The PHP Group</a><br>
 				All rights reserved.
 			</small>
 		</td>

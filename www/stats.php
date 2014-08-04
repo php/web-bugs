@@ -91,7 +91,7 @@ if ($total > 0) {
 				<select class="small" id="bug_type" name="bug_type" onchange="this.form.submit(); return false;">
 					<?php show_type_options($bug_type, true) ?>
 				</select>
-				<input class="small" type="submit" name="submitStats" value="Search" />
+				<input class="small" type="submit" name="submitStats" value="Search">
 			</td>
 		</tr>
 	</table>

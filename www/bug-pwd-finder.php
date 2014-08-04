@@ -87,7 +87,7 @@ in the bug report.
 
 <form method="post" action="bug-pwd-finder.php">
 <p><b>Bug Report ID:</b> #<input type="text" size="20" name="id" value="<?php echo $bug_id; ?>">
-<p><b>Solve the problem:<br /><?php echo $captcha; ?> = ? <input type="text" name="captcha" /></p>
+<p><b>Solve the problem:<br><?php echo $captcha; ?> = ? <input type="text" name="captcha"></p>
                                                                  
 <input type="submit" value="Send"></p>
 </form>

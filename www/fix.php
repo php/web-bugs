@@ -56,7 +56,7 @@ if ($errors) {
 ?>
 
 <form method="post" action="fix.php">
-	<input type="hidden" name="id" value="<?php echo $bug_id; ?>" />
+	<input type="hidden" name="id" value="<?php echo $bug_id; ?>">
 
 <?php // Note: same block is used also in bug.php! 
 if ($logged_in == 'developer') {
@@ -67,15 +67,15 @@ if ($logged_in == 'developer') {
 	</div>
 <?php } else { ?>
 	<div class="explain">
-		Welcome! If you don't have a Git account, you can't do anything here.<br />
+		Welcome! If you don't have a Git account, you can't do anything here.<br>
 		You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
 		or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
 		<div class="details">
 			<label for="svnuser">php.net Username:</label>
-			<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20" />
+			<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20">
 			<label for="svnpw">php.net Password:</label>
-			<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pwd) ?>" size="10" />
-			<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?> />
+			<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pwd) ?>" size="10">
+			<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?>>
 		</div>
 	</div>
 <?php } ?>
@@ -93,7 +93,7 @@ if ($logged_in == 'developer') {
 			<td colspan="5"><textarea cols="80" rows="8" name="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea></td>
 		</tr> 
 	</table>
-	<input type="submit" value="Resolve" />
+	<input type="submit" value="Resolve">
 </form>
 <?php
 	response_footer();

@@ -385,21 +385,21 @@ display_bug_error($errors);
 
 ?>
 	<form method="post" action="report.php?package=<?php echo htmlspecialchars($package); ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
-		<input type="hidden" name="in[did_luser_search]" value="<?php echo isset($_POST['in']['did_luser_search']) ? $_POST['in']['did_luser_search'] : 0; ?>" />
+		<input type="hidden" name="in[did_luser_search]" value="<?php echo isset($_POST['in']['did_luser_search']) ? $_POST['in']['did_luser_search'] : 0; ?>">
 		<table class="form-holder" cellspacing="1">
 <?php if ($logged_in) { ?>
 			<tr>
 				<th class="form-label_left">Your handle:</th>
 				<td class="form-input">
 					<?php echo $auth_user->handle; ?>
-					<input type="hidden" name="in[email]" value="<?php echo $auth_user->email; ?>" />
+					<input type="hidden" name="in[email]" value="<?php echo $auth_user->email; ?>">
 				</td>
 			</tr>
 <?php } else { ?>
 			<tr>
-				<th class="form-label_left">Y<span class="accesskey">o</span>ur email address:<br /><strong>MUST BE VALID</strong></th>
+				<th class="form-label_left">Y<span class="accesskey">o</span>ur email address:<br><strong>MUST BE VALID</strong></th>
 					<td class="form-input">
-						<input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo htmlspecialchars($_POST['in']['email'], ENT_COMPAT, 'UTF-8'); ?>" accesskey="o" />
+						<input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo htmlspecialchars($_POST['in']['email'], ENT_COMPAT, 'UTF-8'); ?>" accesskey="o">
 					</td>
 				</th>
 			</tr>
@@ -407,8 +407,8 @@ display_bug_error($errors);
 			<tr>
 				<th class="form-label_left"><span class="accesskey">P</span>assword:</th>
 				<td class="form-input">
-					<input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8');?>" accesskey="p" /><br />
-					You <strong>must</strong> enter any password here, which will be stored for this bug report.<br />
+					<input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8');?>" accesskey="p"><br>
+					You <strong>must</strong> enter any password here, which will be stored for this bug report.<br>
 					This password allows you to come back and modify your submitted bug report at a later date.
 					[<a href="bug-pwd-finder.php">Lost a bug password?</a>]
 				</td>
@@ -445,14 +445,14 @@ display_bug_error($errors);
 			<tr>
 				<th class="form-label_left">Operating system:</th>
 				<td class="form-input">
-					<input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo htmlspecialchars($_POST['in']['php_os'], ENT_COMPAT, 'UTF-8'); ?>" />
+					<input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo htmlspecialchars($_POST['in']['php_os'], ENT_COMPAT, 'UTF-8'); ?>">
 				</td>
 			</tr>
 
 			<tr>
 				<th class="form-label_left">Summary:</th>
 				<td class="form-input">
-					<input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo htmlspecialchars($_POST['in']['sdesc'], ENT_COMPAT, 'UTF-8'); ?>" />
+					<input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo htmlspecialchars($_POST['in']['sdesc'], ENT_COMPAT, 'UTF-8'); ?>">
 				</td>
 			</tr>
 
@@ -540,16 +540,16 @@ display_bug_error($errors);
 	}
 ?>
 			<tr>
-				<th><?php echo $captcha_label; ?><br /><?php echo htmlspecialchars($captcha); ?> = ?</th>
-				<td class="form-input"><input type="text" name="captcha" autocomplete="off"/></td>
+				<th><?php echo $captcha_label; ?><br><?php echo htmlspecialchars($captcha); ?> = ?</th>
+				<td class="form-input"><input type="text" name="captcha" autocomplete="off"></td>
 			</tr>
 <?php } ?>
 
 			<tr>
 				<th class="form-label_left">Submit:</th>
 				<td class="form-input">
-					<input type="submit" value="Send bug report" />
-					<input type="submit" value="Preview" name="preview"/>
+					<input type="submit" value="Send bug report">
+					<input type="submit" value="Preview" name="preview">
 				</td>
 			</tr>
 		</table>

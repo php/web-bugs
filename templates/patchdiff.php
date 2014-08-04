@@ -1,7 +1,7 @@
 <h2>Patch <?php echo clean($patch_name); ?> for <?php echo clean($package_name); ?> Bug #<?php echo $bug_id; ?></h2>
 <p><b>Patch version <?php echo format_date($revision); ?></b></p>
 <a href="bug.php?id=<?php echo $bug_id; ?>">Return to Bug #<?php echo $bug_id; ?></a>
-| <a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo $patch_name_url; ?>&amp;revision=<?php echo urlencode($revision); ?>&amp;download=1">Download this patch</a><br />
+| <a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo $patch_name_url; ?>&amp;revision=<?php echo urlencode($revision); ?>&amp;download=1">Download this patch</a><br>
 <?php
 if (count($obsoletedby)) {
     echo '<div class="warnings">This patch is obsolete</div><p>Obsoleted by patches:<ul>';

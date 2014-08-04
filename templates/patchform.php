@@ -6,7 +6,7 @@
    <p class="cell_note">
     The patch name must be shorter than 80 characters and it must only contain alpha-numeric characters, dots, underscores or hyphens.
    </p>
-   <input type="text" maxlength="80" size="40" name="in[patchname]" value="<?php echo clean($patchname) ?>" /><br />
+   <input type="text" maxlength="80" size="40" name="in[patchname]" value="<?php echo clean($patchname) ?>"><br>
   </td>
  </tr>
  <tr>
@@ -17,6 +17,6 @@
    </p>
   </th>
   <td class="form-input">
-   <input type="file" name="patchfile" value="<?php echo clean($patchfile) ?>"/>
+   <input type="file" name="patchfile" value="<?php echo clean($patchfile) ?>">
   </td>
  </tr>
