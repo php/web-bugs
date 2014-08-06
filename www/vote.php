@@ -68,5 +68,4 @@ $dbh->prepare("
 )->execute();
 
 // redirect to the bug page (which will display the success message)
-header("Location: bug.php?id=$id&thanks=6");
-exit;
+redirect("bug.php?id=$id&thanks=6");

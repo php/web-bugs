@@ -9,7 +9,6 @@ require_once '../include/prepend.php';
 $id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($id) {
 	redirect("bug.php?id={$id}");
-	exit;
 }
 
 response_header('Bugs :: 404 Not Found');

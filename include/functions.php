@@ -1824,6 +1824,7 @@ function response_footer($extra_html = '')
 function redirect($url)
 {
 	header("Location: {$url}");
+	exit;
 }
 
 

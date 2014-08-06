@@ -11,7 +11,6 @@ require_once '../include/prepend.php';
 $id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($id) {
 	redirect("bug.php?id={$id}");
-	exit;
 }
 
 if($_SERVER['REQUEST_URI'] == '/random') {
@@ -20,7 +19,6 @@ if($_SERVER['REQUEST_URI'] == '/random') {
 	$result = $dbh->prepare($query)->execute();
 	$id = $result->fetchRow();
 	redirect("bug.php?id={$id[0]}");
-	exit;
 }
 
 response_header('Bugs');

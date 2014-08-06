@@ -104,7 +104,6 @@ if (isset($_POST['addpatch'])) {
 			}
 
 			redirect("patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$e}");
-			exit;
 		} catch (Exception $e) {
 			$patches = $patchinfo->listPatches($bug_id);
 			include "{$ROOT_DIR}/templates/addpatch.php";

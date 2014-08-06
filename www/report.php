@@ -181,7 +181,6 @@ OUTPUT;
 				$_SESSION['bug_preview']['ldesc'] = $fdesc;
 				$_SESSION['captcha'] = $_POST['captcha'];
 				redirect('bug.php?id=preview');
-				exit;
 			}
 
 			$res = $dbh->prepare('
@@ -315,10 +314,8 @@ REPORT;
 				$patchname = urlencode($_POST['in']['patchname']);
 				$patchemail= urlencode($_POST['in']['email']);
 				redirect("patch-add.php?bug_id={$cid}&patchname={$patchname}&email={$patchemail}");
-				exit;
 			}
 			redirect("bug.php?id={$cid}&thanks=4");
-			exit;
 		}
 	} else {
 		// had errors...

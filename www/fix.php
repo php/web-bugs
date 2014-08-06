@@ -1,16 +1,14 @@
 <?php
-
 /* Admin interface for closing bug reports via direct link */
+
+// Obtain common includes
+require_once '../include/prepend.php';
 
 $bug_id = (int) $_REQUEST['id'];
 
 if (!$bug_id) {
-	header('Location: index.php');
-	exit;
+	redirect('index.php');
 }
-
-// Obtain common includes
-require_once '../include/prepend.php';
 
 // fetch info about the bug into $bug
 $bug = bugs_get_bug($bug_id);
@@ -112,8 +110,7 @@ $ncomment = $qftext . (!empty($ncomment) ? "\n\n".$ncomment : "");
 // If the report already has the status of the resolution, bounce over to the main bug form
 // which shows the appropriate error message.
 if ($status == $bug['status']) {
-	header("Location: bug.php?id={$bug_id}&edit=1&in[resolve]={$reason}");
-	exit;
+	redirect("bug.php?id={$bug_id}&edit=1&in[resolve]={$reason}");
 }
 
 // Standard items
@@ -164,7 +161,6 @@ if (!PEAR::isError($res) && !empty($ncomment)) {
 if (!PEAR::isError($res)) {
 	mail_bug_updates($bug, $in, $auth_user->email, $ncomment);
 	redirect("bug.php?id={$bug_id}&thanks=1");
-	exit;
 }
 
 // If we end up here, something went wrong.

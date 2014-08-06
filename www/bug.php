@@ -1,6 +1,8 @@
 <?php
-
 /* User interface for viewing and editing bug details */
+
+// Obtain common includes
+require_once '../include/prepend.php';
 
 // Start session 
 session_start();
@@ -15,14 +17,12 @@ if (isset($_REQUEST['id']) && $_REQUEST['id'] == 'preview') {
 	$bug['assign'] = '';
 	
 	if (!$bug) {
-		header('Location: index.php');
-		exit;
+		redirect('index.php');
 	}
 } else {
 	// Bailout early if no/invalid bug id is passed
 	if (empty($_REQUEST['id']) || !((int) $_REQUEST['id'])) {
-		header('Location: index.php');
-		exit;
+		redirect('index.php');
 	} else {
 		$bug_id = (int) $_REQUEST['id'];
 	}
@@ -30,9 +30,6 @@ if (isset($_REQUEST['id']) && $_REQUEST['id'] == 'preview') {
 
 // Init common variables
 $errors = array();
-
-// Obtain common includes
-require_once '../include/prepend.php';
 
 // Set edit mode
 $edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
@@ -51,7 +48,6 @@ if (isset($_GET['unsubscribe'])) {
 
 	if (!$hash) {
 		redirect("bug.php?id={$bug_id}");
-		exit;
 	}
 	unsubscribe($bug_id, $hash);
 	$_GET['thanks'] = 9;
@@ -91,7 +87,6 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 				$thanks = 7;
 			}
 			redirect("bug.php?id={$bug_id}&thanks={$thanks}");
-			exit;
 		}
 	}
 	// If we get here, display errors
@@ -111,7 +106,6 @@ if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
 		$addon = '&thanks=1';
 	}
 	redirect("bug.php?id=$bug_id&edit=1$addon");
-	exit;
 }
 
 // captcha is not necessary if the user is logged in
@@ -548,7 +542,6 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 if (isset($_POST['in']) && !isset($_POST['preview']) && !$errors) {
 	mail_bug_updates($bug, $_POST['in'], $from, $ncomment, $edit, $bug_id);
 	redirect("bug.php?id=$bug_id&thanks=$edit");
-	exit;
 }
 
 switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))

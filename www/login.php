@@ -5,8 +5,7 @@ session_start();
 require_once '../include/prepend.php';
 
 if (!empty($_SESSION['user'])) {
-    header('location: index.php');
-    exit;
+    redirect('location: index.php');
 }
 
 response_header('Login');
@@ -19,11 +18,9 @@ if (isset($_POST['user'])) {
   if ($logged_in === 'developer') {
 	if (!empty($_POST['referer']) &&
 		preg_match("/^{$site_method}:\/\/". preg_quote($site_url) .'/i', $referer)) {
-		header('location: '. $referer);
-		exit;
+		redirect($referer);
 	}
-    header('location: index.php');
-    exit;
+    redirect('index.php');
   } else {
 ?>
     <div style="background: #AB1616; padding: 3px; width: 300px; color: #FFF; margin: 3px;">Wrong username or password!</div>
