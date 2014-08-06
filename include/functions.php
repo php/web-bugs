@@ -202,39 +202,39 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
  */
 function get_pseudo_packages($project, $return_disabled = true)
 {
-	global $project_types;
+	global $dbh, $project_types;
 
-	require_once 'Tree/Tree.php';
-
+	$pseudo_pkgs = $nodes = $tree = array();
 	$where = '1=1';
 	$project = strtolower($project);
 
 	if ($project !== false && in_array($project, $project_types)) {
-		$where .= " AND project IN ('',  '". $project ."')";
+		$where .= " AND project IN ('', '$project')";
 	}
 	if (!$return_disabled) {
 		$where.= " AND disabled = 0";
 	}
 
-	$pseudo_pkgs = array();
-	$tree = Tree::setup (
-		'Memory_MDB2simple',
-		DATABASE_DSN,
-		array (
-			'order' => 'disabled, id',
-			'whereAddOn' => $where,
-			'table' => 'bugdb_pseudo_packages',
-			'columnNameMaps' => array (
-				'parentId' => 'parent',
-			),
-		)
-	);
-	$tree->setup();
+	$data = $dbh->queryAll("SELECT * FROM bugdb_pseudo_packages WHERE $where ORDER BY parent, disabled, id", null, MDB2_FETCHMODE_ASSOC);
 
-	foreach ($tree->data as $data)
+	// Convert flat array to nested strucutre
+	foreach ($data as &$node)
 	{
-		if (isset($data['children']))
-		{
+		$node['children'] = array();
+		$id = $node['id'];
+		$parent_id = $node['parent'];
+		$nodes[$id] =& $node;
+
+		if (array_key_exists($parent_id, $nodes)) {
+			$nodes[$parent_id]['children'][] =& $node;
+		} else {
+			$tree[] =& $node;
+		}
+	}
+
+	foreach ($tree as $data)
+	{
+		if (isset($data['children'])) {
 			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
 			$long_names = array();
 			foreach ($data['children'] as $k => $v) {
@@ -246,8 +246,9 @@ function get_pseudo_packages($project, $return_disabled = true)
 				$pseudo_pkgs[$child['name']] = array("&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}", $child['disabled']);
 			}
 
-		} else if (!isset($pseudo_pkgs[$data['name']]))
+		} elseif (!isset($pseudo_pkgs[$data['name']])) {
 			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
+		}
 	}
 
 	return $pseudo_pkgs;
