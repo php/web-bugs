@@ -1248,15 +1248,9 @@ function addlinks($text)
  */
 function package_exists($package_name)
 {
-	global $dbh, $pseudo_pkgs;
+	global $pseudo_pkgs;
 
-	if (empty($package_name)) {
-		return false;
-	}
-	if (isset($pseudo_pkgs[$package_name])) {
-		return true;
-	}
-	return false;
+	return isset($pseudo_pkgs[$package_name]);
 }
 
 /**
