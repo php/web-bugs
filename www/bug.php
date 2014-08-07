@@ -1188,8 +1188,8 @@ function mark_related_bugs($from, $comment_name, $ncomment)
 	/**
 	 * Adds a new comment on the related bug pointing to the current report
 	 */
-	for ($i = 0; $i < count($related[0]); ++$i) {
-		bugs_add_comment($related[1][$i], $from, $comment_name, 
+	foreach ($related as $bug) {
+		bugs_add_comment($bug, $from, $comment_name,
 			'Related To: Bug #'. $bug_id, 'related');
 	}
 }

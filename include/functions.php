@@ -1858,9 +1858,6 @@ function make_mailto_link($email, $linktext = '', $extras = '')
 /**
  * Turns bug/feature request numbers into hyperlinks
  *
- * If the bug number is prefixed by the word "PHP, PEAR, PECL" the link will
- * go to correct bugs site.	Otherwise, the bug is considered "local" bug.
- *
  * @param string $text	the text to check for bug numbers
  *
  * @return string the string with bug numbers hyperlinked
@@ -1880,7 +1877,7 @@ function get_ticket_links($text)
 
 	preg_match_all('/(?<![>a-z])(?:bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?|duplicated of)\s+#?([0-9]+)/i', $text, $matches);
 
-	return $matches;
+	return $matches[1];
 }
 
 function handle_pear_errors($error_obj)
