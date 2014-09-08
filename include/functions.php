@@ -1561,10 +1561,10 @@ function get_resolve_reasons($project = false)
 
 	$where = '';
 
-	$project = escapeSQL($project);
-
-	if ($project !== false)
+	if ($project !== false) {
+		$project = escapeSQL($project);
 		$where.= "WHERE (project = '{$project}' OR project = '')";
+	}
 
 	$resolves = $variations = array();
 	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array());
