@@ -1,12 +1,14 @@
 <?php
 
 	/*
-	The versions are pulled from the http://qa.php.net/api.php
+	The RC and dev versions are pulled from the http://qa.php.net/api.php
 	if you want to add a new version, add it there at include/release-qa.php
 	the result is cached for an hour, you can force it to refresh, if you delete the 'bugs.versions' item from apc
 	the versions are weighted by the following:
 	- major+minor version desc (6>5.4>5.3>master)
 	- between a minor version we order by the micro if available: first the qa releases: alpha/beta/rc, then the stable, then the Git versions(snaps, Git)
+
+	Stable releases are pulled from http://php.net/releases/active.php
 	*/
 
 	// Custom versions appended to the list
@@ -51,18 +53,12 @@
 			}
 		}
 
-		// add the latest stable for the active branches
-		foreach ($versions as $major_number => $major) {
-			$stable_releases = unserialize(file_get_contents('http://www.php.net/releases/index.php?serialize=1&max=20&version='.$major_number));
-			foreach ($major as $minor_number => $minor) {
-				foreach ($stable_releases as $stable_release_number => $stable_release) {
-					if (strpos($stable_release_number, $major_number.'.'.$minor_number) === 0) {
-						$dev_version_parts = parseVersion($stable_release_number);
-						$versions[$dev_version_parts['major']][$dev_version_parts['minor']][$dev_version_parts['micro']] = $dev_version_parts;
-						ksort($versions[$dev_version_parts['major']][$dev_version_parts['minor']]);
-						break;
-					}
-				}
+		$stable_releases = json_decode(file_get_contents('http://php.net/releases/active.php'), true);
+		foreach ($stable_releases as $major => $major_releases) {
+			foreach ($major_releases as $release) {
+				$version_parts = parseVersion($release['version']);
+				$versions[$version_parts['major']][$version_parts['minor']][$version_parts['micro']] = $version_parts;
+				ksort($versions[$version_parts['major']][$version_parts['minor']]);
 			}
 		}
 
