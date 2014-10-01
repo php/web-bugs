@@ -53,7 +53,7 @@
 			}
 		}
 
-		$stable_releases = json_decode(file_get_contents('http://php.net/releases/active.php'), true);
+		$stable_releases = json_decode(file_get_contents('http://us3.php.net/releases/active.php'), true);
 		foreach ($stable_releases as $major => $major_releases) {
 			foreach ($major_releases as $release) {
 				$version_parts = parseVersion($release['version']);
