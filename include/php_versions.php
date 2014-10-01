@@ -92,7 +92,7 @@
 	function parseVersion($version){
 		$version_parts	= array();
 		$raw_parts	= array();
-		preg_match('#(?P<major>\d)\.(?P<minor>\d).(?P<micro>\d)[-]?(?P<type>RC|alpha|beta|dev)?(?P<number>[\d]?).*#ui', $version, $raw_parts);
+		preg_match('#(?P<major>\d+)\.(?P<minor>\d+).(?P<micro>\d+)[-]?(?P<type>RC|alpha|beta|dev)?(?P<number>[\d]?).*#ui', $version, $raw_parts);
 		$version_parts = array(
 			'major'			=> $raw_parts['major'],
 			'minor'			=> $raw_parts['minor'],
