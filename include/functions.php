@@ -690,12 +690,11 @@ function show_reason_types($current = '', $expanded = 0)
  */
 function show_version_options($current, $default = '')
 {
-	global $ROOT_DIR;
+	global $ROOT_DIR, $versions;
 
 	$use = 0;
 
 	echo '<option value="">--Please Select--</option>' , "\n";
-	require_once "{$ROOT_DIR}/include/php_versions.php";
 	foreach($versions as $v) {
 		echo '<option';
 		if ($current == $v) {
@@ -1275,7 +1274,7 @@ function is_valid_email($email, $phpnet_allowed = true)
  */
 function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 {
-	global $bug, $dbh, $bug_types, $ROOT_DIR;
+	global $bug, $dbh, $bug_types, $versions;
 
 	$errors = array();
 	if (!is_array($in)) {
@@ -1294,8 +1293,6 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 	if (isset($in['php_version']) && $in['php_version'] == 'earlier') {
 		$errors[] = 'Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.';
 	}
-
-	require_once "{$ROOT_DIR}/include/php_versions.php";
 
 	if (empty($in['php_version']) || ($initial && !in_array($in['php_version'], $versions))) {
 		$errors[] = 'Please select a valid PHP version.';

@@ -19,6 +19,8 @@ bugs_authenticate($user, $pw, $logged_in, $user_flags);
 $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 $is_security_developer = ($user_flags & BUGS_SECURITY_DEV);
 
+require "{$ROOT_DIR}/include/php_versions.php";
+
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
 	require_once 'Text/CAPTCHA/Numeral.php';
