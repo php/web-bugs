@@ -325,7 +325,7 @@ REPORT;
 	}
 } // end of if input
 
-$package = !empty($package_name) ? $package_name : (!empty($_REQUEST['package']) ? $_REQUEST['package'] : '');
+$package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : (!empty($package_name) ? $package_name : (isset($_POST['in']) && $_POST['in'] && isset($_POST['in']['package_name']) ? $_POST['in']['package_name'] : ''));
 
 if (!is_string($package)) {
 	response_header('Report - Problems');
