@@ -338,7 +338,7 @@ div.success ul {
 	text-align: right;
 	padding: 0em .2em .2em .2em;
 }
-.bug_header {
+tr.bug_header th {
 	background-color: #aabbcc;
 	color: #000000;
 	font-size: 80%;
