@@ -164,7 +164,7 @@ while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 			echo "</table>\n\n";
 		}
 		echo "<table style='float:left; margin-right:20px'>\n".
-		     "<tr><th colspan='2' class='bug_header'>{$row["d"]}</th></tr>\n";
+		     "<tr class='bug_header'><th colspan='2'>{$row["d"]}</th></tr>\n";
 		$last_date = $row['d'];
 	}
 	$version = htmlentities($row["formatted_version"], ENT_QUOTES, 'UTF-8');
@@ -206,10 +206,10 @@ function bugstats($status, $name)
 
 function sort_url($name)
 {
-	global $sort_by, $rev, $phpver, $category, $developer, $titles;
+	global $sort_by, $rev, $titles;
 
 	if ($name == $sort_by) {
-		$reve = ($rev == 1) ? 0 : 1;
+		$reve = (int) !$rev;
 	} else {
 		$reve = 1;
 	}
@@ -218,9 +218,8 @@ function sort_url($name)
 	} else {
 		$attr = 'class="bug_stats_choosen"';
 	}
-	return '<a href="./stats.php?sort_by=' . urlencode($name) .
-		   '&amp;rev=' . $reve . '&amp;category=' . $category .
-		   '&amp;developer=' . $developer . '" ' . $attr . '>' .
+	return '<a href="stats.php?sort_by=' . urlencode($name) .
+		   '&amp;rev=' . $reve . '" ' . $attr . '>' .
 		   $titles[$name] . '</a>';
 }
 
@@ -228,16 +227,16 @@ function display_stat_header($total, $grandtotal = true)
 {
 	global $titles;
 
-	$stat_head  = " <tr>\n";
+	$stat_head  = " <tr class='bug_header'>\n";
 	if ($grandtotal) {
-		$stat_head .= '  <th class="bug_header">Name</th>' . "\n";
+		$stat_head .= "  <th>Name</th>\n";
 	} else {
-		$stat_head .= '  <th class="bug_header">&nbsp;</th>' . "\n";
+		$stat_head .= "  <th>&nbsp;</th>\n";
 	}
-	$stat_head .= '  <th class="bug_header">&nbsp;</th>' . "\n";
+	$stat_head .= "  <th>&nbsp;</th>\n";
 
 	foreach ($titles as $key => $val) {
-		$stat_head .= '  <th class="bug_header">' . sort_url($key) . "</th>\n";
+		$stat_head .= '  <th>' . sort_url($key) . "</th>\n";
 	}
 
 	$stat_head .= '</tr>' . "\n";
