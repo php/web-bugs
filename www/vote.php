@@ -55,6 +55,16 @@ function get_real_ip ()
 $ip = ip2long(get_real_ip());
 // TODO: check if ip address has been banned. hopefully this will never need to be implemented.
 
+// Check whether the user has already voted on this bug.
+$bug_check = $dbh->prepare("SELECT bug, ip FROM bugdb_votes WHERE bug = ? AND ip = ? LIMIT 1")
+	->execute(array($id, $ip))
+	->fetchRow();
+
+if (!empty($bug_check)) {
+	// Let the user know they have already voted.
+	redirect("bug.php?id=$id&thanks=10");
+}
+
 // add the vote
 $dbh->prepare("
 	INSERT INTO bugdb_votes (bug,ip,score,reproduced,tried,sameos,samever)

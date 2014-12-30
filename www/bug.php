@@ -601,6 +601,9 @@ switch ($thanks)
 	case 9:
 		display_bug_success('You have successfully unsubscribed.');
 		break;
+	case 10:
+		display_bug_success('You have already voted on this bug.');
+	break;
 
 	default:
 		break;
