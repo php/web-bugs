@@ -1,4 +1,4 @@
-#!/local/bin/php -q
+#!/usr/bin/env php
 <?php /* vim: set ft=phpbugdb noet ts=4 sw=4 : */
 
 # this script closes bugs due to lack of feedback.

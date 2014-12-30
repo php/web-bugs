@@ -1,4 +1,4 @@
-#!/local/bin/php -q
+#!/usr/bin/env php
 <?php /* vim: set ft=phpbugdb noet ts=4 sw=4 : */
 
 require __DIR__ . '/../../include/prepend.php';
