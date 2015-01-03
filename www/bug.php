@@ -602,7 +602,7 @@ switch ($thanks)
 		display_bug_success('You have successfully unsubscribed.');
 		break;
 	case 10:
-		display_bug_success('You have already voted on this bug.');
+		display_bug_success('Your vote has been updated.');
 	break;
 
 	default:

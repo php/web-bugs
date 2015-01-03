@@ -60,22 +60,37 @@ $bug_check = $dbh->prepare("SELECT bug, ip FROM bugdb_votes WHERE bug = ? AND ip
 	->execute(array($id, $ip))
 	->fetchRow();
 
-if (!empty($bug_check)) {
-	// Let the user know they have already voted.
+if (empty($bug_check)) {
+	// If the user vote isn't found, create one.
+	$dbh->prepare("
+		INSERT INTO bugdb_votes (bug, ip, score, reproduced, tried, sameos, samever)
+		VALUES (
+			{$id}, {$ip}, {$score}, " .
+			($reproduced == 1 ? "1," : "0,") .
+			($reproduced != 2 ? "1," : "0,") .
+			($reproduced ? "$sameos," : "NULL,") .
+			($reproduced ? "$samever" : "NULL") .
+		')'
+	)->execute();
+
+	// redirect to the bug page (which will display the success message)
+	redirect("bug.php?id=$id&thanks=6");
+} else {
+	// As the user has already voted, just update their existing vote.
+	$dbh->prepare("UPDATE bugdb_votes
+		SET score = ?, reproduced = ? , tried = ?, sameos = ?, samever = ?
+		WHERE bug = ? AND ip = ?")
+		->execute(array(
+			$score,
+			($reproduced == 1 ? "1," : "0,"),
+			($reproduced != 2 ? "1," : "0,"),
+			($reproduced ? "$sameos," : "NULL,"),
+			($reproduced ? "$samever" : "NULL"),
+			$id,
+			$ip
+		));
+
+	// Let the user know they have already voted and the existing vote will be
+	// updated.
 	redirect("bug.php?id=$id&thanks=10");
 }
-
-// add the vote
-$dbh->prepare("
-	INSERT INTO bugdb_votes (bug,ip,score,reproduced,tried,sameos,samever)
-	VALUES (
-		{$id}, {$ip}, {$score}, " .
-		($reproduced == 1 ? "1," : "0,") .
-		($reproduced != 2 ? "1," : "0,") .
-		($reproduced ? "$sameos," : "NULL,") .
-		($reproduced ? "$samever" : "NULL") .
-	')'
-)->execute();
-
-// redirect to the bug page (which will display the success message)
-redirect("bug.php?id=$id&thanks=6");
