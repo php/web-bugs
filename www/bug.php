@@ -172,7 +172,7 @@ $project = $bug['project'];
 
 // Only fetch stuff when it's really needed
 if ($edit && $edit < 3) {
-	$pseudo_pkgs = get_pseudo_packages($project, false); // false == no read-only packages included
+	$pseudo_pkgs = get_pseudo_packages(false, false); // false == no read-only packages included
 }
 
 // Fetch RESOLVE_REASONS array
