@@ -679,12 +679,13 @@ if (!$show_bug_info) {
 
 <?php
 }
+
 if ($bug_id !== 'PREVIEW') {
 	echo '<div class="controls">', "\n",
 		control(0, 'View'),
 		($bug['private'] == 'N' ? control(3, 'Add Comment') : ''),
 		control(1, 'Developer'),
-		control(2, 'Edit'),
+		(!$email || $bug['email'] == $email? control(2, 'Edit') : ''),
 		'</div>', "\n";
 ?>
 <div class="clear"></div>
