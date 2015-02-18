@@ -421,8 +421,8 @@ hr {
 }
 
 code, pre, tt {
-	font-family: monospace;
-	font-size: medium;
+	font-family: Consolas, Inconsolata, "Liberation Mono", monospace;
+	font-size: 13px;
 }
 
 h1 {
@@ -529,7 +529,7 @@ td.content table {
 	width:65em;
 	margin-left: 10px;
 	white-space:pre-wrap;
-	font-size:medium;
+	font-size: 13px;
 }
 .lusersearch .note {
 	width:100%;
