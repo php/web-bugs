@@ -568,6 +568,7 @@ form#update,
 form#vote,
 div.comment {
 	clear: both;
+  padding: 10px 0;
 }
 
 table.lusersearch td {
