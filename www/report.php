@@ -475,7 +475,7 @@ display_bug_error($errors);
 					Description:
 					<p class="cell_note">
 						Put short code samples in the &quot;Test script&quot; section <strong>below</strong>
-						and upload patches and/or long code samples <strong>below</strong>.
+						and upload patches <strong>below</strong>.
 					</p>
 				</th>
 				<td class="form-input">
