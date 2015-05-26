@@ -5,7 +5,7 @@
 	if you want to add a new version, add it there at include/release-qa.php
 	the result is cached for an hour, you can force it to refresh, if you delete the 'bugs.versions' item from apc
 	the versions are weighted by the following:
-	- major+minor version desc (6>5.4>5.3>master)
+	- major+minor version desc (7>5.4>5.3>master)
 	- between a minor version we order by the micro if available: first the qa releases: alpha/beta/rc, then the stable, then the Git versions(snaps, Git)
 
 	Stable releases are pulled from http://php.net/releases/active.php
