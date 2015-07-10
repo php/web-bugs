@@ -13,7 +13,8 @@
 
 	// Custom versions appended to the list
 	$custom_versions = array(
-		'str_size_and_int64 branch',
+		'Next Major Version',
+		'Next Minor Version',
 		'Irrelevant'
 	);
 
