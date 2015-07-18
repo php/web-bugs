@@ -132,7 +132,7 @@ class Bug_Patchtracker
 			return PEAR::raiseError('Upload directory for patches could not be initialized');
 		}
 		if (!preg_match('/^[\w\-\.]+\z/', $name) || strlen($name) > 80) {
-			return PEAR::raiseError("Invalid patch name \"{$name}\"");
+			return PEAR::raiseError("Invalid patch name \"".htmlspecichars($name)."\"");
 		}
 		if (!is_array($obsoletes)) {
 			return PEAR::raiseError('Invalid obsoleted patches');
