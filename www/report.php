@@ -506,8 +506,8 @@ display_bug_error($errors);
 				<th class="form-label_left">
 					Expected result:
 					<p class="cell_note">
+						Skip if irrelevant.
 						What do you expect to happen or see when you run the test script above?
-						Leave it empty if irrelevant (e.g. you're going to duplicate description here).
 					</p>
 				</th>
 				<td class="form-input">
@@ -519,9 +519,9 @@ display_bug_error($errors);
 				<th class="form-label_left">
 					Actual result:
 					<p class="cell_note">
+						Skip if irrelevant.
 						This could be a <a href="bugs-generating-backtrace.php">backtrace</a> for example.
 						Try to keep it as short as possible without leaving anything relevant out.
-						Leave it empty if irrelevant (e.g. you're going to duplicate description here).
 					</p>
 				</th>
 				<td class="form-input">
