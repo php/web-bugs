@@ -71,21 +71,42 @@ if (typeof($) != "function") {
 $(document).ready(function() {
   var org = "php";
   var baseurl = "https://api.github.com/";
-  var url = baseurl+'orgs/'+org+'/repos';
+  var url = baseurl+'orgs/'+org+'/repos?per_page=100';
   converter = new Markdown.getSanitizingConverter();
   $("#pull_id_field").empty().hide();
   $('#pull_details').empty();
-  $.ajax({ dataType: 'jsonp', url: url, success: function(d) {
-    var repos = new Array();
-    for (var i in d.data) {
-      repos.push(d.data[i].name);
-    }
+
+  var repos = new Array();
+  
+  function loadGHRepos(url) {
+    $.ajax({ dataType: 'jsonp', url: url, success: function(d) {
+      for (var i in d.data) {
+        repos.push(d.data[i].name);
+      }
+      // Follow pagination if exists next
+      if (d.meta && d.meta.Link) {
+        for(var l in d.meta.Link) {
+          if (d.meta.Link[l][1] && d.meta.Link[l][1].rel && d.meta.Link[l][1].rel == 'next') {
+            loadGHRepos(d.meta.Link[l][0]);
+            return;
+          }
+        }
+      }
+      // No more next Links, draw them!
+      drawRepos();
+      }
+    });
+  }
+
+  function drawRepos() {
     repos.sort();
     for (var i in repos) {
       $("#repository_field").append("<option>"+repos[i]+"</option>");
     }
     $("#loading").hide();
-  } });
+  }
+  loadGHRepos(url);
+
 });
 
 $("#repository_field").change(function() {
