@@ -44,7 +44,7 @@ KERNEL32! 77e81af6()
 <ul>
 <li>A PHP <a href="http://windows.php.net/snapshots/">snapshot</a> or <a href="http://windows.php.net/download/">stable</a> release</li>
 <li>PHP Debug pack (<a href="http://windows.php.net/snapshots/">snapshot</a> or <a href="http://windows.php.net/download/">stable</a>)</li>
-<li>Microsoft <a href="http://www.microsoft.com/en-us/download/details.aspx?id=40336">Debug Diagnostic Tools</a></li>
+<li>Microsoft <a href="https://www.microsoft.com/en-us/download/details.aspx?id=49924">Debug Diagnostic Tools</a></li>
 <li>Evil script to crash PHP</li>
 </ul>
 <p>For the sake of this example, we will simply use PHP in the shell.
