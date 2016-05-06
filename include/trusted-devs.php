@@ -15,8 +15,7 @@ $trusted_developers = array(
 	'pajoye',
 	'laruence',
 	'zeev',
-	'kalle',
-	'pollita'
+	'pollita',
 );
 
 // Distro people (security related)
@@ -60,7 +59,6 @@ $security_developers = array(
 	'tyrael',
 	'ab',
 	'kaplan',
-	'kalle'
 );
 
 $security_developers = array_merge($security_developers, $security_distro_people);
