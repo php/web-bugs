@@ -15,7 +15,8 @@ $trusted_developers = array(
 	'pajoye',
 	'laruence',
 	'zeev',
-	'kalle'
+	'kalle',
+	'pollita'
 );
 
 // Distro people (security related)
