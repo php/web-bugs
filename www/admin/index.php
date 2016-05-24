@@ -42,7 +42,7 @@ if ($action === 'list_lists') {
 if ($action === 'list_responses') {
 
 	$res = $dbh->query("
-		SELECT id name, status, title, message, project, package_name, webonly
+		SELECT id, name, status, title, message, project, package_name, webonly
 		FROM bug_resolves
 		ORDER BY name
 	");
