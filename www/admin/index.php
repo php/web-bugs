@@ -12,7 +12,7 @@ if (!$logged_in) {
 	exit;
 }
 
-$actions = array('list_lists', 'phpinfo');
+$actions = array('list_lists', 'list_responses', 'phpinfo');
 $action  = !empty($_GET['action']) && in_array($_GET['action'], $actions) ? $_GET['action'] : 'list_lists';
 
 if ($action === 'phpinfo') {
@@ -37,6 +37,29 @@ if ($action === 'list_lists') {
 		echo "<dt>", $row['name'], ": </dt>\n<dd>", $row['list_email'], "</dd>\n";
 	}
 	echo "</dl>\n";
+}
+
+if ($action === 'list_responses') {
+
+	$res = $dbh->query("
+		SELECT id name, status, title, message, project, package_name, webonly
+		FROM bug_resolves
+		ORDER BY name
+	");
+
+	echo "<h3>List Responses</h3>";
+	echo "<dl>\n";
+	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+		echo "<dt>", $row['name'], " (", $row['id'], "): </dt>\n";
+		echo "<dd>", $row['title'], "</dd>\n";
+		echo "<dd>", $row['status'], "</dd>\n";
+		echo "<dd>", $row['project'], "</dd>\n";
+		echo "<dd>", $row['package_name'], "</dd>\n";
+		echo "<dd>", $row['webonly'], "</dd>\n";
+		echo "<dd>", $row['message'], "</dd>\n";
+	}
+	echo "</dl>\n";
+
 }
 
 response_footer();
