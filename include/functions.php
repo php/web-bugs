@@ -585,12 +585,12 @@ function show_type_options($current = 'Bug', $all = false)
 		echo ">All</option>\n";
 	} elseif (!$current) {
 		$current = 'bug';
-	} else {
-		$current = strtolower($current);
 	}
 
 	foreach ($bug_types as $k => $v) {
-		echo '<option value="', $k, '"', (($current == strtolower($k)) ? ' selected="selected"' : ''), ">{$k}</option>\n";
+		$selected = strcasecmp($current, $k) ? '' : ' selected="selected"';
+		$k = htmlentities($k, ENT_QUOTES);
+		echo "<option value=\"$k\"$selected>$k</option>";
 	}
 }
 
