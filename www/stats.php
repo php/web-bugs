@@ -97,7 +97,7 @@ if ($total > 0) {
 	</table>
 </form>
 
-<table style="width: 100%; margin-top: 1em;">
+<table style="width: 100%; margin-top: 1em;" class="stats-table">
 
 <?php // Exit if there are no bugs for this version
 

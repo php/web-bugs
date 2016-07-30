@@ -361,6 +361,10 @@ a.bug_stats_choosen {
 	color: #006600;
 }
 
+.stats-table tr:hover td {
+	background-color: #aabbcc;
+}
+
 /* ========= Other ========= */
 
 a:link {
