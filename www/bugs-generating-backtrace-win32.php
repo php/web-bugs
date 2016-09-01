@@ -11,7 +11,7 @@ response_header('Generating a backtrace on Win32');
 	<li>or compile your own PHP with <code>--enable-dbg-pack</code> or <code>--enable-debug</code></li>
 </ul>
 
-<p>If you downloaded the debug-pack from the Windows site, extract it into
+<p>If you downloaded the debug-pack from the snaps site, extract it into
 your PHP directory and be sure to put the PDB files that belong to the
 extensions into your extension directory.</p>
 
@@ -42,8 +42,8 @@ KERNEL32! 77e81af6()
 <h1>Generating backtrace, <u>without</u> compiler, on Win32</h1>
 <p>You'll need:</p>
 <ul>
-<li><a href="http://windows.php.net/download/">A PHP release</a></li>
-<li><a href="http://windows.php.net/download/">PHP Debug pack</a></li>
+<li>A PHP <a href="http://windows.php.net/downloads/snaps/">snapshot</a> or <a href="http://windows.php.net/download/">stable</a> release</li>
+<li>PHP Debug pack (<a href="http://windows.php.net/downloads/snaps/">snapshot</a> or <a href="http://windows.php.net/download/">stable</a>)</li>
 <li>Microsoft <a href="https://www.microsoft.com/en-us/download/details.aspx?id=49924">Debug Diagnostic Tools</a></li>
 <li>Evil script to crash PHP</li>
 </ul>
