@@ -48,19 +48,6 @@ sure that you're not filing a duplicate bug, that's a few more minutes someone
 can spend helping to fix that bug rather than sorting out duplicate bug
 reports.</p>
 
-<h2>Try a snapshot.</h2>
-
-<p>We will most likely ask you to try a snapshot to verify whether the problem
-has been fixed in our repository or not. You can save yourself and us some
-time if you first try to reproduce the bug with the latest stable snapshot. If
-the bug still exists, select 5Git.. as your version. Note that the format is
-5Git-YYYY-MM-DD. Here are the latest snapshots for version 5 of PHP:
-<ul>
-	<li><a href="http://windows.php.net/snapshots/">Windows</a></li>
-	<li><a href="http://snaps.php.net/php5.2-latest.tar.gz">Source code</a></li>
-</ul>
-</p>
-
 <h2>If you don't understand an error message, ask for help.</h2>
 
 <p>Don't report an error message you don't understand as a bug. There are <a
