@@ -298,6 +298,9 @@ function is_spam($string)
 		'leslunettesdesoleil',
 		'PaulRGuthrie',
 		'[a-z]*?fuck[a-z]*?',
+		'jerseys',
+		'wholesale',
+		'fashionretailshop01',
 	);
 
 	if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
