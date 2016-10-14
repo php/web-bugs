@@ -211,6 +211,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$errors[] = "Please do not SPAM our bug system.";
 	}
 
+	if (is_spam($_POST['in']['commentemail'])) {
+		$errors[] = "Please do not SPAM our bug system.";
+	}
+
 	if (!$errors) {
 		do {
 			if (!$logged_in) {
