@@ -61,6 +61,7 @@ $security_developers = array(
 	'kaplan',
 	'davey',
 	'krakjoe',
+	'nikic',
 );
 
 $security_developers = array_merge($security_developers, $security_distro_people);
