@@ -1749,6 +1749,9 @@ function response_header($title, $extraHeaders = '')
 			<a href="random">random bug</a>&nbsp;|&nbsp;
 <?php if ($is_logged) { ?>
 			<a href="search.php?cmd=display&amp;assign=<?php echo $username;?>">my bugs</a>&nbsp;|&nbsp;
+<?php if ($logged_in === 'developer') { ?>
+			<a href="/admin/">admin</a>&nbsp;|&nbsp;
+<?php } ?>
 			<a href="logout.php">logout</a>
 <?php } else { ?>
 			<a href="login.php">login</a>
