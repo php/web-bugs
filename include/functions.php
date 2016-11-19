@@ -1907,3 +1907,32 @@ function bugs_get_hash($passwd)
 {
 	return hash_hmac('sha256', $passwd, getenv('USER_PWD_SALT'));
 }
+
+
+/**
+ * Inline content menu
+ *
+ * . The base_url is a prefix for the location, currently does not support _SERVER['QUERY_STRING']
+ * . The current_action is used to indicate which page is currently being displayed
+ * . Menu items are in (action_name => Title) array pairs
+ */
+function inline_content_menu($base_url, $current_action, array $menu)
+{
+	if (!$menu) {
+		return;
+	}
+
+	$buffer = '';
+
+	foreach ($menu as $action => $title) {
+		if ($current_action === $action) {
+			$buffer .= sprintf('<strong>%s</strong> | ', $title);
+		} else {
+			$buffer .= sprintf('<a href="%s?action=%s">%s</a> | ', $base_url, $action, $title);
+		}
+	}
+
+	echo "<p>";
+	echo rtrim($buffer, ' | ');
+	echo "</p>\n";
+}

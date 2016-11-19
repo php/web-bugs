@@ -22,6 +22,12 @@ if ($action === 'phpinfo') {
 
 response_header("Bugs admin suite");
 
+inline_content_menu('/admin/', $action, array(
+						'phpinfo' 		=> 'phpinfo()', 
+						'list_lists'		=> 'Package mailing lists', 
+						'list_responses'	=> 'Quick fix responses'
+						));
+
 if ($action === 'list_lists') {
 
 	$res = $dbh->query("
