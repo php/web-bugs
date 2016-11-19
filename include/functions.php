@@ -1936,3 +1936,18 @@ function inline_content_menu($base_url, $current_action, array $menu)
 	echo rtrim($buffer, ' | ');
 	echo "</p>\n";
 }
+
+function mailto_list(array $mails)
+{
+	if(!$mails) {
+		return;
+	}
+
+	$buffer = '';
+
+	foreach ($mails as $mail) {
+		$buffer .= sprintf('<a href="mailto:%1$s">%1$s</a>, ', $mail);
+	}
+
+	echo rtrim($buffer, ', ');
+}

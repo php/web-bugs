@@ -38,7 +38,7 @@ if ($action === 'list_lists') {
 
 	echo "<dl>\n";
 	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
-		echo "<dt>", $row['name'], ": </dt>\n<dd>", $row['list_email'], "</dd>\n";
+		echo "<dt>", $row['name'], ": </dt>\n<dd>", mailto_list(explode(',', $row['list_email'])), "</dd>\n";
 	}
 	echo "</dl>\n";
 }
