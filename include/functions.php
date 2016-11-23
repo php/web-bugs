@@ -590,7 +590,11 @@ function show_type_options($current = 'Bug', $all = false)
 	}
 
 	foreach ($bug_types as $k => $v) {
-		echo '<option value="', $k, '"', (($current == strtolower($k)) ? ' selected="selected"' : ''), ">{$k}</option>\n";
+	    if($current == $k) {
+	       echo '<option value="'. $k .'" selected="selected">'. $k .'</option>';
+	    } else {
+	        echo '<option value="'. $k .'">'. $k .'</option>';
+	    }
 	}
 }
 
