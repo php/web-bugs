@@ -7,6 +7,8 @@ require_once '../include/prepend.php';
 // Start session 
 session_start();
 
+define('SPAM_REJECT_MESSAGE', 'YOUR COMMENT LOOKS LIKE SPAM. If you are getting this message in error, please try to remove "suspicious" words from your comment and post it again. Or don\'t. Indeed, we don\'t give a damn about your comments. Or about bugs, for that matter.');
+
 // Handle preview
 if (isset($_REQUEST['id']) && $_REQUEST['id'] == 'preview') {
 	$bug_id = 'PREVIEW';
@@ -208,7 +210,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 	// primitive spam detection
 	if (is_spam($ncomment)) {
-		$errors[] = "Please do not SPAM our bug system.";
+		$errors[] = SPAM_REJECT_MESSAGE;
 	}
 
 	if (is_spam($_POST['in']['commentemail'])) {
@@ -246,7 +248,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 	// primitive spam detection
 	if (is_spam($ncomment)) {
-		$errors[] = "Please do not SPAM our bug system.";
+		$errors[] = SPAM_REJECT_MESSAGE;
 	}
 	
 	$from = $_POST['in']['commentemail'];
@@ -296,7 +298,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 	// primitive spam detection
 	if ($ncomment && is_spam($ncomment)) {
-		$errors[] = "Please do not SPAM our bug system.";
+		$errors[] = SPAM_REJECT_MESSAGE;
 	}
 
 	if (!empty($_POST['in']['email']) &&
@@ -363,7 +365,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 	// primitive spam detection
 	if (is_spam($ncomment)) {
-		$errors[] = "Please do not SPAM our bug system.";
+		$errors[] = SPAM_REJECT_MESSAGE;
 	}
 
 } elseif (isset($_POST['in']) && is_array($_POST['in']) && !isset($_POST['preview']) && $edit == 1) {
@@ -389,7 +391,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 	// primitive spam detection
 	if ($ncomment && is_spam($ncomment)) {
-		$errors[] = "Please do not SPAM our bug system.";
+		$errors[] = SPAM_REJECT_MESSAGE;
 	}
 	
 	// Just trusted dev can set CVE-ID
