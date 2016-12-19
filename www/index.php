@@ -51,6 +51,10 @@ if (bugid > 0) {
 	<li>
 		Read our tips on <a href="how-to-report.php">how to report a bug that someone will want to help fix</a>.
 	</li>
+
+	<li>
+		Read the <a href="https://wiki.php.net/security">security guidelines</a>, if you think an issue might be security related.
+	</li>
 	
 	<li>
 		See how to get a backtrace in case of a crash: 
