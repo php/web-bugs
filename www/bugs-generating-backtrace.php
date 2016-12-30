@@ -189,4 +189,6 @@ and to the PHP source for the internal data structure.</p>
 <p>You may not see <b><code>execute</code></b> if the segfault happens
 without calling any functions.</p>
 
+<p><b>See also:</b> <a href="bugs-generating-backtrace-win32.php">Generating a backtrace on Windows</a></p>
+
 <?php response_footer();
