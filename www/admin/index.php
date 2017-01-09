@@ -47,7 +47,7 @@ if ($action === 'list_responses') {
 
 	$res = $dbh->query("
 		SELECT *
-		FROM bug_resolves
+		FROM bugdb_resolves
 	");
 
 	echo "<h3>List Responses</h3>";
