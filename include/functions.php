@@ -1957,12 +1957,12 @@ function mailto_list(array $mails)
 
 if (!function_exists('apc_fetch')) {
 	function apc_fetch($key, &$success = false) {
-		apcu_fetch($key, $success);
+		return apcu_fetch($key, $success);
 	}
 }
 
 if (!function_exists('apc_store')) {
 	function apc_store($key, $var, $ttl = 0) {
-		apcu_store($key, $var, $ttl);
+		return apcu_store($key, $var, $ttl);
 	}
 }
