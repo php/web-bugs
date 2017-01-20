@@ -65,10 +65,8 @@ if (isset($patch_name) && isset($revision)) {
 		exit;
 	}
 
-	require_once 'HTTP.php';
-
 	if (isset($_GET['download'])) {
-		header('Last-modified: ' . HTTP::date(filemtime($path)));
+		header('Last-modified: ' . gmdate('l, d-M-y H:i:s \G\M\T', filemtime($path)));
 		header('Content-type: application/octet-stream');
 		header('Content-disposition: attachment; filename="' . $patch_name . '.patch.txt"');
 		header('Content-length: '.filesize($path));
