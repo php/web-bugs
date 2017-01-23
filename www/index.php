@@ -35,17 +35,16 @@ if (bugid > 0) {
 
 <h1>PHP Bug Tracking System</h1>
 
-<p>Before you report a bug, please make sure you have completed the following steps:</p>
+<p>Before you report a bug, please make sure you:</p>
 
 <ul>
 	<li>
-		Used the form above or our <a href="search.php">advanced search page</a> 
-		to make sure nobody has reported the bug already.
+		Search bug database for similar reports.
 	</li>
 
 	<li>
-		Make sure you are using the latest stable version or a build from Git, if
-		similar bugs have recently been fixed and committed.
+		Make sure you are using the latest stable version (or a build if
+		similar bugs have recently been fixed).
 	</li>
 
 	<li>
@@ -57,21 +56,10 @@ if (bugid > 0) {
 	</li>
 	
 	<li>
-		See how to get a backtrace in case of a crash: 
-		<a href="bugs-generating-backtrace.php">for *NIX</a> and
-		<a href="bugs-generating-backtrace-win32.php">for Windows</a>.
-	</li>
-	
-	<li>
-		Make sure it isn't a support question. For support,
+		Don't ask support question. Instead, see the
 		see the <a href="http://www.php.net/support.php">support page</a>.
 	</li>
 </ul>
-
-<p>Once you've double-checked that the bug you've found hasn't already been
-reported, and that you have collected all the information you need to file an
-excellent bug report, you can do so on our <a href="report.php">bug reporting
-page</a>.</p>
 
 <h1>Search the Bug System</h1>
 
@@ -81,40 +69,79 @@ at the top of the page for a basic default search.  Read the
 <a href="search-howto.php">search howto</a> for instructions on 
 how search works.</p>
 
-<p>If you have 10 minutes to kill and you want to help us out, grab a
-random open bug and see if you can help resolve it. We have made it 
-easy. Hit <a href="<?php echo $site_method?>://<?php echo $site_url?>/random">
-<?php echo $site_method?>://<?php echo $site_url?>/random</a> to go directly
-to a random open bug.</p>
-
-<p>Common searches</p>
-<ul>
 <?php
-	$base_default = "{$site_method}://{$site_url}/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open";
-	
-	$searches = array(
-		'Most recent open bugs (all)' => '&bug_type=All',
-		'Most recent open bugs (all) with patch or pull request' => '&bug_type=All&patch=Y&pull=Y',
-		'Most recent open bugs (PHP 5.6)' => '&bug_type=All&phpver=5.6',
-		'Most recent open bugs (PHP 7.0)' => '&bug_type=All&phpver=7.0',
-		'Most recent open bugs (PHP 7.1)' => '&bug_type=All&phpver=7.1',
-		'Open Documentation bugs' => '&bug_type=Documentation+Problem',
-		'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y'
-	);
+	$base_default = "{$site_method}://{$site_url}/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open&amp;";
+
+	$searches = [
+		'all' => [
+			'title' => 'Most recent open bugs (all)',
+			'url' => 'bug_type=All'
+		],
+		'all-patches' => [
+			'title' => 'Most recent open bugs (all) with patches',
+			'url' => 'bug_type=All&patch=Y&pull=Y'
+		],
+		'docs' => [
+			'title' => 'Open Documentation bugs',
+			'url' => 'bug_type=Documentation+Problem'
+		],
+		'docs-patches' => [
+			'title' => 'Open Documentation bugs with patches',
+			'url' => 'bug_type=Documentation+Problem&patch=Y',
+		],
+		'56' => [
+			'title' => 'Most recent open bugs (PHP 5.6)',
+			'url' => 'bug_type=All&phpver=5.6'
+		],
+		'70' => [
+			'title' => 'Most recent open bugs (PHP 7.0)',
+			'url' => 'bug_type=All&phpver=7.0'
+		],
+		'71' => [
+			'title' => 'Most recent open bugs (PHP 7.1)',
+			'url' => 'bug_type=All&phpver=7.1'
+		],
+	];
 
 	if (!empty($_SESSION["user"])) {
-		$searches['Your assigned bugs'] = '&assign='.urlencode($_SESSION['user']);
+		$searches[] = [
+			'title' => 'Your assigned bugs',
+			'url' => 'assign='.urlencode($_SESSION['user'])
+		];
 	}
 
-	foreach ($searches as $title => $sufix) {
-		echo '<li><a href="' . $base_default . htmlspecialchars($sufix) . '">' . $title . '</a></li>' . "\n";
-	}
+	// Make correct URLs
+	$searches = array_map(function($search) use ($base_default) {
+		$search['url'] = '<a href=""' . $base_default . urlencode($search['url']) . '>' .$search['title'] . '</a>';
+
+		return $search;
+	}, $searches);
 ?>
-</ul>
 
-<h1>Bug System Statistics</h1>
-
-<p>You can view a variety of statistics about the bugs that have been
-reported on our <a href="stats.php">bug statistics page</a>.</p>
+<table border="0" cellpadding="3" class="standard">
+	<tr>
+		<th colspan="2">Common bug system searches</th>
+	</tr>
+	<tr>
+		<td class="sub"><?= $searches['all']['url'] ?></td>
+		<td><a href=""><?= $searches['docs']['url'] ?></a></td>
+	</tr>
+	<tr>
+		<td class="sub"><?= $searches['all-patches']['url'] ?></td>
+		<td><a href=""><?= $searches['docs-patches']['url'] ?></a></td>
+	</tr>
+	<tr>
+		<td class="sub"><?= $searches['56']['url'] ?></td>
+		<td><a href="">Random bug</a></td>
+	</tr>
+	<tr>
+		<td class="sub"><?= $searches['70']['url'] ?></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="sub"><?= $searches['71']['url'] ?></td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
 
 <?php response_footer();
