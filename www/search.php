@@ -112,53 +112,51 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			$package_count = count($package_name);
 ?>
 
-<table border="0" cellspacing="2" width="100%">
+<table border="0" class="standard search-bugs">
 
 <?php show_prev_next($begin, $rows, $total_rows, $link, $limit);?>
 
 <?php if ($package_count === 1) { ?>
- <tr>
-  <td class="search-prev_next" style="text-align: center;" colspan="10">
+ <tr class="pager">
+  <th colspan="8">
 <?php
 	$pck = htmlspecialchars($package_name[0]);
 	$pck_url = urlencode($pck);
 	echo "Bugs for {$pck}\n";
 ?>
-  </td>
+  </th>
  </tr>
 <?php } ?>
 
- <tr>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=ts1">Date</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=ts2">Last Modified</a></th>
+ <tr class="heading">
+  <th><a href="<?php echo $link;?>&amp;reorder_by=id">Summary</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=ts1">Date</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=ts2">Modified</a></th>
 <?php if ($package_count !== 1) { ?>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=package_name">Package</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=package_name">Package</a></th>
 <?php } ?>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=php_version">PHP Version</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=sdesc">Summary</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=assign">Assigned</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=php_version">PHP Version</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
+  <th><a href="<?php echo $link;?>&amp;reorder_by=assign">Assigned</a></th>
  </tr>
 <?php
 
 			while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 				$status_class = $row['private'] == 'Y' ? 'Sec' : $tla[$row['status']];
 
-				echo ' <tr valign="top" class="' , $status_class, '">' , "\n";
+				echo ' <tr class="' , strtolower($status_class), '">' , "\n";
 
-				// Bug ID
-				echo '  <td align="center"><a href="bug.php?id=', $row['id'], '">', $row['id'], '</a>';
-				echo '<br><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a></td>', "\n";
+				// Short description
+				echo '  <td><a href="bug.php?id=', $row['id'], '">#', $row['id'], ': ', $row['sdesc'], '</a></td>', "\n";
 
 				// Date
 				echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
 
 				// Last Modified
 				$ts2 = strtotime($row['ts2']);
-				echo '  <td align="center">' , ($ts2 ? format_date($ts2) : 'Not modified') , "</td>\n";
+				echo '  <td align="center">' , ($ts2 ? format_date($ts2) : '<span class="default">Not modified</span>') , "</td>\n";
 
 				// Package
 				if ($package_count !== 1) {
@@ -184,9 +182,6 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 				// OS
 				echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>', "\n";
 
-				// Short description
-				echo '  <td><a href="bug.php?id=', $row['id'], '">', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</a></td>', "\n";
-
 				// Assigned to
 				echo '  <td>',  ($row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=" . urlencode($row['assign']) . '">' . htmlspecialchars($row['assign']) . '</a>') : '&nbsp;'), '</td>';
 				echo " </tr>\n";
@@ -203,7 +198,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 }
 
 display_bug_error($errors);
-display_bug_error($warnings, 'warnings', 'WARNING:');
+display_bug_error($warnings, 'warn', '<strong>Warning</strong>');
 
 ?>
 <form id="asearch" method="get" action="search.php">
@@ -352,37 +347,29 @@ response_footer();
 function show_prev_next($begin, $rows, $total_rows, $link, $limit)
 {
 	echo "<!-- BEGIN PREV/NEXT -->\n";
-	echo " <tr>\n";
-	echo '  <td class="search-prev_next" colspan="11">' . "\n";
+	echo " <tr class='pager'>\n";
+	echo '  <th colspan="9">' . "\n";
 
 	if ($limit=='All') {
-		echo "$total_rows Bugs</td></tr>\n";
+		echo "$total_rows Bugs</th></tr>\n";
 		return;
 	}
 
-	echo '   <table border="0" cellspacing="0" cellpadding="0" width="100%">' . "\n";
-	echo "	<tr>\n";
-	echo '    <td class="search-prev">';
 	if ($begin > 0) {
 		echo '<a href="' . $link . '&amp;begin=';
 		echo max(0, $begin - $limit);
-		echo '">&laquo; Show Previous ' . $limit . ' Entries</a>';
-	} else {
-		echo '&nbsp;';
-	}
-	echo "</td>\n";
+		echo '" rel="prev">&laquo; Previous page</a>';
+  }
 
-	echo '   <td class="search-showing">Showing ' . ($begin+1);
-	echo '-' . ($begin+$rows) . ' of ' . $total_rows . "</td>\n";
+	echo '   Showing ' . ($begin+1);
+	echo '-' . ($begin+$rows) . ' of ' . $total_rows . "\n";
 
-	echo '   <td class="search-next">';
 	if ($begin+$rows < $total_rows) {
 		echo '<a href="' . $link . '&amp;begin=' . ($begin+$limit);
-		echo '">Show Next ' . $limit . ' Entries &raquo;</a>';
-	} else {
-		echo '&nbsp;';
+		echo '" rel="next">Next page &raquo;</a>';
 	}
-	echo "</td>\n	</tr>\n   </table>\n  </td>\n </tr>\n";
+
+	echo "</th>\n </tr>\n";
 	echo "<!-- END PREV/NEXT -->\n";
 }
 
