@@ -112,7 +112,7 @@ how search works.</p>
 
 	// Make correct URLs
 	$searches = array_map(function($search) use ($base_default) {
-		$search['url'] = '<a href=""' . $base_default . urlencode($search['url']) . '>' .$search['title'] . '</a>';
+		$search['url'] = '<a href="' . $base_default . htmlspecialchars($search['url']) . '">' .$search['title'] . '</a>';
 
 		return $search;
 	}, $searches);
@@ -132,7 +132,7 @@ how search works.</p>
 	</tr>
 	<tr>
 		<td class="sub"><?= $searches['56']['url'] ?></td>
-		<td><a href="">Random bug</a></td>
+		<td><a href="/random">Random bug</a></td>
 	</tr>
 	<tr>
 		<td class="sub"><?= $searches['70']['url'] ?></td>
