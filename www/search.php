@@ -111,6 +111,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			$link .= '&amp;status=' . urlencode($status);
 			$package_count = count($package_name);
 ?>
+<h1>Search results</h1>
 
 <table border="0" class="standard search-bugs">
 
