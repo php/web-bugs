@@ -617,42 +617,32 @@ switch ($thanks)
 
 display_bug_error($errors);
 
-if (!$show_bug_info) {
-	echo '<div id="bugheader"></div>';
-} else{
+if ($show_bug_info) {
 ?>
-<div id="bugheader">
-	<table id="details">
-		<tr id="title">
-			<th class="details" id="number"><a href="bug.php?id=<?php echo $bug_id, '">', $bug_type , '</a>&nbsp;#' , $bug_id; ?></th>
-			<td id="summary" colspan="5"><?php echo htmlspecialchars($bug['sdesc']); ?></td>
-		</tr>
-		<tr id="submission">
-			<th class="details">Submitted:</th>
+<h1 class="bug-header"><span><?= $bug_type ?> #<?= $bug_id ?></span > <?= $bug['sdesc'] ?></h1>
+<?php
+
+if ($bug_id !== 'PREVIEW') {
+	echo '<div class="controls">', "\n",
+		control(0, 'View'),
+		($bug['private'] == 'N' ? control(3, 'Add Comment') : ''),
+		control(1, 'Developer'),
+		(!$email || $bug['email'] == $email ? control(2, 'Edit') : ''),
+		'</div>', "\n";
+}
+?>
+	<table border="0" class="bug-details">
+		<tr>
+			<th>Submitted:</th>
 			<td style="white-space: nowrap;"><?php echo format_date($bug['submitted']); ?></td>
-			<th class="details">Modified:</th>
+			<th>Modified:</th>
 			<td style="white-space: nowrap;"><?php echo ($bug['modified']) ? format_date($bug['modified']) : '-'; ?></td>
-			<td rowspan="6">
-
-<?php	if ($bug['votes']) { ?>
-				<table id="votes">
-					<tr><th class="details">Votes:</th><td><?php echo $bug['votes'] ?></td></tr>
-					<tr><th class="details">Avg. Score:</th><td><?php printf("%.1f &plusmn; %.1f", $bug['average'], $bug['deviation']); ?></td></tr>
-					<tr><th class="details">Reproduced:</th><td><?php printf("%d of %d (%.1f%%)", $bug['reproduced'], $bug['tried'], $bug['tried'] ? ($bug['reproduced'] / $bug['tried']) * 100 : 0); ?></td></tr>
-<?php		if ($bug['reproduced']) { ?>
-					<tr><th class="details">Same Version:</th><td><?php printf("%d (%.1f%%)", $bug['samever'], ($bug['samever'] / $bug['reproduced']) * 100); ?></td></tr>
-					<tr><th class="details">Same OS:</th><td><?php printf("%d (%.1f%%)", $bug['sameos'], ($bug['sameos'] / $bug['reproduced']) * 100); ?></td></tr>
-<?php		} ?>
-				</table>
-<?php	} ?>
-
-			</td>
 		</tr>
 
-		<tr id="submitter">
-			<th class="details">From:</th>
+		<tr>
+			<th>From:</th>
 			<td><?php echo ($bug['status'] !== 'Spam') ? spam_protect(htmlspecialchars($bug['email'])) : 'Hidden because of SPAM'; ?></td>
-			<th class="details">Assigned:</th>
+			<th>Assigned:</th>
 <?php if (!empty($bug['assign'])) { ?>
 			<td><a href="search.php?cmd=display&amp;assign=<?php echo urlencode($bug['assign']), '">', htmlspecialchars($bug['assign']); ?></a></td>
 <?php } else { ?>
@@ -660,43 +650,30 @@ if (!$show_bug_info) {
 <?php } ?>
 		</tr>
 
-		<tr id="categorization">
-			<th class="details">Status:</th>
+		<tr>
+			<th>Status:</th>
 			<td><?php echo htmlspecialchars($bug['status']); ?></td>
-			<th class="details">Package:</th>
+			<th>Package:</th>
 			<td><a href="search.php?cmd=display&amp;package_name[]=<?php echo urlencode($bug['package_name']), '">', htmlspecialchars($bug['package_name']); ?></a><?php echo $bug['project'] == 'pecl' ? ' (<a href="http://pecl.php.net/package/'. htmlspecialchars($bug['package_name']) . '" target="_blank">PECL</a>)' : ''; ?></td>
 		</tr>
 
-		<tr id="situation">
-			<th class="details">PHP Version:</th>
+		<tr>
+			<th>PHP Version:</th>
 			<td><?php echo htmlspecialchars($bug['php_version']); ?></td>
-			<th class="details">OS:</th>
+			<th>OS:</th>
 			<td><?php echo htmlspecialchars($bug['php_os']); ?></td>
 		</tr>
 		
-		<tr id="private">
-			<th class="details">Private report:</th>
+		<tr>
+			<th>Private report:</th>
 			<td><?php echo $bug['private'] == 'Y' ? 'Yes' : 'No'; ?></td>
-			<th class="details">CVE-ID:</th>
+			<th>CVE-ID:</th>
 			<td><?php if (!empty($bug['cve_id'])) { printf('<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-%s" target="_blank">%1$s</a>', htmlspecialchars($bug['cve_id'])); } ?></td>
 		</tr>
 	</table>
-</div>
 
-<?php
-}
-
-if ($bug_id !== 'PREVIEW') {
-	echo '<div class="controls">', "\n",
-		control(0, 'View'),
-		($bug['private'] == 'N' ? control(3, 'Add Comment') : ''),
-		control(1, 'Developer'),
-		(!$email || $bug['email'] == $email? control(2, 'Edit') : ''),
-		'</div>', "\n";
-?>
-<div class="clear"></div>
-
-<?php if ($show_bug_info && !$edit && canvote($thanks, $bug['status'])) { ?>
+<?php // fixme: re-add voting ?>
+<?php if ($show_bug_info && !$edit && canvote($thanks, $bug['status']) && false) { ?>
 <form id="vote" method="post" action="vote.php">
 	<div class="sect">
 		<fieldset>
@@ -1054,7 +1031,7 @@ if ($bug['ldesc']) {
 	if (!$show_bug_info) {
 		echo 'This bug report is marked as private.';
 	} else if ($bug['status'] !== 'Spam') {
-		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], 'comment', $bug['reporter_name'], false);
+		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], $bug['reporter_name']);
 	} else {
 		echo 'The original report has been hidden, due to the SPAM status.';
 	}
@@ -1096,37 +1073,21 @@ OUTPUT;
 
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
-if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['status'] !== 'Spam') {
-	$history_tabs = array(
-		'type_all'     => 'All',
-		'type_comment' => 'Comments',
-		'type_log'     => 'Changes',
-		'type_svn'     => 'Git/SVN commits',
-		'type_related' => 'Related reports'
-	);
+if ($show_bug_info && count($bug_comments) && $bug['status'] !== 'Spam') {
+?>
+<h3>History</h3>
+<div class="controls comments">
+	<span data-type="all" class="active">All</span>
+	<span data-type="comment">Comments</span>
+	<span data-type="log">Changes</span>
+	<span data-type="svn">Commits/Patches</span>
+	<span data-type="related">Related</span>
+</div>
 
-	if (!isset($_COOKIE['history_tab']) || !isset($history_tabs[$_COOKIE['history_tab']])) {
-		$active_history_tab = 'type_all';
-	} else {
-		$active_history_tab = $_COOKIE['history_tab'];
-	}
-	echo '<h2 style="border-bottom:2px solid #666;margin-bottom:0;padding:5px 0;">History</h2>',
-			"<div id='comment_filter' class='controls comments'>";
-
-	foreach ($history_tabs as $id => $label)
-	{
-		$class_extra = ($id == $active_history_tab) ? 'active' : '';
-		echo "<span id='{$id}' class='control {$class_extra}' onclick='do_comment(this);'>{$label}</span>";
-	}
-	
-	echo '			</div>
-			';
-
-	echo "<div id='comments_view' style='clear:both;'>\n";
+<?php
 	foreach ($bug_comments as $row) {
-		output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type'], $row['comment_name'], !($active_history_tab == 'type_all' || ('type_' . $row['comment_type']) == $active_history_tab));
+		output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_name'], $row['comment_type']);
 	}
-	echo "</div>\n";
 }
 
 if ($bug_id == 'PREVIEW') {
@@ -1147,34 +1108,6 @@ if ($bug_id == 'PREVIEW') {
 </form>
 
 <?php }
-
-$bug_JS = <<< bug_JS
-<script type='text/javascript' src='js/util.js'></script>
-<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
-<script type="text/javascript" src="js/jquery.cookie.js"></script>
-<script type="text/javascript">
-function do_comment(nd)
-{
-	$('#comment_filter > .control.active').removeClass("active");
-	$(nd).addClass("active");
-	
-	$.cookie('history_tab', nd.id, { expires: 365 });
-	
-	if (nd.id == 'type_all') { 
-		$('#comments_view > .comment:hidden').show('slow');
-	} else {
-		$('#comments_view > .comment').each(function(i) {
-			if ($(this).hasClass(nd.id)) {
-				$(this).show('slow');
-			} else {
-				$(this).hide('slow');
-			}
-		});
-	}
-	return false;
-}
-</script>
-bug_JS;
 
 if ($edit == 1) {
 	$bug_JS .= '
@@ -1204,42 +1137,59 @@ function mark_related_bugs($from, $comment_name, $ncomment)
 	}
 }
 
-function link_to_people($email, $text)
+function is_php_user($email)
 {
-    $domain = strstr($email, "@");
-    if ($domain == "@php.net") {
-        $username = strstr($email, "@", true);
-        return '<a href="//people.php.net/user.php?username=' . urlencode($username) . '">' . $text . '</a>';
-    }
-    return $text;
+	return strstr($email, '@') == '@php.net';
 }
 
-function output_note($com_id, $ts, $email, $comment, $comment_type, $comment_name, $is_hidden = false)
+function output_note($com_id, $ts, $email, $comment, $comment_name, $comment_type = null)
 {
 	global $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
 
-	$display = (!$is_hidden) ? '' : 'style="display:none;"';
-
-	echo "<div class='comment type_{$comment_type}' {$display}>";
-	echo '<a name="' , urlencode($ts) , '">&nbsp;</a>';
-	echo "<strong>[" , format_date($ts) , "] ";
-	echo link_to_people($email, spam_protect(htmlspecialchars($email))) , "</strong>\n";
-
-	switch ($comment_type)
-	{
-		case 'log':
-			echo "<div class='log_note'>{$comment}</div>";
-			break;
-
-		default:
-			// Delete comment action only for trusted developers
-			echo ($edit == 1 && $com_id !== 0 && $is_trusted_developer) ? "<a href='bug.php?id={$bug_id}&amp;edit=1&amp;delete_comment={$com_id}'>[delete]</a>\n" : '';
-
-			$comment = make_ticket_links(addlinks($comment));
-			echo "<pre class='note'>{$comment}\n</pre>\n";
+	// $com_id = 0 means the bug report itself is being displayed, not a comment
+	if ($com_id == 0) {
+		echo '<div class="report" id="report">';
+		echo output_vote_buttons($bug_id, 2);
+	} else {
+		echo '<div class="report comment" data-type="' . $comment_type . '" id="comment-' . $com_id . '">';
 	}
 
+	if (is_php_user($email)) {
+		echo '<a href="//people.php.net/' . urlencode($user) . ' class="name user">' . spam_protect(esc($email)) . '</a>';
+	} else {
+		echo '<span class="name">' . spam_protect($email) . '</span>';
+	}
+	echo '<a class="genanchor" href="#' . ($com_id == 0 ? 'report' : 'comment-' . $com_id) . '"> &para;</a>';
+
+	echo '<time class="date" datetime="' . format_date($ts, DATE_W3C) .'">' . format_date($ts) . '</time>';
+
+	// Delete comment action only for trusted developers
+	echo ($edit == 1 && $com_id !== 0 && $is_trusted_developer && $comment_type != 'log')
+		? "<a href='bug.php?id={$bug_id}&amp;edit=1&amp;delete_comment={$com_id}'>[delete]</a>\n"
+		: '';
+
+	if ($comment_type != 'log') {
+		$comment = '<pre>' . make_ticket_links(addlinks($comment)) . '</pre>';
+	}
+
+	echo '<div class="text">' . $comment . '</div>';
+
 	echo '</div>';
+}
+
+function output_vote_buttons($bug_id, $score = 0)
+{
+?>
+	<div class="votes">
+		<div id="Vu<?= $bug_id ?>">
+			<a href="" title="Vote up!" class="usernotes-voteu">up</a>
+		</div>
+		<div id="Vd<?= $bug_id ?>">
+			<a href="" title="Vote down!" class="usernotes-voted">down</a>
+		</div>
+		<div class="tally"><?= $score ?></div>
+	</div>
+<?php
 }
 
 function delete_comment($bug_id, $com_id)
@@ -1253,11 +1203,11 @@ function control($num, $desc)
 {
 	global $bug_id, $edit;
 
-	$str = "<span id='control_{$num}' class='control";
+	$str = "<span";
 	if ($edit == $num) {
-		$str .= " active'>{$desc}";
+		$str .= " class='active'>{$desc}";
 	} else {
-		$str .= "'><a href='bug.php?id={$bug_id}" . (($num) ? "&amp;edit={$num}" : '') . "'>{$desc}</a>";
+		$str .= "><a href='bug.php?id={$bug_id}" . (($num) ? "&amp;edit={$num}" : '') . "'>{$desc}</a>";
 	}
 	return "{$str}</span>\n";
 }
