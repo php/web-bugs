@@ -1140,7 +1140,7 @@ DEV_TEXT;
  *
  * @return string	the formatted date
  */
-function format_date($ts = null, $format = 'Y-m-d H:i e')
+function format_date($ts = null, $format = 'Y-m-d H:i')
 {
 	if (!$ts) {
 		$ts = time();
