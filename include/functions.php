@@ -1717,102 +1717,84 @@ function response_header($title, $extraHeaders = '')
 
 	$_header_done = true;
 
+	$search = isset($_GET['search_for']) ? htmlspecialchars($_GET['search_for']) : '';
+
 	header('Content-Type: text/html; charset=UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<?php echo $extraHeaders; ?>
-	<base href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/">
-	<title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
-	<link rel="shortcut icon" href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/images/favicon.ico">
-	<link rel="stylesheet" href="<?php echo $site_method?>://<?php echo $site_url, $basedir; ?>/css/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title><?php echo $siteBig; ?> :: <?php echo $title; ?></title>
+  <link rel="stylesheet" href="assets/css/fonts.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <?php echo $extraHeaders; ?>
 </head>
-
 <body>
 
-<table id="top" class="head" cellspacing="0" cellpadding="0">
-	<tr>
-		<td class="head-logo">
-			<a href="/"><img src="images/logo.gif" alt="Bugs" vspace="2" hspace="2"></a>
-		</td>
+<nav id="head-nav" class="navbar navbar-fixed-top">
+  <div class="navbar-inner clearfix">
+    <a href="index.php" class="brand"><img src="assets/images/php-logo.svg" width="48" height="24" alt="php">bugs</a>
+    <div id="mainmenu-toggle-overlay"></div>
+    <input type="checkbox" id="mainmenu-toggle">
+    <ul class="nav">
+      <li class=""><a href="report.php">Report a bug</a></li>
+      <li class=""><a href="search.php">Advanced search</a></li>
+<?php if ($is_logged): ?>
+      <?php if ($logged_in == 'developer'): ?><li class=""><a href="admin/index.php">Admin</a></li><?php endif; ?>
+      <li class=""><a href="search.php?cmd=display&amp;assign=<?= $username ?>">My bugs</a></li>
+      <li class=""><a href="logout.php" >Logout</a></li>
+<?php else: ?>
+      <li class=""><a href="login.php" >Login</a></li>
+<?php endif; ?>
+    </ul>
+    <form class="navbar-search" id="topsearch" action="search.php">
+      <input type="search" name="pattern" class="search-query" placeholder="Search bugs" value="<?= $search ?>" accesskey="s">
+    </form>
+  </div>
+</nav>
 
-		<td class="head-menu">
-			<a href="http://www.php.net/">php.net</a>&nbsp;|&nbsp;
-			<a href="http://www.php.net/support.php">support</a>&nbsp;|&nbsp;
-			<a href="http://www.php.net/docs.php">documentation</a>&nbsp;|&nbsp;
-			<a href="report.php">report a bug</a>&nbsp;|&nbsp;
-			<a href="search.php">advanced search</a>&nbsp;|&nbsp;
-			<a href="search-howto.php">search howto</a>&nbsp;|&nbsp;
-			<a href="stats.php">statistics</a>&nbsp;|&nbsp;
-			<a href="random">random bug</a>&nbsp;|&nbsp;
-<?php if ($is_logged) { ?>
-			<a href="search.php?cmd=display&amp;assign=<?php echo $username;?>">my bugs</a>&nbsp;|&nbsp;
-<?php if ($logged_in === 'developer') { ?>
-			<a href="/admin/">admin</a>&nbsp;|&nbsp;
-<?php } ?>
-			<a href="logout.php">logout</a>
-<?php } else { ?>
-			<a href="login.php">login</a>
-<?php } ?>
-		</td>
-	</tr>
+<div id="layout" class="clearfix">
+  <section id="layout-content">
 
-	<tr>
-		<td class="head-search" colspan="2">
-			<form method="get" action="search.php">
-				<p class="head-search">
-					<input type="hidden" name="cmd" value="display">
-					<small>go to bug id or search bugs for</small>
-					<input class="small" type="text" name="search_for" value="<?php print isset($_GET['search_for']) ? htmlspecialchars($_GET['search_for']) : ''; ?>" size="30">
-					<input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;">
-				</p>
-			</form>
-		</td>
-	</tr>
-</table>
-
-<table class="middle" cellspacing="0" cellpadding="0">
-	<tr>
-		<td class="content">
 <?php
 }
 
 
 function response_footer($extra_html = '')
 {
-	global $_footer_done, $LAST_UPDATED, $basedir;
+	global $_footer_done, $basedir;
 
 	if ($_footer_done) {
 		return;
 	}
 	$_footer_done = true;
 ?>
-		</td>
-	</tr>
-</table>
+</section>
+</div>
 
+<footer>
+  <div class="container footer-content">
+    <div class="row-fluid">
+      <ul class="footmenu">
+        <li><a href="http://php.net/copyright.php">Copyright &copy; 2001-2017 The PHP Group</a></li>
+        <li><a href="http://php.net/sites">Other PHP.net sites</a></li>
+        <li><a href="stats.php">Bug Statistics</a></li>
+        <li><a href="search-howto.php">Search Howto</a></li>
+        <li><a href="random">Random Bug</a></li>
+        <li class="footer-utc">All timestamps are in UTC</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollTo.min.js"></script>
+<script src="assets/js/scripts.js"></script>
 <?php echo $extra_html; ?>
 
-<table class="foot" cellspacing="0" cellpadding="0">
-	<tr>
-		<td class="foot-bar" colspan="2">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td class="foot-copy">
-			<small>
-				<a href="http://www.php.net/"><img src="images/logo-small.gif" align="left" valign="middle" hspace="3" alt="PHP"></a>
-				<a href="http://www.php.net/copyright.php">Copyright &copy; 2001-<?php echo date('Y'); ?> The PHP Group</a><br>
-				All rights reserved.
-			</small>
-		</td>
-		<td class="foot-source">
-			<small>Last updated: <?php echo $LAST_UPDATED; ?></small>
-		</td>
-	</tr>
-</table>
+<a id="toTop" href="javascript:;"><span id="toTopHover"></span><img width="40" height="40" alt="To Top" src="assets/images/to-top@2x.png"></a>
 </body>
 </html>
 <?php
