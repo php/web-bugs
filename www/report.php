@@ -322,6 +322,7 @@ REPORT;
 	} else {
 		// had errors...
 		response_header('Report - Problems');
+		echo '<h1>Report new bug</h1>';
 	}
 } // end of if input
 
@@ -329,6 +330,7 @@ $package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : (!empty($packag
 
 if (!is_string($package)) {
 	response_header('Report - Problems');
+	echo '<h1>Report new bug</h1>';
 	$errors[] = 'Invalid package name passed. Please fix it and try again.';
 	display_bug_error($errors);
 	response_footer();
@@ -352,28 +354,17 @@ if (!isset($_POST['in'])) {
 	);
 	response_header('Report - New');
 ?>
+	<h1>Report new bug</h1>
 
-	<p>
-		Before you report a bug, make sure to search for similar bugs using the &quot;Bug List&quot; link.
-		Also, read the instructions for <a target="top" href="how-to-report.php">how to report a bug that someone will want to help fix</a>.
+	<p class="warn">
+		Failure to follow bug reporting instructions noted on the <a href="index.php">main page</a>
+		may result in your bug simply being marked as <em>Not a bug</em>.
 	</p>
 
-	<p>
-		If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support
-		<a href="http://www.php.net/support.php">listed here</a>.
-	</p>
-
-	<p>
-		<strong>Failure to follow these instructions may result in your bug simply being marked as &quot;not a bug.&quot;</strong>
-	</p>
-
-	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="http://pear.php.net/bugs/">here</a></p>
-
-	<p>
-		<strong>If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, then email
-
+	<p class="warn">
+		If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, then email
 		<?php echo make_mailto_link("{$site_data['security_email']}?subject=%5BSECURITY%5D+possible+new+bug%21", $site_data['security_email']); ?>
-		who will assess the situation or use <strong>Security</strong> as bug type in the form below.</strong>
+		who will assess the situation or set <em>Security</em> bug type below.
 	</p>
 
 <?php
@@ -383,81 +374,82 @@ if (!isset($_POST['in'])) {
 display_bug_error($errors);
 
 ?>
-	<form method="post" action="report.php?package=<?php echo htmlspecialchars($package); ?>" name="bugreport" id="bugreport" enctype="multipart/form-data">
+	<form method="post" action="report.php?package=<?php echo htmlspecialchars($package); ?>" enctype="multipart/form-data">
 		<input type="hidden" name="in[did_luser_search]" value="<?php echo isset($_POST['in']['did_luser_search']) ? $_POST['in']['did_luser_search'] : 0; ?>">
-		<table class="form-holder" cellspacing="1">
-<?php if ($logged_in) { ?>
+		<table border="0" class="standard report-bug-form">
 			<tr>
-				<th class="form-label_left">Your handle:</th>
-				<td class="form-input">
-					<?php echo $auth_user->handle; ?>
+				<th><label for="in_sdesc" class="required">Bug title</label></th>
+				<td>
+					<input type="text" maxlength="79" name="in[sdesc]" id="in_sdesc" value="<?= esc($_POST['in']['sdesc']) ?>" required>
+				</td>
+			</tr>
+<?php if ($logged_in): ?>
+			<tr>
+				<th>Logged as</th>
+				<td class="static">
+					<?php echo $auth_user->handle; ?>@php.net
 					<input type="hidden" name="in[email]" value="<?php echo $auth_user->email; ?>">
 				</td>
 			</tr>
-<?php } else { ?>
+<?php else: ?>
 			<tr>
-				<th class="form-label_left">Y<span class="accesskey">o</span>ur email address:<br><strong>MUST BE VALID</strong></th>
-					<td class="form-input">
-						<input type="text" size="20" maxlength="40" name="in[email]" value="<?php echo htmlspecialchars($_POST['in']['email'], ENT_COMPAT, 'UTF-8'); ?>" accesskey="o">
-					</td>
+				<th>
+					<label for="in_email" class="required">Your email address</label>
+					<small><strong>MUST BE VALID</strong></small>
 				</th>
-			</tr>
-
-			<tr>
-				<th class="form-label_left"><span class="accesskey">P</span>assword:</th>
-				<td class="form-input">
-					<input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8');?>" accesskey="p"><br>
-					You <strong>must</strong> enter any password here, which will be stored for this bug report.<br>
-					This password allows you to come back and modify your submitted bug report at a later date.
-					[<a href="bug-pwd-finder.php">Lost a bug password?</a>]
-				</td>
-			</tr>
-<?php } ?>
-
-			<tr>
-				<th class="form-label_left">PHP version:</th>
-				<td class="form-input">
-					<select name="in[php_version]">
-						<?php show_version_options($_POST['in']['php_version']); ?>
-					</select>
-				</td>
-			</tr>
-			
-			<tr>
-				<th class="form-label_left">Package affected:</th>
-				<td class="form-input">
-					<select name="in[package_name]">
-						<?php show_package_options($_POST['in']['package_name'], 0, htmlspecialchars($package)); ?>
-					</select>
+				<td>
+					<input type="email" maxlength="40" name="in[email]" id="in_email" value="<?= esc($_POST['in']['email']) ?>" required>
 				</td>
 			</tr>
 
 			<tr>
-				<th class="form-label_left">Bug Type:</th>
-				<td class="form-input">
-					<select name="in[bug_type]">
+				<th>
+					<label for="in_password" class="required">Password</label>
+					<small>Set any password for this bug report so that you can alter it later.</small>
+				</th>
+				<td>
+					<input type="password" maxlength="20" name="in[passwd]" id="in_password" value="<?= esc($_POST['in']['passwd']) ?>" required>
+				</td>
+			</tr>
+<?php endif; ?>
+
+			<tr>
+				<th><label for="in_bug_type" class="required">Bug type</label></th>
+				<td>
+					<select name="in[bug_type]" id="in_bug_type" required>
 						<?php show_type_options($_POST['in']['bug_type']); ?>
 					</select>
 				</td>
 			</tr>
 
 			<tr>
-				<th class="form-label_left">Operating system:</th>
-				<td class="form-input">
-					<input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo htmlspecialchars($_POST['in']['php_os'], ENT_COMPAT, 'UTF-8'); ?>">
+				<th><label for="in_php_version" class="required">PHP version</label></th>
+				<td>
+					<select name="in[php_version]" id="in_php_version" required>
+						<?php show_version_options($_POST['in']['php_version']); ?>
+					</select>
 				</td>
 			</tr>
 
 			<tr>
-				<th class="form-label_left">Summary:</th>
-				<td class="form-input">
-					<input type="text" size="40" maxlength="79" name="in[sdesc]" value="<?php echo htmlspecialchars($_POST['in']['sdesc'], ENT_COMPAT, 'UTF-8'); ?>">
+				<th><label for="in_package_name" class="required">Package affected</label></th>
+				<td>
+					<select name="in[package_name]" id="in_package_name">
+						<?php show_package_options($_POST['in']['package_name'], 0, htmlspecialchars($package)); ?>
+					</select>
 				</td>
 			</tr>
 
 			<tr>
-				<th class="form-label_left">Note:</th>
-				<td class="form-input">
+				<th><label for="in_php_os">Operating system</label></th>
+				<td>
+					<input type="text" maxlength="32" name="in[php_os]" id="in_php_os" value="<?= esc($_POST['in']['php_os']) ?>">
+				</td>
+			</tr>
+
+			<tr>
+				<th>Note</th>
+				<td>
 					Please supply any information that may be helpful in fixing the bug:
 					<ul>
 						<li>The version number of the <?php echo $siteBig; ?> package or files you are using.</li>
@@ -471,61 +463,63 @@ display_bug_error($errors);
 			</tr>
 
 			<tr>
-				<th class="form-label_left">
-					Description:
-					<p class="cell_note">
-						Put short code samples in the &quot;Test script&quot; section <strong>below</strong>
-						and upload patches <strong>below</strong>.
-					</p>
+				<th>
+					<label for="in_ldesc" class="required">Description</label>
+					<small>Note that there are separate fields for test script and patches</small>
 				</th>
-				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[ldesc]" wrap="soft"><?php echo htmlspecialchars($_POST['in']['ldesc'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+				<td>
+					<textarea rows="9" name="in[ldesc]" id="in_ldesc" required><?= esc($_POST['in']['ldesc']) ?></textarea>
 				</td>
 			</tr>
 			<tr>
-				<th class="form-label_left">
-					Test script:
-					<p class="cell_note">
-						A short test script you wrote that demonstrates the bug.
-						Please <strong>do not</strong> post more than 20 lines of code.
-						If the code is longer than 20 lines, provide a URL to the source
-						code that will reproduce the bug.
-					</p>
+				<th>
+					<label for="in_repcode">Test script</label>
+					<small>
+						A short test script you wrote that demonstrates the bug. If the code
+						is longer than 20 lines, provide a URL to the code (e.g. using pastebin).
+					</small>
 				</th>
-				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[repcode]" wrap="no"><?php echo htmlspecialchars($_POST['in']['repcode'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+				<td>
+					<textarea rows="9" name="in[repcode]" id="in_repcode"><?= esc($_POST['in']['repcode']) ?></textarea>
 				</td>
 			</tr>
 <?php
 	$patchname = isset($_POST['in']['patchname']) ? $_POST['in']['patchname'] : '';
 	$patchfile = isset($_FILES['patchfile']['name']) ? $_FILES['patchfile']['name'] : '';
-	include "{$ROOT_DIR}/templates/patchform.php";
 ?>
+			<tr>
+				<th>
+					<label for="in_patchfile">Patch file</label>
+					<small>A patch file created using git diff</small>
+				</th>
+				<td><input type="file" name="patchfile" id="in_patchfile"></td>
+			</tr>
 
 			<tr>
-				<th class="form-label_left">
-					Expected result:
-					<p class="cell_note">
-						Skip if irrelevant.
-						What do you expect to happen or see when you run the test script above?
-					</p>
+				<th><label for="in_patchname">Patch name</label></th>
+				<td><input type="text" maxlength="80" name="in[patchname]" id="in_patchname" value="<?php echo clean($patchname) ?>" placeholder="php-bugfix-001.patch"></td>
+			</tr>
+
+			<tr>
+				<th>
+					<label for="in_expres">Expected result</label>
+					<small>What do you expect to happen or see when you run the test script above?</small>
 				</th>
-				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[expres]" wrap="soft"><?php echo htmlspecialchars($_POST['in']['expres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+				<td>
+					<textarea rows="9" name="in[expres]" id="in_expres"><?= esc($_POST['in']['expres']) ?></textarea>
 				</td>
 			</tr>
 
 			<tr>
-				<th class="form-label_left">
-					Actual result:
-					<p class="cell_note">
-						Skip if irrelevant.
+				<th>
+					<label for="actres">Actual result<label>
+					<small>
 						This could be a <a href="bugs-generating-backtrace.php">backtrace</a> for example.
 						Try to keep it as short as possible without leaving anything relevant out.
-					</p>
+					</small>
 				</th>
-				<td class="form-input">
-					<textarea cols="80" rows="15" name="in[actres]" wrap="soft"><?php echo htmlspecialchars($_POST['in']['actres'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+				<td>
+					<textarea rows="9" name="in[actres]" id="in_actres"><?= esc($_POST['in']['actres']) ?></textarea>
 				</td>
 			</tr>
 
@@ -533,21 +527,25 @@ display_bug_error($errors);
 	$captcha = $numeralCaptcha->getOperation();
 	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 	if (!empty($_POST['captcha']) && empty($ok_to_submit_report)) {
-		$captcha_label = '<strong>Solve this <em>new</em> problem:</strong>';
+		$captcha_label = 'Human test (again)';
 	} else {
-		$captcha_label = 'Solve the problem:';
+		$captcha_label = 'Human test';
 	}
 ?>
 			<tr>
-				<th><?php echo $captcha_label; ?><br><?php echo htmlspecialchars($captcha); ?> = ?</th>
-				<td class="form-input"><input type="text" name="captcha" autocomplete="off"></td>
+				<th>
+					<label for="in_captcha" class="required"><?= $captcha_label ?></label>
+				</th>
+				<td>
+					<span class="captcha-question"><?= esc($captcha) ?> = </span>
+					<input type="text" name="captcha" autocomplete="off" required>
+				</td>
 			</tr>
 <?php } ?>
 
 			<tr>
-				<th class="form-label_left">Submit:</th>
-				<td class="form-input">
-					<input type="submit" value="Send bug report">
+				<th class="buttons" colspan="2">
+					<input type="submit" value="Send bug report"> or 
 					<input type="submit" value="Preview" name="preview">
 				</td>
 			</tr>

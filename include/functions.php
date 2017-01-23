@@ -794,7 +794,7 @@ function show_boolean_options($current)
  *
  * @return bool		true if errors were submitted, false if not
  */
-function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
+function display_bug_error($in, $class = 'warn', $head = '<strong>Error</strong>')
 {
 	if (PEAR::isError($in)) {
 		if (DEVBOX == true) {
@@ -1935,6 +1935,10 @@ function mailto_list(array $mails)
 	}
 
 	echo rtrim($buffer, ', ');
+}
+
+function esc($string) {
+	return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
 }
 
 if (!function_exists('apc_fetch')) {
