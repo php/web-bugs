@@ -362,9 +362,9 @@ if (!isset($_POST['in'])) {
 	</p>
 
 	<p class="warn">
-		If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, then email
+		If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, email
 		<?php echo make_mailto_link("{$site_data['security_email']}?subject=%5BSECURITY%5D+possible+new+bug%21", $site_data['security_email']); ?>
-		who will assess the situation or set <em>Security</em> bug type below.
+		or set <em>Security</em> bug type below.
 	</p>
 
 <?php
