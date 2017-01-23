@@ -7,18 +7,18 @@ response_header('Generating a gdb backtrace');
 
 <h3>Noticing PHP crashes</h3>
 
-There's no absolute way to know that PHP is crashing, but there may
+<p>There's no absolute way to know that PHP is crashing, but there may
 be signs. Typically, if you access a page that is always supposed
 to generate output (has a leading HTML block, for example), and
 suddenly get "Document contains no data" from your browser, it may
 mean that PHP crashes somewhere along the execution of the script.
 Another way to tell that PHP is crashing is by looking at the Apache
 error logs, and looking for SEGV (Apache 1.2) or Segmentation
-Fault (Apache 1.3).
+Fault (Apache 1.3).</p>
 
 <h3>Important!</h3>
-To get a backtrace with correct information you must have
-PHP configured with <code>--enable-debug</code>!
+<p>To get a backtrace with correct information you must have
+PHP configured with <code>--enable-debug</code>!</p>
 
 <h3>If you don't have a core file yet:</h3>
 
@@ -138,7 +138,7 @@ be used as a guideline on how to handle your segfault.</p>
 
 <ul>
 	<li>Sample gdb session</li>
-	<pre><code>
+	<pre class="code-box">
 (gdb) bt
 #0  0x080ca21b in _efree (ptr=0xbfffdb9b) at zend_alloc.c:240
 #1  0x080d691a in _zval_dtor (zvalue=0x8186b94) at zend_variables.c:44
@@ -162,7 +162,7 @@ $15 = 0x816cfc4 "result_error"
 (gdb) print (char *)executor_globals.active_op_array->filename
 $16 = 0x816afbc "/home/yohgaki/php/DEV/segfault.php"
 (gdb) 
-	</code></pre>
+	</pre>
 </ul>
 
 <p>In this session, frame 3 is the last <b><code>execute()</code></b>

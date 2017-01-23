@@ -5,10 +5,10 @@ response_header('Generating a valgrind log');
 
 <h1>Generating a valgrind log</h1>
 
-<h3>Important!</h3>
-To get a meaningful log you must have
-PHP configured with <code>--enable-debug</code> 
-and disable Zend memory manager.
+<p class="warn">
+  To get a meaningful log you must have PHP configured with <code>--enable-debug</code>
+  and disable Zend memory manager.
+</p>
 
 <h3>Disabling Zend MM</h3>
 
@@ -21,8 +21,8 @@ and disable Zend memory manager.
 </p>
 <p>
  Use
- <pre><code>export USE_ZEND_ALLOC=0</code></pre> or 
- <pre><code>setenv USE_ZEND_ALLOC 0</code></pre> (the syntax depends on 
+ <pre class="code-box">export USE_ZEND_ALLOC=0<</pre> or 
+ <pre class="code-box">setenv USE_ZEND_ALLOC 0</pre> (the syntax depends on 
  what your shell supports).
 </p>
 <p>
@@ -35,8 +35,8 @@ and disable Zend memory manager.
 
 <p>
  To correctly show the stack frames for extensions compiled as shared libraries, set:
- <pre><code>export ZEND_DONT_UNLOAD_MODULES=1</code></pre> or 
- <pre><code>setenv ZEND_DONT_UNLOAD_MODULES 1</code></pre> (the syntax depends on 
+ <pre class="code-box">export ZEND_DONT_UNLOAD_MODULES=1</pre> or 
+ <pre class="code-box">setenv ZEND_DONT_UNLOAD_MODULES 1</pre> (the syntax depends on 
  what your shell supports).
 </p>
 
@@ -51,10 +51,8 @@ and disable Zend memory manager.
  you need to execute the following command: 
 </p>
 
-<pre>
- <code>
+<pre class="code-box">
  valgrind --tool=memcheck --num-callers=30 --log-file=php.log /path/to/php-cli script.php
- </code>
 </pre>
 
 <p>
@@ -75,11 +73,9 @@ and disable Zend memory manager.
  the required debug info. To check it, run <code>file /path/to/httpd</code>, 
  it should output something like this (notice &quot;not stripped&quot;):
 </p>
-<pre>
- <code>
+<pre class="code-box">
  # file /usr/local/apache2/bin/httpd
  /usr/local/apache2/bin/httpd: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), for GNU/Linux 2.6.4, dynamically linked (uses shared libs), not stripped
- </code>
 </pre>
 
 <p>
@@ -87,10 +83,8 @@ and disable Zend memory manager.
  you need to run the Apache itself under valgrind: 
 </p>
 
-<pre>
- <code>
+<pre class="code-box">
  valgrind --tool=memcheck --num-callers=30 --log-file=apache.log /usr/local/apache/bin/httpd -X
- </code>
 </pre>
 
 <p>

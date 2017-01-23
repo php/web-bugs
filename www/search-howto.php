@@ -30,23 +30,23 @@ Load the advanced search to view the default values.
 Some explanations for most of the PHP bugs <a href="search.php">advanced search</a> 
 options.
 </p>
-<table cellpadding="2" cellspacing="0" border="1" bgcolor="#eeeeee">
-	<tr class="headerbottom" align="left">
-		<td><strong>Feature</strong></td>
-		<td><strong>Explanation</strong></td>
-		<td><strong>Possible reasons for use</strong></td>
+<table border="0" class="standard">
+	<tr>
+		<th>Feature</th>
+		<th>Explanation</th>
+		<th>Possible reasons for use</th>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td>Find bugs</td>
 		<td>
 			The main search text box for your search terms with each term being separated
 			by a space. The searched database fields are: author email, subject, and description.
 			Minimum term length is three characters. There are three types of searches:
 			<ul>
-				<li><i>all</i> : (default) All search terms are required.</li>
-				<li><i>any</i> : One or more (any) of the search terms may be present.</li>
+				<li><i>all</i>: (default) All search terms are required.</li>
+				<li><i>any</i>: One or more (any) of the search terms may be present.</li>
 				<li>
-					<i>raw</i> : Allows full use of MySQL's
+					<i>raw</i>: Allows full use of MySQL's
 					<a href="http://www.mysql.com/doc/en/Fulltext_Search.html">FULLTEXT</a> 
 					boolean search operators.
 				</li>
@@ -93,7 +93,7 @@ options.
 		</td>
 		<td>If you're only interested in critical bugs, or want to see which have been verified, or perhaps just those seeking feedback.</td>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td>Category</td>
 		<td>
 			Bugs are categorized although sometimes it might seem like a bug could be in
@@ -103,7 +103,7 @@ options.
 		</td>
 		<td>&nbsp;</td>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td>OS</td>
 		<td>
 			Bugs that may be specific to an operating system. This value is entered in by the 
@@ -114,7 +114,7 @@ options.
 		</td>
 		<td>Although not an accurate field, it may be of some use.</td>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td>Version</td>
 		<td>
 			Limit bugs to a specific version of PHP. A one character integer of 3, 4 or
@@ -127,7 +127,7 @@ options.
 			version information.
 		</td>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td>Assigned</td>
 		<td>
 			Some bugs get assigned to PHP developers, in which case you may specify by
@@ -135,12 +135,12 @@ options.
 		</td>
 		<td>Example use is limiting the bugs assigned to yourself.</td>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td>Author email</td>
 		<td>Takes on an email address of the original author of a bug.</td>
 		<td>Looking for all bugs that a particular person initiated.</td>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td>Date</td>
 		<td>
 			Limit bugs that were reported by a specific time period. This is not only the 
@@ -153,12 +153,5 @@ options.
 		</td>
 	</tr>
 </table>
-
-<h1>Bug System Statistics</h1>
-
-<p>
-You can view a variety of statistics about the bugs that have been
-reported on our <a href="stats.php">bug statistics page</a>.
-</p>
 
 <?php response_footer();

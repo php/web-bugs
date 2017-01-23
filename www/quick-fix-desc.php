@@ -8,7 +8,12 @@ list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
 response_header('Quick Fix Descriptions'); 
 
 ?> 
-<table border="1" cellpadding="3" cellspacing="1">
+<table border="0" class="standard">
+<tr>
+	<th>Quick fix</th>
+	<th>Status</th>
+	<th>Message</th>
+</tr>
 <?php
 
 foreach ($RESOLVE_REASONS as $key => $reason) {

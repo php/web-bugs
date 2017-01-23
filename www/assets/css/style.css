@@ -342,7 +342,7 @@ p {
   margin:0 0 1.5rem
 }
 ul, ol {
-  margin:0 0 1.5rem 1.5rem;
+  margin:0 0 0.75rem 1.5rem;
   padding:0;
 }
 p:empty {
@@ -1206,7 +1206,8 @@ table.search-bugs tr.sus:hover td {
   text-align: right;
 }
 
-.report .text {
+.report .text,
+pre.code-box {
   background-color: #FFF;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
   border-radius: 0 0 2px 2px;
