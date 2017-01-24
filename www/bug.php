@@ -1144,7 +1144,7 @@ function is_php_user($email)
 
 function output_note($com_id, $ts, $email, $comment, $comment_name, $comment_type = null)
 {
-	global $edit, $bug_id, $dbh, $is_trusted_developer, $logged_in;
+	global $edit, $bug_id, $is_trusted_developer;
 
 	// $com_id = 0 means the bug report itself is being displayed, not a comment
 	if ($com_id == 0) {
@@ -1161,12 +1161,17 @@ function output_note($com_id, $ts, $email, $comment, $comment_name, $comment_typ
 	}
 	echo '<a class="genanchor" href="#' . ($com_id == 0 ? 'report' : 'comment-' . $com_id) . '"> &para;</a>';
 
-	echo '<time class="date" datetime="' . format_date($ts, DATE_W3C) .'">' . format_date($ts) . '</time>';
-
 	// Delete comment action only for trusted developers
 	echo ($edit == 1 && $com_id !== 0 && $is_trusted_developer && $comment_type != 'log')
 		? "<a href='bug.php?id={$bug_id}&amp;edit=1&amp;delete_comment={$com_id}'>[delete]</a>\n"
 		: '';
+
+	echo '<time class="date" datetime="' . format_date($ts, DATE_W3C) .'">' . format_date($ts) . '</time>';
+
+	// For text of the report itself strip first two lines (being "Description:\n------------")
+	if ($com_id == 0) {
+		$comment = implode("\n", array_slice(explode("\n", $comment), 2));
+	}
 
 	if ($comment_type != 'log') {
 		$comment = '<pre>' . make_ticket_links(addlinks($comment)) . '</pre>';
