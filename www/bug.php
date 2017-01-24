@@ -723,19 +723,8 @@ if ($bug_id !== 'PREVIEW') {
 
 } // if ($bug_id != 'PREVIEW') { 
 
-//
-// FIXME! Do not wrap here either. Re-use the comment display function!
-//
-
 if (isset($_POST['preview']) && !empty($ncomment)) {
-	$preview = '<div class="comment">';
-	$preview .= "<strong>[" . format_date(time()) . "] ";
-	$preview .= spam_protect(htmlspecialchars($from));
-	$preview .= "</strong>\n<pre class=\"note\">";
-	$comment = wordwrap($ncomment, 72);
-	$preview .= make_ticket_links(addlinks($comment));
-	$preview .= "</pre>\n";
-	$preview .= '</div>';
+	$preview = output_note('preview', time(), $from, $ncomment, 'comment');
 } else {
 	$preview = '';
 }
@@ -938,11 +927,16 @@ if ($edit == 1 || $edit == 2) { ?>
 	if ($edit == 3 && $bug['private'] == 'N') { 
 	
 	if ($bug['status'] === 'Spam') {
-		echo 'This bug has a SPAM status, so no additional comments are needed.';
+		echo '<p class="warn">This bug has a SPAM status, so no additional comments are needed.</p>';
 		response_footer();
 		exit;
 	}
-	
+
+	if ($bug['block_user_comment'] == 'Y' && $logged_in != 'developer') {
+		echo '<p class="warn">Further comment on this bug is unnecessary.</p>';
+		response_footer();
+		exit;
+	}
 ?>
 
 	<form name="comment" id="comment" action="bug.php" method="post">
@@ -959,17 +953,17 @@ if ($edit == 1 || $edit == 2) { ?>
 
 <?php if (!isset($_POST['in'])) { ?>
 
-		<div class="explain">
+		<p class="warn">
 			Anyone can comment on a bug. Have a simpler test case? Does it
 			work for you on a different platform? Let us know!<br>
-			Just going to say 'Me too!'? Don't clutter the database with that please
+			Just going to say <em>Me too</em>? Don't clutter the database with that please
 
 <?php
 			if (canvote($thanks, $bug['status'])) {
 				echo ' &mdash; but make sure to <a href="bug.php?id=' , $bug_id , '">vote on the bug</a>';
 			}
 ?>!
-		</div>
+		</p>
 
 <?php }
 
@@ -979,46 +973,47 @@ if (!$logged_in) {
 	$captcha = $numeralCaptcha->getOperation();
 	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 ?>
-	<table>
+	<table border="0" class="standard report-bug-form">
 		<tr>
-			<th class="details">Y<span class="accesskey">o</span>ur email address:<br><strong>MUST BE VALID</strong></th>
-			<td class="form-input">
-				<input type="text" size="40" maxlength="40" name="in[commentemail]" value="<?php echo isset($_POST['in']['commentemail']) ? htmlspecialchars($_POST['in']['commentemail'], ENT_COMPAT, 'UTF-8') : ''; ?>" accesskey="o">
+			<th>
+				<label for="in_email" class="required">Your email address</label>
+				<small><strong>MUST BE VALID</strong></small>
+			</th>
+			<td>
+				<input type="email" maxlength="40" name="in[commentemail]" id="in_email" value="<?= esc($_POST['in']['commentemail']) ?>" required>
 			</td>
 		</tr>
 		<tr>
-			<th>Solve the problem:<br><?php echo htmlspecialchars($captcha); ?> = ?</th>
-			<td class="form-input"><input type="text" name="captcha"></td>
+			<th><label for="in_captcha" class="required">Human test</label></th>
+			<td>
+				<span class="captcha-question"><?= esc($captcha) ?> = </span>
+				<input type="text" name="captcha" autocomplete="off" required>
+			</td>
 		</tr>
 		<tr>
-			<th class="details">Subscribe to this entry?</th>
-			<td class="form-input">
+			<th><label>Subscribe to this entry?</label></th>
+			<td>
 				<input type="submit" name="subscribe_to_bug" value="Subscribe">
 				<input type="submit" name="unsubscribe_to_bug" value="Unsubscribe">
 			</td>
 		</tr>
-	</table>
-</div>
 <?php } ?>
-
-	<div>
 		<input type="hidden" name="id" value="<?php echo $bug_id; ?>">
 		<input type="hidden" name="edit" value="<?php echo $edit; ?>">
 
-	<?php
-	if ($bug['block_user_comment'] == 'Y' && $logged_in != 'developer') {
-		echo 'Further comment on this bug is unnecessary.';
-	} elseif ($bug['status'] === 'Spam' && $logged_in != 'developer') {
-		echo 'This bug has a SPAM status, so no additional comments are needed.';
-	} else {
-	?>
-		<textarea cols="80" rows="10" name="ncomment" wrap="soft"><?php echo htmlspecialchars($ncomment); ?></textarea>
-	<?php
-	}
-	?>
-
-		<br><input type="submit" name="preview" value="Preview">&nbsp;<input type="submit" value="Submit">
-	</div>
+		<tr>
+			<th><label for="in_ncomment" class="required">Comment</label></th>
+			<td>
+				<textarea rows="9" name="ncomment" id="in_ncomment" required><?= esc($ncomment) ?></textarea>
+			</td>
+		</tr>
+		<tr>
+			<th class="buttons" colspan="2">
+				<input type="submit" value="Preview" name="preview"> or 
+				<input type="submit" value="Submit">
+			</td>
+		</tr>
+	</table>
 
 	</form>
 
@@ -1031,7 +1026,7 @@ if ($bug['ldesc']) {
 	if (!$show_bug_info) {
 		echo 'This bug report is marked as private.';
 	} else if ($bug['status'] !== 'Spam') {
-		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc'], $bug['reporter_name']);
+		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc']);
 	} else {
 		echo 'The original report has been hidden, due to the SPAM status.';
 	}
@@ -1086,7 +1081,7 @@ if ($show_bug_info && count($bug_comments) && $bug['status'] !== 'Spam') {
 
 <?php
 	foreach ($bug_comments as $row) {
-		output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_name'], $row['comment_type']);
+		output_note($row['id'], $row['added'], $row['email'], $row['comment'], $row['comment_type']);
 	}
 }
 
@@ -1142,12 +1137,12 @@ function is_php_user($email)
 	return strstr($email, '@') == '@php.net';
 }
 
-function output_note($com_id, $ts, $email, $comment, $comment_name, $comment_type = null)
+function output_note($com_id, $ts, $email, $comment, $comment_type = null)
 {
 	global $edit, $bug_id, $is_trusted_developer;
 
 	// $com_id = 0 means the bug report itself is being displayed, not a comment
-	if ($com_id == 0) {
+	if ($com_id === 0) {
 		echo '<div class="report" id="report">';
 		echo output_vote_buttons($bug_id, 2);
 	} else {
@@ -1155,7 +1150,7 @@ function output_note($com_id, $ts, $email, $comment, $comment_name, $comment_typ
 	}
 
 	if (is_php_user($email)) {
-		echo '<a href="//people.php.net/' . urlencode($user) . ' class="name user">' . spam_protect(esc($email)) . '</a>';
+		echo '<a href="//people.php.net/' . urlencode($user) . '" class="name user">' . spam_protect(esc($email)) . '</a>';
 	} else {
 		echo '<span class="name">' . spam_protect($email) . '</span>';
 	}
@@ -1169,7 +1164,7 @@ function output_note($com_id, $ts, $email, $comment, $comment_name, $comment_typ
 	echo '<time class="date" datetime="' . format_date($ts, DATE_W3C) .'">' . format_date($ts) . '</time>';
 
 	// For text of the report itself strip first two lines (being "Description:\n------------")
-	if ($com_id == 0) {
+	if ($com_id === 0) {
 		$comment = implode("\n", array_slice(explode("\n", $comment), 2));
 	}
 
