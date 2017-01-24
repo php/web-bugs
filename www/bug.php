@@ -731,72 +731,47 @@ if ($edit == 1 || $edit == 2) { ?>
 <form id="update" action="bug.php?id=<?php echo $bug_id; ?>&amp;edit=<?php echo $edit; ?>" method="post">
 
 <?php if ($edit == 2) {
-		if ($show_bug_info) { ?>
-                        <div class="explain">
-                                <table>
-                                        <tr>
-                                                <td class="details">Passw<span class="accesskey">o</span>rd:</td>
-                                                <td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o"></td>
-                                                <?php if (!$show_bug_info) { ?>
-                                                <input type="submit" value="Submit">
-                                                <?php } ?>
-                                        </tr>
-                                </table>
-                        </div>
-<?php	} else { ?>
-			<div class="explain">
-			<?php if (!isset($_POST['in'])) { ?>
-				Welcome back! If you're the original bug submitter, here's
-				where you can edit the bug or add additional notes.
-                <br>If this is not your bug, you can
-                <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.<br>
-				If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php?id=<?php echo $bug_id; ?>">you can retrieve your password here</a>.
-                <br>
-			<?php } ?>
-
-				<table>
-					<tr>
-						<td class="details">Passw<span class="accesskey">o</span>rd:</td>
-						<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o"></td>
-						<?php if (!$show_bug_info) { ?>
-						<input type="submit" value="Submit">
-						<?php } ?>
-					</tr>
-				</table>
-			</div>
-<?php	}
-	} else {
-		if ($logged_in == 'developer') {
-?>
-				<div class="explain">
-					Welcome back, <?php echo $user; ?>! (Not <?php echo $user; ?>?
-					<a href="logout.php">Log out.</a>)
-				</div>
-<?php	} else { ?>
-			<div class="explain">
-				Welcome! If you don't have a Git account, you can't do anything here.<br>
-				You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
-				or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
-				<div class="details">
-					<label for="svnuser">php.net Username:</label>
-					<input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user); ?>" size="10" maxlength="20">
-					<label for="svnpw">php.net Password:</label>
-					<input type="password" id="svnpw" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10">
-					<!--<label for="save">Remember:</label><input style="vertical-align:middle;" type="checkbox" id="save" name="save" <?php echo !empty($_POST['save']) ? 'checked="checked"' : ''; ?>>-->
-					<?php if (!$show_bug_info) { ?>
-					<input type="submit" value="Submit">
-					<?php } ?>
-				</div>
-			</div>
-<?php
-		}
+	// Show explanation if the form wasn't' filled yet
+	if (!isset($_POST['in'])) {
+		echo '<p class="warn">';
+		echo "Welcome back! If you're the original bug submitter, here's where you can ";
+		echo 'edit the bug or add additional notes.<br>If this is not your bug you can ';
+		echo "add a coment <a href='bug.php?id={$bug_id}&amp;edit=3'>here</a>.";
+		echo '</p>';
 	}
-	echo $preview;
 ?>
-	<table>
+<table border="0" class="standard report-bug-form">
+	<tr>
+		<th>
+			<label for="in_pw" class="required">Password</label>
+			<small>[<a href="bug-pwd-finder.php?id=<?= $bug_id ?>">Forgot?</a>]</small>
+		</th>
+		<td><input type="password" maxlength="20" name="pw" id="in_pw" value="<?= esc($pw) ?>" required></td>
+	</tr>
+	<?php if (!$show_bug_info): ?>
+	<tr>
+		<th colspan="2" class="buttons">
+			<input type="submit" value="Submit">
+		</th>
+	</tr>
+	<?php endif; ?>
+<?php
+	// Edit == 1 (developer)
+	} else {
+		if ($logged_in != 'developer') {
+			echo '<p class="warn">You need to <a href="login.php">log in</a> first.</p>';
+			response_footer();
+			exit;
+		}
+		echo '<p class="warn">Welcome back, ' . $user . '!</p>';
+	}
+
+echo $preview;
+?>
 
 <?php if ($edit == 1 && $show_bug_info) { /* Developer Edit Form */ ?>
-		<tr>
+<table border="0" class="standard report-bug-form">
+	<tr>
 			<th class="details"><label for="in" accesskey="c">Qui<span class="accesskey">c</span>k Fix:</label></th>
 			<td colspan="3">
 				<select name="in[resolve]" id="in">
@@ -830,9 +805,12 @@ if ($edit == 1 || $edit == 2) { ?>
 				<input type="checkbox" name="in[block_user_comment]" value="Y" <?php print $block_user == 'Y' ? 'checked="checked"' : ''; ?>> Block user comment
 			</td>
 		</tr>
-<?php } ?>
+<?php } // end of developer edit form ?>
 
-<?php if ($show_bug_info) { ?>
+<?php
+	// Shared part of edit form (both developer&user),
+	// hidden in case bug is private
+	if ($show_bug_info) { ?>
 
 		<tr>
 			<th class="details">Status:</th>
@@ -893,7 +871,6 @@ if ($edit == 1 || $edit == 2) { ?>
 			<th class="details">OS:</th>
 			<td><input type="text" size="20" maxlength="32" name="in[php_os]" value="<?php echo field('php_os'); ?>"></td>
 		</tr>
-	</table>
 
 	<p style="margin-bottom: 0em;">
 		<label for="ncomment" accesskey="m"><b>New<?php if ($edit == 1) echo "/Additional"; ?> Co<span class="accesskey">m</span>ment:</b></label>
@@ -917,6 +894,7 @@ if ($edit == 1 || $edit == 2) { ?>
 </form>
 
 <?php } // if ($show_bug_info)
+	echo '</table>';
 } // if ($edit == 1 || $edit == 2) 
 ?>
 
@@ -1021,11 +999,11 @@ if (!$logged_in) {
 // Display original report
 if ($bug['ldesc']) {
 	if (!$show_bug_info) {
-		echo 'This bug report is marked as private.';
+		echo '<p class="warn">This bug report is marked as private.</p>';
 	} else if ($bug['status'] !== 'Spam') {
 		output_note(0, $bug['submitted'], $bug['email'], $bug['ldesc']);
 	} else {
-		echo 'The original report has been hidden, due to the SPAM status.';
+		echo '<p class="warn">The original report has been hidden, due to the SPAM status.</p>';
 	}
 }
 
