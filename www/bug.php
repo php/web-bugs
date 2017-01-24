@@ -567,53 +567,50 @@ switch (txfield('bug_type', $bug, isset($_POST['in']) ? $_POST['in'] : null))
 		break;
 }
 
-response_header(
-	$show_bug_info ? "{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']) : "You must be logged in",
-	($bug_id != 'PREVIEW') ? "
-		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}'>
-		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2'>
-	" : ''
-);
-
 // DISPLAY BUG
 $thanks = (isset($_GET['thanks'])) ? (int) $_GET['thanks'] : 0;
 switch ($thanks)
 {
 	case 1:
 	case 2:
-		display_bug_success('The bug was updated successfully.');
+		$flash = 'The bug was updated successfully.';
 		break;
 	case 3:
-		display_bug_success('Your comment was added to the bug successfully.');
+		$flash = 'Your comment was added to the bug successfully.';
 		break;
 	case 4:
-		$bug_url = "{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug_id}";
-		display_bug_success("
-			Thank you for your help!
-			If the status of the bug report you submitted changes, you will be notified.
-			You may return here and check the status or update your report at any time.<br>
-			The URL for your bug report is: <a href='{$bug_url}'>{$bug_url}</a>.
-		");
+		$flash = 'Thank you for your help! You will be notified of any changes regarding your report.';
 		break;
 	case 6:
-		display_bug_success('Thanks for voting! Your vote should be reflected in the statistics below.');
+		$flash = 'Thanks for voting! Your vote should be reflected in the statistics below.';
 		break;
 	case 7:
-		display_bug_success('Your subscribe request has been processed.');
+		$flash = 'Your subscribe request has been processed.';
 		break;
 	case 8:
-		display_bug_success('Your unsubscribe request has been processed, please check your email.');
+		$flash = 'Your unsubscribe request has been processed, please check your email.';
 		break;
 	case 9:
-		display_bug_success('You have successfully unsubscribed.');
+		$flash = 'You have successfully unsubscribed.';
 		break;
 	case 10:
-		display_bug_success('Your vote has been updated.');
+		$flash = 'Your vote has been updated.';
 	break;
 
 	default:
 		break;
 }
+
+$flash = isset($flash) ? flash_message($flash) : '';
+
+response_header(
+	$show_bug_info ? "{$bug_type} #{$bug_id} :: " . htmlspecialchars($bug['sdesc']) : "You must be logged in",
+	($bug_id != 'PREVIEW') ? "
+		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RDF' href='rss/bug.php?id={$bug_id}'>
+		<link rel='alternate' type='application/rss+xml' title='{$bug['package_name']} Bug #{$bug['id']} - RSS 2.0' href='rss/bug.php?id={$bug_id}&format=rss2'>
+	" : '',
+	$flash
+);
 
 display_bug_error($errors);
 

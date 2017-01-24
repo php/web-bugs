@@ -1697,7 +1697,7 @@ function bugs_mail($to, $subject, $message, $headers = '', $params = '')
  * @param string $title	a string to go into the header's <title>
  * @return void
  */
-function response_header($title, $extraHeaders = '')
+function response_header($title, $extraHeaders = '', $preContent = '')
 {
 	global $_header_done, $self, $auth_user, $logged_in, $siteBig, $site_method, $site_url, $basedir;
 
@@ -1754,6 +1754,8 @@ function response_header($title, $extraHeaders = '')
     </form>
   </div>
 </nav>
+
+<?= $preContent ?>
 
 <div id="layout" class="clearfix">
   <section id="layout-content">
@@ -1939,6 +1941,10 @@ function mailto_list(array $mails)
 
 function esc($string) {
 	return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+}
+
+function flash_message($text, $type = 'success') {
+	return "<div class='headsup {$type}'>{$text}</div>";
 }
 
 if (!function_exists('apc_fetch')) {
