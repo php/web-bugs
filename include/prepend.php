@@ -47,6 +47,8 @@ $basedir = $site_data['basedir'];
 define('BUG_PATCHTRACKER_TMPDIR', $site_data['patch_tmp']);
 define('DATABASE_DSN', "{$site_data['db_extension']}://{$site_data['db_user']}:{$site_data['db_pass']}@{$site_data['db_host']}/{$site_data['db']}");
 
+require_once "{$ROOT_DIR}/vendor/autoload.php";
+
 /**
  * Obtain the functions and variables used throughout the bug system
  */

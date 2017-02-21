@@ -1,0 +1,31 @@
+{
+    "name": "php/web-bugs",
+    "description": "The PHP Bugtracking System",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "https://pear.php.net"
+        }
+    ],
+    "require": {
+        "ext-session": "*",
+        "pear-pear.php.net/mdb2": "*",
+        "pear-pear.php.net/mdb2_driver_mysqli": "*",
+        "pear-pear.php.net/db_dataobject": "*",
+        "pear-pear.php.net/text_captcha_numeral": "*",
+        "pear-pear.php.net/text_diff": "*",
+        "pear-pear.php.net/http_upload": "*",
+        "cweagans/composer-patches": "^1"
+    },
+    "extra": {
+        "patches": {
+            "pear-pear.php.net/mdb2": {
+                "Remove by-ref assignment of new objects": "./patches/mdb2-by-ref-assignments.patch"
+            },
+            "pear-pear.php.net/mdb2_driver_mysqli": {
+                "Remove by-ref assignment of new objects": "./patches/mdb2-mysqli-by-ref-assignments.patch"
+            }
+        }
+    }
+}

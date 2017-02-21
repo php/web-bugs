@@ -1,0 +1,20 @@
+--- MDB2/Driver/mysqli.php	2017-02-18 15:26:30.771391885 +0100
++++ MDB2/Driver/mysqli.php	2017-02-18 15:24:43.971032552 +0100
+@@ -937,7 +937,7 @@
+         }
+
+         $class_name = 'MDB2_Statement_'.$this->phptype;
+-        $obj =& new $class_name($this, $statement, $positions, $query, $types, $result_types, $is_manip, $limit, $offset);
++        $obj = new $class_name($this, $statement, $positions, $query, $types, $result_types, $is_manip, $limit, $offset);
+         $this->debug($query, __FUNCTION__, array('is_manip' => $is_manip, 'when' => 'post', 'result' => $obj));
+         return $obj;
+     }
+@@ -1203,7 +1203,7 @@
+             if ($object_class == 'stdClass') {
+                 $row = (object) $row;
+             } else {
+-                $row = &new $object_class($row);
++                $row = new $object_class($row);
+             }
+         }
+         ++$this->rownum;

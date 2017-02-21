@@ -1,0 +1,445 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "76ad1969c4eb3f83abdedfcf4a1f1a3f",
+    "packages": [
+        {
+            "name": "cweagans/composer-patches",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cweagans/composer-patches.git",
+                "reference": "7cd5c6eb7e68b8f7436ce1a7b9fffa4418bf59c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cweagans/composer-patches/zipball/7cd5c6eb7e68b8f7436ce1a7b9fffa4418bf59c6",
+                "reference": "7cd5c6eb7e68b8f7436ce1a7b9fffa4418bf59c6",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "composer/composer": "~1.0",
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "cweagans\\Composer\\Patches"
+            },
+            "autoload": {
+                "psr-4": {
+                    "cweagans\\Composer\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Cameron Eagans",
+                    "email": "me@cweagans.net"
+                }
+            ],
+            "description": "Provides a way to patch Composer packages.",
+            "time": "2016-12-01T01:19:32+00:00"
+        },
+        {
+            "name": "pear-pear.php.net/Archive_Tar",
+            "version": "1.4.2",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/Archive_Tar-1.4.2.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=5.2.0.0"
+            },
+            "replace": {
+                "pear-pear/archive_tar": "== 1.4.2.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "New BSD License"
+            ],
+            "description": "This class provides handling of tar files in PHP.\nIt supports creating, listing, extracting and adding to tar files.\nGzip support is available if PHP has the zlib extension built-in or\nloaded. Bz2 compression is also supported with the bz2 extension loaded."
+        },
+        {
+            "name": "pear-pear.php.net/Console_Getopt",
+            "version": "1.4.1",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/Console_Getopt-1.4.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=5.4.0.0"
+            },
+            "replace": {
+                "pear-pear/console_getopt": "== 1.4.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "This is a PHP implementation of \"getopt\" supporting both\nshort and long options."
+        },
+        {
+            "name": "pear-pear.php.net/DB_DataObject",
+            "version": "1.11.5",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/DB_DataObject-1.11.5.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "pear-pear.php.net/date": ">=1.4.3.0",
+                "php": ">=5.0.0.0"
+            },
+            "replace": {
+                "pear-pear/db_dataobject": "== 1.11.5.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "PHP License 3.01"
+            ],
+            "description": "DataObject performs 2 tasks:\n  1. Builds SQL statements based on the objects vars and the builder methods.\n  2. acts as a datastore for a table row.\n  The core class is designed to be extended for each of your tables so that you put the\n  data logic inside the data classes.\n  included is a Generator to make your configuration files and your base classes."
+        },
+        {
+            "name": "pear-pear.php.net/Date",
+            "version": "1.4.7",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/Date-1.4.7.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=4.3.0.0"
+            },
+            "replace": {
+                "pear-pear/date": "== 1.4.7.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "BSD License"
+            ],
+            "description": "Generic classes for representation and manipulation of\ndates, times and time zones without the need of timestamps,\nwhich is a huge limitation for PHP programs.  Includes time zone data,\ntime zone conversions and many date/time conversions.\nIt does not rely on 32-bit system date stamps, so\nyou can display calendars and compare dates that date\npre 1970 and post 2038."
+        },
+        {
+            "name": "pear-pear.php.net/HTTP_Upload",
+            "version": "0.9.1",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/HTTP_Upload-0.9.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "replace": {
+                "pear-pear/http_upload": "== 0.9.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "LGPL"
+            ],
+            "description": "This class provides an advanced file uploader system for file uploads made\nfrom html forms. Features:\n * Can handle from one file to multiple files.\n * Safe file copying from tmp dir.\n * Easy detecting mechanism of valid upload, missing upload or error.\n * Gives extensive information about the uploaded file.\n * Rename uploaded files in different ways: as it is, safe or unique\n * Validate allowed file extensions\n * Multiple languages error messages support (es, en, de, fr, it, nl, pt_BR)"
+        },
+        {
+            "name": "pear-pear.php.net/MDB2",
+            "version": "2.4.1",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/MDB2-2.4.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "pear-pear.php.net/pear": ">=1.3.6.0",
+                "php": ">=4.3.2.0"
+            },
+            "replace": {
+                "pear-pear/mdb2": "== 2.4.1.0"
+            },
+            "suggest": {
+                "fbsql-pear-pear.php.net/MDB2_Driver_fbsql": ">=0.3.0.0",
+                "ibase-pear-pear.php.net/MDB2_Driver_ibase": ">=1.4.1.0",
+                "mssql-pear-pear.php.net/MDB2_Driver_mssql": ">=1.2.1.0",
+                "mysql-pear-pear.php.net/MDB2_Driver_mysql": ">=1.4.1.0",
+                "mysqli-pear-pear.php.net/MDB2_Driver_mysqli": ">=1.4.1.0",
+                "oci8-pear-pear.php.net/MDB2_Driver_oci8": ">=1.4.1.0",
+                "pgsql-pear-pear.php.net/MDB2_Driver_pgsql": ">=1.4.1.0",
+                "querysim-pear-pear.php.net/MDB2_Driver_querysim": ">=0.6.0.0",
+                "sqlite-pear-pear.php.net/MDB2_Driver_sqlite": ">=1.4.1.0"
+            },
+            "type": "pear-library",
+            "extra": {
+                "patches_applied": {
+                    "Remove by-ref assignment of new objects": "./patches/mdb2-by-ref-assignments.patch"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "BSD License"
+            ],
+            "description": "PEAR MDB2 is a merge of the PEAR DB and Metabase php database abstraction layers.\n\nIt provides a common API for all supported RDBMS. The main difference to most\nother DB abstraction packages is that MDB2 goes much further to ensure\nportability. MDB2 provides most of its many features optionally that\ncan be used to construct portable SQL statements:\n* Object-Oriented API\n* A DSN (data source name) or array format for specifying database servers\n* Datatype abstraction and on demand datatype conversion\n* Various optional fetch modes to fix portability issues\n* Portable error codes\n* Sequential and non sequential row fetching as well as bulk fetching\n* Ability to make buffered and unbuffered queries\n* Ordered array and associative array for the fetched rows\n* Prepare/execute (bind) named and unnamed placeholder emulation\n* Sequence/autoincrement emulation\n* Replace emulation\n* Limited sub select emulation\n* Row limit emulation\n* Transactions/savepoint support\n* Large Object support\n* Index/Unique Key/Primary Key support\n* Pattern matching abstraction\n* Module framework to load advanced functionality on demand\n* Ability to read the information schema\n* RDBMS management methods (creating, dropping, altering)\n* Reverse engineering schemas from an existing database\n* SQL function call abstraction\n* Full integration into the PEAR Framework\n* PHPDoc API documentation"
+        },
+        {
+            "name": "pear-pear.php.net/MDB2_Driver_mysqli",
+            "version": "1.4.1",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/MDB2_Driver_mysqli-1.4.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "ext-mysqli": "*",
+                "pear-pear.php.net/mdb2": ">=2.4.1.0",
+                "php": ">=5.0.0.0"
+            },
+            "replace": {
+                "pear-pear/mdb2_driver_mysqli": "== 1.4.1.0"
+            },
+            "type": "pear-library",
+            "extra": {
+                "patches_applied": {
+                    "Remove by-ref assignment of new objects": "./patches/mdb2-mysqli-by-ref-assignments.patch"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "BSD License"
+            ],
+            "description": "This is the MySQLi MDB2 driver."
+        },
+        {
+            "name": "pear-pear.php.net/PEAR",
+            "version": "1.10.1",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/PEAR-1.10.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "ext-pcre": "*",
+                "ext-xml": "*",
+                "pear-pear.php.net/archive_tar": ">=1.4.0.0",
+                "pear-pear.php.net/console_getopt": ">=1.4.1.0",
+                "pear-pear.php.net/structures_graph": ">=1.1.0.0",
+                "pear-pear.php.net/xml_util": ">=1.3.0.0",
+                "php": ">=5.4.0.0"
+            },
+            "conflict": {
+                "pear-pear.php.net/pear_frontend_gtk": "<0.4.0.0",
+                "pear-pear.php.net/pear_frontend_web": "<=0.4.0.0"
+            },
+            "replace": {
+                "pear-pear/pear": "== 1.10.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "New BSD License"
+            ],
+            "description": "The PEAR package contains:\n * the PEAR installer, for creating, distributing\n   and installing packages\n * the PEAR_Exception PHP5 error handling mechanism\n * the PEAR_ErrorStack advanced error handling mechanism\n * the PEAR_Error error handling mechanism\n * the OS_Guess class for retrieving info about the OS\n   where PHP is running on\n * the System class for quick handling of common operations\n   with files and directories\n * the PEAR base class\n  Features in a nutshell:\n  * full support for channels\n  * pre-download dependency validation\n  * new package.xml 2.0 format allows tremendous flexibility while maintaining BC\n  * support for optional dependency groups and limited support for sub-packaging\n  * robust dependency support\n  * full dependency validation on uninstall\n  * remote install for hosts with only ftp access - no more problems with\n    restricted host installation\n  * full support for mirroring\n  * support for bundling several packages into a single tarball\n  * support for static dependencies on a url-based package\n  * support for custom file roles and installation tasks"
+        },
+        {
+            "name": "pear-pear.php.net/Structures_Graph",
+            "version": "1.1.1",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/Structures_Graph-1.1.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=5.3.0.0"
+            },
+            "replace": {
+                "pear-pear/structures_graph": "== 1.1.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "LGPL-3.0+"
+            ],
+            "description": "Structures_Graph is a package for creating and manipulating graph datastructures. It allows building of directed\nand undirected graphs, with data and metadata stored in nodes. The library provides functions for graph traversing\nas well as for characteristic extraction from the graph topology."
+        },
+        {
+            "name": "pear-pear.php.net/Text_CAPTCHA_Numeral",
+            "version": "1.3.2",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/Text_CAPTCHA_Numeral-1.3.2.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=5.0.4.0"
+            },
+            "replace": {
+                "pear-pear/text_captcha_numeral": "== 1.3.2.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "BSD License"
+            ],
+            "description": "Numeral captcha generates mathematical operations and answers in order to prove that bots using it are human"
+        },
+        {
+            "name": "pear-pear.php.net/Text_Diff",
+            "version": "1.2.1",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/Text_Diff-1.2.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "php": ">=5.2.0.0"
+            },
+            "replace": {
+                "pear-pear/text_diff": "== 1.2.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "LGPL"
+            ],
+            "description": "This package provides a text-based diff engine and renderers for multiple diff output formats."
+        },
+        {
+            "name": "pear-pear.php.net/XML_Util",
+            "version": "1.4.1",
+            "dist": {
+                "type": "file",
+                "url": "https://pear.php.net/get/XML_Util-1.4.1.tgz",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": ">=5.4.0.0"
+            },
+            "replace": {
+                "pear-pear/xml_util": "== 1.4.1.0"
+            },
+            "type": "pear-library",
+            "autoload": {
+                "classmap": [
+                    ""
+                ]
+            },
+            "include-path": [
+                "/"
+            ],
+            "license": [
+                "BSD License"
+            ],
+            "description": "Selection of methods that are often needed when working with XML documents.  Functionality includes creating of attribute lists from arrays, creation of tags, validation of XML names and more."
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "ext-session": "*"
+    },
+    "platform-dev": []
+}
