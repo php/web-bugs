@@ -68,89 +68,119 @@ var converter;
 if (typeof($) != "function") {
   window.alert("Failed to load jQuery!");
 }
+
 $(document).ready(function() {
+  var MAX_PER_PAGE = 100;
   var org = "php";
   var baseurl = "https://api.github.com/";
-  var url = baseurl+'orgs/'+org+'/repos?per_page=100';
+  var url = baseurl+'orgs/'+org+'/repos?per_page=' + MAX_PER_PAGE;
+
   converter = new Markdown.getSanitizingConverter();
+
   $("#pull_id_field").empty().hide();
   $('#pull_details').empty();
 
-  var repos = new Array();
-  
-  function loadGHRepos(url) {
-    $.ajax({ dataType: 'jsonp', url: url, success: function(d) {
-      for (var i in d.data) {
-        repos.push(d.data[i].name);
+
+  // using https://gist.github.com/niallo/3109252
+  function parse_link_header(header) {
+    if (header.length === 0) {
+      throw new Error("input must not be of zero length");
+    }
+
+    // Split parts by comma
+    var parts = header.split(',');
+    var links = {};
+    // Parse each part into a named link
+    for(var i=0; i<parts.length; i++) {
+      var section = parts[i].split(';');
+      if (section.length !== 2) {
+        throw new Error("section could not be split on ';'");
       }
-      // Follow pagination if exists next
-      if (d.meta && d.meta.Link) {
-        for(var l in d.meta.Link) {
-          if (d.meta.Link[l][1] && d.meta.Link[l][1].rel && d.meta.Link[l][1].rel == 'next') {
-            loadGHRepos(d.meta.Link[l][0]);
-            return;
-          }
+      var url = section[0].replace(/<(.*)>/, '$1').trim();
+      var name = section[1].replace(/rel="(.*)"/, '$1').trim();
+      links[name] = url;
+    }
+    return links;
+  }
+
+
+  function recursiveFetch(url, items, finalCallback) {
+    var hasNext = false;
+    $.ajax({ dataType: 'json', url: url, success: function(data, textStatus, request) {
+      items = items.concat(data);
+      if (request.getResponseHeader('Link')) {
+        var links = parse_link_header(request.getResponseHeader('Link'));
+        if (links['next']) {
+          hasNext = true;
+          recursiveFetch(links['next'], items, finalCallback);
         }
       }
-      // No more next Links, draw them!
-      drawRepos();
+      if (hasNext === false) {
+        finalCallback(items);
       }
+    }
     });
   }
 
-  function drawRepos() {
+  var repos = [], gh_pulls = [];
+  recursiveFetch(url, [], function(items) {
+    items.map(function(repo) {
+      repos.push(repo.name);
+    });
     repos.sort();
-    for (var i in repos) {
-      $("#repository_field").append("<option>"+repos[i]+"</option>");
-    }
+    repos.map(function(repo) {
+      $("#repository_field").append("<option>"+repo+"</option>");
+    });
     $("#loading").hide();
-  }
-  loadGHRepos(url);
+  });
 
-});
-
-$("#repository_field").change(function() {
-  $("#pull_id_field").empty().hide();
-  $('#pull_details').empty();
-  $('#loading').show();
-  gh_pulls = false;
-  $("#pull_id_field").append("<option value=''></option>");
-  var repo = $("#repository_field").val();
-  if (repo == "") {
-    $('#loading').hide();
-    return;
-  }
-  var org = "php";
-  var baseurl = "https://api.github.com/";
-  var url = baseurl+'repos/'+org+'/'+repo+'/pulls?per_page=100';
-  $.ajax({ dataType: 'jsonp', url: url, success: function(d) {
-    d.data.sort(function(a, b) { return a.number - b.number; });
-    for (var i in d.data) {
-      $("#pull_id_field").append("<option value="+(d.data[i].number+0)+">"+d.data[i].number+" - "+d.data[i].title+"</option>");
+  $("#repository_field").change(function() {
+    $("#pull_id_field").empty().hide();
+    $('#pull_details').empty();
+    $('#loading').show();
+    gh_pulls = [];
+    $("#pull_id_field").append("<option value=''></option>");
+    var repo = $("#repository_field").val();
+    if (repo == "") {
+      $('#loading').hide();
+      return;
     }
-    gh_pulls = d.data;
-    $("#pull_id_field").show();
-    $("#loading").hide();
-  }});
-});
 
-$("#pull_id_field").change(function() {
-  var val = $("#pull_id_field").val();
-  $('#pull_details').empty();
-  if (val == "" || !gh_pulls) {
-    return;
-  }
-  var pr = false;
-  for (var i in gh_pulls) {
-    if (gh_pulls[i].number == val) {
-      pr = gh_pulls[i];
-      break;
+    var url = baseurl + 'repos/' + org + '/' + repo + '/pulls?per_page=' + MAX_PER_PAGE;
+    recursiveFetch(url, [], function(items) {
+      items.sort(function (a, b) {
+        return a.number - b.number;
+      });
+      items.map(function(item) {
+        $("#pull_id_field").append("<option value=" + (item.number + 0) + ">" + item.number + " - " + item.title + "</option>");
+      });
+      gh_pulls = items;
+      $("#pull_id_field").show();
+      $("#loading").hide();
+    });
+  });
+
+
+  $("#pull_id_field").change(function() {
+    var val = $("#pull_id_field").val();
+    $('#pull_details').empty();
+    if (val == "" || gh_pulls.length === 0) {
+      return;
     }
-  }
-  if (pr) {
-    $('#pull_details').append('<b>'+pr.title+'</b><br>'+converter.makeHtml(pr.body)+'<p><a href="'+pr.html_url+'">View on GitHub</a></p>');
-  }
-});
+    var pr = false;
+    for (var i in gh_pulls) {
+      if (gh_pulls[i].number == val) {
+        pr = gh_pulls[i];
+        break;
+      }
+    }
+    if (pr) {
+      $('#pull_details').append('<b>'+pr.title+'</b><br>'+converter.makeHtml(pr.body)+'<p><a href="'+pr.html_url+'">View on GitHub</a></p>');
+    }
+  });
+
+}); // document.load
+
 </script>
 <br>
 <?php
