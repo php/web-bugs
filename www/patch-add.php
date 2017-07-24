@@ -5,6 +5,9 @@ require_once '../include/prepend.php';
 
 session_start();
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 $canpatch = true;
 
 /// Input vars
@@ -29,8 +32,6 @@ if (!($buginfo = bugs_get_bug($bug_id))) {
 
 $package_name = $buginfo['package_name'];
 
-// Authenticate
-bugs_authenticate($user, $pw, $logged_in, $user_flags);
 $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
 // captcha is not necessary if the user is logged in

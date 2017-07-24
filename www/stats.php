@@ -5,6 +5,9 @@ session_start();
 // Obtain common includes
 require_once '../include/prepend.php';
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 response_header('Bugs Stats');
 
 $titles = array(

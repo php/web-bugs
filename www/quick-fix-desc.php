@@ -1,9 +1,14 @@
 <?php
 
+session_start();
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 response_header('Quick Fix Descriptions'); 
 

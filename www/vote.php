@@ -21,6 +21,11 @@ $samever = isset($_POST['samever']) ? (int) $_POST['samever'] : 0;
 $sameos = isset($_POST['sameos']) ? (int) $_POST['sameos'] : 0;
 
 if (!$dbh->prepare("SELECT id FROM bugdb WHERE id= ? LIMIT 1")->execute(array($id))->fetchOne()) {
+	session_start();
+
+	// Authenticate
+	bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 	response_header('No such bug.');
 	display_bug_error("No such bug #{$id}");
 	response_footer();

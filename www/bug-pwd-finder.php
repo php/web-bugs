@@ -59,6 +59,9 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 	}
 }
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 response_header('Bug Report Password Finder');
 
 echo "<h1>Bug Report Password Finder</h1>\n";

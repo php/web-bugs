@@ -11,6 +11,9 @@ if ($id) {
 	redirect("bug.php?id={$id}");
 }
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 response_header('Bugs :: 404 Not Found');
 
 ?>

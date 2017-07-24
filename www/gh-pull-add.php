@@ -6,6 +6,9 @@ require_once '../include/prepend.php';
 session_start();
 $canpatch = true;
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 /// Input vars
 $bug_id = !empty($_REQUEST['bug']) ? (int) $_REQUEST['bug'] : 0;
 if (empty($bug_id)) {

@@ -2,6 +2,9 @@
 
 session_start();
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
@@ -11,9 +14,6 @@ if (!isset($_GET['bug_id']) && !isset($_GET['bug'])) {
 	response_footer();
 	exit;
 }
-
-// Authenticate
-bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 

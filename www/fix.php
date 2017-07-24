@@ -10,6 +10,9 @@ if (!$bug_id) {
 	redirect('index.php');
 }
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 // fetch info about the bug into $bug
 $bug = bugs_get_bug($bug_id);
 
@@ -22,8 +25,6 @@ if (!is_array($bug)) {
 
 // If bug exists, continue..
 $RESOLVE_REASONS = $FIX_VARIATIONS = $errors = array();
-
-bugs_authenticate($user, $pwd, $logged_in, $user_flags);
 
 $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 

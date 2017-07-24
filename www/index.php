@@ -21,6 +21,9 @@ if($_SERVER['REQUEST_URI'] == '/random') {
 	redirect("bug.php?id={$id[0]}");
 }
 
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 response_header('Bugs');
 
 ?>

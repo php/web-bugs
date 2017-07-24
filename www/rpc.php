@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 $bug_id = (int) $_REQUEST['id'];
 
 if (!$bug_id) {

@@ -3,6 +3,10 @@
 session_start();
 
 require '../include/prepend.php';
+
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 response_header("How to search the bug database");
 ?>
 

@@ -1,5 +1,9 @@
 <?php
 require_once '../include/prepend.php';
+
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
 response_header('Generating a gdb backtrace');
 ?>
 
