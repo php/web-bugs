@@ -10,8 +10,14 @@ if (!$logged_in) {
 	exit;
 }
 
-$actions = array('list_lists', 'list_responses', 'phpinfo');
-$action  = !empty($_GET['action']) && in_array($_GET['action'], $actions) ? $_GET['action'] : 'list_lists';
+$actions = array(
+	'phpinfo' 		=> 'phpinfo()', 
+	'list_lists'		=> 'Package mailing lists', 
+	'list_responses'	=> 'Quick fix responses',
+	'mysql'			=> 'Database status',
+);
+
+$action  = !empty($_GET['action']) && isset($actions[$_GET['action']]) ? $_GET['action'] : 'list_lists';
 
 if ($action === 'phpinfo') {
 	ob_start();
@@ -33,12 +39,7 @@ if ($action === 'phpinfo') {
 
 response_header("Bugs admin suite");
 
-inline_content_menu('/admin/', $action, array(
-						'phpinfo' 		=> 'phpinfo()', 
-						'list_lists'		=> 'Package mailing lists', 
-						'list_responses'	=> 'Quick fix responses',
-						'mysql'			=> 'Database status',
-						));
+inline_content_menu('/admin/', $action, $actions);
 
 if ($action === 'list_lists') {
 
