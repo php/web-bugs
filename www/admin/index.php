@@ -36,7 +36,8 @@ response_header("Bugs admin suite");
 inline_content_menu('/admin/', $action, array(
 						'phpinfo' 		=> 'phpinfo()', 
 						'list_lists'		=> 'Package mailing lists', 
-						'list_responses'	=> 'Quick fix responses'
+						'list_responses'	=> 'Quick fix responses',
+						'mysql'			=> 'Database status',
 						));
 
 if ($action === 'list_lists') {
@@ -70,6 +71,37 @@ if ($action === 'list_responses') {
 	}
 	echo "</pre>\n";
 
+}
+
+if ($action === 'mysql') {
+	$res = $dbh->query("SHOW TABLES");
+
+	$sql = "SELECT version() mysql_version\n";
+
+	while ($row = $res->fetchRow(MDB2_FETCHMODE_ORDERED)) {
+		$table = $row[0];
+		$sql .= "\t, (SELECT COUNT(*) FROM `$table`) `cnt_$table`\n";
+	}
+
+	$res = $dbh->query($sql);
+	$row = $res->fetchRow(MDB2_FETCHMODE_ASSOC);
+
+	echo "<p>Running MySQL <b>".$row['mysql_version']."</b></p>";
+	unset($row['mysql_version']);
+
+	echo "<p>Number of rows:</p><table><tr><th>Table</th><th>#</th></tr>\n";
+	foreach ($row as $k => $v) {
+		echo "<tr><td>".str_replace("cnt_", "", $k)."</td>"
+			."<td>$v</td></tr>\n";
+	}
+	echo "</table>";
+
+	$res = $dbh->query("SHOW TABLE STATUS");
+	echo "<p>Table status:</p><pre>";
+	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+		var_dump($row);
+	}
+	echo "</pre>";
 }
 
 response_footer();
