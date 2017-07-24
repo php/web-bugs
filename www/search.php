@@ -77,7 +77,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			'cve_id_not'  => $cve_id_not,
 			'patch'       => urlencode($patch),
 			'pull'        => urlencode($pull),
-			'assign'      => urlencode($assign)
+			'assign'      => urlencode($assign),
+			'commented_by' => urlencode($commented_by),
 		];
 
 		if ($is_security_developer) {
@@ -333,6 +334,11 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <th>Pull Request</th>
   <td style="white-space: nowrap">Return only bugs with a <b>pull request</b></td>
   <td><input type="checkbox" name="pull" value="Y" <?php echo $pull == 'Y' ? " checked" : "" ?>></td>
+</tr>
+<tr>
+	<th>Commented by</th>
+	<td style="white-space: nowrap">Return bugs that have been <strong>commented by</strong></td>
+	<td><input type="email" name="commented_by" placeholder="me@example.com" value="<?php echo htmlspecialchars($commented_by, ENT_COMPAT, 'UTF-8'); ?>"></td>
 </tr>
 <?php
 	if ($is_security_developer) {

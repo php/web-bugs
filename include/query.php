@@ -50,6 +50,7 @@ $assign = !empty($_GET['assign']) ? $_GET['assign'] : '';
 $author_email = !empty($_GET['author_email']) ? spam_protect($_GET['author_email'], 'reverse') : '';
 $package_name = (isset($_GET['package_name']) && is_array($_GET['package_name'])) ? $_GET['package_name'] : array();
 $package_nname = (isset($_GET['package_nname']) && is_array($_GET['package_nname'])) ? $_GET['package_nname'] : array();
+$commented_by = !empty($_GET['commented_by']) ? spam_protect($_GET['commented_by'], 'reverse') : '';
 
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 {
@@ -64,7 +65,11 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	
 	if (in_array($order_by, array('votes_count', 'avg_score'))) {
 		$query .= 'LEFT JOIN bugdb_votes v ON bugdb.id = v.bug';
-	}		
+	}
+
+	if ($commented_by != '') {
+		$query .= ' LEFT JOIN bugdb_comments c ON bugdb.id = c.bug';
+	}
 	
 	$where_clause = ' WHERE 1 = 1 ';
 	
@@ -195,6 +200,9 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
 	if ($author_email != '') {
 		$where_clause .= ' AND bugdb.email = ' . $dbh->quote($author_email);
+	}
+	if ($commented_by != '') {
+		$where_clause .= ' AND c.email = ' . $dbh->quote($commented_by);
 	}
 
 	$where_clause .= ' AND (1=1';
