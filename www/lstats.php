@@ -34,10 +34,11 @@ function get_status_count ($status, $category = '')
 }
 
 // Input 
-if (!isset($_GET['phpver'])) {
-	echo "<h3>Bug stats for both <a href='lstats.php?phpver=5'>PHP 5</a> and <a href='lstats.php?phpver=6'>PHP 6</a>:</h3>\n<pre>\n";	
+$phpver = (isset($_GET['phpver']) ? (int) $_GET['phpver'] : false);
+
+if (!$phpver || ($phpver !== 5 && $phpver !== 7)) {
+	echo "<h3>Bug stats for both <a href='lstats.php?phpver=5'>PHP 5</a> and <a href='lstats.php?phpver=7'>PHP 7</a>:</h3>\n<pre>\n";	
 } else {
-	$phpver = (int) $_GET['phpver'];
 	echo "<h3>Bug stats for PHP $phpver:</h3>\n<pre>\n";	
 }
 
