@@ -14,7 +14,20 @@ $actions = array('list_lists', 'list_responses', 'phpinfo');
 $action  = !empty($_GET['action']) && in_array($_GET['action'], $actions) ? $_GET['action'] : 'list_lists';
 
 if ($action === 'phpinfo') {
+	ob_start();
 	phpinfo();
+
+	$phpinfo = ob_get_clean();
+
+	// Attempt to hide certain ENV vars
+	$vars = array(
+			$_ENV['AUTH_TOKEN'], 
+			$_ENV['USER_TOKEN'], 
+			$_ENV['USER_PWD_SALT']
+			);
+
+	echo str_replace($vars, '&lt;hidden&gt;', $phpinfo);
+
 	exit;
 }
 
