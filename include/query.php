@@ -68,7 +68,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	}
 
 	if ($commented_by != '') {
-		$query .= 'LEFT JOIN bugdb_comments c ON bugdb.id = c.bug';
+		$query .= ' LEFT JOIN bugdb_comments c ON bugdb.id = c.bug';
 	}
 	
 	$where_clause = ' WHERE 1 = 1 ';
