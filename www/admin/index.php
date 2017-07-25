@@ -27,9 +27,9 @@ if ($action === 'phpinfo') {
 
 	// Attempt to hide certain ENV vars
 	$vars = array(
-			$_ENV['AUTH_TOKEN'], 
-			$_ENV['USER_TOKEN'], 
-			$_ENV['USER_PWD_SALT']
+			getenv('AUTH_TOKEN'), 
+			getenv('USER_TOKEN'), 
+			getenv('USER_PWD_SALT')
 			);
 
 	echo str_replace($vars, '&lt;hidden&gt;', $phpinfo);
