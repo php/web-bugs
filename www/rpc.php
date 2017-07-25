@@ -2,7 +2,7 @@
 
 session_start();
 
-$bug_id = (int) $_REQUEST['id'];
+$bug_id = (isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : 0);
 
 if (!$bug_id) {
 	echo json_encode(array('result' => array('error' => 'Missing bug id')));

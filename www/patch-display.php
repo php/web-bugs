@@ -2,11 +2,11 @@
 
 session_start();
 
-// Authenticate
-bugs_authenticate($user, $pw, $logged_in, $user_flags);
-
 // Obtain common includes
 require_once '../include/prepend.php';
+
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 if (!isset($_GET['bug_id']) && !isset($_GET['bug'])) {
 	response_header('Error :: no bug selected');

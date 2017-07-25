@@ -5,7 +5,7 @@ session_start();
 require_once '../include/prepend.php';
 
 if (!empty($_SESSION['user'])) {
-    redirect('location: index.php');
+    redirect('index.php');
 }
 
 response_header('Login');

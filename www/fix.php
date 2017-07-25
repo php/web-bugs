@@ -1,4 +1,7 @@
 <?php
+
+session_start();
+
 /* Admin interface for closing bug reports via direct link */
 
 // Obtain common includes
