@@ -4,10 +4,12 @@ require_once '../include/prepend.php';
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
-response_header('Generating a backtrace on Win32');
+response_header('Generating a backtrace on Windows');
+
+backtrace_inline_menu('Windows');
 ?>
 
-<h1>Generating a backtrace, <u>with</u> a compiler, on Win32</h1>
+<h1>Generating a backtrace, <u>with</u> a compiler, on Windows</h1>
 
 <p>You'll need to install MS Visual Studio 2008, 2012 or later. You'll also need to</p>
 <ul>
@@ -43,7 +45,7 @@ KERNEL32! 77e81af6()
 	Everything below is stolen from Pierre,
 	http://blog.thepimp.net/index.php/post/2007/06/10/debug-pack-or-how-to-generate-backtrack-on-windows-without-compiling
 -->
-<h1>Generating backtrace, <u>without</u> compiler, on Win32</h1>
+<h1>Generating backtrace, <u>without</u> compiler, on Windows</h1>
 <p>You'll need:</p>
 <ul>
 <li>A PHP <a href="http://windows.php.net/downloads/snaps/">snapshot</a> or <a href="http://windows.php.net/download/">stable</a> release</li>

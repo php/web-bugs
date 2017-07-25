@@ -5,6 +5,9 @@ require_once '../include/prepend.php';
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 response_header('Generating a gdb backtrace');
+
+backtrace_inline_menu('Unix');
+
 ?>
 
 <h1>Generating a gdb backtrace</h1>
