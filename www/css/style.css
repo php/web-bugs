@@ -320,17 +320,17 @@ div.success ul {
 
 /* ========= Statistics ========= */
 
-.bug_bg0 {
+.bug_bg0, .e {
 	background-color: #DDDDDD;
 	font-size: 85%;
 	text-align: center;
 }
-.bug_bg1 {
+.bug_bg1, .v {
 	background-color: #EEEEEE;
 	font-size: 85%;
 	text-align: center;
 }
-.bug_head {
+.bug_head, .h {
 	background-color: #aabbcc;
 	color: #000000;
 	font-size: 80%;
@@ -827,4 +827,10 @@ td.search-next {
 
 td.tbl-row-message {
 	text-align: left;
+}
+
+// phpinfo()
+div.center {
+	margin: 0px auto;
+	width: 80%;
 }
