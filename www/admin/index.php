@@ -96,9 +96,9 @@ if ($action === 'phpinfo') {
 
 	$rows = array();
 
-	array_walk($row, function(&$value, $key) use($rows) {
-		$rows[str_replace('cnt_', '', $key)] = $value;
-	});
+	foreach($row as $key => $value) {
+		$rows[] = [str_replace('cnt_', '', $key), $value];
+	}
 
 	admin_table_static(['Table', 'Rows'], $rows);
 
