@@ -2026,8 +2026,8 @@ function admin_table_dynamic(array $rows)
 
 		echo "<tr>\n";
 
-		foreach ($row as $value) {
-			echo "<td class=\"bug_bg" . (int) !(!$i || !($i % 2)) . "\">$value</td>\n";
+		foreach ($row as $column => $value) {
+			echo "<td class=\"bug_bg" . (int) !(!$i || !($i % 2)) . " tbl-row-$column\">$value</td>\n";
 
 			++$i;
 		}

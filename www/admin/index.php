@@ -70,7 +70,7 @@ if ($action === 'phpinfo') {
 	$rows = array();
 	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 		// This is ugly but works (tm)
-		$row['message'] = '<pre>' . $row['message'] . '</pre>';
+		$row['message'] = nl2br($row['message']);
 
 		$rows[] = $row;
 	}

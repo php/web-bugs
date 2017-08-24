@@ -822,3 +822,9 @@ td.search-next {
 }
 
 /* }}} */
+
+/* === Admin === */
+
+td.tbl-row-message {
+	text-align: left;
+}
