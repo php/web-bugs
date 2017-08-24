@@ -1966,6 +1966,76 @@ function backtrace_inline_menu($platform)
 	echo "</p>\n";
 }
 
+function admin_table_static(array $header, array $rows)
+{
+	if (!$header || !$rows || sizeof($header) != sizeof($rows)) {
+		return;
+	}
+
+	echo "<table>\n";
+	echo "<tr class=\"bug_header\">\n";
+
+	foreach ($header as $name) {
+		echo "<th>$name</th>\n";
+	}
+
+	echo "</tr>\n";
+
+
+	foreach ($rows as $row) {
+		$i = 0;
+
+		echo "<tr>\n";
+
+		foreach ($row as $value) {
+			echo "<td class=\"bug_bg" . (int) !(!$i || !($i % 2)) . "\">$value</td>\n";
+
+			++$i;
+		}
+
+		echo "</tr>\n";
+	}
+
+	echo "</table>\n";
+}
+
+function admin_table_dynamic(array $rows)
+{
+	if (!$rows) {
+		return;
+	}
+
+	$printed_header = false;
+
+	echo "<table>\n";
+
+	foreach ($rows as $row) {
+		if (!$printed_header) {
+			echo "<tr class=\"bug_header\">\n";
+
+			foreach (array_keys($row) as $column) {
+				echo "<th>$column</th>\n";
+			}
+
+			echo "</tr>\n";
+
+			$printed_header = true;
+		}
+
+		$i = 0;
+
+		echo "<tr>\n";
+
+		foreach ($row as $value) {
+			echo "<td class=\"bug_bg" . (int) !(!$i || !($i % 2)) . "\">$value</td>\n";
+
+			++$i;
+		}
+
+		echo "</tr>\n";
+	}
+}
+
 function mailto_list(array $mails)
 {
 	if(!$mails) {

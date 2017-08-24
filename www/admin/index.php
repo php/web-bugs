@@ -65,13 +65,17 @@ if ($action === 'phpinfo') {
 		FROM bugdb_resolves
 	");
 
-	echo "<h3>List Responses</h3>";
-	echo "<pre>\n";
-	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
-		print_r($row);
-	}
-	echo "</pre>\n";
+	echo "<h3>List Responses</h3>\n";
 
+	$rows = array();
+	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+		// This is ugly but works (tm)
+		$row['message'] = '<pre>' . $row['message'] . '</pre>';
+
+		$rows[] = $row;
+	}
+
+	admin_table_dynamic($rows);
 } elseif ($action === 'mysql') {
 	$res = $dbh->query("SHOW TABLES");
 
@@ -88,19 +92,24 @@ if ($action === 'phpinfo') {
 	echo "<p>Running MySQL <b>".$row['mysql_version']."</b></p>";
 	unset($row['mysql_version']);
 
-	echo "<p>Number of rows:</p><table><tr><th>Table</th><th>#</th></tr>\n";
-	foreach ($row as $k => $v) {
-		echo "<tr><td>".str_replace("cnt_", "", $k)."</td>"
-			."<td>$v</td></tr>\n";
-	}
-	echo "</table>";
+	echo "<h3>Number of rows:</h3>\n";
 
+	$rows = array();
+
+	array_walk($row, function(&$value, $key) use($rows) {
+		$rows[str_replace('cnt_', '', $key)] = $value;
+	});
+
+	admin_table_static(['Table', 'Rows'], $rows);
+
+	$rows = array();
 	$res = $dbh->query("SHOW TABLE STATUS");
-	echo "<p>Table status:</p><pre>";
+	echo "<h3>Table status:</h3>\n";
 	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
-		var_dump($row);
+		$rows[] = $row;
 	}
-	echo "</pre>";
+
+	admin_table_dynamic($rows);
 }
 
 response_footer();
