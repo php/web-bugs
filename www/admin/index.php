@@ -19,6 +19,9 @@ $actions = array(
 
 $action  = !empty($_GET['action']) && isset($actions[$_GET['action']]) ? $_GET['action'] : 'list_lists';
 
+response_header("Bugs admin suite");
+inline_content_menu('/admin/', $action, $actions);
+
 if ($action === 'phpinfo') {
 	ob_start();
 	phpinfo();
@@ -32,16 +35,15 @@ if ($action === 'phpinfo') {
 			getenv('USER_PWD_SALT')
 			);
 
-	echo str_replace($vars, '&lt;hidden&gt;', $phpinfo);
+	$phpinfo = str_replace($vars, '&lt;hidden&gt;', $phpinfo);
 
-	exit;
-}
+	// Semi stolen from php-web
+	$m = array();
 
-response_header("Bugs admin suite");
+	preg_match('!<body.*?>(.*)</body>!ims', $phpinfo, $m);
+	echo preg_replace('!<a href="http://www.php.net/"><img.*?></a>!ims', '', $m[1]);
 
-inline_content_menu('/admin/', $action, $actions);
-
-if ($action === 'list_lists') {
+} elseif ($action === 'list_lists') {
 
 	$res = $dbh->query("
 		SELECT name, list_email 
@@ -56,9 +58,7 @@ if ($action === 'list_lists') {
 		echo "<dt>", $row['name'], ": </dt>\n<dd>", mailto_list(explode(',', $row['list_email'])), "</dd>\n";
 	}
 	echo "</dl>\n";
-}
-
-if ($action === 'list_responses') {
+} elseif ($action === 'list_responses') {
 
 	$res = $dbh->query("
 		SELECT *
@@ -72,9 +72,7 @@ if ($action === 'list_responses') {
 	}
 	echo "</pre>\n";
 
-}
-
-if ($action === 'mysql') {
+} elseif ($action === 'mysql') {
 	$res = $dbh->query("SHOW TABLES");
 
 	$sql = "SELECT version() mysql_version\n";
