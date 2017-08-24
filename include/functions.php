@@ -1968,7 +1968,7 @@ function backtrace_inline_menu($platform)
 
 function admin_table_static(array $header, array $rows)
 {
-	if (!$header || !$rows || sizeof($header) != sizeof($rows)) {
+	if (!$header || !$rows || sizeof($header) != sizeof($rows[0])) {
 		return;
 	}
 
