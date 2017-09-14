@@ -328,6 +328,7 @@ function spam_protect($txt, $format = 'html')
 	if (preg_match('/^(.+)@php\.net$/i', $txt)) {
 		return $txt;
 	}
+	$email = substr($txt, 0, strrpos($txt, '@'));
 	if ($format == 'html') {
 		$translate = array(
 			'@' => ' &#x61;&#116; ',
