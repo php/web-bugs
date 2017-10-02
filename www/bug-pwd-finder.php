@@ -50,7 +50,7 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 						 'From: noreply@php.net');
 
 				if ($resp) {
-					$success = "The password for bug report #{$bug_id} has been sent to " . spam_protect($row['email'], 'text');
+					$success = "The password for bug report #{$bug_id} has been sent to the address associated with this report.";
 				} else {
 					$errors[] = 'Sorry. Mail can not be sent at this time, please try again later.';
 				}
