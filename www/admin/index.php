@@ -41,8 +41,9 @@ if ($action === 'phpinfo') {
 	$m = array();
 
 	preg_match('!<body.*?>(.*)</body>!ims', $phpinfo, $m);
-	
+
 	$m[1] = preg_replace('!<a href="http://www.php.net/"><img.*?></a>!ims', '', $m[1]);
+	$m[1] = preg_replace('!<a href="http://www.zend.com/"><img.*?></a>!ims', '', $m[1]);
 	$m[1] = str_replace(' width="600"', ' width="80%"', $m[1]);
 
 	echo $m[1];
