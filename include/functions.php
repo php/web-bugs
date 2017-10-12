@@ -687,11 +687,10 @@ function show_reason_types($current = '', $expanded = 0)
  * Prints PHP version number <option>'s for use in a <select> list
  *
  * @param string $current	the bug's current version number
- * @param string $default	a version number that should be the default
  *
  * @return void
  */
-function show_version_options($current, $default = '')
+function show_version_options($current)
 {
 	global $ROOT_DIR, $versions;
 
