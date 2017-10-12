@@ -1246,7 +1246,7 @@ function delete_comment($bug_id, $com_id)
 {
 	global $dbh;
 	
-	$res = $dbh->prepare("DELETE FROM bugdb_comments WHERE bug='{$bug_id}' AND id='{$com_id}'")->execute();
+	$dbh->prepare("DELETE FROM bugdb_comments WHERE bug='{$bug_id}' AND id='{$com_id}'")->execute();
 }
 
 function control($num, $desc)
