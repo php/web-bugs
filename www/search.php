@@ -82,7 +82,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		];
 
 		if ($is_security_developer) {
-			$link_params[] = ['private' => $private];
+			$link_params['private'] = $private;
 		}
 
 		// Remove empty URL parameters
