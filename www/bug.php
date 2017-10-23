@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /* User interface for viewing and editing bug details */
 
 // Obtain common includes
@@ -654,7 +654,7 @@ if (!$show_bug_info) {
 			<td><?php echo ($bug['status'] !== 'Spam') ? spam_protect(htmlspecialchars($bug['email'])) : 'Hidden because of SPAM'; ?></td>
 			<th class="details">Assigned:</th>
 <?php if (!empty($bug['assign'])) { ?>
-			<td><a href="search.php?cmd=display&amp;assign=<?php echo urlencode($bug['assign']), '">', htmlspecialchars($bug['assign']); ?></a></td>
+			<td><a href="search.php?cmd=display&amp;assign=<?php echo urlencode($bug['assign']), '">', htmlspecialchars($bug['assign']); ?></a> (<a href="https://people.php.net/<?php echo urlencode($bug['assign']); ?>">profile</a>)</td>
 <?php } else { ?>
 			<td><?php echo htmlspecialchars($bug['assign']); ?></td>
 <?php } ?>
@@ -678,7 +678,7 @@ if (!$show_bug_info) {
 			<th class="details">Private report:</th>
 			<td><?php echo $bug['private'] == 'Y' ? 'Yes' : 'No'; ?></td>
 			<th class="details">CVE-ID:</th>
-			<td><?php if (!empty($bug['cve_id'])) { printf('<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-%s" target="_blank">%1$s</a>', htmlspecialchars($bug['cve_id'])); } ?></td>
+			<td><?php if (!empty($bug['cve_id'])) { printf('<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-%s" target="_blank">%1$s</a>', htmlspecialchars($bug['cve_id'])); } else { ?><em>None</em><?php } ?></td>
 		</tr>
 	</table>
 </div>
