@@ -832,7 +832,10 @@ if ($edit == 1 || $edit == 2) { ?>
 ?>
 	<table>
 
-<?php if ($edit == 1 && $show_bug_info) { /* Developer Edit Form */ ?>
+<?php
+      if ($edit == 1 && $show_bug_info) { /* Developer Edit Form */
+        if (isset($RESOLVE_REASONS) && $RESOLVE_REASONS) {
+?>
 		<tr>
 			<th class="details"><label for="in" accesskey="c">Qui<span class="accesskey">c</span>k Fix:</label></th>
 			<td colspan="3">
@@ -840,14 +843,17 @@ if ($edit == 1 || $edit == 2) { ?>
 					<?php show_reason_types((isset($_POST['in']) && isset($_POST['in']['resolve'])) ? $_POST['in']['resolve'] : -1, 1); ?>
 				</select>
 
-<?php	if (isset($_POST['in']) && !empty($_POST['in']['resolve'])) { ?>
+<?php	  if (isset($_POST['in']) && !empty($_POST['in']['resolve'])) { ?>
 				<input type="hidden" name="trytoforce" value="1">
-<?php	} ?>
+<?php	  } ?>
 
 				<small>(<a href="quick-fix-desc.php">description</a>)</small>
 			</td>
 		</tr>
-<?php   if ($is_security_developer) { ?>
+<?php
+        }
+
+        if ($is_security_developer) { ?>
 		<tr>
 			<th class="details">CVE-ID:</th>
 			<td colspan="3">
