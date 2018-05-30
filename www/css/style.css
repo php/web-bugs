@@ -829,7 +829,7 @@ td.tbl-row-message {
 	text-align: left;
 }
 
-// phpinfo()
+/* phpinfo() */
 div.center {
 	margin: 0px auto;
 	width: 80%;
