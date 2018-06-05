@@ -35,7 +35,7 @@ CREATE TABLE bugdb_comments (
   bug int(8) NOT NULL default '0',
   email varchar(40) NOT NULL default '',
   reporter_name varchar(80) default '',
-  ts datetime NOT NULL default '0000-00-00 00:00:00',
+  ts datetime NOT NULL default CURRENT_TIMESTAMP,
   comment text NOT NULL,
   comment_type varchar(10) default 'comment',
   visitor_ip int(8) UNSIGNED NOT NULL,
