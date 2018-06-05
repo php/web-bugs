@@ -148,9 +148,6 @@ $(document).ready(function() {
 
     var url = baseurl + 'repos/' + org + '/' + repo + '/pulls?per_page=' + MAX_PER_PAGE;
     recursiveFetch(url, [], function(items) {
-      items.sort(function (a, b) {
-        return a.number - b.number;
-      });
       items.map(function(item) {
         $("#pull_id_field").append("<option value=" + (item.number + 0) + ">" + item.number + " - " + item.title + "</option>");
       });
