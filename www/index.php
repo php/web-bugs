@@ -102,6 +102,7 @@ to a random open bug.</p>
 		'Most recent open bugs (PHP 7.0)' => '&bug_type=All&phpver=7.0',
 		'Most recent open bugs (PHP 7.1)' => '&bug_type=All&phpver=7.1',
 		'Most recent open bugs (PHP 7.2)' => '&bug_type=All&phpver=7.2',
+		'Most recent open bugs (PHP 7.3)' => '&bug_type=All&phpver=7.3',
 		'Open Documentation bugs' => '&bug_type=Documentation+Problem',
 		'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y'
 	);
