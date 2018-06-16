@@ -64,7 +64,7 @@ $state_types = array (
 /**
  * Authentication
  */
-function verify_password($user, $pass)
+function verify_user_password($user, $pass)
 {
 	global $errors;
 
@@ -165,7 +165,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 		$auth_user->handle = $user;
 		$auth_user->email = "{$user}@php.net";
 		$auth_user->name = $user;
-	} elseif ($user != '' && $pw != '' && verify_password($user, $pw)) {
+	} elseif ($user != '' && $pw != '' && verify_user_password($user, $pw)) {
 		$user_flags = BUGS_DEV_USER;
 		$logged_in = 'developer';
 		$auth_user = new stdClass;
