@@ -4,10 +4,11 @@
 // Obtain common includes
 require_once '../include/prepend.php';
 
-// Start session 
+// Start session
 session_start();
 
 define('SPAM_REJECT_MESSAGE', 'Your comment looks like SPAM by its content. Please consider rewording.');
+$email = null;
 
 // Handle preview
 if (isset($_REQUEST['id']) && $_REQUEST['id'] == 'preview') {
@@ -17,7 +18,7 @@ if (isset($_REQUEST['id']) && $_REQUEST['id'] == 'preview') {
 	$bug['modified'] = null;
 	$bug['votes'] = 0;
 	$bug['assign'] = '';
-	
+
 	if (!$bug) {
 		redirect('index.php');
 	}
