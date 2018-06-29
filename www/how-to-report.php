@@ -12,7 +12,7 @@ response_header('How to Report a Bug');
 
 <h1>How to Report a Bug</h1>
 
-<p>There is a large number of PHP users. There is a much small number of people
+<p>There is a large number of PHP users. There is a much smaller number of people
 who actually develop the PHP language and extensions. There is an even smaller
 number of people who actively fix bugs reported by users.</p>
 
@@ -47,7 +47,7 @@ get, and what you actually got, we don't have to guess.</p>
 
 <h2>Always search the bug database first.</h2>
 
-<p>Advice so good, we'll repeat it twice. Always <a
+<p>Advice is so good, we'll repeat it twice. Always <a
 href="search.php">search</a> the bug database first. As we said above, there's
 a lot of users of PHP. The odds are good that if you've found a problem,
 someone else has found it, too. If you spend a few minutes of your time making
@@ -77,10 +77,10 @@ as a feature request.)</p>
 	<li>
 		When you provide code that demonstrates the problem, it should almost
 		never be more than ten lines long. Anything longer probably contains a
-		lot of code that has nothing to do with the problem, which just makes
-		it take longer to figure out the real problem. (But don't forget to make
+		lot of code that has nothing to do with the problem, which just increases
+		the time to figure out the real problem. (But don't forget to make
 		sure that your code still demonstrates the bug you're reporting and
-		doesn't have some other problem because you've accidently trimmed out
+		doesn't have some other problem because you've accidentally trimmed out
 		something you thought wasn't important but was!)
 	</li>
 	<li>
