@@ -127,7 +127,7 @@ with the different bugs.</p>
 	</li>
 	<li>
 		mozilla.org's 
-		<a href="http://www.mozilla.org/quality/bug-writing-guidelines.html">bug
+		<a href="https://developer.mozilla.org/en-US/docs/Mozilla/QA/Bug_writing_guidelines">bug
 		writing guidelines</a>
 	</li>
 	<li>
