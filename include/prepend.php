@@ -45,23 +45,20 @@ $docBugEmail = $site_data['doc_email'];
 $secBugEmail = $site_data['security_email'];
 $basedir = $site_data['basedir'];
 define('BUG_PATCHTRACKER_TMPDIR', $site_data['patch_tmp']);
-define('DATABASE_DSN', "{$site_data['db_extension']}://{$site_data['db_user']}:{$site_data['db_pass']}@{$site_data['db_host']}/{$site_data['db']}");
+define('DATABASE_DSN', "mysql:host={$site_data['db_host']};dbname={$site_data['db']};charset=utf8");
 
 /**
  * Obtain the functions and variables used throughout the bug system
  */
 require_once "{$ROOT_DIR}/include/functions.php";
+require 'classes/bug_pdo.php';
 
 // Database connection (required always?)
-include_once 'MDB2.php';
-
-PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, 'handle_pear_errors');
-
-if (empty($dbh))
-{
-	$dbh = MDB2::factory(DATABASE_DSN);
-	$dbh->loadModule('Extended');
-}
+$dbh = new Bug_PDO(DATABASE_DSN, $site_data['db_user'], $site_data['db_pass'], [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+]);
 
 // Last Updated..
 $tmp = filectime($_SERVER['SCRIPT_FILENAME']);

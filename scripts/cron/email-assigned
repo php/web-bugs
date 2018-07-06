@@ -16,17 +16,10 @@ $sql = "SELECT id, package_name, bug_type, sdesc, status, assign, UNIX_TIMESTAMP
 
 $res = $dbh->query($sql);
 
-if (PEAR::isError($res)) {
-	throw new Exception("SQL Error in email-assigned");
-}
-
 // Gather up the data
 while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
 	$data[$row['assign']][] = $row;
 }
-
-$num_rows  = $res->numRows();
-$num_users = count($data);
 
 foreach ($data as $assigned => $binfos) {
 

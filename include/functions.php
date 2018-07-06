@@ -796,13 +796,7 @@ function show_boolean_options($current)
  */
 function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 {
-	if (PEAR::isError($in)) {
-		if (DEVBOX == true) {
-			$in = array($in->getMessage() . '... ' . $in->getUserInfo());
-		} else {
-			$in = array($in->getMessage());
-		}
-	} elseif (!is_array($in)) {
+	if (!is_array($in)) {
 		$in = array($in);
 	} elseif (!count($in)) {
 		return false;
@@ -810,13 +804,6 @@ function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 
 	echo "<div class='{$class}'>{$head}<ul>";
 	foreach ($in as $msg) {
-		if (PEAR::isError($msg)) {
-			if (DEVBOX == true) {
-				$msg = $msg->getMessage() . '... ' . $msg->getUserInfo();
-			} else {
-				$msg = $msg->getMessage();
-			}
-		}
 		echo '<li>' , htmlspecialchars($msg) , "</li>\n";
 	}
 	echo "</ul></div>\n";
@@ -1356,10 +1343,6 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 			WHERE name = ?
 		')->execute([$package_name]);
 
-		if (PEAR::isError($res)) {
-			throw new Exception('SQL Error in get_package_name(): ' . $res->getMessage());
-		}
-
 		list($list_email, $project) = $res->fetchRow();
 
 		if ($project == 'pecl') {
@@ -1568,7 +1551,7 @@ function get_resolve_reasons($project = false)
 
 	$resolves = $variations = array();
 	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array());
-	if (PEAR::isError($res)) {
+	if (!$res) {
 		throw new Exception("SQL Error in get_resolve_reasons");
 	}
 	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {

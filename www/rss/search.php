@@ -28,14 +28,6 @@ if ($format === 'rss2') {
 require_once '../../include/prepend.php';
 require "{$ROOT_DIR}/include/query.php";
 
-if (!isset($res)) {
-	die('Invalid query');
-} else {
-	$res  = $dbh->prepare($query)->execute();
-	$rows = $res->numRows();
-	$total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
-}
-
 if ($format === 'rss2') {
 	require "{$ROOT_DIR}/templates/search-rss2.php";
 } else {
