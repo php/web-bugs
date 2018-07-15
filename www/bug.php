@@ -235,7 +235,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			}
 
 			$res = bugs_add_comment($bug_id, $_POST['in']['commentemail'], $_POST['in']['name'], $ncomment, 'comment');
-			
+
 			mark_related_bugs($_POST['in']['commentemail'], $_POST['in']['name'], $ncomment);
 
 		} while (false);
@@ -251,16 +251,16 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	if (is_spam($ncomment)) {
 		$errors[] = SPAM_REJECT_MESSAGE;
 	}
-	
+
 	$from = $_POST['in']['commentemail'];
-	
+
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
 	// Edits submitted by original reporter for old bugs
-	
+
 	if (!$show_bug_info || !verify_bug_passwd($bug_id, bugs_get_hash($pw))) {
 		$errors[] = 'The password you supplied was incorrect.';
 	}
-	
+
 	// Bug is private (just should be available to trusted developers, original reporter and assigned dev)
 	if (!$show_bug_info && $bug['private'] == 'Y') {
 		response_header('Private report');
@@ -268,13 +268,13 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		response_footer();
 		exit;
 	}
-	
+
 	// Just trusted dev can change the package name of a Security related bug to another package
 	if ($bug['private'] == 'Y' && !$is_security_developer
 		&& $bug['bug_type'] == 'Security'
 		&& $_POST['in']['bug_type'] != $bug['bug_type']) {
-	
-		$errors[] = 'You cannot change the bug type of a Security bug!';	
+
+		$errors[] = 'You cannot change the bug type of a Security bug!';
 	}
 
 	$ncomment = trim($_POST['ncomment']);
@@ -315,10 +315,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		// the report as private
 		if ($bug['private'] == 'N' && $_POST['in']['bug_type'] == 'Security'
 			&& $_POST['in']['bug_type'] != $bug['bug_type']) {
-					
+
 			$is_private = $_POST['in']['private'] = 'Y';
 		}
-	
+
 		$dbh->prepare("
 			UPDATE bugdb
 			SET
@@ -352,11 +352,11 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				$res = bugs_add_comment($bug_id, $from, '', $log_comment, 'log');
 			}
 		}
-		
+
 		// Add normal comment
 		if (!empty($ncomment)) {
 			$res = bugs_add_comment($bug_id, $from, '', $ncomment, 'comment');
-			
+
 			mark_related_bugs($from, '', $ncomment);
 		}
 	}
@@ -371,7 +371,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 
 } elseif (isset($_POST['in']) && is_array($_POST['in']) && !isset($_POST['preview']) && $edit == 1) {
 	// Edits submitted by developer
-	
+
 	// Bug is private (just should be available to trusted developers, submitter and assigned dev)
 	if (!$show_bug_info && $bug['private'] == 'Y') {
 		response_header('Private report');
@@ -379,7 +379,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		response_footer();
 		exit;
 	}
-	
+
 	if ($logged_in != 'developer') {
 		$errors[] = 'You have to login first in order to edit the bug report.';
 	}
@@ -394,7 +394,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	if ($ncomment && is_spam($ncomment)) {
 		$errors[] = SPAM_REJECT_MESSAGE;
 	}
-	
+
 	// Just trusted dev can set CVE-ID
 	if ($is_security_developer && !empty($_POST['in']['cve_id'])) {
 		// Remove the CVE- prefix
@@ -403,7 +403,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 	if (empty($_POST['in']['cve_id'])) {
 		$_POST['in']['cve_id'] = $bug['cve_id'];
 	}
-	
+
 	if ($bug['private'] == 'N' && $bug['private'] != $is_private) {
 		if ($_POST['in']['bug_type'] != 'Security') {
 			$errors[] = 'Only Security bugs can be marked as private.';
@@ -468,7 +468,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		if ($bug['email'] != $_POST['in']['email'] && !empty($_POST['in']['email'])) {
 			$query .= " email='{$_POST['in']['email']}',";
 		}
-		
+
 		// Changing the package to 'Security related' should mark the bug as private automatically
 		if ($bug['bug_type'] != $_POST['in']['bug_type']) {
 			if ($_POST['in']['bug_type'] == 'Security' && $_POST['in']['status'] != 'Closed') {
@@ -494,8 +494,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		}
 
 		$dbh->prepare($query . "
-				sdesc = ?, 
-				status = ?, 
+				sdesc = ?,
+				status = ?,
 				package_name = ?,
 				bug_type = ?,
 				assign = ?,
@@ -532,7 +532,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		// Add normal comment
 		if (!empty($ncomment)) {
 			$res = bugs_add_comment($bug_id, $from, $comment_name, $ncomment, 'comment');
-			
+
 			mark_related_bugs($from, $comment_name, $ncomment);
 		}
 	}
@@ -655,7 +655,7 @@ if (!$show_bug_info) {
 			<td><?php echo ($bug['status'] !== 'Spam') ? spam_protect(htmlspecialchars($bug['email'])) : 'Hidden because of SPAM'; ?></td>
 			<th class="details">Assigned:</th>
 <?php if (!empty($bug['assign'])) { ?>
-			<td><a href="search.php?cmd=display&amp;assign=<?php echo urlencode($bug['assign']), '">', htmlspecialchars($bug['assign']); ?></a> (<a href="https://people.php.net/<?php echo urlencode($bug['assign']); ?>">profile</a>)</td>
+			<td><a href="search.php?cmd=display&amp;assign=<?php echo urlencode($bug['assign']), '&amp;status=All">', htmlspecialchars($bug['assign']); ?></a> (<a href="https://people.php.net/<?php echo urlencode($bug['assign']); ?>">profile</a>)</td>
 <?php } else { ?>
 			<td><?php echo htmlspecialchars($bug['assign']); ?></td>
 <?php } ?>
@@ -674,7 +674,7 @@ if (!$show_bug_info) {
 			<th class="details">OS:</th>
 			<td><?php echo htmlspecialchars($bug['php_os']); ?></td>
 		</tr>
-		
+
 		<tr id="private">
 			<th class="details">Private report:</th>
 			<td><?php echo $bug['private'] == 'Y' ? 'Yes' : 'No'; ?></td>
@@ -743,7 +743,7 @@ if ($bug_id !== 'PREVIEW') {
 	</div>
 </form>
 <br clear="all">
-<?php	} 
+<?php	}
 
 } // if ($bug_id != 'PREVIEW') { 
 
@@ -961,18 +961,18 @@ if ($edit == 1 || $edit == 2) { ?>
 </form>
 
 <?php } // if ($show_bug_info)
-} // if ($edit == 1 || $edit == 2) 
+} // if ($edit == 1 || $edit == 2)
 ?>
 
-<?php 
-	if ($edit == 3 && $bug['private'] == 'N') { 
-	
+<?php
+	if ($edit == 3 && $bug['private'] == 'N') {
+
 	if ($bug['status'] === 'Spam') {
 		echo 'This bug has a SPAM status, so no additional comments are needed.';
 		response_footer();
 		exit;
 	}
-	
+
 ?>
 
 	<form name="comment" id="comment" action="bug.php" method="post">
@@ -1072,7 +1072,7 @@ if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
 	require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 	$patches = new Bug_Patchtracker;
 	$p = $patches->listPatches($bug_id);
-	$revs = [];	
+	$revs = [];
 	echo "<h2>Patches</h2>\n";
 
 	foreach ($p as $patch) {
@@ -1129,7 +1129,7 @@ if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['s
 		$class_extra = ($id == $active_history_tab) ? 'active' : '';
 		echo "<span id='{$id}' class='control {$class_extra}' onclick='do_comment(this);'>{$label}</span>";
 	}
-	
+
 	echo '			</div>
 			';
 
@@ -1168,10 +1168,10 @@ function do_comment(nd)
 {
 	$('#comment_filter > .control.active').removeClass("active");
 	$(nd).addClass("active");
-	
+
 	$.cookie('history_tab', nd.id, { expires: 365 });
-	
-	if (nd.id == 'type_all') { 
+
+	if (nd.id == 'type_all') {
 		$('#comments_view > .comment:hidden').show('slow');
 	} else {
 		$('#comments_view > .comment').each(function(i) {
@@ -1190,7 +1190,7 @@ bug_JS;
 if ($edit == 1) {
 	$bug_JS .= '
 <script type="text/javascript" src="js/jquery.autocomplete-min.js"></script>
-<script type="text/javascript" src="js/userlisting.php"></script> 	
+<script type="text/javascript" src="js/userlisting.php"></script>
 <script type="text/javascript" src="js/search.js"></script>
 	';
 
@@ -1205,7 +1205,7 @@ function mark_related_bugs($from, $comment_name, $ncomment)
 	global $bug_id;
 
 	$related = get_ticket_links($ncomment);
-	
+
 	/**
 	 * Adds a new comment on the related bug pointing to the current report
 	 */
@@ -1256,7 +1256,7 @@ function output_note($com_id, $ts, $email, $comment, $comment_type, $comment_nam
 function delete_comment($bug_id, $com_id)
 {
 	global $dbh;
-	
+
 	$res = $dbh->prepare("DELETE FROM bugdb_comments WHERE bug='{$bug_id}' AND id='{$com_id}'")->execute();
 }
 
