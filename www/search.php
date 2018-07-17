@@ -34,7 +34,10 @@ require "{$ROOT_DIR}/include/query.php";
 
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 {
-	if (!isset($res)) {
+	// FIXME: this if doesn't make sense, check is already performed in
+	// query.php - whole condition can be removed, reducing level of
+	// nesting by one.
+	if (!isset($result)) {
 		$errors[] = 'Invalid query';
 	} else {
 		// For count only, simply print the count and exit
@@ -145,7 +148,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
  </tr>
 <?php
 
-			while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+			foreach ($result as $row) {
 				$status_class = $row['private'] == 'Y' ? 'Sec' : $tla[$row['status']];
 
 				echo ' <tr valign="top" class="' , $status_class, '">' , "\n";

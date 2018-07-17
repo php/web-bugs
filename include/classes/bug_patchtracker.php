@@ -224,7 +224,7 @@ class Bug_Patchtracker
 			return $id;
 		} elseif ($file->isMissing()) {
 			return PEAR::raiseError('Uploaded file is empty or nothing was uploaded.');
-		} elseif ($file->isError()) {
+		} elseif ($file->error()) {
 			return PEAR::raiseError($file->errorMsg());
 		}
 		return PEAR::raiseError('Unable to attach patch (try renaming the file with .txt extension)');

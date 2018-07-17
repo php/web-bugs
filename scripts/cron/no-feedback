@@ -26,7 +26,7 @@ if ($dbh)
 	if (PEAR::isError($res)) {
 		throw new Exception("SQL Error in no-feedback");
 	}
-	while ($bug = $res->fetchRow(MDB2_FETCHMODE_ASSOC))
+	while ($bug = $res->fetchRow(PDO::FETCH_ASSOC))
 	{
 		list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 

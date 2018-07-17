@@ -27,14 +27,14 @@ function getAllUsers()
 	return $json;
 }
 
-if (!$json = apc_fetch('svnusers')) {
+if (!file_exists("/tmp/svnusers.json") || filemetime("/tmp/svnusers.json") < $_SERVER["REQUEST_TIME"] - 3600) {
 	$json = getAllUsers();
-	if ($json) {
-		apc_store('svnusers', $json, 3600);
-		apc_store('svnusers_update', $_SERVER['REQUEST_TIME'], 3600);
-	}
+	$json_data = var_export($json, true);
+	file_put_contents("/tmp/svnusers.php", '<?php $json = '.$json_data.';');
+} else {
+	include "/tmp/svnusers.php";
+	$modified = filemtime("/tmp/svnusers.php");
 }
-$modified = apc_fetch('svnusers_update');
 
 $tsstring = gmdate('D, d M Y H:i:s ', $modified);
 if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $tsstring) {

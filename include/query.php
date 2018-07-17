@@ -263,14 +263,13 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if (stristr($query, ';')) {
 		$errors[] = 'BAD HACKER!! No database cracking for you today!';
 	} else {
-		$res = $dbh->prepare($query)->execute();
-		if (!PEAR::isError($res)) {
-			$rows = $res->numRows();
+		try {
+			$result = $dbh->prepare($query)->execute()->fetchAll();
+			$rows = count($result);
 			$total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
-		} else {
-			$error = MDB2::errorMessage($res);
-			$errors[] = $error;
-		}		
+		} catch (Exception $e) {
+			$errors[] = 'Invalid query: ' . $e->getMessage();
+		}
 		if (defined('MAX_BUGS_RETURN') && $total_rows > $rows) {
 			$warnings[] = 'The search was too general, only ' . MAX_BUGS_RETURN . ' bugs will be returned';
 		}

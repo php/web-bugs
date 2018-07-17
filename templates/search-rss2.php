@@ -9,7 +9,7 @@ echo '<?xml version="1.0"?>' . "\n";
   <description>Search Results</description>
 <?php
 if ($total_rows > 0) {
-	foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
+	foreach ($result as $row) {
 		echo "  <item>\n";
 		echo '   <title>' . clean($row['sdesc']) . "</title>\n";
 		echo "   <link>{$site_method}://{$site_url}{$basedir}/{$row['id']}</link>\n";

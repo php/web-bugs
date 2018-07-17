@@ -3,7 +3,7 @@
 	/*
 	The RC and dev versions are pulled from the http://qa.php.net/api.php
 	if you want to add a new version, add it there at include/release-qa.php
-	the result is cached for an hour, you can force it to refresh, if you delete the 'bugs.versions' item from apc
+	the result is cached for an hour in /tmp/<systemd>/tmp/versions.php
 	the versions are weighted by the following:
 	- major+minor version desc (7>5.4>5.3>master)
 	- between a minor version we order by the micro if available: first the qa releases: alpha/beta/rc, then the stable, then the Git versions(snaps, Git)
@@ -18,11 +18,12 @@
 		'Irrelevant'
 	);
 
-	if (!$versions = apc_fetch('bugs.versions')) {
+	if(!file_exists("/tmp/versions.php") || filemtime("/tmp/versions.php") < $_SERVER['REQUEST_TIME'] - 3600) {
 		$versions = buildVersions();
-		if ($versions) {
- 			apc_store('bugs.versions', $versions, 3600);
-		}
+		$versions_data = var_export($versions, true);
+		file_put_contents("/tmp/versions.php", '<?php $versions = '.$versions_data.';');
+	} else {
+		include "/tmp/versions.php";
 	}
 
 	$versions = array_merge($versions, $custom_versions);

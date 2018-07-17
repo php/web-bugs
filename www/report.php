@@ -76,9 +76,9 @@ if (isset($_POST['in'])) {
 
 			$query = "SELECT * from bugdb $where_clause LIMIT 5";
 
-			$res = $dbh->prepare($query)->execute();
+			$possible_duplicates = $dbh->prepare($query)->execute()->fetchAll();
 
-			if ($res->numRows() == 0) {
+			if (count($possible_duplicates) == 0) {
 				$ok_to_submit_report = true;
 			} else {
 				response_header("Report - Confirm");
@@ -107,7 +107,7 @@ if (isset($_POST['in'])) {
 						</tr>
 <?php
 
-				foreach ($res->fetchAll(MDB2_FETCHMODE_ASSOC) as $row) {
+				foreach ($possible_duplicates as $row) {
 					$resolution = $dbh->prepare("
 						SELECT comment 
 						FROM bugdb_comments
@@ -215,11 +215,7 @@ OUTPUT;
 					$_SERVER['REMOTE_ADDR']
 				)
 			);
-			if (PEAR::isError($res)) {
-				echo "<pre>";
-				var_dump($_POST['in'], $fdesc, $package_name);
-				die($res->getMessage());
-			}
+
 			$cid = $dbh->lastInsertId();
 
 			$redirectToPatchAdd = false;
