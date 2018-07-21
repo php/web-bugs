@@ -200,7 +200,7 @@ OUTPUT;
 					ts1,
 					private,
 					visitor_ip
-				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW(), ?, INET_ATON(?))
+				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW(), ?, INET6_ATON(?))
 			')->execute(array(
 					$package_name,
 					$_POST['in']['bug_type'],
