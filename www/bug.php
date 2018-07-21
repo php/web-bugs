@@ -1072,10 +1072,14 @@ if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
 	require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 	$patches = new Bug_Patchtracker;
 	$p = $patches->listPatches($bug_id);
-	
+	$revs = [];	
 	echo "<h2>Patches</h2>\n";
 
-	foreach ($p as $name => $revisions)
+	foreach ($p as $patch) {
+		$revs[$patch['patch']][] = [$patch['revision'], $patch['developer']];
+	}
+
+	foreach ($revs as $name => $revisions)
 	{
 		$obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
 		$style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';

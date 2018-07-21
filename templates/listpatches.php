@@ -9,7 +9,9 @@
    <?php } ?>
   </td>
  </tr>
-<?php foreach ($patches as $pname => $revs) { ?>
+<?php 
+foreach ($patches as $fpa) { $fixed[$fpa['patch']][] = [ $fpa['revision'], $fpa['developer'] ]; }
+foreach ($fixed as $pname => $revs) { ?>
  <tr>
   <th class="details">
    Patch <a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php echo urlencode($pname); ?>&amp;revision=latest"><?php echo clean($pname); ?></a>

@@ -53,7 +53,7 @@ if (isset($patch_name) && isset($revision)) {
 	if ($revision == 'latest') {
 		$revisions = $patchinfo->listRevisions($buginfo['id'], $patch_name);
 		if (isset($revisions[0])) {
-			$revision = $revisions[0][0];
+			$revision = $revisions[0]['revision'];
 		}
 	}
 
