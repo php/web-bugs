@@ -994,12 +994,15 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 	}
 
 	if ($ncomment) {
-		$ncomment = preg_replace('#<div class="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $ncomment);
+#		$ncomment = preg_replace('#<div class="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $ncomment);
+		$ncomment = preg_replace_callback('#<div class="changeset">(.*)</div>#sU', function ($m) { return ltrim(strip_tags($m[0])); }, $ncomment);
+
 		$text[] = " New Comment:\n\n{$ncomment}";
 	}
 
 	$old_comments = get_old_comments($bug['id'], empty($ncomment));
-	$old_comments = preg_replace('#<div class="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $old_comments);
+#	$old_comments = preg_replace('#<div class="changeset">(.*)</div>#sUe', "ltrim(strip_tags('\\1'))", $old_comments);
+	$old_comments = preg_replace_callback('#<div class="changeset">(.*)</div>#sU', function ($m) { return ltrim(strip_tags($m[0])); }, $old_comments);
 
 	$text[] = $old_comments;
 
