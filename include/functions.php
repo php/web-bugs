@@ -1384,7 +1384,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 				$to[] = $assigned;
 			}
 		}
-		$bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute([$bug_id])->fetchOne();
+		$bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute([$bug_id])->fetchAll();
 
 		$bcc = array_unique($bcc);
 		return array(implode(', ', $to), $mailfrom, implode(', ', $bcc), $params);
