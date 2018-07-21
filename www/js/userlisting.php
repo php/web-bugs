@@ -31,6 +31,7 @@ if (!file_exists("/tmp/svnusers.json") || filemetime("/tmp/svnusers.json") < $_S
 	$json = getAllUsers();
 	$json_data = var_export($json, true);
 	file_put_contents("/tmp/svnusers.php", '<?php $json = '.$json_data.';');
+	$modified = time();
 } else {
 	include "/tmp/svnusers.php";
 	$modified = filemtime("/tmp/svnusers.php");
