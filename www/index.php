@@ -108,7 +108,7 @@ to a random open bug.</p>
 	);
 
 	if (!empty($_SESSION["user"])) {
-		$searches['Your assigned bugs'] = '&assign='.urlencode($_SESSION['user']);
+		$searches['Your assigned open bugs'] = '&assign='.urlencode($_SESSION['user']);
 	}
 
 	foreach ($searches as $title => $sufix) {
