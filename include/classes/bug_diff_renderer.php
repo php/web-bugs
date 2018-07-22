@@ -24,7 +24,7 @@ class Bug_Diff_Renderer extends Text_Diff_Renderer
 	function __construct($d)
 	{
 		$this->diff = $d;
-		parent::Text_Diff_Renderer();
+		parent::__construct();
 	}
 
 	function _blockHeader($xbeg, $xlen, $ybeg, $ylen)
