@@ -31,8 +31,8 @@ if (count($obsoletes)) {
 Patch Revisions:
 <?php foreach ($revisions as $i => $revision) { ?>
 <a href="patch-display.php?bug_id=<?php echo $bug_id; ?>&amp;patch=<?php
-    echo $patch_name_url; ?>&amp;revision=<?php echo urlencode($revision[0]); ?>"><?php
-    echo format_date($revision[0]); ?></a><?php if ($i < count($revisions) - 1) echo ' | '; ?>
+    echo $patch_name_url; ?>&amp;revision=<?php echo urlencode($revision['revision']); ?>"><?php
+    echo format_date($revision['revision']); ?></a><?php if ($i < count($revisions) - 1) echo ' | '; ?>
 <?php } ?>
 <h3>Developer: <?php echo $handle; ?></h3>
 <pre>
