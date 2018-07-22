@@ -58,7 +58,7 @@ class Bug_Diff_Renderer extends Text_Diff_Renderer
 		return $this->_deleted($orig) . "\n" . $this->_added($final);
 	}
 
-	function render()
+	function render($diff)
 	{
 		return parent::render($this->diff);
 	}

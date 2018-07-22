@@ -33,11 +33,11 @@ Patch Revisions:
 echo '<ul>';
 foreach ($revisions as $i => $rev) {
     echo '<li><a href="patch-display.php?bug_id=', $bug_id, '&amp;patch=',
-         $patch_name_url, '&amp;revision=', urlencode($rev[0]), '">',
-         format_date($rev[0]), '</a>',
+         $patch_name_url, '&amp;revision=', urlencode($rev['revision']), '">',
+         format_date($rev['revision']), '</a>',
          ' <a href="patch-display.php?patch=',
              $patch_name_url,
-             '&amp;bug_id=', $bug_id, '&amp;diff=1&amp;old=', $rev[0], '&amp;revision=',
+             '&amp;bug_id=', $bug_id, '&amp;diff=1&amp;old=', $rev['revision'], '&amp;revision=',
              $revision, '">[diff to current]</a></li>';
 }
 echo '</ul></li>';
