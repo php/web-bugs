@@ -351,19 +351,19 @@ if (!isset($_POST['in'])) {
 
 	<p>
 		Before you report a bug, make sure to search for similar bugs using the &quot;Bug List&quot; link.
-		Also, read the instructions for <a target="top" href="how-to-report.php">how to report a bug that someone will want to help fix</a>.
+		Also, read the instructions for <a target="_blank" href="how-to-report.php">how to report a bug that someone will want to help fix</a>.
 	</p>
 
 	<p>
 		If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support
-		<a href="http://www.php.net/support.php">listed here</a>.
+		<a target="_blank" href="http://www.php.net/support.php">listed here</a>.
 	</p>
 
 	<p>
 		<strong>Failure to follow these instructions may result in your bug simply being marked as &quot;not a bug.&quot;</strong>
 	</p>
 
-	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="http://pear.php.net/bugs/">here</a></p>
+	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a target="_blank" href="http://pear.php.net/bugs/">here</a></p>
 
 	<p>
 		<strong>If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, then email
@@ -405,7 +405,7 @@ display_bug_error($errors);
 					<input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8');?>" accesskey="p"><br>
 					You <strong>must</strong> enter any password here, which will be stored for this bug report.<br>
 					This password allows you to come back and modify your submitted bug report at a later date.
-					[<a href="bug-pwd-finder.php">Lost a bug password?</a>]
+					[<a target="_blank" href="bug-pwd-finder.php">Lost a bug password?</a>]
 				</td>
 			</tr>
 <?php } ?>
@@ -461,7 +461,7 @@ display_bug_error($errors);
 						<li>The list of modules you compiled PHP with (your configure line).</li>
 						<li>Any other information unique or specific to your setup.</li>
 						<li>Any changes made in your php.ini compared to php.ini-dist or php.ini-recommended (<strong>not</strong> your whole php.ini!)</li>
-						<li>A <a href="bugs-generating-backtrace.php">gdb backtrace</a>.</li>
+						<li>A <a target="_blank" href="bugs-generating-backtrace.php">gdb backtrace</a>.</li>
 					</ul>
 				</td>
 			</tr>
