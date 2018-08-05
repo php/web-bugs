@@ -1209,7 +1209,7 @@ function link_to_people($email, $text)
     $domain = strstr($email, "@");
     if ($domain == "@php.net") {
         $username = strstr($email, "@", true);
-        return '<a href="//people.php.net/user.php?username=' . urlencode($username) . '">' . $text . '</a>';
+        return '<a href="//people.php.net/' . urlencode($username) . '">' . $text . '</a>';
     }
     return $text;
 }
