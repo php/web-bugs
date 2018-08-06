@@ -421,10 +421,7 @@ hr {
 	color: #66cc66;
 }
 
-.compact {
-}
-
-code, pre, tt {
+code, pre {
 	font-family: Consolas, Inconsolata, "Liberation Mono", monospace;
 	font-size: 13px;
 }
