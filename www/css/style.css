@@ -424,6 +424,10 @@ code, pre {
 	font-size: 13px;
 }
 
+pre {
+	line-height: 1.4;
+}
+
 h1 {
 	font-size: 140%;
 	font-weight: bold;
@@ -530,7 +534,6 @@ td.content table {
 	margin-left: 10px;
 	white-space:pre-wrap;
 	font-size: 13px;
-	line-height: 1.4;
 }
 .lusersearch .note {
 	width:100%;
