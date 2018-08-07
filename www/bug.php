@@ -768,38 +768,30 @@ if ($edit == 1 || $edit == 2) { ?>
 
 <form id="update" action="bug.php?id=<?php echo $bug_id; ?>&amp;edit=<?php echo $edit; ?>" method="post">
 
-<?php if ($edit == 2) {
-		if ($show_bug_info) { ?>
-                        <div class="explain">
-                                <table>
-                                        <tr>
-                                                <td class="details">Passw<span class="accesskey">o</span>rd:</td>
-                                                <td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o"></td>
-                                        </tr>
-                                </table>
-                        </div>
-<?php	} else { ?>
-			<div class="explain">
-			<?php if (!isset($_POST['in'])) { ?>
-				Welcome back! If you're the original bug submitter, here's
-				where you can edit the bug or add additional notes.
-                <br>If this is not your bug, you can
-                <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.<br>
-				If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php?id=<?php echo $bug_id; ?>">you can retrieve your password here</a>.
-                <br>
-			<?php } ?>
+<?php
+	if ($edit == 2) {
+?>
+		<div class="explain">
+		<?php if (!isset($_POST['in'])) { ?>
+			Welcome back! If you're the original bug submitter, here's
+			where you can edit the bug or add additional notes.
+               <br>If this is not your bug, you can
+               <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.<br>
+			If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php?id=<?php echo $bug_id; ?>">you can retrieve your password here</a>.
+               <br>
+		<?php } ?>
 
-				<table>
-					<tr>
-						<td class="details">Passw<span class="accesskey">o</span>rd:</td>
-						<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o"></td>
-						<?php if (!$show_bug_info) { ?>
-						<input type="submit" value="Submit">
-						<?php } ?>
-					</tr>
-				</table>
-			</div>
-<?php	}
+			<table>
+				<tr>
+					<td class="details">Passw<span class="accesskey">o</span>rd:</td>
+					<td><input type="password" name="pw" value="<?php echo htmlspecialchars($pw); ?>" size="10" maxlength="20" accesskey="o"></td>
+					<?php if (!$show_bug_info) { ?>
+					<input type="submit" value="Submit">
+					<?php } ?>
+				</tr>
+			</table>
+		</div>
+<?php
 	} else {
 		if ($logged_in == 'developer') {
 ?>
