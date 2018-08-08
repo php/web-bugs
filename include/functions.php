@@ -728,10 +728,16 @@ function show_version_options($current)
 function show_package_options($current, $show_any, $default = '')
 {
 	global $pseudo_pkgs;
-	static $bug_items;
+	$disabled_style = ' style="background-color:#eee;"';
+	static $bug_groups;
 
-	if (!isset($bug_items)) {
-		$bug_items = $pseudo_pkgs;
+	if (!isset($bug_groups)) {
+		$bug_groups = array_filter(
+			$pseudo_pkgs,
+			function ($value) {
+				return is_array($value[2]);
+			}
+		);
 	}
 
 	if (!$current && (!$default || $default == 'none') && !$show_any) {
@@ -742,19 +748,28 @@ function show_package_options($current, $show_any, $default = '')
 		$current = $default;
 	}
 
-	if (!is_array($bug_items)) {
+	if (!is_array($bug_groups)) {
 		return;
 	}
 
-	foreach ($bug_items as $key => $value) {
-		if ($show_any == 1 || $key != 'Any') {
-			echo "<option value=\"$key\"";
-			if ((is_array($current) && in_array($key, $current)) || ($key == $current)) {
-				echo ' selected="selected"';
+
+	foreach ($bug_groups as $key => $bug_group) {
+		echo "<optgroup label=\"${bug_group[0]}\"" .
+			(($bug_group[1]) ? $disabled_style : ''), "\n>";
+
+		array_unshift($bug_group[2], $key);
+		foreach ($bug_group[2] as $name) {
+			$child = $pseudo_pkgs[$name];
+			if ($show_any == 1 || $key != 'Any') {
+				echo "<option value=\"$name\"";
+				if ((is_array($current) && in_array($key, $current)) || ($key == $current)) {
+					echo ' selected="selected"';
+				}
+				// Show disabled categories with different background color in listing
+				echo (($child[1]) ? $disabled_style : ''), ">{$child[0]}</option>\n";
 			}
-			// Show disabled categories with different background color in listing
-			echo (($value[1]) ? ' style="background-color:#eee;"' : ''), ">{$value[0]}</option>\n";
 		}
+		echo "</optgroup>\n";
 	}
 }
 
