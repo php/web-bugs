@@ -235,7 +235,8 @@ function get_pseudo_packages($project, $return_disabled = true)
 	foreach ($tree as $data)
 	{
 		if (isset($data['children'])) {
-			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
+			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled'], array());
+			$children = &$pseudo_pkgs[$data['name']][2];
 			$long_names = array();
 			foreach ($data['children'] as $k => $v) {
 				$long_names[$k] = strtolower($v['long_name']);
@@ -243,11 +244,12 @@ function get_pseudo_packages($project, $return_disabled = true)
 			array_multisort($long_names, SORT_ASC, SORT_STRING, $data['children']);
 			foreach ($data['children'] as $child)
 			{
-				$pseudo_pkgs[$child['name']] = array("&nbsp;&nbsp;&nbsp;&nbsp;{$child['long_name']}", $child['disabled']);
+				$pseudo_pkgs[$child['name']] = array("{$child['long_name']}", $child['disabled'], null);
+				$children[] = $child['name'];
 			}
 
 		} elseif (!isset($pseudo_pkgs[$data['name']])) {
-			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled']);
+			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled'], null);
 		}
 	}
 
