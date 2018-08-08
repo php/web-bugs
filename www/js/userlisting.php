@@ -27,7 +27,7 @@ function getAllUsers()
 	return $json;
 }
 
-if (!file_exists("/tmp/svnusers.json") || filemetime("/tmp/svnusers.json") < $_SERVER["REQUEST_TIME"] - 3600) {
+if (!file_exists("/tmp/svnusers.json") || filemtime("/tmp/svnusers.json") < $_SERVER["REQUEST_TIME"] - 3600) {
 	$json = getAllUsers();
 	$json_data = var_export($json, true);
 	file_put_contents("/tmp/svnusers.php", '<?php $json = '.$json_data.';');
