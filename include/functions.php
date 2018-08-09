@@ -762,7 +762,7 @@ function show_package_options($current, $show_any, $default = '')
 			$child = $pseudo_pkgs[$name];
 			if ($show_any == 1 || $key != 'Any') {
 				echo "<option value=\"$name\"";
-				if ((is_array($current) && in_array($key, $current)) || ($key == $current)) {
+				if ((is_array($current) && in_array($name, $current)) || ($name == $current)) {
 					echo ' selected="selected"';
 				}
 				// Show disabled categories with different background color in listing
