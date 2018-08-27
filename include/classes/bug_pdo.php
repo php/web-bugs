@@ -10,8 +10,8 @@
  */
 
 // Define missing constants
-define('MDB2_FETCHMODE_ASSOC', null);
-define('MDB2_FETCHMODE_ORDERED', null);
+define('MDB2_FETCHMODE_ASSOC', PDO::FETCH_ASSOC);
+define('MDB2_FETCHMODE_ORDERED', PDO::FETCH_NUM);
 define('MDB2_PREPARE_MANIP', null);
 
 class Bug_PDO extends PDO
