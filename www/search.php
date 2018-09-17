@@ -7,9 +7,8 @@ session_start();
 require_once '../include/prepend.php';
 
 // Redirect early if a bug id is passed as search string
-$search_for_id = (isset($_GET['search_for'])) ? (int) $_GET['search_for'] : 0;
-if ($search_for_id) {
-	redirect("bug.php?id={$search_for_id}");
+if (isset($_GET['search_for']) && preg_match('/^\d+$/', trim($_GET['search_for']), $search_for_id_array)) {
+	redirect("bug.php?id=${search_for_id_array[0]}");
 }
 
 // For bug count only, used in places like doc.php.net
