@@ -17,7 +17,8 @@ if (isset($_POST['user'])) {
 
   if ($logged_in === 'developer') {
 	if (!empty($_POST['referer']) &&
-		preg_match("/^{$site_method}:\/\/". preg_quote($site_url) .'/i', $referer)) {
+		preg_match("/^{$site_method}:\/\/". preg_quote($site_url) .'/i', $referer) &&
+		parse_url($referer, PHP_URL_PATH) != '/logout.php') {
 		redirect($referer);
 	}
     redirect('index.php');
