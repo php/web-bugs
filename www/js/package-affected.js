@@ -87,6 +87,14 @@ window.addEventListener(
 						select.value = null;
 					}
 
+					packageGroup.style.marginRight = '.5em';
+					[select, packageGroup].forEach(
+						function (element) {
+							element.size = 5;
+							element.style.width = '22em';
+						}
+					);
+
 					select
 						.parentNode
 						.insertBefore(packageGroup, select);
