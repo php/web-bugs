@@ -27,6 +27,10 @@ if (!$logged_in) {
 	$numeralCaptcha = new Text_CAPTCHA_Numeral();
 }
 
+$packageAffectedScript = <<<SCRIPT
+	<script type="text/javascript" src="$site_method://$site_url$basedir/js/package-affected.js"></script>
+SCRIPT;
+
 // Handle input
 if (isset($_POST['in'])) {
 
@@ -81,7 +85,7 @@ if (isset($_POST['in'])) {
 			if (count($possible_duplicates) == 0) {
 				$ok_to_submit_report = true;
 			} else {
-				response_header("Report - Confirm");
+				response_header("Report - Confirm", $packageAffectedScript);
 				if (count($_FILES)) {
 					echo '<h1>WARNING: YOU MUST RE-UPLOAD YOUR PATCH, OR IT WILL BE IGNORED</h1>';
 				}
@@ -150,7 +154,7 @@ OUTPUT;
 		
 		if (isset($_POST['edit_after_preview'])) {
 			$ok_to_submit_report = false;
-			response_header("Report - New");
+			response_header("Report - New", $packageAffectedScript);
 		}
 
 		if ($ok_to_submit_report) {
@@ -317,14 +321,14 @@ REPORT;
 		}
 	} else {
 		// had errors...
-		response_header('Report - Problems');
+		response_header('Report - Problems', $packageAffectedScript);
 	}
 } // end of if input
 
 $package = !empty($_REQUEST['package']) ? $_REQUEST['package'] : (!empty($package_name) ? $package_name : (isset($_POST['in']) && $_POST['in'] && isset($_POST['in']['package_name']) ? $_POST['in']['package_name'] : ''));
 
 if (!is_string($package)) {
-	response_header('Report - Problems');
+	response_header('Report - Problems', $packageAffectedScript);
 	$errors[] = 'Invalid package name passed. Please fix it and try again.';
 	display_bug_error($errors);
 	response_footer();
@@ -346,7 +350,9 @@ if (!isset($_POST['in'])) {
 			 'php_os' => '',
 			 'passwd' => '',
 	);
-	response_header('Report - New');
+
+
+	response_header('Report - New', $packageAffectedScript);
 ?>
 
 	<p>
