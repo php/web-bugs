@@ -9,7 +9,7 @@
    <?php } ?>
   </td>
  </tr>
-<?php 
+<?php
 foreach ($patches as $fpa) { $fixed[$fpa['patch']][] = [ $fpa['revision'], $fpa['developer'] ]; }
 foreach ($fixed as $pname => $revs) { ?>
  <tr>

@@ -42,7 +42,7 @@ if (!is_array($bug)) {
 if (!bugs_has_access($bug_id, $bug, $pwd, $user_flags)) {
 	echo json_encode(array('result' => array('error' => 'No access to bug')));
 	exit;
-}	
+}
 
 if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 	$user = htmlspecialchars(trim($_POST['user']));
@@ -55,15 +55,15 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 	if ($res) {
 		/* Close the bug report as requested if it is not already closed */
 		if (!empty($_POST['status'])
-			&& $bug['status'] !== 'Closed' 
+			&& $bug['status'] !== 'Closed'
 			&& $_POST['status'] === 'Closed') {
 			/* Change the bug status to Closed */
 			bugs_status_change($bug_id, 'Closed');
-			
+
 			$in = $bug;
 			/* Just change the bug status */
 			$in['status'] = $_POST['status'];
-			
+
 			$changed = bug_diff($bug, $in);
 			if (!empty($changed)) {
 				$log_comment = bug_diff_render_html($changed);
@@ -72,11 +72,11 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 					$res = bugs_add_comment($bug_id, $from, '', $log_comment, 'log');
 				}
 			}
-			
+
 			/* Send a mail notification when automatically closing a bug */
 			mail_bug_updates($bug, $in, $from, $ncomment, 1, $bug_id);
 		}
-		
+
 		echo json_encode(array('result' => array('status' => $bug)));
 		exit;
 	} else {

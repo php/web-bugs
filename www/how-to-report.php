@@ -88,7 +88,7 @@ as a feature request.)</p>
 		can be found <a href="bugs-generating-backtrace.php">here for *NIX users</a> and
 		<a href="bugs-generating-backtrace-win32.php">here for Windows users</a>.
 	</li>
-	<li> 
+	<li>
 		<a href="http://valgrind.org">Valgrind</a> log can be also very useful.
 		See <a href="bugs-getting-valgrind-log.php">instructions how to generate it</a>.
 	</li>
@@ -126,7 +126,7 @@ with the different bugs.</p>
 		To Ask Questions The Smart Way</a>
 	</li>
 	<li>
-		mozilla.org's 
+		mozilla.org's
 		<a href="https://developer.mozilla.org/en-US/docs/Mozilla/QA/Bug_writing_guidelines">bug
 		writing guidelines</a>
 	</li>

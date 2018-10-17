@@ -13,11 +13,11 @@ $interval = isset($_GET['interval']) ? (int) $_GET['interval'] : 7;
 
 if ($type === 'docs' && $action === 'closed' && $interval) {
 
-	$query = 
+	$query =
 	"
 		SELECT bugdb_comments.reporter_name, COUNT(*) as count
-		FROM bugdb_comments, bugdb 
-		WHERE comment_type =  'log' 
+		FROM bugdb_comments, bugdb
+		WHERE comment_type =  'log'
 		AND (package_name IN ('Doc Build problem', 'Documentation problem', 'Translation problem', 'Online Doc Editor problem') OR bug_type = 'Documentation Problem')
 		AND comment LIKE  '%+Status:      Closed</span>%'
 		AND date_sub(curdate(), INTERVAL {$interval} DAY) <= ts
@@ -25,18 +25,18 @@ if ($type === 'docs' && $action === 'closed' && $interval) {
 		GROUP BY bugdb_comments.reporter_name
 		ORDER BY count DESC
 	";
-	
+
 	//@todo add error handling
 	$rows = $dbh->prepare($query)->execute(array())->fetchAll(MDB2_FETCHMODE_ASSOC);
 	if (!$rows) {
 		echo 'The fail train has arrived.';
 		exit;
 	}
-	
+
 	echo serialize($rows);
 
 } else {
-	
+
 	echo "Unknown action";
-	
+
 }

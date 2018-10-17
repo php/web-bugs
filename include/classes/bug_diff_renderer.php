@@ -46,7 +46,7 @@ class Bug_Diff_Renderer extends Text_Diff_Renderer
 		array_walk($lines, create_function('&$a,$b', '$a=htmlspecialchars($a);'));
 		return "\n" . parent::_context($lines);
 	}
-	
+
 	function _deleted($lines)
 	{
 		array_walk($lines, create_function('&$a,$b', '$a=htmlspecialchars($a);'));

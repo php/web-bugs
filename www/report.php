@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 // Obtain common includes
 require_once '../include/prepend.php';
 
-// Start session 
+// Start session
 session_start();
 
 // Init variables
@@ -64,7 +64,7 @@ if (isset($_POST['in'])) {
 			$_POST['in']['did_luser_search'] = 1;
 
 			$where_clause = "WHERE package_name != 'Feature/Change Request'";
-			
+
 			if (!$is_security_developer) {
 				$where_clause .= " AND private = 'N' ";
 			}
@@ -147,7 +147,7 @@ OUTPUT;
 			// We displayed the luser search and they said it really was not already submitted, so let's allow them to submit.
 			$ok_to_submit_report = true;
 		}
-		
+
 		if (isset($_POST['edit_after_preview'])) {
 			$ok_to_submit_report = false;
 			response_header("Report - New");
@@ -171,11 +171,11 @@ OUTPUT;
 				$fdesc .= "Actual result:\n--------------\n";
 				$fdesc .= $_POST['in']['actres'] . "\n";
 			}
-			
+
 			// Bug type 'Security' marks automatically the report as private
 			$_POST['in']['private'] = ($_POST['in']['bug_type'] == 'Security') ? 'Y' : 'N';
 			$_POST['in']['block_user_comment'] = 'N';
-			
+
 			if (isset($_POST['preview'])) {
 				$_POST['in']['status'] = 'Open';
 				$_SESSION['bug_preview'] = $_POST['in'];
@@ -229,7 +229,7 @@ OUTPUT;
 					$redirectToPatchAdd = true;
 				}
 			}
-			
+
 			if (empty($_POST['in']['handle'])) {
 				$mailfrom = spam_protect($_POST['in']['email'], 'text');
 			} else {
@@ -268,7 +268,7 @@ REPORT;
 			} else {
 				$type = 'unknown';
 			}
-			
+
 			$project = !empty($_GET['project']) ? $_GET['project'] : false;
 
 			// provide shortcut URLS for "quick bug fixes"
@@ -418,7 +418,7 @@ display_bug_error($errors);
 					</select>
 				</td>
 			</tr>
-			
+
 			<tr>
 				<th class="form-label_left">Package affected:</th>
 				<td class="form-input">
@@ -525,7 +525,7 @@ display_bug_error($errors);
 				</td>
 			</tr>
 
-<?php if (!$logged_in) { 
+<?php if (!$logged_in) {
 	$captcha = $numeralCaptcha->getOperation();
 	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
 	if (!empty($_POST['captcha']) && empty($ok_to_submit_report)) {

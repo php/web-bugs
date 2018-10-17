@@ -140,7 +140,7 @@ TXT;
 
 	$res = bugs_add_comment($bug_id, $auth_user->email, $auth_user->name, $text, 'patch');
 
-	// Send emails 
+	// Send emails
 	mail_bug_updates($buginfo, $buginfo, $auth_user->email, $text, 4, $bug_id);
 
 	$patches = $patchinfo->listPatches($bug_id);

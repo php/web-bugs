@@ -48,7 +48,7 @@ switch ($bug['status']) {
 
 print '<?xml version="1.0"?>';
 ?>
-<rdf:RDF 
+<rdf:RDF
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns="http://purl.org/rss/1.0/"
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -118,7 +118,7 @@ print '<?xml version="1.0"?>';
 			</title>
 
 			<link><?php echo $uri; ?>#<?php echo $comment['added']; ?></link>
-			
+
 			<description><![CDATA[<pre><?php echo clean($comment['comment']); ?></pre>]]></description>
 			<content:encoded><![CDATA[<pre><?php echo clean($comment['comment']); ?></pre>]]></content:encoded>
 			<dc:date><?php echo date(DATE_ATOM, $comment['added']); ?></dc:date>

@@ -42,7 +42,7 @@ if (bugid > 0) {
 
 <ul>
 	<li>
-		Used the form above or our <a href="search.php">advanced search page</a> 
+		Used the form above or our <a href="search.php">advanced search page</a>
 		to make sure nobody has reported the bug already.
 	</li>
 
@@ -58,13 +58,13 @@ if (bugid > 0) {
 	<li>
 		Read the <a href="https://wiki.php.net/security">security guidelines</a>, if you think an issue might be security related.
 	</li>
-	
+
 	<li>
-		See how to get a backtrace in case of a crash: 
+		See how to get a backtrace in case of a crash:
 		<a href="bugs-generating-backtrace.php">for *NIX</a> and
 		<a href="bugs-generating-backtrace-win32.php">for Windows</a>.
 	</li>
-	
+
 	<li>
 		Make sure it isn't a support question. For support,
 		see the <a href="http://www.php.net/support.php">support page</a>.
@@ -80,12 +80,12 @@ page</a>.</p>
 
 <p>You can search all of the bugs that have been reported on our
 <a href="search.php">advanced search page</a>, or use the form
-at the top of the page for a basic default search.  Read the 
-<a href="search-howto.php">search howto</a> for instructions on 
+at the top of the page for a basic default search.  Read the
+<a href="search-howto.php">search howto</a> for instructions on
 how search works.</p>
 
 <p>If you have 10 minutes to kill and you want to help us out, grab a
-random open bug and see if you can help resolve it. We have made it 
+random open bug and see if you can help resolve it. We have made it
 easy. Hit <a href="<?php echo $site_method?>://<?php echo $site_url?>/random">
 <?php echo $site_method?>://<?php echo $site_url?>/random</a> to go directly
 to a random open bug.</p>
@@ -94,7 +94,7 @@ to a random open bug.</p>
 <ul>
 <?php
 	$base_default = "{$site_method}://{$site_url}/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open";
-	
+
 	$searches = array(
 		'Most recent open bugs (all)' => '&bug_type=All',
 		'Most recent open bugs (all) with patch or pull request' => '&bug_type=All&patch=Y&pull=Y',

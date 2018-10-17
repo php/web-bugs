@@ -10,9 +10,9 @@ list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
-response_header('Quick Fix Descriptions'); 
+response_header('Quick Fix Descriptions');
 
-?> 
+?>
 <table border="1" cellpadding="3" cellspacing="1">
 <?php
 
@@ -37,7 +37,7 @@ foreach ($RESOLVE_REASONS as $key => $reason) {
 				</tr>";
 		}
 	}
-} 
+}
 ?>
 </table>
 

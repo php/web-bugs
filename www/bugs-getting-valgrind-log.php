@@ -14,22 +14,22 @@ response_header('Generating a valgrind log');
 
 <h3>Important!</h3>
 To get a meaningful log you must have
-PHP configured with <code>--enable-debug</code> 
+PHP configured with <code>--enable-debug</code>
 and disable Zend memory manager.
 
 <h3>Disabling Zend MM</h3>
 
 <p>
- Zend Engine uses its own routines to optimize memory management, 
+ Zend Engine uses its own routines to optimize memory management,
  but because of this valgrind cannot see most of the memory issues.
  You must disable Zend memory manager before running PHP with valgrind.
  In order to do this you need to set USE_ZEND_ALLOC environment
- variable to 0. 
+ variable to 0.
 </p>
 <p>
  Use
- <pre><code>export USE_ZEND_ALLOC=0</code></pre> or 
- <pre><code>setenv USE_ZEND_ALLOC 0</code></pre> (the syntax depends on 
+ <pre><code>export USE_ZEND_ALLOC=0</code></pre> or
+ <pre><code>setenv USE_ZEND_ALLOC 0</code></pre> (the syntax depends on
  what your shell supports).
 </p>
 <p>
@@ -42,8 +42,8 @@ and disable Zend memory manager.
 
 <p>
  To correctly show the stack frames for extensions compiled as shared libraries, set:
- <pre><code>export ZEND_DONT_UNLOAD_MODULES=1</code></pre> or 
- <pre><code>setenv ZEND_DONT_UNLOAD_MODULES 1</code></pre> (the syntax depends on 
+ <pre><code>export ZEND_DONT_UNLOAD_MODULES=1</code></pre> or
+ <pre><code>setenv ZEND_DONT_UNLOAD_MODULES 1</code></pre> (the syntax depends on
  what your shell supports).
 </p>
 
@@ -54,8 +54,8 @@ and disable Zend memory manager.
 <h3>Running PHP CLI, Built-in Web Server or PHP CGI through valgrind</h3>
 
 <p>
- To generate the valgrind log using PHP CLI/CGI, 
- you need to execute the following command: 
+ To generate the valgrind log using PHP CLI/CGI,
+ you need to execute the following command:
 </p>
 
 <pre>
@@ -77,9 +77,9 @@ and disable Zend memory manager.
 <h3>Running PHP Apache module through valgrind</h3>
 
 <p>
- If you compiled PHP and Apache statically, make sure the Apache binary 
- is not stripped after <code>make install</code>, otherwise you lose 
- the required debug info. To check it, run <code>file /path/to/httpd</code>, 
+ If you compiled PHP and Apache statically, make sure the Apache binary
+ is not stripped after <code>make install</code>, otherwise you lose
+ the required debug info. To check it, run <code>file /path/to/httpd</code>,
  it should output something like this (notice &quot;not stripped&quot;):
 </p>
 <pre>
@@ -90,8 +90,8 @@ and disable Zend memory manager.
 </pre>
 
 <p>
- To generate the valgrind log using PHP as Apache module, 
- you need to run the Apache itself under valgrind: 
+ To generate the valgrind log using PHP as Apache module,
+ you need to run the Apache itself under valgrind:
 </p>
 
 <pre>

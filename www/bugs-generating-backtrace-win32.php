@@ -26,8 +26,8 @@ extensions into your extension directory.</p>
 
 <p>If you compile PHP by your own, you can also use a newer version of MSVC.</p>
 
-<p>When PHP crashes, click <em>Cancel</em> to debug the process.  Now MSVC starts 
-up in <em>Debug View</em>.  If you don't already see the call stack, go into the 
+<p>When PHP crashes, click <em>Cancel</em> to debug the process.  Now MSVC starts
+up in <em>Debug View</em>.  If you don't already see the call stack, go into the
 <em>View</em> menu and choose <em>Debug Windows</em> &rarr; <em>Call Stack</em>.</p>
 
 <p>You'll now see something similar to the following lines, this is the backtrace:</p>
@@ -97,4 +97,4 @@ selection.</p>
 <p>What we need is the backtrace itself which can be found under "Thread X - System ID XXX".</p>
 
 <?php response_footer();
-	
+

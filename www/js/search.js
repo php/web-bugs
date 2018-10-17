@@ -7,8 +7,8 @@ var fnFormatSearchResult = function(value, data, currentValue) {
 	return '<img src="https://secure.gravatar.com/avatar/' + users[value]["email"] + '.jpg?s=25"> ' + listing;
 };
 
-$('#assigned_user').autocomplete({ 
-	minChars:2, 
+$('#assigned_user').autocomplete({
+	minChars:2,
 	maxHeight:400,
 	width:300,
 	fnFormatResult: fnFormatSearchResult,

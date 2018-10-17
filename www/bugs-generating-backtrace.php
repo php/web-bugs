@@ -64,13 +64,13 @@ PHP configured with <code>--enable-debug</code>!
 		</ul>
 	</li>
 	<li>
-		Set the ulimit (see above how to do it). 
+		Set the ulimit (see above how to do it).
 	</li>
 	<li>
 		Restart/rerun PHP.
 	</li>
 </ul>
-<p>After that any process crashing in your system, including PHP, will leave 
+<p>After that any process crashing in your system, including PHP, will leave
 its core file in the directory you've specified in <i>core_pattern</i>.</p>
 
 <h3>Once you have the core file:</h3>
@@ -171,7 +171,7 @@ $14 = 0x80fa6fa "pg_result_error"
 $15 = 0x816cfc4 "result_error"
 (gdb) print (char *)executor_globals.active_op_array->filename
 $16 = 0x816afbc "/home/yohgaki/php/DEV/segfault.php"
-(gdb) 
+(gdb)
 	</code></pre>
 </ul>
 

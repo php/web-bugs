@@ -11,8 +11,8 @@ if (!$logged_in) {
 }
 
 $actions = array(
-	'phpinfo' 		=> 'phpinfo()', 
-	'list_lists'		=> 'Package mailing lists', 
+	'phpinfo' 		=> 'phpinfo()',
+	'list_lists'		=> 'Package mailing lists',
 	'list_responses'	=> 'Quick fix responses',
 	'mysql'			=> 'Database status',
 );
@@ -30,8 +30,8 @@ if ($action === 'phpinfo') {
 
 	// Attempt to hide certain ENV vars
 	$vars = array(
-			getenv('AUTH_TOKEN'), 
-			getenv('USER_TOKEN'), 
+			getenv('AUTH_TOKEN'),
+			getenv('USER_TOKEN'),
 			getenv('USER_PWD_SALT')
 			);
 

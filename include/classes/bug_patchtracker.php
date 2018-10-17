@@ -142,7 +142,7 @@ class Bug_Patchtracker
 		if (PEAR::isError($file)) {
 			return $file;
 		}
-	
+
 		if ($file->isValid()) {
 			$newobsoletes = array();
 			foreach ($obsoletes as $who) {
@@ -191,7 +191,7 @@ class Bug_Patchtracker
 				$mime = $t[0];
 			}
 			else // NOTE: I didn't have PHP 5.3 around with fileinfo enabled :)
-			{ 
+			{
 				$mime = 'text/plain';
 			}
 			if (!in_array($mime, $allowed_mime_types)) {

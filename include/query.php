@@ -62,7 +62,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		UNIX_TIMESTAMP(ts2) AS modified
 		FROM bugdb
 	';
-	
+
 	if (in_array($order_by, array('votes_count', 'avg_score'))) {
 		$query .= 'LEFT JOIN bugdb_votes v ON bugdb.id = v.bug';
 	}
@@ -70,14 +70,14 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if ($commented_by != '') {
 		$query .= ' LEFT JOIN bugdb_comments c ON bugdb.id = c.bug';
 	}
-	
+
 	$where_clause = ' WHERE 1 = 1 ';
-	
+
 	if (isset($user_flags) && ($user_flags & (BUGS_SECURITY_DEV | BUGS_TRUSTED_DEV))) {
 		if ($private != '') {
 			$where_clause .= ' AND bugdb.private = "Y" ';
 		}
-	} else { 
+	} else {
 		/* Non trusted developer should see the Security related bug report just when it is public */
 		$where_clause .= ' AND (bugdb.bug_type <> "Security" OR private = "N") ';
 	}
@@ -172,11 +172,11 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if ($phpver != '') {
 		$where_clause .= " AND bugdb.php_version LIKE '" . $dbh->escape($phpver) . "%'";
 	}
-	
+
 	if ($project != '') {
 		$where_clause .= " AND EXISTS (SELECT 1 FROM bugdb_pseudo_packages b WHERE b.name = bugdb.package_name AND  b.project = '". $dbh->escape($project) ."' LIMIT 1)";
 	}
-	
+
 	if ($cve_id != '') {
 		$where_clause .= " AND bugdb.cve_id {$cve_id_not} LIKE '" . $dbh->escape($cve_id) . "%'";
 	}
@@ -228,11 +228,11 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 			$order_by = $reorder_by;
 		}
 	}
-	
+
 	$order_by_clauses = array();
 	if (in_array($order_by, array('votes_count', 'avg_score'))) {
 		$query .= ' GROUP BY bugdb.id';
-		
+
 		switch ($order_by) {
 			case 'avg_score':
 				$order_by_clauses = array(

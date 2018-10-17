@@ -37,13 +37,13 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 				$errors[] = "No password found for #$bug_id bug report, sorry.";
 			} else {
 				$new_passwd = bugs_gen_passwd();
-				
+
 				$dbh->prepare(
 				'UPDATE bugdb
 				 SET passwd = ?
 				 WHERE id = ?
 				')->execute(array(bugs_get_hash($new_passwd), $bug_id));
-				
+
 				$resp = bugs_mail($row['email'],
 						 "Password for {$siteBig} bug report #{$bug_id}",
 						 "The password for {$siteBig} bug report #{$bug_id} has been set to: {$new_passwd}",
@@ -74,7 +74,7 @@ if ($success) {
 
 $captcha = $numeralCaptcha->getOperation();
 $_SESSION['answer'] = $numeralCaptcha->getAnswer();
-         
+
 ?>
 
 <p>
@@ -91,7 +91,7 @@ in the bug report.
 <form method="post" action="bug-pwd-finder.php">
 <p><b>Bug Report ID:</b> #<input type="text" size="20" name="id" value="<?php echo $bug_id; ?>">
 <p><b>Solve the problem:<br><?php echo $captcha; ?> = ? <input type="text" name="captcha"></p>
-                                                                 
+
 <input type="submit" value="Send"></p>
 </form>
 

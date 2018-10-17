@@ -14,24 +14,24 @@ response_header("How to search the bug database");
 
 <p>
 This HOWTO will allow for a useful experience while scouring the bug database.
-Do note that a lot of information is entered in by the general public and 
+Do note that a lot of information is entered in by the general public and
 therefore cannot be fully trusted. Also, the information contained within
 a bug report is what setup found the bug, so other setups may apply.
-</p> 
-	
+</p>
+
 <h3>Basic Search</h3>
 
 <p>
 Within every <a href="<?php echo $basedir, '/'; ?>"><?php echo $site_url, $basedir; ?>/</a>
 webpage header is a search box, this is the <i>basic</i> search option.
 You may enter in a numeric bug ID to redirect to that bugs page or
-enter in a search term to perform a default bug search. 
+enter in a search term to perform a default bug search.
 Load the advanced search to view the default values.
 </p>
 
 <h3>Advanced Search</h3>
 <p>
-Some explanations for most of the PHP bugs <a href="search.php">advanced search</a> 
+Some explanations for most of the PHP bugs <a href="search.php">advanced search</a>
 options.
 </p>
 <table cellpadding="2" cellspacing="0" border="1" bgcolor="#eeeeee">
@@ -51,7 +51,7 @@ options.
 				<li><i>any</i> : One or more (any) of the search terms may be present.</li>
 				<li>
 					<i>raw</i> : Allows full use of MySQL's
-					<a href="http://www.mysql.com/doc/en/Fulltext_Search.html">FULLTEXT</a> 
+					<a href="http://www.mysql.com/doc/en/Fulltext_Search.html">FULLTEXT</a>
 					boolean search operators.
 				</li>
 			</ul>
@@ -61,8 +61,8 @@ options.
 			not caring which shows up. Or a name that has changed in PHP 5 from PHP 4.
 			Use of <strong>all</strong> makes sense if you require every term in your
 			results, as this can provide precise searching. The <strong>raw</strong>
-			option is for custom searches, like you might require one term but also want 
-			to disallow another from the result. Also, adding optional terms always 
+			option is for custom searches, like you might require one term but also want
+			to disallow another from the result. Also, adding optional terms always
 			affects relevancy/order.
 		</td>
 	</tr>
@@ -73,7 +73,7 @@ options.
 			Here are a few explanations:
 			<ul>
 				<li>
-					<strong>Open</strong>: This also includes <i>assigned</i>, <i>analyzed</i>, 
+					<strong>Open</strong>: This also includes <i>assigned</i>, <i>analyzed</i>,
 					<i>critical</i>, and <i>verified</i> bugs. (default)
 				</li>
 				<li>
@@ -88,8 +88,8 @@ options.
 					date as public comments do not.
 				</li>
 				<li>
-					<strong>Stale</strong>: Bugs last commented on at least 30 days ago that are not 
-					closed, duplicates, or not-a-bug. Only developers and the original author can affect 
+					<strong>Stale</strong>: Bugs last commented on at least 30 days ago that are not
+					closed, duplicates, or not-a-bug. Only developers and the original author can affect
 					this date as public comments do not count.
 				</li>
 				<li><strong>All</strong>: All types, even not-a-bug.</li>
@@ -101,7 +101,7 @@ options.
 		<td>Category</td>
 		<td>
 			Bugs are categorized although sometimes it might seem like a bug could be in
-			multiple categories. You may choose a specific category or allow any, and 
+			multiple categories. You may choose a specific category or allow any, and
 			also disallow certain categories. If you're unable to locate a bug, consider
 			trying a <i>feature request</i> or <i>any</i> status.
 		</td>
@@ -110,9 +110,9 @@ options.
 	<tr valign="top">
 		<td>OS</td>
 		<td>
-			Bugs that may be specific to an operating system. This value is entered in by the 
+			Bugs that may be specific to an operating system. This value is entered in by the
 			reporter as the OS they used while finding the bug so this may or may not have meaning.
-			Also, the value isn't regulated so for example Windows may be written as Win32, Win, 
+			Also, the value isn't regulated so for example Windows may be written as Win32, Win,
 			Windows, Win98, NT, etc. Or perhaps a distribution name rather than simply Linux.
 			The query uses a SQL LIKE statement like so: <i>'%$os%'</i>.
 		</td>
@@ -122,7 +122,7 @@ options.
 		<td>Version</td>
 		<td>
 			Limit bugs to a specific version of PHP. A one character integer of 3, 4 or
-			5 is standard. Entering a length greater than one will perform a SQL LIKE 
+			5 is standard. Entering a length greater than one will perform a SQL LIKE
 			statement like so: <i>'$version%'</i>. Defaults to both 4 and 5.
 		</td>
 		<td>
@@ -147,8 +147,8 @@ options.
 	<tr valign="top">
 		<td>Date</td>
 		<td>
-			Limit bugs that were reported by a specific time period. This is not only the 
-			amount of time since a comment or developer remark was last made, but this is 
+			Limit bugs that were reported by a specific time period. This is not only the
+			amount of time since a comment or developer remark was last made, but this is
 			the time when the bug was originally reported.
 		</td>
 		<td>

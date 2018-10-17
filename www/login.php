@@ -12,7 +12,7 @@ response_header('Login');
 
 if (isset($_POST['user'])) {
   $referer = $_POST['referer'];
-  
+
   bugs_authenticate($user, $pwd, $logged_in, $user_flags);
 
   if ($logged_in === 'developer') {

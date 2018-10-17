@@ -8,8 +8,8 @@ require __DIR__ . '/../../include/prepend.php';
   is a little odd that way.
   'No Feedback' was once a part of this, but no longer: http://news.php.net/php.webmaster/8828
 */
-$sql = "SELECT id, package_name, bug_type, sdesc, status, assign, UNIX_TIMESTAMP(ts1) AS ts_opened, UNIX_TIMESTAMP(ts2) AS ts_changed 
-		FROM `bugdb` 
+$sql = "SELECT id, package_name, bug_type, sdesc, status, assign, UNIX_TIMESTAMP(ts1) AS ts_opened, UNIX_TIMESTAMP(ts2) AS ts_changed
+		FROM `bugdb`
 		WHERE length(assign) > 1
 		AND status IN ('Assigned', 'Open', 'Re-Opened', 'Feedback', 'Analyzed', 'Verified', 'Critical', 'Suspended')
 		ORDER BY id";

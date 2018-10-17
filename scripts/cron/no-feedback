@@ -11,7 +11,7 @@ $after = "7 DAY";
 # Set "input" array
 $in = array('status' => 'No Feedback');
 
-# Update relevant reports 
+# Update relevant reports
 if ($dbh)
 {
 	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
@@ -43,7 +43,7 @@ if ($dbh)
 		// Update status
 		$dbh->prepare('
 			UPDATE bugdb
-			SET status = "No Feedback", ts2 = NOW() 
+			SET status = "No Feedback", ts2 = NOW()
 			WHERE id = ?
 		')->execute(array(
 			$bug['id'],

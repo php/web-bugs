@@ -198,7 +198,7 @@ td.form-input_center {
 	background-color: #e8e8e8;
 }
 
-td.form-input input, 
+td.form-input input,
 td.form-input_center input {
 	font-size: 90%;
 }
@@ -801,7 +801,7 @@ td.search-next {
 	overflow: auto;
 	margin: -6px 6px 6px -6px;
 	/* IE6 specific: */
-	_height:350px; 
+	_height:350px;
 	_margin:0;
 	_overflow-x:hidden;
 }

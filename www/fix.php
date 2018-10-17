@@ -93,7 +93,7 @@ if ($logged_in == 'developer') {
 		<tr>
 			<th>Note:</th>
 			<td colspan="5"><textarea cols="80" rows="8" name="ncomment" wrap="physical"><?php echo htmlspecialchars($ncomment); ?></textarea></td>
-		</tr> 
+		</tr>
 	</table>
 	<input type="submit" value="Resolve">
 </form>

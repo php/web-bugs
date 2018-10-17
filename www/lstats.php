@@ -10,7 +10,7 @@ function status_print ($status, $num, $width, $align = STR_PAD_LEFT)
 function get_status_count ($status, $category = '')
 {
 	global $phpver, $dbh;
-	
+
 	$query = "SELECT count(id) from bugdb WHERE";
 
 	if ($phpver > 0) {
@@ -33,20 +33,20 @@ function get_status_count ($status, $category = '')
 	return $row[0];
 }
 
-// Input 
+// Input
 $phpver = (isset($_GET['phpver']) ? (int) $_GET['phpver'] : false);
 
 if (!$phpver || ($phpver !== 5 && $phpver !== 7)) {
-	echo "<h3>Bug stats for both <a href='lstats.php?phpver=5'>PHP 5</a> and <a href='lstats.php?phpver=7'>PHP 7</a>:</h3>\n<pre>\n";	
+	echo "<h3>Bug stats for both <a href='lstats.php?phpver=5'>PHP 5</a> and <a href='lstats.php?phpver=7'>PHP 7</a>:</h3>\n<pre>\n";
 } else {
-	echo "<h3>Bug stats for PHP $phpver:</h3>\n<pre>\n";	
+	echo "<h3>Bug stats for PHP $phpver:</h3>\n<pre>\n";
 }
 
 if (isset($_GET['per_category']))
 {
 	$project = !empty($_GET['project']) ? $_GET['project'] : false;
 	$pseudo_pkgs = get_pseudo_packages($project);
-	
+
 	$totals = array();
 	foreach ($pseudo_pkgs as $category => $data) {
 		$count = get_status_count ("status NOT IN('to be documented', 'closed', 'not a bug', 'duplicate', 'wont fix', 'no feedback')", $category);
@@ -58,7 +58,7 @@ if (isset($_GET['per_category']))
 	foreach ($totals as $category => $total) {
 		status_print($category, $total, 40);
 	}
-	
+
 } else {
 
 	foreach ($tla as $status => $short) {

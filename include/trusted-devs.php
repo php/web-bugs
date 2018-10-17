@@ -15,8 +15,8 @@ $trusted_developers = array(
 	'pajoye',
 	'laruence',
 	'zeev',
-	'pollita', 
-	'kalle', 
+	'pollita',
+	'kalle',
 	'danbrown',
 	'nikic',
 );
@@ -67,8 +67,8 @@ $security_developers = array(
 	'nikic',
 	'leigh',
 	'kalle',
-	'cmb', 
-	'danbrown', 
+	'cmb',
+	'danbrown',
 	'yohgaki'
 );
 

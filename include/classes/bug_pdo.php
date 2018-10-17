@@ -1,8 +1,8 @@
 <?php
 /**
  * Thin compatibility layer between MDB2 and PDO for bugs.php.net.
- * 
- * Please mind that it's not meant to implement full feature set, 
+ *
+ * Please mind that it's not meant to implement full feature set,
  * but only this used by our existing codebase. New code interacting
  * with the database should be written using standard PDO's approach.
  *
