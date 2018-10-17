@@ -73,4 +73,3 @@ $security_developers = array(
 );
 
 $security_developers = array_merge($security_developers, $security_distro_people);
-

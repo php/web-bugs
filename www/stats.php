@@ -245,4 +245,3 @@ function display_stat_header($total, $grandtotal = true)
 	$stat_head .= '</tr>' . "\n";
 	return $stat_head;
 }
-

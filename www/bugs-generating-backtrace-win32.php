@@ -97,4 +97,3 @@ selection.</p>
 <p>What we need is the backtrace itself which can be found under "Thread X - System ID XXX".</p>
 
 <?php response_footer();
-
