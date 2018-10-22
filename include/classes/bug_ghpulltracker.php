@@ -72,6 +72,6 @@ class Bug_Pulltracker
 			ORDER BY github_repo, github_pull_id DESC
 		';
 
-		return $this->_dbh->prepare($query)->execute(array($bugid))->fetchAll(MDB2_FETCHMODE_ASSOC);
+		return $this->_dbh->prepare($query)->execute(array($bugid))->fetchAll(PDO::FETCH_ASSOC);
 	}
 }

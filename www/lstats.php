@@ -28,7 +28,7 @@ function get_status_count ($status, $category = '')
 	$query.= "AND bug_type NOT IN({$excluded})";
 
 	$res = $dbh->prepare($query)->execute(array());
-	$row = $res->fetchRow(MDB2_FETCHMODE_ORDERED);
+	$row = $res->fetchRow(PDO::FETCH_NUM);
 
 	return $row[0];
 }

@@ -285,7 +285,7 @@ class Bug_Patchtracker
 			ORDER BY revision DESC
 		';
 
-		return $this->_dbh->prepare($query)->execute(array($bugid))->fetchAll(MDB2_FETCHMODE_ORDERED, true, false, true);
+		return $this->_dbh->prepare($query)->execute(array($bugid))->fetchAll(PDO::FETCH_NUM, true, false, true);
 	}
 
 	/**
@@ -302,7 +302,7 @@ class Bug_Patchtracker
 			WHERE bugdb_id = ? AND patch = ?
 			ORDER BY revision DESC
 		';
-		return $this->_dbh->prepare($query)->execute(array($bugid, $patch))->fetchAll(MDB2_FETCHMODE_ORDERED);
+		return $this->_dbh->prepare($query)->execute(array($bugid, $patch))->fetchAll(PDO::FETCH_NUM);
 	}
 
 	/**
@@ -326,7 +326,7 @@ class Bug_Patchtracker
 			SELECT developer, revision
 			FROM bugdb_patchtracker
 			WHERE bugdb_id = ? AND patch = ? ORDER BY revision DESC
-		')->execute(array($bugid, $patch))->fetchAll(MDB2_FETCHMODE_ASSOC);
+		')->execute(array($bugid, $patch))->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	function getObsoletingPatches($bugid, $patch, $revision)
@@ -335,7 +335,7 @@ class Bug_Patchtracker
 			SELECT bugdb_id, patch, revision
 			FROM bugdb_obsoletes_patches
 			WHERE	bugdb_id = ? AND obsolete_patch = ? AND obsolete_revision = ?
-		')->execute(array($bugid, $patch, $revision))->fetchAll(MDB2_FETCHMODE_ASSOC);
+		')->execute(array($bugid, $patch, $revision))->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	function getObsoletePatches($bugid, $patch, $revision)
@@ -344,7 +344,7 @@ class Bug_Patchtracker
 			SELECT bugdb_id, obsolete_patch, obsolete_revision
 			FROM bugdb_obsoletes_patches
 			WHERE bugdb_id = ? AND patch = ? AND revision = ?
-		')->execute(array($bugid, $patch, $revision))->fetchAll(MDB2_FETCHMODE_ASSOC);
+		')->execute(array($bugid, $patch, $revision))->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	/**

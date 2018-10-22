@@ -215,7 +215,7 @@ function get_pseudo_packages($project, $return_disabled = true)
 		$where.= " AND disabled = 0";
 	}
 
-	$data = $dbh->queryAll("SELECT * FROM bugdb_pseudo_packages WHERE $where ORDER BY parent, disabled, id", null, MDB2_FETCHMODE_ASSOC);
+	$data = $dbh->queryAll("SELECT * FROM bugdb_pseudo_packages WHERE $where ORDER BY parent, disabled, id", null, PDO::FETCH_ASSOC);
 
 	// Convert flat array to nested strucutre
 	foreach ($data as &$node)
@@ -1181,13 +1181,13 @@ function get_old_comments($bug_id, $all = 0)
 
 	// skip the most recent unless the caller wanted all comments
 	if (!$all) {
-		$row = $res->fetchRow(MDB2_FETCHMODE_ORDERED);
+		$row = $res->fetchRow(PDO::FETCH_NUM);
 		if (!$row) {
 			return '';
 		}
 	}
 
-	while (($row = $res->fetchRow(MDB2_FETCHMODE_ORDERED)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
+	while (($row = $res->fetchRow(PDO::FETCH_NUM)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
 		$email = spam_protect($row[1], 'text');
 		$output .= "[{$row[0]}] {$email}\n\n{$row[2]}\n\n{$divider}\n";
 	}
@@ -1197,7 +1197,7 @@ function get_old_comments($bug_id, $all = 0)
 		if (!$res) {
 			return $output;
 		}
-		$row = $res->fetchRow(MDB2_FETCHMODE_ORDERED);
+		$row = $res->fetchRow(PDO::FETCH_NUM);
 		if (!$row) {
 			return $output;
 		}
@@ -1477,7 +1477,7 @@ function unsubscribe_hash($bug_id, $email)
 		WHERE bug_id = ? AND email = ?
 	";
 
-	$affected = $dbh->prepare($query, null, MDB2_PREPARE_MANIP)->execute([$hash, $bug_id, $email]);
+	$affected = $dbh->prepare($query, null, null)->execute([$hash, $bug_id, $email]);
 
 	if ($affected > 0) {
 		$hash = urlencode($hash);
@@ -1530,7 +1530,7 @@ function unsubscribe($bug_id, $hash)
 		WHERE bug_id = ? AND unsubscribe_hash = ? LIMIT 1
 	";
 
-	$sub = $dbh->prepare($query)->execute([$bug_id, $hash])->fetch(MDB2_FETCHMODE_ASSOC);
+	$sub = $dbh->prepare($query)->execute([$bug_id, $hash])->fetch(PDO::FETCH_ASSOC);
 
 	if (!$sub) {
 		return false;
@@ -1573,7 +1573,7 @@ function get_resolve_reasons($project = false)
 	if (!$res) {
 		throw new Exception("SQL Error in get_resolve_reasons");
 	}
-	while ($row = $res->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+	while ($row = $res->fetchRow(PDO::FETCH_ASSOC)) {
 		if (!empty($row['package_name'])) {
 			$variations[$row['name']][$row['package_name']] = $row['message'];
 		} else {
@@ -1608,7 +1608,7 @@ function bugs_get_bug($bug_id)
 		WHERE b.id = ?
 		GROUP BY bug';
 
-	return $dbh->prepare($query)->execute([$bug_id])->fetchRow(MDB2_FETCHMODE_ASSOC);
+	return $dbh->prepare($query)->execute([$bug_id])->fetchRow(PDO::FETCH_ASSOC);
 }
 
 /**
@@ -1628,7 +1628,7 @@ function bugs_get_bug_comments($bug_id)
 		WHERE c.bug = ?
 		GROUP BY c.id ORDER BY c.ts
 	";
-	return $dbh->prepare($query)->execute([$bug_id])->fetchAll(MDB2_FETCHMODE_ASSOC);
+	return $dbh->prepare($query)->execute([$bug_id])->fetchAll(PDO::FETCH_ASSOC);
 }
 
 /**
