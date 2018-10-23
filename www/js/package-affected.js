@@ -66,6 +66,8 @@ window.addEventListener(
 						}
 
 						moveOptions(nextGroup, select);
+
+						select.selectedIndex = -1;
 					}
 
 					function moveOptions(from, to) {
@@ -77,6 +79,7 @@ window.addEventListener(
 							);
 					}
 
+					packageGroup.addEventListener('click', updateGroup);
 					packageGroup.addEventListener('change', updateGroup);
 
 					if (initialGroup instanceof HTMLOptGroupElement) {
@@ -85,12 +88,13 @@ window.addEventListener(
 					} else {
 						select.disabled = true;
 						select.value = null;
+						packageGroup.selectedIndex = -1;
 					}
 
 					packageGroup.style.marginRight = '.5em';
 					[select, packageGroup].forEach(
 						function (element) {
-							element.size = 5;
+							element.size = 12;
 							element.style.width = '22em';
 						}
 					);
