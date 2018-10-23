@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This API page is used by https://svn.php.net/viewvc/SVNROOT/commit-bugs.php
+ * to manage bugs automatically.
+ */
+
 session_start();
 
 $bug_id = (isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : 0);
