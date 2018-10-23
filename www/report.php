@@ -342,7 +342,7 @@ if (!isset($_POST['in'])) {
 			 'bug_type' => isset($_GET['bug_type']) ? clean($_GET['bug_type']) : '',
 			 'email' => '',
 			 'sdesc' => '',
-			 'ldesc' => isset($_GET['manpage']) ? clean("\n---\nFrom manual page: http://www.php.net/" . ltrim($_GET['manpage'], '/') . "\n---\n") : '',
+			 'ldesc' => isset($_GET['manpage']) ? clean("\n---\nFrom manual page: https://php.net/" . ltrim($_GET['manpage'], '/') . "\n---\n") : '',
 			 'repcode' => '',
 			 'expres' => '',
 			 'actres' => '',
@@ -362,14 +362,14 @@ if (!isset($_POST['in'])) {
 
 	<p>
 		If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support
-		<a href="http://www.php.net/support.php">listed here</a>.
+		<a href="https://php.net/support.php">listed here</a>.
 	</p>
 
 	<p>
 		<strong>Failure to follow these instructions may result in your bug simply being marked as &quot;not a bug.&quot;</strong>
 	</p>
 
-	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="http://pear.php.net/bugs/">here</a></p>
+	<p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="https://pear.php.net/bugs/">here</a></p>
 
 	<p>
 		<strong>If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, then email

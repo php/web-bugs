@@ -45,7 +45,7 @@ if (!$logged_in) {
   </th>
   <td class="form-input">
    <select name="repository" id="repository_field"><option value=""></option></select>
-   <small>The repository must belong to http://github.com/php/.</small>
+   <small>The repository must belong to https://github.com/php</small>
   </td>
  </tr>
  <tr>

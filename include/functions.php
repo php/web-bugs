@@ -1741,9 +1741,9 @@ function response_header($title, $extraHeaders = '')
 		</td>
 
 		<td class="head-menu">
-			<a href="http://www.php.net/">php.net</a>&nbsp;|&nbsp;
-			<a href="http://www.php.net/support.php">support</a>&nbsp;|&nbsp;
-			<a href="http://www.php.net/docs.php">documentation</a>&nbsp;|&nbsp;
+			<a href="https://php.net/">php.net</a>&nbsp;|&nbsp;
+			<a href="https://php.net/support.php">support</a>&nbsp;|&nbsp;
+			<a href="https://php.net/docs.php">documentation</a>&nbsp;|&nbsp;
 			<a href="report.php">report a bug</a>&nbsp;|&nbsp;
 			<a href="search.php">advanced search</a>&nbsp;|&nbsp;
 			<a href="search-howto.php">search howto</a>&nbsp;|&nbsp;
@@ -1805,8 +1805,8 @@ function response_footer($extra_html = '')
 	<tr>
 		<td class="foot-copy">
 			<small>
-				<a href="http://www.php.net/"><img src="images/logo-small.gif" align="left" valign="middle" hspace="3" alt="PHP"></a>
-				<a href="http://www.php.net/copyright.php">Copyright &copy; 2001-<?php echo date('Y'); ?> The PHP Group</a><br>
+				<a href="https://php.net/"><img src="images/logo-small.gif" align="left" valign="middle" hspace="3" alt="PHP"></a>
+				<a href="https://php.net/copyright.php">Copyright &copy; 2001-<?php echo date('Y'); ?> The PHP Group</a><br>
 				All rights reserved.
 			</small>
 		</td>

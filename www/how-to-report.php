@@ -23,7 +23,7 @@ heart a few tips on how to report a bug so that they can and will help you.</p>
 <p>Take special note of that word in bold above. The people who are going to
 help you with a bug you report are <b>volunteers</b>. Not only are you not
 paying them to help you, but nobody else is either. So, to paraphrase the
-immortal words of <a href="http://www.imdb.com/Title?0096928">Bill and Ted</a>,
+immortal words of <a href="https://www.imdb.com/title/tt0096928/">Bill and Ted</a>,
 <b>"be excellent to them"</b>.</p>
 
 <p>Beyond that golden rule, what follows are some additional tips on ways to
@@ -58,7 +58,7 @@ reports.</p>
 <h2>If you don't understand an error message, ask for help.</h2>
 
 <p>Don't report an error message you don't understand as a bug. There are <a
-href="http://www.php.net/support.php">a lot of places you can ask for help</a>
+href="https://php.net/support.php">a lot of places you can ask for help</a>
 in understanding what is going on before you can claim that an error message
 you do not understand is a bug.</p>
 
@@ -101,7 +101,7 @@ many people who can speak a great many languages. But if you were to report a
 bug in a language other than English, many (if not most) of the people who
 would otherwise help you won't be able to. If you're worried about your English
 skills making it difficult to describe the bug, you might try asking for help
-on one of the <a href="http://www.php.net/support.php#local">non-English
+on one of the <a href="https://php.net/support.php#local">non-English
 mailing lists</a>.</p>
 
 <h2>Don't report bugs about old versions.</h2>
@@ -131,7 +131,7 @@ with the different bugs.</p>
 		writing guidelines</a>
 	</li>
 	<li>
-		Simon Tatham's <a href="http://www.chiark.greenend.org.uk/~sgtatham/bugs.html">How
+		Simon Tatham's <a href="https://www.chiark.greenend.org.uk/~sgtatham/bugs.html">How
 		to Report Bugs Effectively</a>
 	</li>
 </ul>
