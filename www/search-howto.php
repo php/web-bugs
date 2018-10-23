@@ -51,7 +51,7 @@ options.
 				<li><i>any</i> : One or more (any) of the search terms may be present.</li>
 				<li>
 					<i>raw</i> : Allows full use of MySQL's
-					<a href="http://www.mysql.com/doc/en/Fulltext_Search.html">FULLTEXT</a>
+					<a href="https://dev.mysql.com/doc/en/fulltext-search.html">FULLTEXT</a>
 					boolean search operators.
 				</li>
 			</ul>
