@@ -87,10 +87,10 @@ if (empty($bug_check)) {
 		WHERE bug = ? AND ip = ?")
 		->execute(array(
 			$score,
-			($reproduced == 1 ? "1," : "0,"),
-			($reproduced != 2 ? "1," : "0,"),
-			($reproduced ? "$sameos," : "NULL,"),
-			($reproduced ? "$samever" : "NULL"),
+			($reproduced == 1 ? "1" : "0"),
+			($reproduced != 2 ? "1" : "0"),
+			($reproduced ? "$sameos" : null),
+			($reproduced ? "$samever" : null),
 			$id,
 			$ip
 		));
