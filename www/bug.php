@@ -665,7 +665,7 @@ if (!$show_bug_info) {
 			<th class="details">Status:</th>
 			<td><?php echo htmlspecialchars($bug['status']); ?></td>
 			<th class="details">Package:</th>
-			<td><a href="search.php?cmd=display&amp;package_name[]=<?php echo urlencode($bug['package_name']), '">', htmlspecialchars($bug['package_name']); ?></a><?php echo $bug['project'] == 'pecl' ? ' (<a href="http://pecl.php.net/package/'. htmlspecialchars($bug['package_name']) . '" target="_blank">PECL</a>)' : ''; ?></td>
+			<td><a href="search.php?cmd=display&amp;package_name[]=<?php echo urlencode($bug['package_name']), '">', htmlspecialchars($bug['package_name']); ?></a><?php echo $bug['project'] == 'pecl' ? ' (<a href="https://pecl.php.net/package/'. htmlspecialchars($bug['package_name']) . '" target="_blank">PECL</a>)' : ''; ?></td>
 		</tr>
 
 		<tr id="situation">
@@ -679,7 +679,7 @@ if (!$show_bug_info) {
 			<th class="details">Private report:</th>
 			<td><?php echo $bug['private'] == 'Y' ? 'Yes' : 'No'; ?></td>
 			<th class="details">CVE-ID:</th>
-			<td><?php if (!empty($bug['cve_id'])) { printf('<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-%s" target="_blank">%1$s</a>', htmlspecialchars($bug['cve_id'])); } else { ?><em>None</em><?php } ?></td>
+			<td><?php if (!empty($bug['cve_id'])) { printf('<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-%s" target="_blank">%1$s</a>', htmlspecialchars($bug['cve_id'])); } else { ?><em>None</em><?php } ?></td>
 		</tr>
 	</table>
 </div>

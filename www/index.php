@@ -67,7 +67,7 @@ if (bugid > 0) {
 
 	<li>
 		Make sure it isn't a support question. For support,
-		see the <a href="http://www.php.net/support.php">support page</a>.
+		see the <a href="https://php.net/support.php">support page</a>.
 	</li>
 </ul>
 

@@ -1,14 +1,14 @@
 <?php
 
 	/*
-	The RC and dev versions are pulled from the http://qa.php.net/api.php
+	The RC and dev versions are pulled from the https://qa.php.net/api.php
 	if you want to add a new version, add it there at include/release-qa.php
 	the result is cached for an hour in /tmp/<systemd>/tmp/versions.php
 	the versions are weighted by the following:
 	- major+minor version desc (7>5.4>5.3>master)
 	- between a minor version we order by the micro if available: first the qa releases: alpha/beta/rc, then the stable, then the Git versions(snaps, Git)
 
-	Stable releases are pulled from http://php.net/releases/active.php
+	Stable releases are pulled from https://php.net/releases/active.php
 	*/
 
 	// Custom versions appended to the list
@@ -29,7 +29,7 @@
 	$versions = array_merge($versions, $custom_versions);
 
 	function buildVersions() {
-		$dev_versions = json_decode(file_get_contents('http://qa.php.net/api.php?type=qa-releases&format=json&only=dev_versions'));
+		$dev_versions = json_decode(file_get_contents('https://qa.php.net/api.php?type=qa-releases&format=json&only=dev_versions'));
 
 		$versions = array();
 
@@ -55,7 +55,7 @@
 			}
 		}
 
-		$stable_releases = json_decode(file_get_contents('http://us3.php.net/releases/active.php'), true);
+		$stable_releases = json_decode(file_get_contents('https://php.net/releases/active.php'), true);
 		foreach ($stable_releases as $major => $major_releases) {
 			foreach ($major_releases as $release) {
 				$version_parts = parseVersion($release['version']);

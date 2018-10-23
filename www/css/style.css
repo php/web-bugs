@@ -784,7 +784,7 @@ td.search-next {
 	background-color: #B5C7CD;
 }
 
-/* {{{ Stolen from http://www.devbridge.com/projects/autocomplete/jquery/ */
+/* {{{ Stolen from https://www.devbridge.com/sourcery/components/jquery-autocomplete/ */
 .autocomplete-w1 {
 	background: url(../images/shadow.png) no-repeat bottom right;
 	position: absolute;
