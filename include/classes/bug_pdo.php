@@ -1,10 +1,6 @@
 <?php
 /**
- * Thin compatibility layer between MDB2 and PDO for bugs.php.net.
- *
- * Please mind that it's not meant to implement full feature set,
- * but only this used by our existing codebase. New code interacting
- * with the database should be written using standard PDO's approach.
+ * Thin PDO wrapper for bugs.php.net.
  *
  * @author Maciej Sobaczewski <sobak@php.net>
  */
@@ -23,8 +19,8 @@ class Bug_PDO extends PDO
     }
 
     /**
-     * MDB2::espace() doesn't put apostrophes around the text and PDO does so we
-     * need to strip outermost characters.
+     * PDO puts apostrophes around the text so we need to strip the outermost
+     * characters.
      */
     public function escape($text, $escape_wildcards = false)
     {
@@ -40,10 +36,10 @@ class Bug_PDO extends PDO
 class Bug_PDOStatement extends PDOStatement
 {
     /**
-     * MDB2 allows for chaining execute() method like so:
+     * This allows chaining execute() method:
      *   $db->query('SELECT a FROM b WHERE c = ?')->execute('foo')->fetch();
-     * PDOStatement::execute(), on the other hand, returns boolean. Change it
-     * to return $this and thus allow futher method chaining.
+     * PDOStatement::execute(), on the other hand, returns boolean. Change it to
+     * return $this and thus allow further method chaining.
      */
     public function execute($input_parameters = NULL)
     {

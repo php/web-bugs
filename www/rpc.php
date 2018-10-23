@@ -49,10 +49,10 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 	$ncomment = htmlspecialchars(trim($_POST['ncomment']));
 	$from = "{$user}@php.net";
 
-	/* svn log comment */
-	$res = bugs_add_comment($bug_id, $from, $user, $ncomment, 'svn');
+	try {
+		/* svn log comment */
+		bugs_add_comment($bug_id, $from, $user, $ncomment, 'svn');
 
-	if ($res) {
 		/* Close the bug report as requested if it is not already closed */
 		if (!empty($_POST['status'])
 			&& $bug['status'] !== 'Closed'
@@ -69,7 +69,7 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 				$log_comment = bug_diff_render_html($changed);
 				if (!empty($log_comment)) {
 					/* Add a log of status change */
-					$res = bugs_add_comment($bug_id, $from, '', $log_comment, 'log');
+					bugs_add_comment($bug_id, $from, '', $log_comment, 'log');
 				}
 			}
 
@@ -79,8 +79,8 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 
 		echo json_encode(array('result' => array('status' => $bug)));
 		exit;
-	} else {
-		echo json_encode(array('result' => array('error' => MDB2::errorMessage($res))));
+	} catch (Exception $e) {
+		echo json_encode(array('result' => array('error' => $e->getMessage())));
 		exit;
 	}
 } else if (!empty($_POST['getbug'])) {
