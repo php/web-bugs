@@ -2,6 +2,7 @@
 
 // Obtain common includes
 require_once '../include/prepend.php';
+require_once 'PEAR.php';
 
 session_start();
 $canpatch = true;
