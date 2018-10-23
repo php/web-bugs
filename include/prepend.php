@@ -4,7 +4,7 @@ ini_set('display_errors', 0);
 
 $site = 'php';
 $siteBig = 'PHP';
-$ROOT_DIR = realpath(dirname(__FILE__) . '/../');
+$ROOT_DIR = realpath(__DIR__ . '/../');
 
 $local_cfg = "{$ROOT_DIR}/local_config.php";
 if (file_exists($local_cfg)) {

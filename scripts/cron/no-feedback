@@ -3,7 +3,7 @@
 
 # this script closes bugs due to lack of feedback.
 
-require dirname(__FILE__).'/../../include/prepend.php';
+require __DIR__.'/../../include/prepend.php';
 
 # date interval to close after
 $after = "7 DAY";
