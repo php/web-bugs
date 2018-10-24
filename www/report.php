@@ -28,7 +28,7 @@ if (!$logged_in) {
 }
 
 $packageAffectedScript = <<<SCRIPT
-	<script type="text/javascript" src="$site_method://$site_url$basedir/js/package-affected.js"></script>
+	<script src="$site_method://$site_url$basedir/js/package-affected.js"></script>
 SCRIPT;
 
 // Handle input

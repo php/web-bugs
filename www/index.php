@@ -28,7 +28,7 @@ response_header('Bugs');
 
 ?>
 
-<script type="text/javascript">
+<script>
 var bugid = window.location.hash.substr(1) * 1;
 if (bugid > 0) {
 	var loc = window.location;
