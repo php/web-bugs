@@ -1149,10 +1149,10 @@ if ($bug_id == 'PREVIEW') {
 <?php }
 
 $bug_JS = <<< bug_JS
-<script type='text/javascript' src='js/util.js'></script>
-<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
-<script type="text/javascript" src="js/jquery.cookie.js"></script>
-<script type="text/javascript">
+<script src='js/util.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
+<script src="js/jquery.cookie.js"></script>
+<script>
 function do_comment(nd)
 {
 	$('#comment_filter > .control.active').removeClass("active");
@@ -1178,9 +1178,9 @@ bug_JS;
 
 if ($edit == 1) {
 	$bug_JS .= '
-<script type="text/javascript" src="js/jquery.autocomplete-min.js"></script>
-<script type="text/javascript" src="js/userlisting.php"></script> 	
-<script type="text/javascript" src="js/search.js"></script>
+<script src="js/jquery.autocomplete-min.js"></script>
+<script src="js/userlisting.php"></script>
+<script src="js/search.js"></script>
 	';
 
 }

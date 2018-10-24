@@ -1,9 +1,9 @@
 <?php
 response_header('Add Pull Request :: ' . clean($package_name));
 ?>
-<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
-<script type="text/javascript" src="js/Markdown.Converter.js"></script>
-<script type="text/javascript" src="js/Markdown.Sanitizer.js"></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
+<script src="js/Markdown.Converter.js"></script>
+<script src="js/Markdown.Sanitizer.js"></script>
 <h2>Add a Pull Request to <a href="bug.php?id=<?php echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a></h2>
 <ul>
  <li>One problem per pull request, please</li>
