@@ -20,7 +20,7 @@ $reproduced = (int) $_POST['reproduced'];
 $samever = isset($_POST['samever']) ? (int) $_POST['samever'] : 0;
 $sameos = isset($_POST['sameos']) ? (int) $_POST['sameos'] : 0;
 
-if (!$dbh->prepare("SELECT id FROM bugdb WHERE id= ? LIMIT 1")->execute(array($id))->fetchOne()) {
+if (!$dbh->prepare("SELECT id FROM bugdb WHERE id= ? LIMIT 1")->execute([$id])->fetchOne()) {
 	session_start();
 
 	// Authenticate
@@ -62,7 +62,7 @@ $ip = ip2long(get_real_ip());
 
 // Check whether the user has already voted on this bug.
 $bug_check = $dbh->prepare("SELECT bug, ip FROM bugdb_votes WHERE bug = ? AND ip = ? LIMIT 1")
-	->execute(array($id, $ip))
+	->execute([$id, $ip])
 	->fetchRow();
 
 if (empty($bug_check)) {
@@ -85,7 +85,7 @@ if (empty($bug_check)) {
 	$dbh->prepare("UPDATE bugdb_votes
 		SET score = ?, reproduced = ? , tried = ?, sameos = ?, samever = ?
 		WHERE bug = ? AND ip = ?")
-		->execute(array(
+		->execute([
 			$score,
 			($reproduced == 1 ? "1" : "0"),
 			($reproduced != 2 ? "1" : "0"),
@@ -93,7 +93,7 @@ if (empty($bug_check)) {
 			($reproduced ? "$samever" : null),
 			$id,
 			$ip
-		));
+		]);
 
 	// Let the user know they have already voted and the existing vote will be
 	// updated.

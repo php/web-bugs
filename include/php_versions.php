@@ -12,11 +12,11 @@
 	*/
 
 	// Custom versions appended to the list
-	$custom_versions = array(
+	$custom_versions = [
 		'Next Major Version',
 		'Next Minor Version',
 		'Irrelevant'
-	);
+	];
 
 	if(!file_exists("/tmp/versions.php") || filemtime("/tmp/versions.php") < $_SERVER['REQUEST_TIME'] - 3600) {
 		$versions = buildVersions();
@@ -31,13 +31,13 @@
 	function buildVersions() {
 		$dev_versions = json_decode(file_get_contents('https://qa.php.net/api.php?type=qa-releases&format=json&only=dev_versions'));
 
-		$versions = array();
+		$versions = [];
 
 		$date = date('Y-m-d');
-		$default_versions = array(
+		$default_versions = [
 			"Git-{$date} (snap)",
 			"Git-{$date} (Git)",
-		);
+		];
 
 		foreach ($dev_versions as $dev_version) {
 			$dev_version_parts = parseVersion($dev_version);
@@ -45,7 +45,7 @@
 			// if it is a dev version, then add that branch, add the minor-1 version, if it's appropriate
 			if ($dev_version_parts['type'] == 'dev') {
 				if (!isset($versions[$dev_version_parts['major']][$dev_version_parts['minor']])) {
-					$versions[$dev_version_parts['major']][$dev_version_parts['minor']] = array();
+					$versions[$dev_version_parts['major']][$dev_version_parts['minor']] = [];
 				}
 			}
 			// then it is a qa version (alpha|beta|rc)
@@ -64,7 +64,7 @@
 			}
 		}
 
-		$flat_versions = array();
+		$flat_versions = [];
 
 		// add master to the end of the list
 		foreach ($default_versions as $default_version) {
@@ -92,16 +92,16 @@
 
 
 	function parseVersion($version){
-		$version_parts	= array();
-		$raw_parts	= array();
+		$version_parts	= [];
+		$raw_parts	= [];
 		preg_match('#(?P<major>\d+)\.(?P<minor>\d+).(?P<micro>\d+)[-]?(?P<type>RC|alpha|beta|dev)?(?P<number>[\d]?).*#ui', $version, $raw_parts);
-		$version_parts = array(
+		$version_parts = [
 			'major'			=> $raw_parts['major'],
 			'minor'			=> $raw_parts['minor'],
 			'micro'			=> $raw_parts['micro'],
 			'type'			=> strtolower($raw_parts['type']?$raw_parts['type']:'stable'),
 			'number'		=> $raw_parts['number'],
 			'original_version'	=> $version,
-		);
+		];
 		return $version_parts;
 	}

@@ -10,7 +10,7 @@ session_start();
 $bug_id = (isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : 0);
 
 if (!$bug_id) {
-	echo json_encode(array('result' => array('error' => 'Missing bug id')));
+	echo json_encode(['result' => ['error' => 'Missing bug id']]);
 	exit;
 }
 
@@ -23,7 +23,7 @@ if (isset($_POST['MAGIC_COOKIE'])) {
 	$auth_user->handle = $user;
 	$auth_user->password = $pwd;
 } else {
-	echo json_encode(array('result' => array('error' => 'Missing credentials')));
+	echo json_encode(['result' => ['error' => 'Missing credentials']]);
 	exit;
 }
 
@@ -32,7 +32,7 @@ bugs_authenticate($user, $pwd, $logged_in, $user_flags);
 $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
 if (empty($auth_user->handle)) {
-	echo json_encode(array('result' => array('error' => 'Invalid user or password')));
+	echo json_encode(['result' => ['error' => 'Invalid user or password']]);
 	exit;
 }
 
@@ -40,12 +40,12 @@ if (empty($auth_user->handle)) {
 $bug = bugs_get_bug($bug_id);
 
 if (!is_array($bug)) {
-	echo json_encode(array('result' => array('error' => 'No such bug')));
+	echo json_encode(['result' => ['error' => 'No such bug']]);
 	exit;
 }
 
 if (!bugs_has_access($bug_id, $bug, $pwd, $user_flags)) {
-	echo json_encode(array('result' => array('error' => 'No access to bug')));
+	echo json_encode(['result' => ['error' => 'No access to bug']]);
 	exit;
 }
 
@@ -82,15 +82,15 @@ if (!empty($_POST['ncomment']) && !empty($_POST['user'])) {
 			mail_bug_updates($bug, $in, $from, $ncomment, 1, $bug_id);
 		}
 
-		echo json_encode(array('result' => array('status' => $bug)));
+		echo json_encode(['result' => ['status' => $bug]]);
 		exit;
 	} catch (Exception $e) {
-		echo json_encode(array('result' => array('error' => $e->getMessage())));
+		echo json_encode(['result' => ['error' => $e->getMessage()]]);
 		exit;
 	}
 } else if (!empty($_POST['getbug'])) {
-	echo json_encode(array('result' => array('status' => $bug)));
+	echo json_encode(['result' => ['status' => $bug]]);
 	exit;
 }
 
-echo json_encode(array('result' => array('error' => 'Nothing to do')));
+echo json_encode(['result' => ['error' => 'Nothing to do']]);

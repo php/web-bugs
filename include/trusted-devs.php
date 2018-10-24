@@ -1,6 +1,6 @@
 <?php
 
-$trusted_developers = array(
+$trusted_developers = [
 	'tony2001',
 	'derick',
 	'iliaa',
@@ -19,10 +19,10 @@ $trusted_developers = array(
 	'kalle',
 	'danbrown',
 	'nikic',
-);
+];
 
 // Distro people (security related)
-$security_distro_people = array(
+$security_distro_people = [
 	'jorton',    /* RH */
 	'huzaifas',  /* RH */
 	'vdanen',    /* RH */
@@ -32,9 +32,9 @@ $security_distro_people = array(
 	'sbeattie',  /* Ubuntu */
 	'remi',      /* fedora */
 	'olemarkus', /* Gentoo */
-);
+];
 
-$security_developers = array(
+$security_developers = [
 	'felipe',
 	'rasmus',
 	'tony2001',
@@ -70,6 +70,6 @@ $security_developers = array(
 	'cmb',
 	'danbrown',
 	'yohgaki'
-);
+];
 
 $security_developers = array_merge($security_developers, $security_distro_people);

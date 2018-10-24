@@ -9,7 +9,7 @@ define('BUGS_SECURITY_DEV', 1<<3);
 /* Contains functions and variables used throughout the bug system */
 
 // used in mail_bug_updates(), below, and class for search results
-$tla = array(
+$tla = [
 	'Open'          => 'Opn',
 	'Not a bug'     => 'Nab',
 	'Feedback'      => 'Fbk',
@@ -24,22 +24,22 @@ $tla = array(
 	'Closed'        => 'Csd',
 	'Spam'          => 'Spm',
 	'Re-Opened'     => 'ReO',
-);
+];
 
-$bug_types = array(
+$bug_types = [
 	'Bug'                      => 'Bug',
 	'Feature/Change Request'   => 'Req',
 	'Documentation Problem'    => 'Doc',
 	'Security'                 => 'Sec Bug'
-);
+];
 
-$project_types = array(
+$project_types = [
 	'PHP'   => 'php',
 	'PECL'  => 'pecl'
-);
+];
 
 // Used in show_state_options()
-$state_types = array (
+$state_types = [
 	'Open'          => 2,
 	'Closed'        => 2,
 	'Re-Opened'     => 1,
@@ -59,7 +59,7 @@ $state_types = array (
 	'Not a bug'     => 1,
 	'Spam'          => 1,
 	'All'           => 0,
-);
+];
 
 /**
  * Authentication
@@ -69,20 +69,20 @@ function verify_user_password($user, $pass)
 	global $errors;
 
 	$post = http_build_query(
-		array(
+		[
 			'token' => getenv('AUTH_TOKEN'),
 			'username' => $user,
 			'password' => $pass,
-		)
+		]
 	);
 
-	$opts = array(
+	$opts = [
 		'method'	=> 'POST',
 		'header'	=> 'Content-type: application/x-www-form-urlencoded',
 		'content'	=> $post,
-	);
+	];
 
-	$ctx = stream_context_create(array('http' => $opts));
+	$ctx = stream_context_create(['http' => $opts]);
 
 	$s = file_get_contents('https://master.php.net/fetch/cvsauth.php', false, $ctx);
 
@@ -204,7 +204,7 @@ function get_pseudo_packages($project, $return_disabled = true)
 {
 	global $dbh, $project_types;
 
-	$pseudo_pkgs = $nodes = $tree = array();
+	$pseudo_pkgs = $nodes = $tree = [];
 	$where = '1=1';
 	$project = strtolower($project);
 
@@ -220,7 +220,7 @@ function get_pseudo_packages($project, $return_disabled = true)
 	// Convert flat array to nested strucutre
 	foreach ($data as &$node)
 	{
-		$node['children'] = array();
+		$node['children'] = [];
 		$id = $node['id'];
 		$parent_id = $node['parent'];
 		$nodes[$id] =& $node;
@@ -235,21 +235,21 @@ function get_pseudo_packages($project, $return_disabled = true)
 	foreach ($tree as $data)
 	{
 		if (isset($data['children'])) {
-			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled'], array());
+			$pseudo_pkgs[$data['name']] = [$data['long_name'], $data['disabled'], []];
 			$children = &$pseudo_pkgs[$data['name']][2];
-			$long_names = array();
+			$long_names = [];
 			foreach ($data['children'] as $k => $v) {
 				$long_names[$k] = strtolower($v['long_name']);
 			}
 			array_multisort($long_names, SORT_ASC, SORT_STRING, $data['children']);
 			foreach ($data['children'] as $child)
 			{
-				$pseudo_pkgs[$child['name']] = array("{$child['long_name']}", $child['disabled'], null);
+				$pseudo_pkgs[$child['name']] = ["{$child['long_name']}", $child['disabled'], null];
 				$children[] = $child['name'];
 			}
 
 		} elseif (!isset($pseudo_pkgs[$data['name']])) {
-			$pseudo_pkgs[$data['name']] = array($data['long_name'], $data['disabled'], null);
+			$pseudo_pkgs[$data['name']] = [$data['long_name'], $data['disabled'], null];
 		}
 	}
 
@@ -268,7 +268,7 @@ function is_spam($string)
 		return true;
 	}
 
-	$keywords = array(
+	$keywords = [
 		'spy',
 		'bdsm',
 		'massage',
@@ -303,7 +303,7 @@ function is_spam($string)
 		'jerseys',
 		'wholesale',
 		'fashionretailshop01',
-	);
+	];
 
 	if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
 		return true;
@@ -331,15 +331,15 @@ function spam_protect($txt, $format = 'html')
 		return $txt;
 	}
 	if ($format == 'html') {
-		$translate = array(
+		$translate = [
 			'@' => ' &#x61;&#116; ',
 			'.' => ' &#x64;&#111;&#x74; ',
-		);
+		];
 	} else {
-		$translate = array(
+		$translate = [
 			'@' => ' at ',
 			'.' => ' dot ',
-		);
+		];
 		if ($format == 'reverse') {
 			$translate = array_flip($translate);
 		}
@@ -361,7 +361,7 @@ function escapeSQL($in)
 	global $dbh;
 
 	if (is_array($in)) {
-		$out = array();
+		$out = [];
 		foreach ($in as $key => $value) {
 			$out[$key] = $dbh->escape($value);
 		}
@@ -424,7 +424,7 @@ function field($n)
 function clean($in)
 {
 	return mb_encode_numericentity($in,
-		array(
+		[
 			0x0, 0x8, 0, 0xffffff,
 			0xb, 0xc, 0, 0xffffff,
 			0xe, 0x1f, 0, 0xffffff,
@@ -451,7 +451,7 @@ function clean($in)
 			0xefffe, 0xeffff, 0, 0xffffff,
 			0xffffe, 0xfffff, 0, 0xffffff,
 			0x10fffe, 0x10ffff, 0, 0xffffff,
-		),
+		],
 	'UTF-8');
 }
 
@@ -490,14 +490,14 @@ function txfield($n, $bug = null, $in = null)
  */
 function show_byage_options($current)
 {
-	$opts = array(
+	$opts = [
 		'0' => 'the beginning',
 		'1'	=> 'yesterday',
 		'7'	=> '7 days ago',
 		'15' => '15 days ago',
 		'30' => '30 days ago',
 		'90' => '90 days ago',
-	);
+	];
 	while (list($k,$v) = each($opts)) {
 		echo "<option value=\"$k\"", ($current==$k ? ' selected="selected"' : ''), ">$v</option>\n";
 	}
@@ -783,7 +783,7 @@ function show_package_options($current, $show_any, $default = '')
  */
 function show_boolean_options($current)
 {
-	$options = array('any', 'all', 'raw');
+	$options = ['any', 'all', 'raw'];
 	while (list($val, $type) = each($options)) {
 		echo '<input type="radio" name="boolean" value="', $val, '"';
 		if ($val === $current) {
@@ -813,7 +813,7 @@ function show_boolean_options($current)
 function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 {
 	if (!is_array($in)) {
-		$in = array($in);
+		$in = [$in];
 	} elseif (!count($in)) {
 		return false;
 	}
@@ -843,14 +843,14 @@ function display_bug_success($in)
  */
 function bug_diff($bug, $in)
 {
-	$changed = array();
+	$changed = [];
 
 	if (!empty($in['email']) && (trim($in['email']) != trim($bug['email']))) {
 		$changed['reported_by']['from'] = spam_protect($bug['email'], 'text');
 		$changed['reported_by']['to'] = spam_protect(txfield('email', $bug, $in), 'text');
 	}
 
-	$fields = array(
+	$fields = [
 		'sdesc'				=> 'Summary',
 		'status'			=> 'Status',
 		'bug_type'			=> 'Type',
@@ -861,14 +861,14 @@ function bug_diff($bug, $in)
 		'block_user_comment' => 'Block user comment',
 		'private'			=> 'Private report',
 		'cve_id'			=> 'CVE-ID'
-	);
+	];
 
 	foreach (array_keys($fields) as $name) {
 		if (array_key_exists($name, $in) && array_key_exists($name, $bug)) {
 			$to   = trim($in[$name]);
 			$from = trim($bug[$name]);
 			if ($from != $to) {
-				if (in_array($name, array('private', 'block_user_comment'))) {
+				if (in_array($name, ['private', 'block_user_comment'])) {
 					$from = $from == 'Y' ? 'Yes' : 'No';
 					$to = $to == 'Y' ? 'Yes' : 'No';
 				}
@@ -883,7 +883,7 @@ function bug_diff($bug, $in)
 
 function bug_diff_render_html($diff)
 {
-	$fields = array(
+	$fields = [
 		'sdesc'				=> 'Summary',
 		'status'			=> 'Status',
 		'bug_type'			=> 'Type',
@@ -894,7 +894,7 @@ function bug_diff_render_html($diff)
 		'block_user_comment' => 'Block user comment',
 		'private'			=> 'Private report',
 		'cve_id'			=> 'CVE-ID'
-	);
+	];
 
 	// make diff output aligned
 	$actlength = $maxlength = 0;
@@ -932,35 +932,35 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 {
 	global $tla, $bug_types, $siteBig, $site_method, $site_url, $basedir;
 
-	$text = array();
-	$headers = array();
+	$text = [];
+	$headers = [];
 	$changed = bug_diff($bug, $in);
-	$from = str_replace(array("\n", "\r"), '', $from);
+	$from = str_replace(["\n", "\r"], '', $from);
 
 	/* Default addresses */
 	list($mailto, $mailfrom, $bcc, $params) = get_package_mail(oneof(@$in['package_name'], $bug['package_name']), $id, oneof(@$in['bug_type'], $bug['bug_type']));
 
-	$headers[] = array(' ID', $bug['id']);
+	$headers[] = [' ID', $bug['id']];
 
 	switch ($edit) {
 		case 4:
-			$headers[] = array(' Patch added by', $from);
+			$headers[] = [' Patch added by', $from];
 			$from = "\"{$from}\" <{$mailfrom}>";
 			break;
 		case 3:
-			$headers[] = array(' Comment by', $from);
+			$headers[] = [' Comment by', $from];
 			$from = "\"{$from}\" <{$mailfrom}>";
 			break;
 		case 2:
 			$from = spam_protect(txfield('email', $bug, $in), 'text');
-			$headers[] = array(' User updated by', $from);
+			$headers[] = [' User updated by', $from];
 			$from = "\"{$from}\" <{$mailfrom}>";
 			break;
 		default:
-			$headers[] = array(' Updated by', $from);
+			$headers[] = [' Updated by', $from];
 	}
 
-	$fields = array(
+	$fields = [
 		'email'				=> 'Reported by',
 		'sdesc'				=> 'Summary',
 		'status'			=> 'Status',
@@ -972,12 +972,12 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 		'block_user_comment' => 'Block user comment',
 		'private'			=> 'Private report',
 		'cve_id'			=> 'CVE-ID',
-	);
+	];
 
 	foreach ($fields as $name => $desc) {
 		$prefix = ' ';
 		if (isset($changed[$name])) {
-			$headers[] = array("-{$desc}", $changed[$name]['from']);
+			$headers[] = ["-{$desc}", $changed[$name]['from']];
 			$prefix = '+';
 		}
 
@@ -987,7 +987,7 @@ function mail_bug_updates($bug, $in, $from, $ncomment, $edit = 1, $id = false)
 				$f = spam_protect($f, 'text');
 			}
 			$foo = isset($changed[$name]['to']) ? $changed[$name]['to'] : $f;
-			$headers[] = array($prefix.$desc, $foo);
+			$headers[] = [$prefix.$desc, $foo];
 		}
 	}
 
@@ -1092,7 +1092,7 @@ DEV_TEXT;
 		$tmp = $edit != 3 ? $in : $bug;
 		$tmp['new_status'] = $new_status;
 		$tmp['old_status'] = $old_status;
-		foreach (array('bug_type', 'php_version', 'package_name', 'php_os') as $field) {
+		foreach (['bug_type', 'php_version', 'package_name', 'php_os'] as $field) {
 			$tmp[$field] = strtok($tmp[$field], "\r\n");
 		}
 
@@ -1285,7 +1285,7 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 {
 	global $bug, $dbh, $bug_types, $versions;
 
-	$errors = array();
+	$errors = [];
 	if (!is_array($in)) {
 		$errors[] = 'Invalid data submitted!';
 		return $errors;
@@ -1339,7 +1339,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 {
 	global $dbh, $bugEmail, $docBugEmail, $secBugEmail, $security_distro_people;
 
-	$to = array();
+	$to = [];
 	$params = '-f noreply@php.net';
 	$mailfrom = $bugEmail;
 
@@ -1406,9 +1406,9 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 		$bcc = $dbh->prepare("SELECT email FROM bugdb_subscribe WHERE bug_id=?")->execute([$bug_id])->fetchAll();
 
 		$bcc = array_unique($bcc);
-		return array(implode(', ', $to), $mailfrom, implode(', ', $bcc), $params);
+		return [implode(', ', $to), $mailfrom, implode(', ', $bcc), $params];
 	} else {
-		return array(implode(', ', $to), $mailfrom, '', $params);
+		return [implode(', ', $to), $mailfrom, '', $params];
 	}
 }
 
@@ -1426,7 +1426,7 @@ function format_search_string($search, $boolean_search = false)
 	$min_word_len=3;
 
 	$words = preg_split("/\s+/", $search);
-	$ignored = $used = array();
+	$ignored = $used = [];
 	foreach($words as $match)
 	{
 		if (strlen($match) < $min_word_len) {
@@ -1443,15 +1443,15 @@ function format_search_string($search, $boolean_search = false)
 			foreach ($used as $word) {
 				$newsearch .= "+$word ";
 			}
-			return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($newsearch) . "' IN BOOLEAN MODE)", $ignored);
+			return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($newsearch) . "' IN BOOLEAN MODE)", $ignored];
 
 		// allow custom boolean search (raw)
 		} elseif ($boolean_search === 2) {
-			return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($search) . "' IN BOOLEAN MODE)", $ignored);
+			return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($search) . "' IN BOOLEAN MODE)", $ignored];
 		}
 	}
 	// require any of the words (any)
-	return array(" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($search) . "')", $ignored);
+	return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($search) . "')", $ignored];
 }
 
 /**
@@ -1568,8 +1568,8 @@ function get_resolve_reasons($project = false)
 		$where.= "WHERE (project = '{$project}' OR project = '')";
 	}
 
-	$resolves = $variations = array();
-	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute(array());
+	$resolves = $variations = [];
+	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute([]);
 	if (!$res) {
 		throw new Exception("SQL Error in get_resolve_reasons");
 	}
@@ -1580,7 +1580,7 @@ function get_resolve_reasons($project = false)
 			$resolves[$row['name']] = $row;
 		}
 	}
-	return array($resolves, $variations);
+	return [$resolves, $variations];
 }
 
 /**
@@ -1641,9 +1641,9 @@ function bugs_add_comment($bug_id, $from, $from_name, $comment, $type = 'comment
 	return $dbh->prepare("
 		INSERT INTO bugdb_comments (bug, email, reporter_name, comment, comment_type, ts, visitor_ip)
 		VALUES (?, ?, ?, ?, ?, NOW(), INET6_ATON(?))
-	")->execute(array(
+	")->execute([
 		$bug_id, $from, $from_name, $comment, $type, (!empty($_SERVER['REMOTE_ADDR'])?$_SERVER['REMOTE_ADDR']:'127.0.0.1')
-	));
+	]);
 }
 
 /**
@@ -1878,7 +1878,7 @@ function make_ticket_links($text)
 
 function get_ticket_links($text)
 {
-	$matches = array();
+	$matches = [];
 
 	preg_match_all('/(?<![>a-z])(?:bug(?:fix)?|feat(?:ure)?|doc(?:umentation)?|req(?:uest)?|duplicated of)\s+#?([0-9]+)/i', $text, $matches);
 

@@ -95,7 +95,7 @@ to a random open bug.</p>
 <?php
 	$base_default = "{$site_method}://{$site_url}/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open";
 
-	$searches = array(
+	$searches = [
 		'Most recent open bugs (all)' => '&bug_type=All',
 		'Most recent open bugs (all) with patch or pull request' => '&bug_type=All&patch=Y&pull=Y',
 		'Most recent open bugs (PHP 5.6)' => '&bug_type=All&phpver=5.6',
@@ -105,7 +105,7 @@ to a random open bug.</p>
 		'Most recent open bugs (PHP 7.3)' => '&bug_type=All&phpver=7.3',
 		'Open Documentation bugs' => '&bug_type=Documentation+Problem',
 		'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y'
-	);
+	];
 
 	if (!empty($_SESSION["user"])) {
 		$searches['Your assigned open bugs'] = '&assign='.urlencode($_SESSION['user']);

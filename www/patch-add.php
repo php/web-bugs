@@ -58,7 +58,7 @@ $patch_name_url = urlencode($patch_name);
 
 if (isset($_POST['addpatch'])) {
 	if (!isset($_POST['obsoleted'])) {
-		$_POST['obsoleted'] = array();
+		$_POST['obsoleted'] = [];
 	}
 
 	// Check that patch name is given (required always)
@@ -71,7 +71,7 @@ if (isset($_POST['addpatch'])) {
 
 	if (!$logged_in) {
 		try {
-			$errors = array();
+			$errors = [];
 
 			$email = isset($_POST['email']) ? $_POST['email'] : '';
 
@@ -119,10 +119,10 @@ if (isset($_POST['addpatch'])) {
 	PEAR::popErrorHandling();
 	if (PEAR::isError($e)) {
 		$patches = $patchinfo->listPatches($bug_id);
-		$errors = array($e->getMessage(),
+		$errors = [$e->getMessage(),
 			'Could not attach patch "' .
 			htmlspecialchars($patch_name) .
-			'" to Bug #' . $bug_id);
+			'" to Bug #' . $bug_id];
 		include "{$ROOT_DIR}/templates/addpatch.php";
 		exit;
 	}
@@ -144,7 +144,7 @@ TXT;
 	mail_bug_updates($buginfo, $buginfo, $auth_user->email, $text, 4, $bug_id);
 
 	$patches = $patchinfo->listPatches($bug_id);
-	$errors = array();
+	$errors = [];
 	include "{$ROOT_DIR}/templates/patchadded.php";
 	exit;
 }

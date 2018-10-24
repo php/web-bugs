@@ -11,7 +11,7 @@ $numeralCaptcha = new Text_CAPTCHA_Numeral();
 // Obtain common includes
 require_once '../include/prepend.php';
 
-$errors  = array();
+$errors  = [];
 $success = false;
 $bug_id = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : 0;
 $bug_id = $bug_id ? $bug_id : '';
@@ -42,7 +42,7 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 				'UPDATE bugdb
 				 SET passwd = ?
 				 WHERE id = ?
-				')->execute(array(bugs_get_hash($new_passwd), $bug_id));
+				')->execute([bugs_get_hash($new_passwd), $bug_id]);
 
 				$resp = bugs_mail($row['email'],
 						 "Password for {$siteBig} bug report #{$bug_id}",
