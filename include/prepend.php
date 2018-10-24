@@ -17,7 +17,6 @@ if (file_exists($local_cfg)) {
 		'email' => 'php-bugs@lists.php.net',
 		'doc_email' => 'doc-bugs@lists.php.net',
 		'security_email' => 'security@php.net',
-		'db_extension' => 'mysqli',
 		'db' => 'phpbugsdb',
 		'db_user' => 'nobody',
 		'db_pass' => '',
