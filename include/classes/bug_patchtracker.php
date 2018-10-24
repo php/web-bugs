@@ -76,19 +76,19 @@ class Bug_Patchtracker
 		PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
 		$e = $this->_dbh->prepare('INSERT INTO bugdb_patchtracker
 			(bugdb_id, patch, revision, developer) VALUES(?, ?, ?, ?)')->execute(
-			array($bugid, $patch, $id, $handle));
+			[$bugid, $patch, $id, $handle]);
 		if (PEAR::isError($e)) {
 			// try with another timestamp
 			$id++;
 			$e = $this->_dbh->prepare('INSERT INTO bugdb_patchtracker
 				(bugdb_id, patch, revision, developer) VALUES(?, ?, ?, ?)')->execute(
-				array($bugid, $patch, $id, $handle));
+				[$bugid, $patch, $id, $handle]);
 		}
 		PEAR::popErrorHandling();
 		if (PEAR::isError($e)) {
 			return PEAR::raiseError("Could not get unique patch file name for bug #{$bugid}, patch \"{$patch}\"");
 		}
-		return array($id, $this->getPatchFileName($id));
+		return [$id, $this->getPatchFileName($id)];
 	}
 
 	/**
@@ -144,7 +144,7 @@ class Bug_Patchtracker
 		}
 
 		if ($file->isValid()) {
-			$newobsoletes = array();
+			$newobsoletes = [];
 			foreach ($obsoletes as $who) {
 				if (!$who) {
 					continue; // remove (none)
@@ -167,7 +167,7 @@ class Bug_Patchtracker
 			}
 			list($id, $fname) = $res;
 			$file->setName($fname);
-			$allowed_mime_types = array(
+			$allowed_mime_types = [
 				'application/x-txt',
 				'text/plain',
 				'text/x-diff',
@@ -175,7 +175,7 @@ class Bug_Patchtracker
 				'text/x-c++',
 				'text/x-c',
 				'text/x-m4',
-			);
+			];
 
 			// return mime type ala mimetype extension
 			if (class_exists('finfo')) {
@@ -197,7 +197,7 @@ class Bug_Patchtracker
 			if (!in_array($mime, $allowed_mime_types)) {
 				$this->_dbh->prepare('DELETE FROM bugdb_patchtracker
 					WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
-					array($bugid, $name, $id));
+					[$bugid, $name, $id]);
 				return PEAR::raiseError('Error: uploaded patch file must be text'
 					. ' file (save as e.g. "patch.txt" or "package.diff")'
 					. ' (detected "' . htmlspecialchars($mime) . '")'
@@ -207,7 +207,7 @@ class Bug_Patchtracker
 			if (PEAR::isError($tmpfile)) {
 				$this->_dbh->prepare('DELETE FROM bugdb_patchtracker
 					WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
-					array($bugid, $name, $id));
+					[$bugid, $name, $id]);
 				return $tmpfile;
 			}
 			if (!$file->getProp('size')) {
@@ -241,7 +241,7 @@ class Bug_Patchtracker
 	{
 		$this->_dbh->prepare('DELETE FROM bugdb_patchtracker
 			WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
-			array($bugid, $name, $revision));
+			[$bugid, $name, $revision]);
 		@unlink($this->patchDir($bugid, $name) . DIRECTORY_SEPARATOR .
 			$this->getPatchFileName($revision));
 	}
@@ -259,7 +259,7 @@ class Bug_Patchtracker
 		if ($this->_dbh->prepare('
 			SELECT bugdb_id
 			FROM bugdb_patchtracker
-			WHERE bugdb_id = ? AND patch = ? AND revision = ?')->execute(array($bugid, $name, $revision))->fetchOne()
+			WHERE bugdb_id = ? AND patch = ? AND revision = ?')->execute([$bugid, $name, $revision])->fetchOne()
 		) {
 			$contents = @file_get_contents($this->getPatchFullpath($bugid, $name, $revision));
 			if (!$contents) {
@@ -285,7 +285,7 @@ class Bug_Patchtracker
 			ORDER BY revision DESC
 		';
 
-		return $this->_dbh->prepare($query)->execute(array($bugid))->fetchAll(PDO::FETCH_NUM, true, false, true);
+		return $this->_dbh->prepare($query)->execute([$bugid])->fetchAll(PDO::FETCH_NUM, true, false, true);
 	}
 
 	/**
@@ -302,7 +302,7 @@ class Bug_Patchtracker
 			WHERE bugdb_id = ? AND patch = ?
 			ORDER BY revision DESC
 		';
-		return $this->_dbh->prepare($query)->execute(array($bugid, $patch))->fetchAll(PDO::FETCH_NUM);
+		return $this->_dbh->prepare($query)->execute([$bugid, $patch])->fetchAll(PDO::FETCH_NUM);
 	}
 
 	/**
@@ -320,13 +320,13 @@ class Bug_Patchtracker
 				SELECT developer
 				FROM bugdb_patchtracker
 				WHERE bugdb_id = ? AND patch = ? AND revision = ?
-			')->execute(array($bugid, $patch, $revision))->fetchOne();
+			')->execute([$bugid, $patch, $revision])->fetchOne();
 		}
 		return $this->_dbh->prepare('
 			SELECT developer, revision
 			FROM bugdb_patchtracker
 			WHERE bugdb_id = ? AND patch = ? ORDER BY revision DESC
-		')->execute(array($bugid, $patch))->fetchAll(PDO::FETCH_ASSOC);
+		')->execute([$bugid, $patch])->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	function getObsoletingPatches($bugid, $patch, $revision)
@@ -335,7 +335,7 @@ class Bug_Patchtracker
 			SELECT bugdb_id, patch, revision
 			FROM bugdb_obsoletes_patches
 			WHERE	bugdb_id = ? AND obsolete_patch = ? AND obsolete_revision = ?
-		')->execute(array($bugid, $patch, $revision))->fetchAll(PDO::FETCH_ASSOC);
+		')->execute([$bugid, $patch, $revision])->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	function getObsoletePatches($bugid, $patch, $revision)
@@ -344,7 +344,7 @@ class Bug_Patchtracker
 			SELECT bugdb_id, obsolete_patch, obsolete_revision
 			FROM bugdb_obsoletes_patches
 			WHERE bugdb_id = ? AND patch = ? AND revision = ?
-		')->execute(array($bugid, $patch, $revision))->fetchAll(PDO::FETCH_ASSOC);
+		')->execute([$bugid, $patch, $revision])->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -361,6 +361,6 @@ class Bug_Patchtracker
 		$this->_dbh->prepare('
 			INSERT INTO bugdb_obsoletes_patches
 			VALUES(?, ?, ?, ?, ?)
-		')->execute(array($bugid, $name, $revision, $obsoletename, $obsoleterevision));
+		')->execute([$bugid, $name, $revision, $obsoletename, $obsoleterevision]);
 	}
 }

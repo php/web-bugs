@@ -10,7 +10,7 @@ $local_cfg = "{$ROOT_DIR}/local_config.php";
 if (file_exists($local_cfg)) {
 	require $local_cfg;
 } else {
-	$site_data = array (
+	$site_data = [
 		'method' => 'https',
 		'url' => 'bugs.php.net',
 		'basedir' => '',
@@ -22,7 +22,7 @@ if (file_exists($local_cfg)) {
 		'db_pass' => '',
 		'db_host' => 'localhost',
 		'patch_tmp' => "{$ROOT_DIR}/uploads/patches/",
-	);
+	];
 	define('DEVBOX', false);
 }
 // CONFIG END

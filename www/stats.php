@@ -10,7 +10,7 @@ bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 response_header('Bugs Stats');
 
-$titles = array(
+$titles = [
 	'Closed'	=> 'Closed',
 	'Open'		=> 'Open',
 	'Critical'	=> 'Crit',
@@ -23,17 +23,17 @@ $titles = array(
 	'Not a bug'	=> 'Not&nbsp;a&nbsp;bug',
 	'Duplicate'	=> 'Dupe',
 	'Wont fix'	=> 'Wont&nbsp;Fix',
-);
+];
 
 $rev = isset($_GET['rev']) ? $_GET['rev'] : 1;
 $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'Open';
 $total = 0;
-$row = array();
-$pkg = array();
-$pkg_tmp = array();
-$pkg_total = array();
-$pkg_names = array();
-$all = array();
+$row = [];
+$pkg = [];
+$pkg_tmp = [];
+$pkg_total = [];
+$pkg_names = [];
+$all = [];
 $pseudo	= true;
 $pseudo_pkgs = get_pseudo_packages($site);
 

@@ -5,8 +5,8 @@ ini_set('zlib.output_compression', 1);
 
 function getAllUsers()
 {
-	$opts = array('ignore_errors' => true);
-	$ctx = stream_context_create(array('http' => $opts));
+	$opts = ['ignore_errors' => true];
+	$ctx = stream_context_create(['http' => $opts]);
 	$token = getenv('USER_TOKEN');
 
 	$retval = @file_get_contents('https://master.php.net/fetch/allusers.php?&token=' . rawurlencode($token), false, $ctx);
@@ -47,18 +47,18 @@ if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINC
 	header("Expires: {$expires}");
 }
 
-$lookup = $user = array();
+$lookup = $user = [];
 
 if ($json) {
 	foreach ($json as $row) {
 		$lookup[] = $row['name'];
 		$lookup[] = $row["username"];
 
-		$data = array(
+		$data = [
 			'email'		=> md5($row['username'] . '@php.net'),
 			'name'		=> $row['name'],
 			'username'	=> $row['username'],
-		);
+		];
 		$user[$row["username"]] = $data;
 		$user[$row["name"]]     = $data;
 	}

@@ -32,7 +32,7 @@ if (isset($_REQUEST['id']) && $_REQUEST['id'] == 'preview') {
 }
 
 // Init common variables
-$errors = array();
+$errors = [];
 
 // Set edit mode
 $edit = isset($_REQUEST['edit']) ? (int) $_REQUEST['edit'] : 0;
@@ -86,7 +86,7 @@ if (isset($_POST['subscribe_to_bug']) || isset($_POST['unsubscribe_to_bug'])) {
 			}
 			else // Subscribe
 			{
-				$dbh->prepare('REPLACE INTO bugdb_subscribe SET bug_id = ?, email = ?')->execute(array($bug_id, $email));
+				$dbh->prepare('REPLACE INTO bugdb_subscribe SET bug_id = ?, email = ?')->execute([$bug_id, $email]);
 				$thanks = 7;
 			}
 			redirect("bug.php?id={$bug_id}&thanks={$thanks}");
@@ -169,7 +169,7 @@ $block_user = isset($block_user) ? $block_user : $bug['block_user_comment'];
 $is_private = isset($is_private) ? $is_private : $bug['private'];
 
 // Handle any updates, displaying errors if there were any
-$RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = array();
+$RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = [];
 
 $project = $bug['project'];
 
@@ -332,7 +332,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				ts2 = NOW(),
 				private = ?
 			WHERE id={$bug_id}
-		")->execute(array(
+		")->execute([
 			$_POST['in']['sdesc'],
 			$_POST['in']['status'],
 			$_POST['in']['package_name'],
@@ -341,7 +341,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$_POST['in']['php_os'],
 			$from,
 			$is_private
-		));
+		]);
 
 		// Add changelog entry
 		$changed = bug_diff($bug, $_POST['in']);
@@ -415,7 +415,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 		$errors[] = "You must provide a status";
 	} else {
 		if ($_POST['in']['status'] == 'Not a bug' &&
-			!in_array($bug['status'], array ('Not a bug', 'Closed', 'Duplicate', 'No feedback', 'Wont fix')) &&
+			!in_array($bug['status'], ['Not a bug', 'Closed', 'Duplicate', 'No feedback', 'Wont fix']) &&
 			strlen(trim($ncomment)) == 0
 		) {
 			$errors[] = "You must provide a comment when marking a bug 'Not a bug'";
@@ -506,7 +506,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 				private = ?,
 				ts2 = NOW()
 			WHERE id = {$bug_id}
-		")->execute(array (
+		")->execute([
 			$_POST['in']['sdesc'],
 			$status,
 			$_POST['in']['package_name'],
@@ -517,7 +517,7 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
 			$block_user,
 			$_POST['in']['cve_id'],
 			$is_private
-		));
+		]);
 
 		// Add changelog entry
 		$changed = bug_diff($bug, $_POST['in']);
@@ -1097,13 +1097,13 @@ OUTPUT;
 // Display comments
 $bug_comments = bugs_get_bug_comments($bug_id);
 if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['status'] !== 'Spam') {
-	$history_tabs = array(
+	$history_tabs = [
 		'type_all'     => 'All',
 		'type_comment' => 'Comments',
 		'type_log'     => 'Changes',
 		'type_svn'     => 'Git/SVN commits',
 		'type_related' => 'Related reports'
-	);
+	];
 
 	if (!isset($_COOKIE['history_tab']) || !isset($history_tabs[$_COOKIE['history_tab']])) {
 		$active_history_tab = 'type_all';

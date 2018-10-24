@@ -54,7 +54,7 @@ require_once "{$ROOT_DIR}/include/classes/bug_ghpulltracker.php";
 $pullinfo = new Bug_Pulltracker;
 
 if (isset($_POST['addpull'])) {
-	$errors = array();
+	$errors = [];
 	if (empty($_POST['repository'])) {
 		$errors[] = 'No repository selected';
 	}
@@ -97,7 +97,7 @@ if (isset($_POST['addpull'])) {
 		$newpr = $pullinfo->attach($bug_id, $_POST['repository'], $_POST['pull_id'], $email);
 		PEAR::popErrorHandling();
 		if (PEAR::isError($newpr)) {
-			$errors = array($newpr->getMessage(), 'Could not attach pull request to Bug #' . $bug_id);
+			$errors = [$newpr->getMessage(), 'Could not attach pull request to Bug #' . $bug_id];
 		}
 	}
 
@@ -123,7 +123,7 @@ TXT;
 	mail_bug_updates($buginfo, $buginfo, $auth_user->email, $text, 4, $bug_id);
  */
 	$pulls = $pullinfo->listPulls($bug_id);
-	$errors = array();
+	$errors = [];
 	include "{$ROOT_DIR}/templates/addghpull.php";
 	exit;
 }

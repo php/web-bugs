@@ -4,7 +4,7 @@
  * Add your local changes here and copy to local_config.php
  */
 
-$site_data = array (
+$site_data = [
 	'method' => 'https',
 	'url' => 'bugs.php.net',
 	'basedir' => '/bugs',
@@ -16,6 +16,6 @@ $site_data = array (
 	'db_pass' => '',
 	'db_host' => 'localhost',
 	'patch_tmp' => "{$ROOT_DIR}/uploads/patches/",
-);
+];
 
 define('DEVBOX', true);

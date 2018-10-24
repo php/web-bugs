@@ -10,12 +10,12 @@ if (!$logged_in) {
 	exit;
 }
 
-$actions = array(
+$actions = [
 	'phpinfo' 		=> 'phpinfo()',
 	'list_lists'		=> 'Package mailing lists',
 	'list_responses'	=> 'Quick fix responses',
 	'mysql'			=> 'Database status',
-);
+];
 
 $action  = !empty($_GET['action']) && isset($actions[$_GET['action']]) ? $_GET['action'] : 'list_lists';
 
@@ -29,16 +29,16 @@ if ($action === 'phpinfo') {
 	$phpinfo = ob_get_clean();
 
 	// Attempt to hide certain ENV vars
-	$vars = array(
+	$vars = [
 			getenv('AUTH_TOKEN'),
 			getenv('USER_TOKEN'),
 			getenv('USER_PWD_SALT')
-			);
+			];
 
 	$phpinfo = str_replace($vars, '&lt;hidden&gt;', $phpinfo);
 
 	// Semi stolen from php-web
-	$m = array();
+	$m = [];
 
 	preg_match('!<body.*?>(.*)</body>!ims', $phpinfo, $m);
 
@@ -72,7 +72,7 @@ if ($action === 'phpinfo') {
 
 	echo "<h3>List Responses</h3>\n";
 
-	$rows = array();
+	$rows = [];
 	while ($row = $res->fetchRow(PDO::FETCH_ASSOC)) {
 		// This is ugly but works (tm)
 		$row['message'] = nl2br($row['message']);
@@ -99,7 +99,7 @@ if ($action === 'phpinfo') {
 
 	echo "<h3>Number of rows:</h3>\n";
 
-	$rows = array();
+	$rows = [];
 
 	foreach($row as $key => $value) {
 		$rows[] = [str_replace('cnt_', '', $key), $value];
@@ -107,7 +107,7 @@ if ($action === 'phpinfo') {
 
 	admin_table_static(['Table', 'Rows'], $rows);
 
-	$rows = array();
+	$rows = [];
 	$res = $dbh->query("SHOW TABLE STATUS");
 	echo "<h3>Table status:</h3>\n";
 	while ($row = $res->fetchRow(PDO::FETCH_ASSOC)) {

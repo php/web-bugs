@@ -27,7 +27,7 @@ if (!is_array($bug)) {
 }
 
 // If bug exists, continue..
-$RESOLVE_REASONS = $FIX_VARIATIONS = $errors = array();
+$RESOLVE_REASONS = $FIX_VARIATIONS = $errors = [];
 
 $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
@@ -118,13 +118,13 @@ if ($status == $bug['status']) {
 }
 
 // Standard items
-$in = array(
+$in = [
 	'status' => $status,
 	'bug_type' => $bug['bug_type'],
 	'php_version' => $bug['php_version'],
 	'php_os' => $bug['php_os'],
 	'assign' => $bug['assign'],
-);
+];
 
 // Assign automatically when closed
 if ($status == 'Closed' && $in['assign'] == '') {
@@ -139,11 +139,11 @@ $dbh->prepare("
 		assign = ?,
 		ts2 = NOW()
 	WHERE id = ?
-")->execute(array (
+")->execute([
 	$status,
 	$in['assign'],
 	$bug_id,
-));
+]);
 
 // Add changelog entry
 if (!PEAR::isError($res)) {

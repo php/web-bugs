@@ -27,7 +27,7 @@ if ($type === 'docs' && $action === 'closed' && $interval) {
 	";
 
 	//@todo add error handling
-	$rows = $dbh->prepare($query)->execute(array())->fetchAll(PDO::FETCH_ASSOC);
+	$rows = $dbh->prepare($query)->execute([])->fetchAll(PDO::FETCH_ASSOC);
 	if (!$rows) {
 		echo 'The fail train has arrived.';
 		exit;

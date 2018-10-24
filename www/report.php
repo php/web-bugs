@@ -7,7 +7,7 @@ require_once '../include/prepend.php';
 session_start();
 
 // Init variables
-$errors = array();
+$errors = [];
 $ok_to_submit_report = false;
 
 $project = !empty($_GET['project']) ? $_GET['project'] : false;
@@ -118,7 +118,7 @@ if (isset($_POST['in'])) {
 						WHERE bug = ?
 						ORDER BY id DESC
 						LIMIT 1
-					")->execute(array($row['id']))->fetchOne();
+					")->execute([$row['id']])->fetchOne();
 
 					$summary = $row['ldesc'];
 					if (strlen($summary) > 256) {
@@ -205,7 +205,7 @@ OUTPUT;
 					private,
 					visitor_ip
 				) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "Open", NOW(), ?, INET6_ATON(?))
-			')->execute(array(
+			')->execute([
 					$package_name,
 					$_POST['in']['bug_type'],
 					$_POST['in']['email'],
@@ -217,7 +217,7 @@ OUTPUT;
 					$_POST['in']['reporter_name'],
 					$_POST['in']['private'],
 					$_SERVER['REMOTE_ADDR']
-				)
+				]
 			);
 
 			$cid = $dbh->lastInsertId();
@@ -227,7 +227,7 @@ OUTPUT;
 				require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
 				$tracker = new Bug_Patchtracker;
 				PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-				$patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $_POST['in']['handle'], array());
+				$patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $_POST['in']['handle'], []);
 				PEAR::staticPopErrorHandling();
 				if (PEAR::isError($patchrevision)) {
 					$redirectToPatchAdd = true;
@@ -337,7 +337,7 @@ if (!is_string($package)) {
 
 if (!isset($_POST['in'])) {
 
-	$_POST['in'] = array(
+	$_POST['in'] = [
 			 'package_name' => isset($_GET['package_name']) ? clean($_GET['package_name']) : '',
 			 'bug_type' => isset($_GET['bug_type']) ? clean($_GET['bug_type']) : '',
 			 'email' => '',
@@ -349,7 +349,7 @@ if (!isset($_POST['in'])) {
 			 'php_version' => '',
 			 'php_os' => '',
 			 'passwd' => '',
-	);
+	];
 
 
 	response_header('Report - New', $packageAffectedScript);

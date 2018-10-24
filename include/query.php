@@ -1,8 +1,8 @@
 <?php
 
-$errors = array();
-$warnings = array();
-$order_options = array(
+$errors = [];
+$warnings = [];
+$order_options = [
 	''				=> 'relevance',
 	'id'			=> 'ID',
 	'ts1'			=> 'date',
@@ -17,7 +17,7 @@ $order_options = array(
 	'avg_score'		=> 'avg. vote score',
 	'votes_count'	=> 'number of votes',
 	'RAND()'	=> 'random',
-);
+];
 
 // Fetch pseudo packages
 $pseudo_pkgs = get_pseudo_packages(false);
@@ -48,8 +48,8 @@ $order_by = (!empty($_GET['order_by']) && array_key_exists($_GET['order_by'], $o
 $reorder_by = (!empty($_GET['reorder_by']) && array_key_exists($_GET['reorder_by'], $order_options)) ? $_GET['reorder_by'] : '';
 $assign = !empty($_GET['assign']) ? $_GET['assign'] : '';
 $author_email = !empty($_GET['author_email']) ? spam_protect($_GET['author_email'], 'reverse') : '';
-$package_name = (isset($_GET['package_name']) && is_array($_GET['package_name'])) ? $_GET['package_name'] : array();
-$package_nname = (isset($_GET['package_nname']) && is_array($_GET['package_nname'])) ? $_GET['package_nname'] : array();
+$package_name = (isset($_GET['package_name']) && is_array($_GET['package_name'])) ? $_GET['package_name'] : [];
+$package_nname = (isset($_GET['package_nname']) && is_array($_GET['package_nname'])) ? $_GET['package_nname'] : [];
 $commented_by = !empty($_GET['commented_by']) ? spam_protect($_GET['commented_by'], 'reverse') : '';
 
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
@@ -63,7 +63,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		FROM bugdb
 	';
 
-	if (in_array($order_by, array('votes_count', 'avg_score'))) {
+	if (in_array($order_by, ['votes_count', 'avg_score'])) {
 		$query .= 'LEFT JOIN bugdb_votes v ON bugdb.id = v.bug';
 	}
 
@@ -229,23 +229,23 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		}
 	}
 
-	$order_by_clauses = array();
-	if (in_array($order_by, array('votes_count', 'avg_score'))) {
+	$order_by_clauses = [];
+	if (in_array($order_by, ['votes_count', 'avg_score'])) {
 		$query .= ' GROUP BY bugdb.id';
 
 		switch ($order_by) {
 			case 'avg_score':
-				$order_by_clauses = array(
+				$order_by_clauses = [
 					"IFNULL(AVG(v.score), 0)+3 $direction",
 					"COUNT(v.bug) DESC"
-				);
+				];
 				break;
 			case 'votes_count':
-				$order_by_clauses = array("COUNT(v.bug) $direction");
+				$order_by_clauses = ["COUNT(v.bug) $direction"];
 				break;
 		}
 	} elseif ($order_by != '') {
-		$order_by_clauses = array("$order_by $direction");
+		$order_by_clauses = ["$order_by $direction"];
 	}
 
 	if ($status == 'Feedback') {

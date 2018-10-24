@@ -9,7 +9,7 @@ require __DIR__.'/../../include/prepend.php';
 $after = "7 DAY";
 
 # Set "input" array
-$in = array('status' => 'No Feedback');
+$in = ['status' => 'No Feedback'];
 
 # Update relevant reports
 if ($dbh)
@@ -22,7 +22,7 @@ if ($dbh)
 			private, reporter_name, UNIX_TIMESTAMP(ts2) AS modified
 		FROM bugdb
 		WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})
-	")->execute(array());
+	")->execute([]);
 	if (PEAR::isError($res)) {
 		throw new Exception("SQL Error in no-feedback");
 	}
@@ -45,9 +45,9 @@ if ($dbh)
 			UPDATE bugdb
 			SET status = "No Feedback", ts2 = NOW()
 			WHERE id = ?
-		')->execute(array(
+		')->execute([
 			$bug['id'],
-		));
+		]);
 
 		// Send emails
 		mail_bug_updates($bug, $in, $mailfrom, $message);

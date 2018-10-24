@@ -27,7 +27,7 @@ function get_status_count ($status, $category = '')
 	}
 	$query.= "AND bug_type NOT IN({$excluded})";
 
-	$res = $dbh->prepare($query)->execute(array());
+	$res = $dbh->prepare($query)->execute([]);
 	$row = $res->fetchRow(PDO::FETCH_NUM);
 
 	return $row[0];
@@ -47,7 +47,7 @@ if (isset($_GET['per_category']))
 	$project = !empty($_GET['project']) ? $_GET['project'] : false;
 	$pseudo_pkgs = get_pseudo_packages($project);
 
-	$totals = array();
+	$totals = [];
 	foreach ($pseudo_pkgs as $category => $data) {
 		$count = get_status_count ("status NOT IN('to be documented', 'closed', 'not a bug', 'duplicate', 'wont fix', 'no feedback')", $category);
 		if ($count > 0) {
@@ -62,7 +62,7 @@ if (isset($_GET['per_category']))
 } else {
 
 	foreach ($tla as $status => $short) {
-		if (!in_array($status, array('Duplicate'))) {
+		if (!in_array($status, ['Duplicate'])) {
 			$count = get_status_count ($status);
 			status_print($status, $count, 30);
 		}
