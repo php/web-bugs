@@ -7,7 +7,7 @@ response_header('Add Pull Request :: ' . clean($package_name));
 <h2>Add a Pull Request to <a href="bug.php?id=<?php echo $bug_id; ?>">Bug #<?php echo $bug_id; ?></a></h2>
 <ul>
  <li>One problem per pull request, please</li>
- <li>The pull requst must be opened against a PHP project on GitHub</li>
+ <li>The pull request must be opened against a PHP project on GitHub</li>
  <li>Choose a meaningful request name (i.e. include bug id and title)</li>
 </ul>
 <form name="patchform" method="post" action="gh-pull-add.php" enctype="multipart/form-data">
