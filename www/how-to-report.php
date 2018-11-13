@@ -106,10 +106,16 @@ mailing lists</a>.</p>
 
 <h2>Don't report bugs about old versions.</h2>
 
-<p>Every time a new version of PHP is released, hundreds of bugs are fixed.  If
+<p>Every time a new version of PHP is released, dozens of bugs are fixed.  If
 you're using a version of PHP that is more than two revisions older than the
 latest version, you should upgrade to the latest version to make sure the bug
 you are experiencing still exists.</p>
+
+<p>Note that PHP branches which are no longer <a
+href="https://php.net/supported-versions.php">actively supported</a> will
+receive fixes for critical security issues only. So please do not report
+non-security related bugs which do not affect any actively supported PHP
+branch.</p>
 
 <h2>Only report one problem in each bug report.</h2>
 
