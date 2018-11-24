@@ -5,7 +5,7 @@ This is a unified bug tracking system for PHP hosted online at
 
 ## Requirements
 
-- PHP 5.4+
+- PHP 7.2+
 - ext/pdo
 - ext/pdo_mysql
 - ext/openssl (for https:// fopen wrapper)
