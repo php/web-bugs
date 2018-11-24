@@ -498,7 +498,7 @@ function show_byage_options($current)
 		'30' => '30 days ago',
 		'90' => '90 days ago',
 	];
-	while (list($k,$v) = each($opts)) {
+	foreach ($opts as $k => $v) {
 		echo "<option value=\"$k\"", ($current==$k ? ' selected="selected"' : ''), ">$v</option>\n";
 	}
 }
@@ -784,7 +784,7 @@ function show_package_options($current, $show_any, $default = '')
 function show_boolean_options($current)
 {
 	$options = ['any', 'all', 'raw'];
-	while (list($val, $type) = each($options)) {
+	foreach ($options as $val => $type) {
 		echo '<input type="radio" name="boolean" value="', $val, '"';
 		if ($val === $current) {
 			echo ' checked="checked"';
