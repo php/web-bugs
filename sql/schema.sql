@@ -97,7 +97,7 @@ CREATE TABLE bugdb_subscribe (
 CREATE TABLE bugdb_votes (
   bug int(8) NOT NULL default '0',
   ts timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  ip int(10) unsigned NOT NULL default '0',
+  ip varbinary(16) NOT NULL,
   score int(3) NOT NULL default '0',
   reproduced int(1) NOT NULL default '0',
   tried int(1) NOT NULL default '0',

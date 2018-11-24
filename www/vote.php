@@ -57,11 +57,11 @@ function get_real_ip ()
 	return ($ip ? $ip : $_SERVER['REMOTE_ADDR']);
 }
 
-$ip = ip2long(get_real_ip());
+$ip = get_real_ip();
 // TODO: check if ip address has been banned. hopefully this will never need to be implemented.
 
 // Check whether the user has already voted on this bug.
-$bug_check = $dbh->prepare("SELECT bug, ip FROM bugdb_votes WHERE bug = ? AND ip = ? LIMIT 1")
+$bug_check = $dbh->prepare("SELECT bug, ip FROM bugdb_votes WHERE bug = ? AND ip = INET6_ATON(?) LIMIT 1")
 	->execute([$id, $ip])
 	->fetchRow();
 
@@ -70,13 +70,17 @@ if (empty($bug_check)) {
 	$dbh->prepare("
 		INSERT INTO bugdb_votes (bug, ip, score, reproduced, tried, sameos, samever)
 		VALUES (
-			{$id}, {$ip}, {$score}, " .
+			?, INET6_ATON(?), ?, " .
 			($reproduced == 1 ? "1," : "0,") .
 			($reproduced != 2 ? "1," : "0,") .
 			($reproduced ? "$sameos," : "NULL,") .
 			($reproduced ? "$samever" : "NULL") .
 		')'
-	)->execute();
+	)->execute([
+		$id,
+		$ip,
+		$score
+	]);
 
 	// redirect to the bug page (which will display the success message)
 	redirect("bug.php?id=$id&thanks=6");
@@ -84,7 +88,7 @@ if (empty($bug_check)) {
 	// As the user has already voted, just update their existing vote.
 	$dbh->prepare("UPDATE bugdb_votes
 		SET score = ?, reproduced = ? , tried = ?, sameos = ?, samever = ?
-		WHERE bug = ? AND ip = ?")
+		WHERE bug = ? AND ip = INET6_ATON(?)")
 		->execute([
 			$score,
 			($reproduced == 1 ? "1" : "0"),
