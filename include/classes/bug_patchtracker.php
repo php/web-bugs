@@ -111,8 +111,7 @@ class Bug_Patchtracker
 	 */
 	public function getPatchFullpath($bugid, $name, $revision)
 	{
-		return $this->patchDir($bugid, $name) .
-			DIRECTORY_SEPARATOR . $this->getPatchFileName($revision);
+		return $this->patchDir($bugid, $name).'/'.$this->getPatchFileName($revision);
 	}
 
 	/**
@@ -241,8 +240,8 @@ class Bug_Patchtracker
 		$this->dbh->prepare('DELETE FROM bugdb_patchtracker
 			WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
 			[$bugid, $name, $revision]);
-		@unlink($this->patchDir($bugid, $name) . DIRECTORY_SEPARATOR .
-			$this->getPatchFileName($revision));
+
+		@unlink($this->patchDir($bugid, $name).'/'.$this->getPatchFileName($revision));
 	}
 
 	/**
