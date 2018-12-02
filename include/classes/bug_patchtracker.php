@@ -4,21 +4,20 @@ require_once 'HTTP/Upload.php';
 
 class Bug_Patchtracker
 {
-	var $_upload;
-	var $_patchdir;
-	var $_dbh;
+	private $uploader;
+	private $dbh;
 
-	function __construct()
+	public function __construct()
 	{
 		if (!file_exists(BUG_PATCHTRACKER_TMPDIR)) {
 			if (!@mkdir(BUG_PATCHTRACKER_TMPDIR)) {
-				$this->_upload = false;
-				$this->_dbh = $GLOBALS['dbh'];
+				$this->uploader = false;
+				$this->dbh = $GLOBALS['dbh'];
 				return;
 			}
 		}
-		$this->_upload = new HTTP_Upload('en');
-		$this->_dbh = $GLOBALS['dbh'];
+		$this->uploader = new HTTP_Upload('en');
+		$this->dbh = $GLOBALS['dbh'];
 	}
 
 	/**
@@ -28,7 +27,7 @@ class Bug_Patchtracker
 	 * @param string $name name of this patch line
 	 * @return string
 	 */
-	function patchDir($bugid, $name)
+	private function patchDir($bugid, $name)
 	{
 		return BUG_PATCHTRACKER_TMPDIR . '/p' . $bugid . '/' . $name;
 	}
@@ -37,7 +36,7 @@ class Bug_Patchtracker
 	 *
 	 * @param int $bugid
 	 */
-	function setupPatchDir($bugid, $name)
+	private function setupPatchDir($bugid, $name)
 	{
 		if (file_exists($this->patchDir($bugid, $name))) {
 			if (!is_dir($this->patchDir($bugid, $name))) {
@@ -70,17 +69,17 @@ class Bug_Patchtracker
 	 * @param string $patch
 	 * @return array array(revision, patch file name)
 	 */
-	function newPatchFileName($bugid, $patch, $handle)
+	private function newPatchFileName($bugid, $patch, $handle)
 	{
 		$id = time();
 		PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-		$e = $this->_dbh->prepare('INSERT INTO bugdb_patchtracker
+		$e = $this->dbh->prepare('INSERT INTO bugdb_patchtracker
 			(bugdb_id, patch, revision, developer) VALUES(?, ?, ?, ?)')->execute(
 			[$bugid, $patch, $id, $handle]);
 		if (PEAR::isError($e)) {
 			// try with another timestamp
 			$id++;
-			$e = $this->_dbh->prepare('INSERT INTO bugdb_patchtracker
+			$e = $this->dbh->prepare('INSERT INTO bugdb_patchtracker
 				(bugdb_id, patch, revision, developer) VALUES(?, ?, ?, ?)')->execute(
 				[$bugid, $patch, $id, $handle]);
 		}
@@ -97,7 +96,7 @@ class Bug_Patchtracker
 	 * @param int $id revision ID
 	 * @return string
 	 */
-	function getPatchFileName($id)
+	private function getPatchFileName($id)
 	{
 		return 'p' . $id . '.patch.txt';
 	}
@@ -110,7 +109,7 @@ class Bug_Patchtracker
 	 * @param int $revision
 	 * @return string
 	 */
-	function getPatchFullpath($bugid, $name, $revision)
+	public function getPatchFullpath($bugid, $name, $revision)
 	{
 		return $this->patchDir($bugid, $name) .
 			DIRECTORY_SEPARATOR . $this->getPatchFileName($revision);
@@ -126,9 +125,9 @@ class Bug_Patchtracker
 	 * @param array	$obsoletes	obsoleted patches
 	 * @return int patch revision
 	 */
-	function attach($bugid, $patch, $name, $handle, $obsoletes)
+	public function attach($bugid, $patch, $name, $handle, $obsoletes)
 	{
-		if (!$this->_upload) {
+		if (!$this->uploader) {
 			return PEAR::raiseError('Upload directory for patches could not be initialized');
 		}
 		if (!preg_match('/^[\w\-\.]+\z/', $name) || strlen($name) > 80) {
@@ -138,7 +137,7 @@ class Bug_Patchtracker
 			return PEAR::raiseError('Invalid obsoleted patches');
 		}
 
-		$file = $this->_upload->getFiles($patch);
+		$file = $this->uploader->getFiles($patch);
 		if (PEAR::isError($file)) {
 			return $file;
 		}
@@ -195,7 +194,7 @@ class Bug_Patchtracker
 				$mime = 'text/plain';
 			}
 			if (!in_array($mime, $allowed_mime_types)) {
-				$this->_dbh->prepare('DELETE FROM bugdb_patchtracker
+				$this->dbh->prepare('DELETE FROM bugdb_patchtracker
 					WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
 					[$bugid, $name, $id]);
 				return PEAR::raiseError('Error: uploaded patch file must be text'
@@ -205,7 +204,7 @@ class Bug_Patchtracker
 			}
 			$tmpfile = $file->moveTo($this->patchDir($bugid, $name));
 			if (PEAR::isError($tmpfile)) {
-				$this->_dbh->prepare('DELETE FROM bugdb_patchtracker
+				$this->dbh->prepare('DELETE FROM bugdb_patchtracker
 					WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
 					[$bugid, $name, $id]);
 				return $tmpfile;
@@ -237,9 +236,9 @@ class Bug_Patchtracker
 	 * @param string $name
 	 * @param int $revision
 	 */
-	function detach($bugid, $name, $revision)
+	public function detach($bugid, $name, $revision)
 	{
-		$this->_dbh->prepare('DELETE FROM bugdb_patchtracker
+		$this->dbh->prepare('DELETE FROM bugdb_patchtracker
 			WHERE bugdb_id = ? and patch = ? and revision = ?')->execute(
 			[$bugid, $name, $revision]);
 		@unlink($this->patchDir($bugid, $name) . DIRECTORY_SEPARATOR .
@@ -254,9 +253,9 @@ class Bug_Patchtracker
 	 * @param int $revision
 	 * @return string
 	 */
-	function getPatch($bugid, $name, $revision)
+	public function getPatch($bugid, $name, $revision)
 	{
-		if ($this->_dbh->prepare('
+		if ($this->dbh->prepare('
 			SELECT bugdb_id
 			FROM bugdb_patchtracker
 			WHERE bugdb_id = ? AND patch = ? AND revision = ?')->execute([$bugid, $name, $revision])->fetchOne()
@@ -276,7 +275,7 @@ class Bug_Patchtracker
 	 * @param int $bugid
 	 * @return array
 	 */
-	function listPatches($bugid)
+	public function listPatches($bugid)
 	{
 		$query = '
 			SELECT patch, revision, developer
@@ -285,7 +284,7 @@ class Bug_Patchtracker
 			ORDER BY revision DESC
 		';
 
-		return $this->_dbh->prepare($query)->execute([$bugid])->fetchAll(PDO::FETCH_NUM, true, false, true);
+		return $this->dbh->prepare($query)->execute([$bugid])->fetchAll(PDO::FETCH_NUM, true, false, true);
 	}
 
 	/**
@@ -295,14 +294,14 @@ class Bug_Patchtracker
 	 * @param string $patch
 	 * @return array
 	 */
-	function listRevisions($bugid, $patch)
+	public function listRevisions($bugid, $patch)
 	{
 		$query = '
 			SELECT revision FROM bugdb_patchtracker
 			WHERE bugdb_id = ? AND patch = ?
 			ORDER BY revision DESC
 		';
-		return $this->_dbh->prepare($query)->execute([$bugid, $patch])->fetchAll(PDO::FETCH_NUM);
+		return $this->dbh->prepare($query)->execute([$bugid, $patch])->fetchAll(PDO::FETCH_NUM);
 	}
 
 	/**
@@ -313,34 +312,34 @@ class Bug_Patchtracker
 	 * @param int $revision
 	 * @return string|array array if no revision is selected
 	 */
-	function getDeveloper($bugid, $patch, $revision = false)
+	public function getDeveloper($bugid, $patch, $revision = false)
 	{
 		if ($revision) {
-			return $this->_dbh->prepare('
+			return $this->dbh->prepare('
 				SELECT developer
 				FROM bugdb_patchtracker
 				WHERE bugdb_id = ? AND patch = ? AND revision = ?
 			')->execute([$bugid, $patch, $revision])->fetchOne();
 		}
-		return $this->_dbh->prepare('
+		return $this->dbh->prepare('
 			SELECT developer, revision
 			FROM bugdb_patchtracker
 			WHERE bugdb_id = ? AND patch = ? ORDER BY revision DESC
 		')->execute([$bugid, $patch])->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function getObsoletingPatches($bugid, $patch, $revision)
+	public function getObsoletingPatches($bugid, $patch, $revision)
 	{
-		return $this->_dbh->prepare('
+		return $this->dbh->prepare('
 			SELECT bugdb_id, patch, revision
 			FROM bugdb_obsoletes_patches
 			WHERE	bugdb_id = ? AND obsolete_patch = ? AND obsolete_revision = ?
 		')->execute([$bugid, $patch, $revision])->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function getObsoletePatches($bugid, $patch, $revision)
+	public function getObsoletePatches($bugid, $patch, $revision)
 	{
-		return $this->_dbh->prepare('
+		return $this->dbh->prepare('
 			SELECT bugdb_id, obsolete_patch, obsolete_revision
 			FROM bugdb_obsoletes_patches
 			WHERE bugdb_id = ? AND patch = ? AND revision = ?
@@ -356,9 +355,9 @@ class Bug_Patchtracker
 	 * @param string $obsoletename
 	 * @param int $obsoleterevision
 	 */
-	function obsoletePatch($bugid, $name, $revision, $obsoletename, $obsoleterevision)
+	private function obsoletePatch($bugid, $name, $revision, $obsoletename, $obsoleterevision)
 	{
-		$this->_dbh->prepare('
+		$this->dbh->prepare('
 			INSERT INTO bugdb_obsoletes_patches
 			VALUES(?, ?, ?, ?, ?)
 		')->execute([$bugid, $name, $revision, $obsoletename, $obsoleterevision]);

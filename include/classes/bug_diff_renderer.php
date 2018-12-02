@@ -16,18 +16,18 @@ require_once 'Text/Diff/Renderer.php';
 class Bug_Diff_Renderer extends Text_Diff_Renderer
 {
 	// Number of leading context "lines" to preserve.
-	var $_leading_context_lines = 4;
+	public $_leading_context_lines = 4;
 
 	// Number of trailing context "lines" to preserve.
-	var $_trailing_context_lines = 4;
+	public $_trailing_context_lines = 4;
 
-	function __construct($d)
+	public function __construct($d)
 	{
 		$this->diff = $d;
 		parent::__construct();
 	}
 
-	function _blockHeader($xbeg, $xlen, $ybeg, $ylen)
+	public function _blockHeader($xbeg, $xlen, $ybeg, $ylen)
 	{
 		$removed = $xlen - $ylen;
 		if ($removed > 0) {
@@ -35,30 +35,30 @@ class Bug_Diff_Renderer extends Text_Diff_Renderer
 		}
 	}
 
-	function _added($lines)
+	public function _added($lines)
 	{
 		array_walk($lines, create_function('&$a,$b', '$a=htmlspecialchars($a);'));
 		return '<span class="newdiff"> ' . implode("</span>\n<span class='newdiff'> ", $lines) . '</span>';
 	}
 
-	function _context($lines)
+	public function _context($lines)
 	{
 		array_walk($lines, create_function('&$a,$b', '$a=htmlspecialchars($a);'));
 		return "\n" . parent::_context($lines);
 	}
 
-	function _deleted($lines)
+	public function _deleted($lines)
 	{
 		array_walk($lines, create_function('&$a,$b', '$a=htmlspecialchars($a);'));
 		return '<span class="olddiff"> ' . implode("</span>\n<span class='olddiff'> ", $lines) . '</span>';
 	}
 
-	function _changed($orig, $final)
+	public function _changed($orig, $final)
 	{
 		return $this->_deleted($orig) . "\n" . $this->_added($final);
 	}
 
-	function render($diff)
+	public function render($diff)
 	{
 		return parent::render($this->diff);
 	}

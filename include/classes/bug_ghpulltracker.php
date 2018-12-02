@@ -2,13 +2,12 @@
 
 class Bug_Pulltracker
 {
-	var $_dbh;
+	private $dbh;
 	private $userAgent = 'bugs.php.net Pulltracker';
 
-
-	function __construct()
+	public function __construct()
 	{
-		$this->_dbh = $GLOBALS['dbh'];
+		$this->dbh = $GLOBALS['dbh'];
 	}
 
 	private function getDataFromGithub($repo, $pull_id)
@@ -29,14 +28,14 @@ class Bug_Pulltracker
 	/**
 	 * Attach a pull request to this bug
 	 */
-	function attach($bugid, $repo, $pull_id, $developer)
+	public function attach($bugid, $repo, $pull_id, $developer)
 	{
 		$data = $this->getDataFromGithub($repo, $pull_id);
 		if (!$data) {
 			return PEAR::raiseError('Failed to retrieve pull request from GitHub');
 		}
 		PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-		$e = $this->_dbh->prepare('INSERT INTO bugdb_pulls
+		$e = $this->dbh->prepare('INSERT INTO bugdb_pulls
 			(bugdb_id, github_repo, github_pull_id, github_title, github_html_url, developer) VALUES (?, ?, ?, ?, ?, ?)')->execute(
 				[$bugid, $repo, $pull_id, $data->title, $data->html_url, $developer]);
 		PEAR::popErrorHandling();
@@ -50,9 +49,9 @@ class Bug_Pulltracker
 	/**
 	 * Remove a pull request from this bug
 	 */
-	function detach($bugid, $repo, $pull_id)
+	public function detach($bugid, $repo, $pull_id)
 	{
-		$this->_dbh->prepare('DELETE FROM bugdb_pulls
+		$this->dbh->prepare('DELETE FROM bugdb_pulls
 			WHERE bugdb_id = ? and github_repo = ? and github_pull_id = ?')->execute(
 			[$bugid, $repo, $pull_id]);
 	}
@@ -63,7 +62,7 @@ class Bug_Pulltracker
 	 * @param int $bugid
 	 * @return array
 	 */
-	function listPulls($bugid)
+	public function listPulls($bugid)
 	{
 		$query = '
 			SELECT github_repo, github_pull_id, github_title, github_html_url, developer
@@ -72,6 +71,6 @@ class Bug_Pulltracker
 			ORDER BY github_repo, github_pull_id DESC
 		';
 
-		return $this->_dbh->prepare($query)->execute([$bugid])->fetchAll(PDO::FETCH_ASSOC);
+		return $this->dbh->prepare($query)->execute([$bugid])->fetchAll(PDO::FETCH_ASSOC);
 	}
 }
