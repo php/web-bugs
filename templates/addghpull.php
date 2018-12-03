@@ -23,8 +23,7 @@ if (!empty($errors)) {
 <table>
 <?php
 if (!$logged_in) {
-	$captcha = $numeralCaptcha->getOperation();
-	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+	$_SESSION['answer'] = $captcha->getAnswer();
 ?>
  <tr>
   <th class="form-label_left">
@@ -35,7 +34,7 @@ if (!$logged_in) {
   </td>
  </tr>
  <tr>
-  <th>Solve the problem:<br><?php echo $captcha; ?> = ?</th>
+  <th>Solve the problem:<br><?php echo $captcha->getQuestion(); ?></th>
   <td class="form-input"><input type="text" name="captcha"></td>
  </tr>
 <?php } ?>

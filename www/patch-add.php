@@ -1,5 +1,7 @@
 <?php
 
+use App\Utils\Captcha;
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
@@ -36,8 +38,8 @@ $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
-	require_once 'Text/CAPTCHA/Numeral.php';
-	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+	require_once __DIR__.'/../src/Utils/Captcha.php';
+	$captcha = new Captcha();
 }
 
 $show_bug_info = bugs_has_access($bug_id, $buginfo, $pw, $user_flags);

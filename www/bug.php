@@ -1,6 +1,8 @@
 ﻿<?php
 /* User interface for viewing and editing bug details */
 
+use App\Utils\Captcha;
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
@@ -113,8 +115,8 @@ if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
-	require_once 'Text/CAPTCHA/Numeral.php';
-	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+	require_once __DIR__.'/../src/Utils/Captcha.php';
+	$captcha = new Captcha();
 }
 
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
@@ -995,8 +997,7 @@ if ($edit == 1 || $edit == 2) { ?>
 echo $preview;
 
 if (!$logged_in) {
-	$captcha = $numeralCaptcha->getOperation();
-	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+	$_SESSION['answer'] = $captcha->getAnswer();
 ?>
 	<table>
 		<tr>
@@ -1006,7 +1007,7 @@ if (!$logged_in) {
 			</td>
 		</tr>
 		<tr>
-			<th>Solve the problem:<br><?php echo htmlspecialchars($captcha); ?> = ?</th>
+			<th>Solve the problem:<br><?php echo htmlspecialchars($captcha->getQuestion()); ?></th>
 			<td class="form-input"><input type="text" name="captcha"></td>
 		</tr>
 		<tr>

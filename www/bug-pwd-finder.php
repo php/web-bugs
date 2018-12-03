@@ -2,11 +2,14 @@
 
 /* Procedure for emailing a password reminder to a user */
 
+use App\Utils\Captcha;
+
+require_once __DIR__.'/../src/Utils/Captcha.php';
+
 // Start session (for captcha!)
 session_start();
 
-require_once 'Text/CAPTCHA/Numeral.php';
-$numeralCaptcha = new Text_CAPTCHA_Numeral();
+$captcha = new Captcha();
 
 // Obtain common includes
 require_once '../include/prepend.php';
@@ -72,8 +75,7 @@ if ($success) {
 	display_bug_success($success);
 }
 
-$captcha = $numeralCaptcha->getOperation();
-$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+$_SESSION['answer'] = $captcha->getAnswer();
 
 ?>
 
@@ -90,7 +92,7 @@ in the bug report.
 
 <form method="post" action="bug-pwd-finder.php">
 <p><b>Bug Report ID:</b> #<input type="text" size="20" name="id" value="<?php echo $bug_id; ?>">
-<p><b>Solve the problem:<br><?php echo $captcha; ?> = ? <input type="text" name="captcha"></p>
+<p><b>Solve the problem:<br><?php echo $captcha->getQuestion(); ?> <input type="text" name="captcha"></p>
 
 <input type="submit" value="Send"></p>
 </form>

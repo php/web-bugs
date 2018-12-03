@@ -1,5 +1,7 @@
 <?php
 
+use App\Utils\Captcha;
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
@@ -23,8 +25,8 @@ require "{$ROOT_DIR}/include/php_versions.php";
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
-	require_once 'Text/CAPTCHA/Numeral.php';
-	$numeralCaptcha = new Text_CAPTCHA_Numeral();
+	require_once __DIR__.'/../src/Utils/Captcha.php';
+	$captcha = new Captcha();
 }
 
 $packageAffectedScript = <<<SCRIPT
@@ -532,8 +534,8 @@ display_bug_error($errors);
 			</tr>
 
 <?php if (!$logged_in) {
-	$captcha = $numeralCaptcha->getOperation();
-	$_SESSION['answer'] = $numeralCaptcha->getAnswer();
+	$_SESSION['answer'] = $captcha->getAnswer();
+
 	if (!empty($_POST['captcha']) && empty($ok_to_submit_report)) {
 		$captcha_label = '<strong>Solve this <em>new</em> problem:</strong>';
 	} else {
@@ -541,7 +543,7 @@ display_bug_error($errors);
 	}
 ?>
 			<tr>
-				<th><?php echo $captcha_label; ?><br><?php echo htmlspecialchars($captcha); ?> = ?</th>
+				<th><?php echo $captcha_label; ?><br><?php echo htmlspecialchars($captcha->getQuestion()); ?></th>
 				<td class="form-input"><input type="text" name="captcha" autocomplete="off"></td>
 			</tr>
 <?php } ?>
