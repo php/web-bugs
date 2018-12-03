@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /* User interface for viewing and editing bug details */
 
 use App\Utils\Captcha;
