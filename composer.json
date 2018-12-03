@@ -1,0 +1,31 @@
+{
+    "name": "php/web-bugs",
+    "description": "The PHP Bugtracking System",
+    "type": "project",
+    "keywords": ["bugs", "php", "website"],
+    "homepage": "https://bugs.php.net",
+    "readme": "README.md",
+    "license": "PHP license",
+    "authors": [
+        {
+            "name": "PHP contributors"
+        }
+    ],
+    "support": {
+        "email": "php-webmaster@lists.php.net",
+        "issues": "https://bugs.php.net/",
+        "wiki": "https://wiki.php.net/",
+        "irc": "irc://irc.efnet.org/php.pecl",
+        "source": "https://git.php.net/?p=web/bugs.git",
+        "docs": "https://php.net/manual",
+        "rss": "https://bugs.php.net/rss"
+    },
+    "require": {
+        "php": "^7.2",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-session": "*"
+    }
+}
