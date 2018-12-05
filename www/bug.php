@@ -2,6 +2,7 @@
 /* User interface for viewing and editing bug details */
 
 use App\Utils\Captcha;
+use App\Repository\PullRequestRepository;
 
 // Obtain common includes
 require_once '../include/prepend.php';
@@ -1085,9 +1086,8 @@ OUTPUT;
 	}
 	echo "<p><a href='patch-add.php?bug_id={$bug_id}'>Add a Patch</a></p>";
 
-	require_once "{$ROOT_DIR}/include/classes/bug_ghpulltracker.php";
-	$pulltracker = new Bug_Pulltracker();
-	$pulls = $pulltracker->listPulls($bug_id);
+	$pullRequestRepository = new PullRequestRepository($dbh);
+	$pulls = $pullRequestRepository->findAllByBugId($bug_id);
 	echo "<h2>Pull Requests</h2>\n";
 
 	require "{$ROOT_DIR}/templates/listpulls.php";

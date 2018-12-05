@@ -1,6 +1,8 @@
 <?php
 
+use App\Repository\PullRequestRepository;
 use App\Utils\Captcha;
+use App\Utils\GitHub;
 
 // Obtain common includes
 require_once '../include/prepend.php';
@@ -50,8 +52,8 @@ if (!$show_bug_info) {
 	exit;
 }
 
-require_once "{$ROOT_DIR}/include/classes/bug_ghpulltracker.php";
-$pullinfo = new Bug_Pulltracker;
+$pullinfo = new GitHub($dbh);
+$pullRequestRepository = new PullRequestRepository($dbh);
 
 if (isset($_POST['addpull'])) {
 	$errors = [];
@@ -84,7 +86,7 @@ if (isset($_POST['addpull'])) {
 			}
 
 		} catch (Exception $e) {
-			$pulls = $pullinfo->listPulls($bug_id);
+			$pulls = $pullRequestRepository->findAllByBugId($bug_id);
 			include "{$ROOT_DIR}/templates/addghpull.php";
 			exit;
 		}
@@ -109,12 +111,11 @@ if (isset($_POST['addpull'])) {
 	}
 
 	if (count($errors)) {
-		$pulls = $pullinfo->listPulls($bug_id);
+		$pulls = $pullRequestRepository->findAllByBugId($bug_id);
 		include "{$ROOT_DIR}/templates/addghpull.php";
 		exit;
 	}
 
-/*
 	// Add a comment to the bug report.
 	$text = <<<TXT
 The following pull request has been associated:
@@ -127,15 +128,16 @@ TXT;
 	$res = bugs_add_comment($bug_id, $auth_user->email, $auth_user->name, $text, 'patch');
 
 	// Send emails
-	mail_bug_updates($buginfo, $buginfo, $auth_user->email, $text, 4, $bug_id);
- */
-	$pulls = $pullinfo->listPulls($bug_id);
+	// TODO: enable also mailing
+	//mail_bug_updates($buginfo, $buginfo, $auth_user->email, $text, 4, $bug_id);
+
+	$pulls = $pullRequestRepository->findAllByBugId($bug_id);
 	$errors = [];
 	include "{$ROOT_DIR}/templates/addghpull.php";
 	exit;
 }
 
 $email = isset($_GET['email']) ? $_GET['email'] : '';
-$pulls = $pullinfo->listPulls($bug_id);
+$pulls = $pullRequestRepository->findAllByBugId($bug_id);
 
 include "{$ROOT_DIR}/templates/addghpull.php";
