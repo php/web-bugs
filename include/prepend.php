@@ -1,6 +1,7 @@
 <?php
 
 use App\Autoloader;
+use App\Database\Database;
 
 // Dual PSR-4 compatible class autoloader. When Composer is not available, an
 // application specific replacement class is used. Once Composer can be added
@@ -66,13 +67,12 @@ define('DATABASE_DSN', "mysql:host={$site_data['db_host']};dbname={$site_data['d
  * Obtain the functions and variables used throughout the bug system
  */
 require_once "{$ROOT_DIR}/include/functions.php";
-require 'classes/bug_pdo.php';
 
 // Database connection (required always?)
-$dbh = new Bug_PDO(DATABASE_DSN, $site_data['db_user'], $site_data['db_pass'], [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
+$dbh = new Database(DATABASE_DSN, $site_data['db_user'], $site_data['db_pass'], [
+    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+    \PDO::ATTR_EMULATE_PREPARES   => false,
 ]);
 
 // Last Updated..
