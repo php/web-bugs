@@ -4,7 +4,6 @@ use App\Utils\Captcha;
 
 // Obtain common includes
 require_once '../include/prepend.php';
-require_once 'PEAR.php';
 
 session_start();
 $canpatch = true;
@@ -95,11 +94,18 @@ if (isset($_POST['addpull'])) {
 	}
 
 	if (!count($errors)) {
-		PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-		$newpr = $pullinfo->attach($bug_id, $_POST['repository'], $_POST['pull_id'], $email);
-		PEAR::popErrorHandling();
-		if (PEAR::isError($newpr)) {
-			$errors = [$newpr->getMessage(), 'Could not attach pull request to Bug #' . $bug_id];
+		try {
+			$newpr = $pullinfo->attach($bug_id, $_POST['repository'], $_POST['pull_id'], $email);
+		} catch(\Exception $e) {
+			$errors = ['Could not attach pull request to Bug #'.$bug_id];
+
+			if ($e->errorInfo[1] === 1062) {
+				$errors[] = 'This pull request is already added.';
+			}
+
+			if (DEVBOX) {
+				$errors[] = $e->getMessage();
+			}
 		}
 	}
 

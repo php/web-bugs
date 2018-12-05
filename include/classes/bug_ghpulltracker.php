@@ -31,17 +31,26 @@ class Bug_Pulltracker
 	public function attach($bugid, $repo, $pull_id, $developer)
 	{
 		$data = $this->getDataFromGithub($repo, $pull_id);
+
 		if (!$data) {
-			return PEAR::raiseError('Failed to retrieve pull request from GitHub');
+			throw new \Exception('Failed to retrieve pull request from GitHub');
 		}
-		PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-		$e = $this->dbh->prepare('INSERT INTO bugdb_pulls
-			(bugdb_id, github_repo, github_pull_id, github_title, github_html_url, developer) VALUES (?, ?, ?, ?, ?, ?)')->execute(
-				[$bugid, $repo, $pull_id, $data->title, $data->html_url, $developer]);
-		PEAR::popErrorHandling();
-		if (PEAR::isError($e)) {
-			return $e;
-		}
+
+		$sql = 'INSERT INTO bugdb_pulls
+				(bugdb_id, github_repo, github_pull_id, github_title, github_html_url, developer)
+				VALUES (?, ?, ?, ?, ?, ?)
+		';
+
+		$arguments = [
+			$bugid,
+			$repo,
+			$pull_id,
+			$data->title,
+			$data->html_url,
+			$developer,
+		];
+
+		$this->dbh->prepare($sql)->execute($arguments);
 
 		return $data;
 	}
