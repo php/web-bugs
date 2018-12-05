@@ -4,8 +4,6 @@ if (file_exists(__DIR__.'/../vendor/autoload.php')) {
     require_once __DIR__.'/../vendor/autoload.php';
 }
 
-ini_set('display_errors', 0);
-
 $site = 'php';
 $siteBig = 'PHP';
 $ROOT_DIR = realpath(__DIR__ . '/../');
@@ -30,6 +28,13 @@ if (file_exists($local_cfg)) {
 	define('DEVBOX', false);
 }
 // CONFIG END
+
+// Configure errors based on the environment.
+if (defined(DEVBOX) && true === DEVBOX) {
+    ini_set('display_errors', 1);
+} else {
+    ini_set('display_errors', 0);
+}
 
 if (!isset($site_data['security_email'])) {
 	$site_data['security_email'] = 'security@php.net';
