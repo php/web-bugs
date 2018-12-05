@@ -41,7 +41,7 @@ if (file_exists($local_cfg)) {
 // CONFIG END
 
 // Configure errors based on the environment.
-if (defined(DEVBOX) && true === DEVBOX) {
+if (defined('DEVBOX') && true === DEVBOX) {
     ini_set('display_errors', 1);
 } else {
     ini_set('display_errors', 0);
