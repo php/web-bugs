@@ -1,9 +1,19 @@
 <?php
 
+use App\Repository\ObsoletePatchRepository;
+use App\Repository\PatchRepository;
+use App\Utils\PatchTracker;
+use App\Utils\Uploader;
+
 session_start();
 
 // Obtain common includes
 require_once '../include/prepend.php';
+
+$obsoletePatchRepository = new ObsoletePatchRepository($dbh);
+$patchRepository = new PatchRepository($dbh);
+$uploader = new Uploader();
+$patchTracker = new PatchTracker($dbh, $uploader);
 
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
@@ -30,9 +40,6 @@ if (empty($bug_id)) {
 	$bug_id = (int) $_GET['bug_id'];
 }
 
-require "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
-$patchinfo = new Bug_Patchtracker;
-
 if (!($buginfo = bugs_get_bug($bug_id))) {
 	response_header('Error :: invalid bug selected');
 	display_bug_error("Invalid bug #{$bug_id} selected");
@@ -51,13 +58,13 @@ $pseudo_pkgs = get_pseudo_packages(false);
 
 if (isset($patch_name) && isset($revision)) {
 	if ($revision == 'latest') {
-		$revisions = $patchinfo->listRevisions($buginfo['id'], $patch_name);
+		$revisions = $patchRepository->findRevisions($buginfo['id'], $patch_name);
 		if (isset($revisions[0])) {
 			$revision = $revisions[0]['revision'];
 		}
 	}
 
-	$path = $patchinfo->getPatchFullpath($bug_id, $patch_name, $revision);
+	$path = $patchTracker->getPatchFullpath($bug_id, $patch_name, $revision);
 	if (!file_exists($path)) {
 		response_header('Error :: no such patch/revision');
 		display_bug_error('Invalid patch/revision specified');
@@ -73,9 +80,10 @@ if (isset($patch_name) && isset($revision)) {
 		readfile($path);
 		exit;
 	}
-	$patchcontents = $patchinfo->getPatch($buginfo['id'], $patch_name, $revision);
 
-	if (PEAR::isError($patchcontents)) {
+	try {
+		$patchcontents = $patchRepository->getPatchContents($buginfo['id'], $patch_name, $revision);
+	} catch (\Exception $e) {
 		response_header('Error :: Cannot retrieve patch');
 		display_bug_error('Internal error: Invalid patch/revision specified (is in database, but not in filesystem)');
 		response_footer();
@@ -83,17 +91,17 @@ if (isset($patch_name) && isset($revision)) {
 	}
 
 	$package_name = $buginfo['package_name'];
-	$handle = $patchinfo->getDeveloper($bug_id, $patch_name, $revision);
-	$obsoletedby = $patchinfo->getObsoletingPatches($bug_id, $patch_name, $revision);
-	$obsoletes = $patchinfo->getObsoletePatches($bug_id, $patch_name, $revision);
-	$patches = $patchinfo->listPatches($bug_id);
-	$revisions = $patchinfo->listRevisions($bug_id, $patch_name);
+	$handle = $patchRepository->findDeveloper($bug_id, $patch_name, $revision);
+	$obsoletedby = $obsoletePatchRepository->findObsoletingPatches($bug_id, $patch_name, $revision);
+	$obsoletes = $obsoletePatchRepository->findObsoletePatches($bug_id, $patch_name, $revision);
+	$patches = $patchRepository->findAllByBugId($bug_id);
+	$revisions = $patchRepository->findRevisions($bug_id, $patch_name);
 
 	response_header("Bug #{$bug_id} :: Patches");
 	include "{$ROOT_DIR}/templates/listpatches.php";
 
 	if (isset($_GET['diff']) && $_GET['diff'] && isset($_GET['old']) && is_numeric($_GET['old'])) {
-		$old = $patchinfo->getPatchFullpath($bug_id, $patch_name, $_GET['old']);
+		$old = $patchTracker->getPatchFullpath($bug_id, $patch_name, $_GET['old']);
 		$new = $path;
 		if (!realpath($old) || !realpath($new)) {
 			response_header('Error :: Cannot retrieve patch');
@@ -116,7 +124,7 @@ if (isset($patch_name) && isset($revision)) {
 	exit;
 }
 
-$patches = $patchinfo->listPatches($bug_id);
+$patches = $patchTracker->listPatches($bug_id);
 response_header("Bug #{$bug_id} :: Patches");
 include "{$ROOT_DIR}/templates/listpatches.php";
 response_footer();

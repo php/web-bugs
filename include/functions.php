@@ -1148,7 +1148,7 @@ function format_date($ts = null, $format = 'Y-m-d H:i e')
 	if (!$ts) {
 		$ts = time();
 	}
-	return gmdate($format, $ts - date('Z', $ts));
+	return gmdate($format, (int)$ts - date('Z', (int)$ts));
 }
 
 /**

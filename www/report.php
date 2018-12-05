@@ -1,6 +1,8 @@
 <?php
 
 use App\Utils\Captcha;
+use App\Utils\PatchTracker;
+use App\Utils\Uploader;
 
 // Obtain common includes
 require_once '../include/prepend.php';
@@ -225,12 +227,13 @@ OUTPUT;
 
 			$redirectToPatchAdd = false;
 			if (!empty($_POST['in']['patchname']) && $_POST['in']['patchname']) {
-				require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
-				$tracker = new Bug_Patchtracker;
-				PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-				$patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $_POST['in']['handle'], []);
-				PEAR::staticPopErrorHandling();
-				if (PEAR::isError($patchrevision)) {
+				$uploader = new Uploader();
+				$tracker = new PatchTracker($dbh, $uploader);
+
+				try {
+					$developer = !empty($_POST['in']['handle']) ? $_POST['in']['handle'] : $_POST['in']['email'];
+					$patchrevision = $tracker->attach($cid, 'patchfile', $_POST['in']['patchname'], $developer, []);
+				} catch (\Exception $e) {
 					$redirectToPatchAdd = true;
 				}
 			}

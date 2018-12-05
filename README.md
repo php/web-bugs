@@ -21,7 +21,7 @@ composer install
 
 ```bash
 pear channel-update pear.php.net
-pear install --alldeps Text_Diff HTTP_Upload-1.0.0b4
+pear install --alldeps Text_Diff
 ```
 
 * Database:

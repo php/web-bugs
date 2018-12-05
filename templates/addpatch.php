@@ -61,15 +61,13 @@ if (!$logged_in) {
   <td class="form-input">
    <select name="obsoleted[]" multiple="true" size="5">
     <option value="0">(none)</option>
-<?php
-   foreach ($patches as $patchname => $patch2) {
-       foreach ($patch2 as $patch) {
-           echo '<option value="', htmlspecialchars($patchname . '#' . $patch[0]),
-                '">', htmlspecialchars($patchname), ', Revision ',
-                format_date($patch[0]), ' (', $patch[1], ')</option>';
-       }
-   }
-?>
+    <?php foreach ($patches as $patch): ?>
+        <option value="<?= htmlspecialchars($patch['patch'].'#'.$patch['revision'], ENT_QUOTES); ?>">
+            <?= htmlspecialchars($patch['patch'], ENT_QUOTES); ?>,
+            Revision <?= format_date($patch['revision']); ?>
+            <?= $patch['developer'] ? '('.spam_protect(htmlspecialchars($patch['developer'], ENT_QUOTES)).')' : ''; ?>
+        </option>
+    <?php endforeach; ?>
    </select>
   </td>
  </tr>

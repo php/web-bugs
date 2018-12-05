@@ -1,9 +1,16 @@
 <?php
 
+use App\Repository\PatchRepository;
 use App\Utils\Captcha;
+use App\Utils\PatchTracker;
+use App\Utils\Uploader;
 
 // Obtain common includes
 require_once '../include/prepend.php';
+
+$uploader = new Uploader();
+$patchTracker = new PatchTracker($dbh, $uploader);
+$patchRepository = new PatchRepository($dbh);
 
 session_start();
 
@@ -50,9 +57,6 @@ if (!$show_bug_info) {
 	exit;
 }
 
-require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
-$patchinfo = new Bug_Patchtracker;
-
 $patch_name = (!empty($_GET['patchname']) && is_string($_GET['patchname'])) ? $_GET['patchname'] : '';
 $patch_name = (!empty($_POST['name']) && is_string($_POST['name'])) ? $_POST['name'] : $patch_name;
 $patch_name_url = urlencode($patch_name);
@@ -64,7 +68,7 @@ if (isset($_POST['addpatch'])) {
 
 	// Check that patch name is given (required always)
 	if (empty($patch_name)) {
-		$patches = $patchinfo->listPatches($bug_id);
+		$patches = $patchRepository->findAllByBugId($bug_id);
 		$errors[] = 'No patch name entered';
 		include "{$ROOT_DIR}/templates/addpatch.php";
 		exit;
@@ -90,24 +94,23 @@ if (isset($_POST['addpatch'])) {
 			}
 
 			if (count($errors)) {
-				throw new Exception('');
+				throw new \Exception('');
 			}
 
-			PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-			$e = $patchinfo->attach($bug_id, 'patch', $patch_name, $email, $_POST['obsoleted']);
-			PEAR::popErrorHandling();
-
-			if (PEAR::isError($e)) {
-				$patches = $patchinfo->listPatches($bug_id);
+			try {
+				$revision = $patchTracker->attach($bug_id, 'patch', $patch_name, $email, $_POST['obsoleted']);
+			} catch (\Exception $e) {
+				$patches = $patchRepository->findAllByBugId($bug_id);
 				$errors[] = $e->getMessage();
-				$errors[] = 'Could not attach patch "' . htmlspecialchars($patch_name) . '" to Bug #' . $bug_id;
+				$errors[] = 'Could not attach patch "'.htmlspecialchars($patch_name).'" to Bug #'.$bug_id;
 				include "{$ROOT_DIR}/templates/addpatch.php";
+
 				exit;
 			}
 
-			redirect("patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$e}");
-		} catch (Exception $e) {
-			$patches = $patchinfo->listPatches($bug_id);
+			redirect("patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$revision}");
+		} catch (\Exception $e) {
+			$patches = $patchRepository->findAllByBugId($bug_id);
 			include "{$ROOT_DIR}/templates/addpatch.php";
 			exit;
 		}
@@ -115,27 +118,27 @@ if (isset($_POST['addpatch'])) {
 		$email = $auth_user->email;
 	}
 
-	PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-	$e = $patchinfo->attach($bug_id, 'patch', $patch_name, $auth_user->email, $_POST['obsoleted']);
-	PEAR::popErrorHandling();
-	if (PEAR::isError($e)) {
-		$patches = $patchinfo->listPatches($bug_id);
-		$errors = [$e->getMessage(),
-			'Could not attach patch "' .
-			htmlspecialchars($patch_name) .
-			'" to Bug #' . $bug_id];
+	try {
+		$revision = $patchTracker->attach($bug_id, 'patch', $patch_name, $auth_user->email, $_POST['obsoleted']);
+	} catch (\Exception $e) {
+		$patches = $patchRepository->findAllByBugId($bug_id);
+		$errors = [
+			$e->getMessage(),
+			'Could not attach patch "'.htmlspecialchars($patch_name, ENT_QUOTES).'" to Bug #'.$bug_id
+		];
 		include "{$ROOT_DIR}/templates/addpatch.php";
+
 		exit;
 	}
 
 	// Add a comment to the bug report.
-	$patch_url = "{$site_method}://{$site_url}{$basedir}/patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$e}";
+	$patch_url = "{$site_method}://{$site_url}{$basedir}/patch-display.php?bug={$bug_id}&patch={$patch_name_url}&revision={$revision}";
 
 	$text = <<<TXT
 The following patch has been added/updated:
 
 Patch Name: {$patch_name}
-Revision:   {$e}
+Revision:   {$revision}
 URL:        {$patch_url}
 TXT;
 
@@ -144,13 +147,13 @@ TXT;
 	// Send emails
 	mail_bug_updates($buginfo, $buginfo, $auth_user->email, $text, 4, $bug_id);
 
-	$patches = $patchinfo->listPatches($bug_id);
+	$patches = $patchRepository->findAllByBugId($bug_id);
 	$errors = [];
 	include "{$ROOT_DIR}/templates/patchadded.php";
 	exit;
 }
 
 $email = isset($_GET['email']) ? $_GET['email'] : '';
-$patches = $patchinfo->listPatches($bug_id);
+$patches = $patchRepository->findAllByBugId($bug_id);
 
 include "{$ROOT_DIR}/templates/addpatch.php";

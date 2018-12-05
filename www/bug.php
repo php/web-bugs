@@ -1,6 +1,8 @@
 <?php
 /* User interface for viewing and editing bug details */
 
+use App\Repository\ObsoletePatchRepository;
+use App\Repository\PatchRepository;
 use App\Utils\Captcha;
 use App\Repository\PullRequestRepository;
 
@@ -9,6 +11,9 @@ require_once '../include/prepend.php';
 
 // Start session
 session_start();
+
+$obsoletePatchRepository = new ObsoletePatchRepository($dbh);
+$patchRepository = new PatchRepository($dbh);
 
 define('SPAM_REJECT_MESSAGE', 'Your comment looks like SPAM by its content. Please consider rewording.');
 $email = null;
@@ -1059,9 +1064,7 @@ if ($bug['ldesc']) {
 
 // Display patches
 if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
-	require_once "{$ROOT_DIR}/include/classes/bug_patchtracker.php";
-	$patches = new Bug_Patchtracker;
-	$p = $patches->listPatches($bug_id);
+	$p = $patchRepository->findAllByBugId($bug_id);
 	$revs = [];
 	echo "<h2>Patches</h2>\n";
 
@@ -1071,7 +1074,7 @@ if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
 
 	foreach ($revs as $name => $revisions)
 	{
-		$obsolete = $patches->getObsoletingPatches($bug_id, $name, $revisions[0][0]);
+		$obsolete = $obsoletePatchRepository->findObsoletingPatches($bug_id, $name, $revisions[0][0]);
 		$style = !empty($obsolete) ? ' style="background-color: yellow; text-decoration: line-through;" ' : '';
 		$url_name = urlencode($name);
 		$clean_name = clean($name);
@@ -1080,7 +1083,7 @@ if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
 
 		echo <<< OUTPUT
 <a href="patch-display.php?bug_id={$bug_id}&amp;patch={$url_name}&amp;revision=latest" {$style}>{$clean_name}</a>
-(last revision {$formatted_date}) by {$submitter})
+(last revision {$formatted_date} by {$submitter})
 <br>
 OUTPUT;
 	}
