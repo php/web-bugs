@@ -38,7 +38,6 @@ $is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
-	require_once __DIR__.'/../src/Utils/Captcha.php';
 	$captcha = new Captcha();
 }
 

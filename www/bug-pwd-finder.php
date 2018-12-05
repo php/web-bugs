@@ -4,15 +4,13 @@
 
 use App\Utils\Captcha;
 
-require_once __DIR__.'/../src/Utils/Captcha.php';
+// Obtain common includes
+require_once '../include/prepend.php';
 
 // Start session (for captcha!)
 session_start();
 
 $captcha = new Captcha();
-
-// Obtain common includes
-require_once '../include/prepend.php';
 
 $errors  = [];
 $success = false;

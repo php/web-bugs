@@ -1,7 +1,18 @@
 <?php
 
+use App\Autoloader;
+
+// Dual PSR-4 compatible class autoloader. When Composer is not available, an
+// application specific replacement class is used. Once Composer can be added
+// to the deployment step with rsync this can be simplified and only Composer's
+// autoload.php will be used.
 if (file_exists(__DIR__.'/../vendor/autoload.php')) {
     require_once __DIR__.'/../vendor/autoload.php';
+} else {
+    require_once __DIR__.'/../src/Autoloader.php';
+
+    $loader = new Autoloader();
+    $loader->addNamespace('App\\', __DIR__.'/../src/');
 }
 
 $site = 'php';
