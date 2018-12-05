@@ -1885,21 +1885,6 @@ function get_ticket_links($text)
 	return $matches[1];
 }
 
-function handle_pear_errors($error_obj)
-{
-	error_log($error_obj->getMessage());
-	response_header("Oops! We are sorry that you are unable to report an undocumented feature today.");
-
-	$error  = "<p>Greetings! We are experiencing an error, and in the spirit of Open Source would like you to fix it. ";
-	$error .= "Or more likely, just wait and someone else will find and solve this.</p>\n";
-	$error .= "<p>It's our guess that the database is down. Argh!!!</p>\n";
-
-	// FIXME: If logged in, show other stuff....
-	response_footer($error);
-	exit;
-}
-
-
 /**
  * Generates a random password
  */
