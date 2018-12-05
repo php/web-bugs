@@ -131,43 +131,41 @@ if ($status == 'Closed' && $in['assign'] == '') {
 	$in['assign'] = $auth_user->handle;
 }
 
-// Update bug
-$dbh->prepare("
-	UPDATE bugdb
-	SET
-		status = ?,
-		assign = ?,
-		ts2 = NOW()
-	WHERE id = ?
-")->execute([
-	$status,
-	$in['assign'],
-	$bug_id,
-]);
+try {
+	// Update bug
+	$dbh->prepare("
+		UPDATE bugdb
+		SET
+			status = ?,
+			assign = ?,
+			ts2 = NOW()
+		WHERE id = ?
+	")->execute([
+		$status,
+		$in['assign'],
+		$bug_id,
+	]);
 
-// Add changelog entry
-if (!PEAR::isError($res)) {
+	// Add changelog entry
 	$changed = bug_diff($bug, $in);
 	if (!empty($changed)) {
 		$log_comment = bug_diff_render_html($changed);
 		if (!empty($log_comment)) {
-			$res = bugs_add_comment($bug_id, $auth_user->email, $auth_user->name, $log_comment, 'log');
+			$result = bugs_add_comment($bug_id, $auth_user->email, $auth_user->name, $log_comment, 'log');
 		}
 	}
-}
 
-// Add possible comment
-if (!PEAR::isError($res) && !empty($ncomment)) {
-	$res = bugs_add_comment($bug_id, $auth_user->email, $auth_user->name, $ncomment, 'comment');
-}
+	// Add possible comment
+	if (!empty($ncomment)) {
+		$result = bugs_add_comment($bug_id, $auth_user->email, $auth_user->name, $ncomment, 'comment');
+	}
 
-// Send emails
-if (!PEAR::isError($res)) {
+	// Send emails
 	mail_bug_updates($bug, $in, $auth_user->email, $ncomment);
 	redirect("bug.php?id={$bug_id}&thanks=1");
+} catch (\Exception $e) {
+	// If we end up here, something went wrong.
+	response_header('Resolve Bug: Problem');
+	display_bug_error($e->getMessage());
+	response_footer();
 }
-
-// If we end up here, something went wrong.
-response_header('Resolve Bug: Problem');
-display_bug_error($res);
-response_footer();
