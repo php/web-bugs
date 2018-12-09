@@ -10,11 +10,13 @@ class Captcha
 {
     /**
      * First operand.
+     * @var int
      */
     private $first;
 
     /**
      * Last operand.
+     * @var int
      */
     private $last;
 
@@ -34,6 +36,7 @@ class Captcha
 
     /**
      * Current operation.
+     * @var string
      */
     private $operation;
 
@@ -48,7 +51,7 @@ class Captcha
     /**
      * Set random operands values and operation.
      */
-    public function randomize()
+    public function randomize(): void
     {
         $this->setFirst(rand(1, self::MAX));
         $this->setLast(rand(1, self::MAX));
@@ -59,7 +62,7 @@ class Captcha
      * First operand number setter to override default random pick. Defined as a
      * separate method for convenience when unit testing.
      */
-    public function setFirst($number)
+    public function setFirst(int $number): void
     {
         $this->first = $number;
     }
@@ -68,7 +71,7 @@ class Captcha
      * Last operand number setter to override default random pick. Defined as a
      * separate method for convenience when unit testing.
      */
-    public function setLast($number)
+    public function setLast(int $number): void
     {
         $this->last = $number;
     }
@@ -76,7 +79,7 @@ class Captcha
     /**
      * Set the operation. If provided operation is invalid it falls back to addition.
      */
-    public function setOperation($operation)
+    public function setOperation(string $operation): void
     {
         $this->operation = in_array($operation, self::OPERATIONS) ? $operation : 'addition';
     }
@@ -84,7 +87,7 @@ class Captcha
     /**
      * Get current question equation string for displaying it to the user.
      */
-    public function getQuestion()
+    public function getQuestion(): string
     {
         $this->sortOperands();
 
@@ -97,7 +100,7 @@ class Captcha
     /**
      * The correct current answer of the given equation question.
      */
-    public function getAnswer()
+    public function getAnswer(): int
     {
         $this->sortOperands();
 
@@ -109,7 +112,7 @@ class Captcha
      * operand first. With this, negative results are omitted for simplicity and
      * possible better user experience.
      */
-    private function sortOperands()
+    private function sortOperands(): void
     {
         $first = $this->first;
         $last = $this->last;
@@ -123,7 +126,7 @@ class Captcha
     /**
      * Addition of two operands.
      */
-    private function addition($first, $last)
+    private function addition(int $first, int $last): int
     {
         return $first + $last;
     }
@@ -131,7 +134,7 @@ class Captcha
     /**
      * Subtraction of two operands.
      */
-    private function subtraction($first, $last)
+    private function subtraction(int $first, int $last): int
     {
         return $first - $last;
     }
