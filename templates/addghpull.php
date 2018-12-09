@@ -10,8 +10,7 @@ response_header('Add Pull Request :: ' . clean($package_name));
  <li>The pull request must be opened against a PHP project on GitHub</li>
  <li>Choose a meaningful request name (i.e. include bug id and title)</li>
 </ul>
-<form name="patchform" method="post" action="gh-pull-add.php" enctype="multipart/form-data">
-<input type="hidden" name="MAX_FILE_SIZE" value="102400">
+<form name="patchform" method="post" action="gh-pull-add.php">
 <input type="hidden" name="bug" value="<?php echo $bug_id; ?>">
 <?php
 if (!empty($errors)) {
