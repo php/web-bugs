@@ -2,6 +2,7 @@
 /* User interface for viewing and editing bug details */
 
 use App\Repository\ObsoletePatchRepository;
+use App\Repository\PackageRepository;
 use App\Repository\PatchRepository;
 use App\Utils\Captcha;
 use App\Repository\PullRequestRepository;
@@ -182,7 +183,8 @@ $project = $bug['project'];
 
 // Only fetch stuff when it's really needed
 if ($edit && $edit < 3) {
-	$pseudo_pkgs = get_pseudo_packages(false, false); // false == no read-only packages included
+	$packageRepository = new PackageRepository($dbh);
+	$pseudo_pkgs = $packageRepository->findEnabled();
 }
 
 // Fetch RESOLVE_REASONS array

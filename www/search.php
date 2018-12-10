@@ -1,5 +1,7 @@
 <?php
 
+use App\Repository\PackageRepository;
+
 // Start session
 session_start();
 
@@ -256,7 +258,14 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">
    <label for="bug_type">Return bugs with <b>project</b></label>
   </td>
-  <td><select id="project" name="project"><?php show_project_options($project, true);?></select></td>
+  <td><select id="project" name="project">
+      <option value="All"<?php if ($project === ''): ?> selected="selected"<?php endif;?>>All</option>
+
+      <?php foreach (PackageRepository::PROJECTS as $key => $value): ?>
+        <option value="<?= htmlspecialchars($key, ENT_QUOTES); ?>" <?php if ($project === strtolower($key)): ?> selected="selected"<?php endif; ?>><?= htmlspecialchars($key, ENT_QUOTES); ?></option>
+      <?php endforeach; ?>
+    </select>
+  </td>
 </tr>
 </table>
 

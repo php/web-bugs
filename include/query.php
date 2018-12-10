@@ -1,5 +1,7 @@
 <?php
 
+use App\Repository\PackageRepository;
+
 $errors = [];
 $warnings = [];
 $order_options = [
@@ -20,7 +22,8 @@ $order_options = [
 ];
 
 // Fetch pseudo packages
-$pseudo_pkgs = get_pseudo_packages(false);
+$packageRepository = new PackageRepository($dbh);
+$pseudo_pkgs = $packageRepository->findAll();
 
 // Setup input variables..
 $boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
