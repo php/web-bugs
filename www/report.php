@@ -1,5 +1,6 @@
 <?php
 
+use App\Repository\PackageRepository;
 use App\Utils\Captcha;
 use App\Utils\PatchTracker;
 use App\Utils\Uploader;
@@ -14,8 +15,8 @@ session_start();
 $errors = [];
 $ok_to_submit_report = false;
 
-$project = !empty($_GET['project']) ? $_GET['project'] : false;
-$pseudo_pkgs = get_pseudo_packages($project, false); // false == no read-only packages included
+$packageRepository = new PackageRepository($dbh);
+$pseudo_pkgs = $packageRepository->findEnabled($_GET['project'] ?? '');
 
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
@@ -277,10 +278,8 @@ REPORT;
 				$type = 'unknown';
 			}
 
-			$project = !empty($_GET['project']) ? $_GET['project'] : false;
-
 			// provide shortcut URLS for "quick bug fixes"
-			list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($project);
+			list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($_GET['project'] ?? false);
 
 			$dev_extra = '';
 			$maxkeysize = 0;

@@ -30,9 +30,4 @@ class Database extends \PDO
     {
         return substr($this->quote($text), 1, -1);
     }
-
-    public function queryAll($query, $types = null, $fetchmode = null, $rekey = false, $force_array = false, $group = false)
-    {
-        return $this->query($query)->fetchAll();
-    }
 }

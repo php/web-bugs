@@ -1,5 +1,7 @@
 <?php
 
+use App\Repository\PackageRepository;
+
 require '../include/prepend.php';
 
 function status_print ($status, $num, $width, $align = STR_PAD_LEFT)
@@ -44,8 +46,8 @@ if (!$phpver || ($phpver !== 5 && $phpver !== 7)) {
 
 if (isset($_GET['per_category']))
 {
-	$project = !empty($_GET['project']) ? $_GET['project'] : false;
-	$pseudo_pkgs = get_pseudo_packages($project);
+	$packageRepository = new PackageRepository($dbh);
+	$pseudo_pkgs = $packageRepository->findAll($_GET['project'] ?? '');
 
 	$totals = [];
 	foreach ($pseudo_pkgs as $category => $data) {

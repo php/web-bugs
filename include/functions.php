@@ -33,11 +33,6 @@ $bug_types = [
 	'Security'                 => 'Sec Bug'
 ];
 
-$project_types = [
-	'PHP'   => 'php',
-	'PECL'  => 'pecl'
-];
-
 // Used in show_state_options()
 $state_types = [
 	'Open'          => 2,
@@ -190,70 +185,6 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 			$user_flags |= BUGS_SECURITY_DEV;
 		}
 	}
-}
-
-/**
- * Fetches pseudo packages from database
- *
- * @param string	$project			define what project pseudo packages are returned
- * @param bool		$return_disabled	whether to return read-only items, defaults to true
- *
- * @return array	array of pseudo packages
- */
-function get_pseudo_packages($project, $return_disabled = true)
-{
-	global $dbh, $project_types;
-
-	$pseudo_pkgs = $nodes = $tree = [];
-	$where = '1=1';
-	$project = strtolower($project);
-
-	if ($project !== false && in_array($project, $project_types)) {
-		$where .= " AND project IN ('', '$project')";
-	}
-	if (!$return_disabled) {
-		$where.= " AND disabled = 0";
-	}
-
-	$data = $dbh->queryAll("SELECT * FROM bugdb_pseudo_packages WHERE $where ORDER BY parent, disabled, id", null, PDO::FETCH_ASSOC);
-
-	// Convert flat array to nested strucutre
-	foreach ($data as &$node)
-	{
-		$node['children'] = [];
-		$id = $node['id'];
-		$parent_id = $node['parent'];
-		$nodes[$id] =& $node;
-
-		if (array_key_exists($parent_id, $nodes)) {
-			$nodes[$parent_id]['children'][] =& $node;
-		} else {
-			$tree[] =& $node;
-		}
-	}
-
-	foreach ($tree as $data)
-	{
-		if (isset($data['children'])) {
-			$pseudo_pkgs[$data['name']] = [$data['long_name'], $data['disabled'], []];
-			$children = &$pseudo_pkgs[$data['name']][2];
-			$long_names = [];
-			foreach ($data['children'] as $k => $v) {
-				$long_names[$k] = strtolower($v['long_name']);
-			}
-			array_multisort($long_names, SORT_ASC, SORT_STRING, $data['children']);
-			foreach ($data['children'] as $child)
-			{
-				$pseudo_pkgs[$child['name']] = ["{$child['long_name']}", $child['disabled'], null];
-				$children[] = $child['name'];
-			}
-
-		} elseif (!isset($pseudo_pkgs[$data['name']])) {
-			$pseudo_pkgs[$data['name']] = [$data['long_name'], $data['disabled'], null];
-		}
-	}
-
-	return $pseudo_pkgs;
 }
 
 /* Primitive check for SPAM. Add more later. */
@@ -526,40 +457,6 @@ function show_limit_options($limit = 30)
 		echo ' selected="selected"';
 	}
 	echo ">All</option>\n";
-}
-
-/**
- * Prints bug project <option>'s for use in a <select>
- *
- * Options include "PHP" and "PECL".
- *
- * @param string	$current	bug's current project
- * @param bool		$all		whether or not 'All' should be an option
- *
- * @retun void
- */
-function show_project_options($current = 'php', $all = false)
-{
-	global $project_types;
-
-	if ($all) {
-		if (!$current) {
-			$current = 'All';
-		}
-		echo '<option value="All"';
-		if ($current == 'All') {
-			echo ' selected="selected"';
-		}
-		echo ">All</option>\n";
-	} elseif (!$current) {
-		$current = 'php';
-	} else {
-		$current = strtolower($current);
-	}
-
-	foreach ($project_types as $k => $v) {
-		echo '<option value="', $k, '"', (($current == strtolower($k)) ? ' selected="selected"' : ''), ">{$k}</option>\n";
-	}
 }
 
 /**
