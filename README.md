@@ -69,3 +69,36 @@ Source code of this application is structured in the following directories:
  ├─ phpunit.xml.dist        # PHPUnit's default XML configuration
  └─ ...
 ```
+
+## Contributing
+
+Issues with the application and new feature requests can be reported to
+[bugs.php.net](https://bugs.php.net) and discussed by sending message to the
+[webmaster mailing list](http://news.php.net/php.webmaster) to the address
+php-webmaster@lists.php.net.
+
+Application source code is located in the
+[git.php.net](https://git.php.net/?p=web/bugs.git) repository.
+
+Contributions can be done by forking the [GitHub mirror](https://github.com/php/web-bugs)
+repository and sending a pull request.
+
+```bash
+git clone git@github.com:your-username/web-bugs
+cd web-bugs
+git checkout -b patch-1
+git add .
+git commit -m "Describe changes"
+git push origin patch-1
+```
+
+A good practice is to also set the upstream remote in case the upstream master
+branch updates. This way your master branch will track remote upstream master
+branch of the root repository.
+
+```bash
+git checkout master
+git remote add upstream git://github.com/php/web-bugs
+git config branch.master.remote upstream
+git pull --rebase
+```
