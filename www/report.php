@@ -117,7 +117,7 @@ if (isset($_POST['in'])) {
 
 				foreach ($possible_duplicates as $row) {
 					$resolution = $dbh->prepare("
-						SELECT comment 
+						SELECT comment
 						FROM bugdb_comments
 						WHERE bug = ?
 						ORDER BY id DESC

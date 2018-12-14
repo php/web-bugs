@@ -2,7 +2,7 @@
 header('Content-type: text/xml');
 
 echo '<?xml version="1.0"?>
-<?xml-stylesheet 
+<?xml-stylesheet
 href="http://www.w3.org/2000/08/w3c-synd/style.css" type="text/css"
 ?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/"

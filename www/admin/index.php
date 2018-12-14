@@ -51,8 +51,8 @@ if ($action === 'phpinfo') {
 } elseif ($action === 'list_lists') {
 
 	$res = $dbh->query("
-		SELECT name, list_email 
-		FROM bugdb_pseudo_packages 
+		SELECT name, list_email
+		FROM bugdb_pseudo_packages
 		WHERE project = 'php'
 		AND LENGTH(list_email) > 0
 		ORDER BY list_email

@@ -1162,10 +1162,10 @@ function do_comment(nd)
 {
 	$('#comment_filter > .control.active').removeClass("active");
 	$(nd).addClass("active");
-	
+
 	$.cookie('history_tab', nd.id, { expires: 365 });
-	
-	if (nd.id == 'type_all') { 
+
+	if (nd.id == 'type_all') {
 		$('#comments_view > .comment:hidden').show('slow');
 	} else {
 		$('#comments_view > .comment').each(function(i) {

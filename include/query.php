@@ -58,7 +58,7 @@ $commented_by = !empty($_GET['commented_by']) ? spam_protect($_GET['commented_by
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 {
 	$query = '
-		SELECT SQL_CALC_FOUND_ROWS 
+		SELECT SQL_CALC_FOUND_ROWS
 		bugdb.*,
 		TO_DAYS(NOW())-TO_DAYS(bugdb.ts2) AS unchanged,
 		UNIX_TIMESTAMP(ts1) AS submitted,
