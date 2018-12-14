@@ -17,7 +17,7 @@ if($_SERVER['REQUEST_URI'] == '/random') {
 	$query  = "SELECT id FROM bugdb WHERE status NOT IN('Closed', 'Not a bug', 'Duplicate', 'Spam', 'Wont fix', 'No Feedback') AND private = 'N' ORDER BY RAND() LIMIT 1";
 
 	$result = $dbh->prepare($query)->execute();
-	$id = $result->fetchRow();
+	$id = $result->fetch(\PDO::FETCH_NUM);
 	redirect("bug.php?id={$id[0]}");
 }
 

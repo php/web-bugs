@@ -59,7 +59,7 @@ if ($action === 'phpinfo') {
 	");
 
 	echo "<dl>\n";
-	while ($row = $res->fetchRow(PDO::FETCH_ASSOC)) {
+	while ($row = $res->fetch()) {
 		echo "<dt>", $row['name'], ": </dt>\n<dd>", mailto_list(explode(',', $row['list_email'])), "</dd>\n";
 	}
 	echo "</dl>\n";
@@ -73,7 +73,7 @@ if ($action === 'phpinfo') {
 	echo "<h3>List Responses</h3>\n";
 
 	$rows = [];
-	while ($row = $res->fetchRow(PDO::FETCH_ASSOC)) {
+	while ($row = $res->fetch()) {
 		// This is ugly but works (tm)
 		$row['message'] = nl2br($row['message']);
 
@@ -86,13 +86,13 @@ if ($action === 'phpinfo') {
 
 	$sql = "SELECT version() mysql_version\n";
 
-	while ($row = $res->fetchRow(PDO::FETCH_NUM)) {
+	while ($row = $res->fetch(\PDO::FETCH_NUM)) {
 		$table = $row[0];
 		$sql .= "\t, (SELECT COUNT(*) FROM `$table`) `cnt_$table`\n";
 	}
 
 	$res = $dbh->query($sql);
-	$row = $res->fetchRow(PDO::FETCH_ASSOC);
+	$row = $res->fetch();
 
 	echo "<p>Running MySQL <b>".$row['mysql_version']."</b></p>";
 	unset($row['mysql_version']);
@@ -110,7 +110,7 @@ if ($action === 'phpinfo') {
 	$rows = [];
 	$res = $dbh->query("SHOW TABLE STATUS");
 	echo "<h3>Table status:</h3>\n";
-	while ($row = $res->fetchRow(PDO::FETCH_ASSOC)) {
+	while ($row = $res->fetch()) {
 		$rows[] = $row;
 	}
 

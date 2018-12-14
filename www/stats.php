@@ -58,7 +58,7 @@ $query  = "
 
 $result = $dbh->prepare($query)->execute();
 
-while ($row = $result->fetchRow(PDO::FETCH_ASSOC)) {
+while ($row = $result->fetch()) {
 	$pkg_tmp[$row['status']][$row['package_name']] = $row['quant'];
 	@$pkg_total[$row['package_name']] += $row['quant'];
 	@$all[$row['status']] += $row['quant'];
@@ -160,7 +160,7 @@ $query  = "  SELECT DATE_FORMAT(ts1, '%Y-%m') as d,
 $result = $dbh->prepare($query)->execute();
 
 $last_date = null;
-while ($row = $result->fetchRow(PDO::FETCH_ASSOC)) {
+while ($row = $result->fetch()) {
 	if ($row['d'] != $last_date) {
 		if ($last_date !== null) {
 			echo "</table>\n\n";

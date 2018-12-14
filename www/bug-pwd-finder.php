@@ -29,7 +29,7 @@ if (isset($_POST['captcha']) && $bug_id != '') {
 		$query = "SELECT email, passwd FROM bugdb WHERE id = '{$bug_id}'";
 
 		// Run the query
-		$row = $dbh->prepare($query)->execute()->fetchRow(PDO::FETCH_ASSOC);
+		$row = $dbh->prepare($query)->execute()->fetch();
 
 		if (is_null($row)) {
 			$errors[] = "Invalid bug id provided: #{$bug_id}";

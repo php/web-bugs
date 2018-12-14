@@ -9,13 +9,14 @@ class PullRequestRepository
 {
     /**
      * Database handler.
+     * @var \PDO
      */
     private $dbh;
 
     /**
      * Class constructor.
      */
-    public function __construct($dbh)
+    public function __construct(\PDO $dbh)
     {
         $this->dbh = $dbh;
     }

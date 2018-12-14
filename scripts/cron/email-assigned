@@ -17,7 +17,7 @@ $sql = "SELECT id, package_name, bug_type, sdesc, status, assign, UNIX_TIMESTAMP
 $res = $dbh->query($sql);
 
 // Gather up the data
-while ($row = $res->fetchRow(PDO::FETCH_ASSOC)) {
+while ($row = $res->fetch()) {
 	$data[$row['assign']][] = $row;
 }
 

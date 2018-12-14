@@ -23,14 +23,14 @@ function get_status_count ($status, $category = '')
 	$excluded = "'Feature/Change Request', 'Systems problem', 'Website Problem', 'PEAR related', 'PECL related', 'Documentation problem', 'Translation problem', 'PHP-GTK related', 'Online Doc Editor problem'";
 
 	if ($category != '') {
-		$query.= " {$status} AND bug_type = 'Bug' AND package_name = '" . $dbh->escape($category). "' ";
+		$query.= " {$status} AND bug_type = 'Bug' AND package_name = " . $dbh->quote($category);
 	} else {
 		$query.= " status='{$status}' ";
 	}
 	$query.= "AND bug_type NOT IN({$excluded})";
 
 	$res = $dbh->prepare($query)->execute([]);
-	$row = $res->fetchRow(PDO::FETCH_NUM);
+	$row = $res->fetch(\PDO::FETCH_NUM);
 
 	return $row[0];
 }

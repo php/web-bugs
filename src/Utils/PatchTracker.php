@@ -3,7 +3,6 @@
 namespace App\Utils;
 
 use App\Utils\Uploader;
-use App\Database\Database;
 
 /**
  * Service for handling uploaded patches.
@@ -12,7 +11,7 @@ class PatchTracker
 {
     /**
      * Database handler.
-     * @var Database
+     * @var \PDO
      */
     private $dbh;
 
@@ -49,7 +48,7 @@ class PatchTracker
     /**
      * Class constructor.
      */
-    public function __construct(Database $dbh, Uploader $uploader)
+    public function __construct(\PDO $dbh, Uploader $uploader)
     {
         $this->dbh = $dbh;
         $this->uploadsDir = BUG_PATCHTRACKER_TMPDIR;

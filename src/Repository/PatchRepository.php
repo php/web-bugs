@@ -2,8 +2,6 @@
 
 namespace App\Repository;
 
-use App\Database\Database;
-
 /**
  * Repository for retrieving data from the bugdb_patchtracker database table.
  */
@@ -11,7 +9,7 @@ class PatchRepository
 {
     /**
      * Database handler.
-     * @var Database
+     * @var \PDO
      */
     private $dbh;
 
@@ -24,7 +22,7 @@ class PatchRepository
     /**
      * Class constructor.
      */
-    public function __construct(Database $dbh)
+    public function __construct(\PDO $dbh)
     {
         $this->dbh = $dbh;
         $this->uploadsDir = BUG_PATCHTRACKER_TMPDIR;
@@ -56,7 +54,7 @@ class PatchRepository
 
         $arguments = [$bugId, $patch, $revision];
 
-        return $this->dbh->prepare($sql)->execute($arguments)->fetchOne();
+        return $this->dbh->prepare($sql)->execute($arguments)->fetch(\PDO::FETCH_NUM)[0];
     }
 
     /**
@@ -83,7 +81,7 @@ class PatchRepository
                 WHERE bugdb_id = ? AND patch = ? AND revision = ?
         ';
 
-        if ($this->dbh->prepare($sql)->execute([$bugId, $name, $revision])->fetchOne()) {
+        if ($this->dbh->prepare($sql)->execute([$bugId, $name, $revision])->fetch(\PDO::FETCH_NUM)[0]) {
             $contents = @file_get_contents($this->getPatchPath($bugId, $name, $revision));
 
             if (!$contents) {

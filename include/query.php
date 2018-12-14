@@ -88,7 +88,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if (!empty($package_name)) {
 		$where_clause .= ' AND bugdb.package_name';
 		if (count($package_name) > 1) {
-			$where_clause .= " IN ('" . join("', '", escapeSQL($package_name)) . "')";
+			$package_name = array_map([$dbh, 'quote'], $package_name);
+			$where_clause .= " IN (" . join(", ", $package_name) . ")";
 		} else {
 			$where_clause .= ' = ' . $dbh->quote($package_name[0]);
 		}
@@ -97,7 +98,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if (!empty($package_nname)) {
 		$where_clause .= ' AND bugdb.package_name';
 		if (count($package_nname) > 1) {
-			$where_clause .= " NOT IN ('" . join("', '", escapeSQL($package_nname)) . "')";
+			$package_nname = array_map([$dbh, 'quote'], $package_nname);
+			$where_clause .= " NOT IN (" . join(", ", $package_nname) . ")";
 		} else {
 			$where_clause .= ' <> ' . $dbh->quote($package_nname[0]);
 		}
@@ -169,19 +171,19 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	}
 
 	if ($php_os != '') {
-		$where_clause .= " AND bugdb.php_os {$php_os_not} LIKE '%" . $dbh->escape($php_os) . "%'";
+		$where_clause .= " AND bugdb.php_os {$php_os_not} LIKE " . $dbh->quote('%'.$php_os.'%');
 	}
 
 	if ($phpver != '') {
-		$where_clause .= " AND bugdb.php_version LIKE '" . $dbh->escape($phpver) . "%'";
+		$where_clause .= " AND bugdb.php_version LIKE " . $dbh->quote($phpver.'%');
 	}
 
 	if ($project != '') {
-		$where_clause .= " AND EXISTS (SELECT 1 FROM bugdb_pseudo_packages b WHERE b.name = bugdb.package_name AND  b.project = '". $dbh->escape($project) ."' LIMIT 1)";
+		$where_clause .= " AND EXISTS (SELECT 1 FROM bugdb_pseudo_packages b WHERE b.name = bugdb.package_name AND  b.project = ". $dbh->quote($project) ." LIMIT 1)";
 	}
 
 	if ($cve_id != '') {
-		$where_clause .= " AND bugdb.cve_id {$cve_id_not} LIKE '" . $dbh->escape($cve_id) . "%'";
+		$where_clause .= " AND bugdb.cve_id {$cve_id_not} LIKE " . $dbh->quote($cve_id.'%');
 	}
 
 	/* A search for patch&pull should be (patch or pull) */
@@ -213,12 +215,14 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if ($pseudo = array_intersect(array_keys($pseudo_pkgs), $package_name)) {
 		$where_clause .= " OR bugdb.package_name";
 		if (count($pseudo) > 1) {
-			$where_clause .= " IN ('" . join("', '", escapeSQL($pseudo)) . "')";
+			$pseudo = array_map([$dbh, 'quote'], $pseudo);
+			$where_clause .= " IN (" . join(", ", $pseudo) . ")";
 		} else {
-			$where_clause .= " = '" . implode('', escapeSQL($pseudo)) . "'";
+			$where_clause .= " = " . $dbh->quote(reset($pseudo));
 		}
 	} else {
-		$where_clause .= " OR bugdb.package_name IN ('" . join("', '", escapeSQL(array_keys($pseudo_pkgs))) . "')";
+		$items = array_map([$dbh, 'quote'], array_keys($pseudo_pkgs));
+		$where_clause .= " OR bugdb.package_name IN (" . join(", ", $items) . ")";
 	}
 
 	$query .= "$where_clause )";
@@ -269,7 +273,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 		try {
 			$result = $dbh->prepare($query)->execute()->fetchAll();
 			$rows = count($result);
-			$total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetchOne();
+			$total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetch(\PDO::FETCH_NUM)[0];
 		} catch (Exception $e) {
 			$errors[] = 'Invalid query: ' . $e->getMessage();
 		}

@@ -1,7 +1,7 @@
 <?php
 
 use App\Autoloader;
-use App\Database\Database;
+use App\Database\Statement;
 
 // Dual PSR-4 compatible class autoloader. When Composer is not available, an
 // application specific replacement class is used. Once Composer can be added
@@ -61,19 +61,24 @@ $docBugEmail = $site_data['doc_email'];
 $secBugEmail = $site_data['security_email'];
 $basedir = $site_data['basedir'];
 define('BUG_PATCHTRACKER_TMPDIR', $site_data['patch_tmp']);
-define('DATABASE_DSN', "mysql:host={$site_data['db_host']};dbname={$site_data['db']};charset=utf8");
 
 /**
  * Obtain the functions and variables used throughout the bug system
  */
 require_once "{$ROOT_DIR}/include/functions.php";
 
-// Database connection (required always?)
-$dbh = new Database(DATABASE_DSN, $site_data['db_user'], $site_data['db_pass'], [
-    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-    \PDO::ATTR_EMULATE_PREPARES   => false,
-]);
+// Database connection with vanilla PDO to understand app architecture in no time
+$dbh = new \PDO(
+    'mysql:host='.$site_data['db_host'].';dbname='.$site_data['db'].';charset=utf8',
+    $site_data['db_user'],
+    $site_data['db_pass'],
+    [
+        \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+        \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+        \PDO::ATTR_EMULATE_PREPARES   => false,
+        \PDO::ATTR_STATEMENT_CLASS    => [Statement::class],
+    ]
+);
 
 // Last Updated..
 $tmp = filectime($_SERVER['SCRIPT_FILENAME']);

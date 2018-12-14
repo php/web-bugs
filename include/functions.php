@@ -279,30 +279,6 @@ function spam_protect($txt, $format = 'html')
 }
 
 /**
- * Escape strings so they can be used as literals in queries
- *
- * @param string|array	$in		data to be sanitized. If it's an array, each element is sanitized.
- *
- * @return string|array  the sanitized data
- *
- * @see oneof(), field(), txfield()
- */
-function escapeSQL($in)
-{
-	global $dbh;
-
-	if (is_array($in)) {
-		$out = [];
-		foreach ($in as $key => $value) {
-			$out[$key] = $dbh->escape($value);
-		}
-		return $out;
-	} else {
-		return $dbh->escape($in);
-	}
-}
-
-/**
  * Goes through each variable submitted and returns the value
  * from the first variable which has a non-empty value
  *
@@ -312,7 +288,7 @@ function escapeSQL($in)
  *
  * @return mixed	the value, if any
  *
- * @see escapeSQL(), field(), txfield()
+ * @see field(), txfield()
  */
 function oneof()
 {
@@ -334,7 +310,7 @@ function oneof()
  *
  * @return mixed		the data requested
  *
- * @see escapeSQL(), oneof(), txfield()
+ * @see oneof(), txfield()
  */
 function field($n)
 {
@@ -1075,13 +1051,13 @@ function get_old_comments($bug_id, $all = 0)
 
 	// skip the most recent unless the caller wanted all comments
 	if (!$all) {
-		$row = $res->fetchRow(PDO::FETCH_NUM);
+		$row = $res->fetch(\PDO::FETCH_NUM);
 		if (!$row) {
 			return '';
 		}
 	}
 
-	while (($row = $res->fetchRow(PDO::FETCH_NUM)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
+	while (($row = $res->fetch(\PDO::FETCH_NUM)) && strlen($output) < $max_message_length && $count++ < $max_comments) {
 		$email = spam_protect($row[1], 'text');
 		$output .= "[{$row[0]}] {$email}\n\n{$row[2]}\n\n{$divider}\n";
 	}
@@ -1091,7 +1067,7 @@ function get_old_comments($bug_id, $all = 0)
 		if (!$res) {
 			return $output;
 		}
-		$row = $res->fetchRow(PDO::FETCH_NUM);
+		$row = $res->fetch(\PDO::FETCH_NUM);
 		if (!$row) {
 			return $output;
 		}
@@ -1256,7 +1232,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 			WHERE name = ?
 		')->execute([$package_name]);
 
-		list($list_email, $project) = $res->fetchRow();
+		list($list_email, $project) = $res->fetch(\PDO::FETCH_NUM);
 
 		if ($project == 'pecl') {
 			$mailfrom = 'pecl-dev@lists.php.net';
@@ -1270,7 +1246,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 		} else {
 			// Get the maintainers handle
 			if ($project == 'pecl') {
-				$handles = $dbh->prepare("SELECT GROUP_CONCAT(handle) FROM bugdb_packages_maintainers WHERE package_name = ?")->execute([$package_name])->fetchOne();
+				$handles = $dbh->prepare("SELECT GROUP_CONCAT(handle) FROM bugdb_packages_maintainers WHERE package_name = ?")->execute([$package_name])->fetch(\PDO::FETCH_NUM)[0];
 
 				if ($handles) {
 					foreach (explode(',', $handles) as $handle) {
@@ -1290,7 +1266,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
 	if ($bug_id) {
 		$bug_id = (int) $bug_id;
 
-		$assigned = $dbh->prepare("SELECT assign FROM bugdb WHERE id= ? ")->execute([$bug_id])->fetchOne();
+		$assigned = $dbh->prepare("SELECT assign FROM bugdb WHERE id= ? ")->execute([$bug_id])->fetch(\PDO::FETCH_NUM)[0];
 		if ($assigned) {
 			$assigned .= '@php.net';
 			if ($assigned && !in_array($assigned, $to)) {
@@ -1315,6 +1291,8 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
  */
 function format_search_string($search, $boolean_search = false)
 {
+	global $dbh;
+
 	// Function will be updated to make results more relevant.
 	// Quick hack for indicating ignored words.
 	$min_word_len=3;
@@ -1337,15 +1315,15 @@ function format_search_string($search, $boolean_search = false)
 			foreach ($used as $word) {
 				$newsearch .= "+$word ";
 			}
-			return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($newsearch) . "' IN BOOLEAN MODE)", $ignored];
+			return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST (" . $dbh->quote($newsearch) . " IN BOOLEAN MODE)", $ignored];
 
 		// allow custom boolean search (raw)
 		} elseif ($boolean_search === 2) {
-			return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($search) . "' IN BOOLEAN MODE)", $ignored];
+			return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST (" . $dbh->quote($search) . " IN BOOLEAN MODE)", $ignored];
 		}
 	}
 	// require any of the words (any)
-	return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST ('" . escapeSQL($search) . "')", $ignored];
+	return [" AND MATCH (bugdb.email,sdesc,ldesc) AGAINST (" . $dbh->quote($search) . ")", $ignored];
 }
 
 /**
@@ -1415,7 +1393,6 @@ function unsubscribe($bug_id, $hash)
 {
 	global $dbh;
 
-	$hash = escapeSQL($hash);
 	$bug_id = (int) $bug_id;
 
 	$query = "
@@ -1424,7 +1401,7 @@ function unsubscribe($bug_id, $hash)
 		WHERE bug_id = ? AND unsubscribe_hash = ? LIMIT 1
 	";
 
-	$sub = $dbh->prepare($query)->execute([$bug_id, $hash])->fetch(PDO::FETCH_ASSOC);
+	$sub = $dbh->prepare($query)->execute([$bug_id, $hash])->fetch();
 
 	if (!$sub) {
 		return false;
@@ -1458,8 +1435,8 @@ function get_resolve_reasons($project = false)
 	$where = '';
 
 	if ($project !== false) {
-		$project = escapeSQL($project);
-		$where.= "WHERE (project = '{$project}' OR project = '')";
+		$project = $dbh->quote($project);
+		$where.= "WHERE (project = {$project} OR project = '')";
 	}
 
 	$resolves = $variations = [];
@@ -1467,7 +1444,7 @@ function get_resolve_reasons($project = false)
 	if (!$res) {
 		throw new Exception("SQL Error in get_resolve_reasons");
 	}
-	while ($row = $res->fetchRow(PDO::FETCH_ASSOC)) {
+	while ($row = $res->fetch()) {
 		if (!empty($row['package_name'])) {
 			$variations[$row['name']][$row['package_name']] = $row['message'];
 		} else {
@@ -1502,7 +1479,7 @@ function bugs_get_bug($bug_id)
 		WHERE b.id = ?
 		GROUP BY bug';
 
-	return $dbh->prepare($query)->execute([$bug_id])->fetchRow(PDO::FETCH_ASSOC);
+	return $dbh->prepare($query)->execute([$bug_id])->fetch();
 }
 
 /**
@@ -1522,7 +1499,7 @@ function bugs_get_bug_comments($bug_id)
 		WHERE c.bug = ?
 		GROUP BY c.id ORDER BY c.ts
 	";
-	return $dbh->prepare($query)->execute([$bug_id])->fetchAll(PDO::FETCH_ASSOC);
+	return $dbh->prepare($query)->execute([$bug_id])->fetchAll();
 }
 
 /**
@@ -1562,7 +1539,7 @@ function verify_bug_passwd($bug_id, $passwd)
 {
 	global $dbh;
 
-	return (bool) $dbh->prepare('SELECT 1 FROM bugdb WHERE id = ? AND passwd = ?')->execute([$bug_id, $passwd])->fetchOne();
+	return (bool) $dbh->prepare('SELECT 1 FROM bugdb WHERE id = ? AND passwd = ?')->execute([$bug_id, $passwd])->fetch(\PDO::FETCH_NUM)[0];
 }
 
 /**

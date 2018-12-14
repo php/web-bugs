@@ -122,7 +122,7 @@ if (isset($_POST['in'])) {
 						WHERE bug = ?
 						ORDER BY id DESC
 						LIMIT 1
-					")->execute([$row['id']])->fetchOne();
+					")->execute([$row['id']])->fetch(\PDO::FETCH_NUM)[0];
 
 					$summary = $row['ldesc'];
 					if (strlen($summary) > 256) {

@@ -2,8 +2,6 @@
 
 namespace App\Repository;
 
-use App\Database\Database;
-
 /**
  * Repository class for retrieving data from the bugdb_pseudo_packages database
  * table.
@@ -12,7 +10,7 @@ class PackageRepository
 {
     /**
      * Database handler.
-     * @var Database
+     * @var \PDO
      */
     private $dbh;
 
@@ -27,7 +25,7 @@ class PackageRepository
     /**
      * Class constructor.
      */
-    public function __construct(Database $dbh)
+    public function __construct(\PDO $dbh)
     {
         $this->dbh = $dbh;
     }

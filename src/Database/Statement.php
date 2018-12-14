@@ -13,34 +13,10 @@ class Statement extends \PDOStatement
      * \PDOStatement::execute(), on the other hand, returns boolean. Change it
      * to return $this and thus allow further method chaining.
      */
-    public function execute($input_parameters = null)
+    public function execute($parameters = null): self
     {
-        parent::execute($input_parameters);
+        parent::execute($parameters);
 
         return $this;
-    }
-
-    public function fetchAll($fetchode = null, $rekey = false, $force_array = false, $group = false)
-    {
-        return parent::fetchAll();
-    }
-
-    public function fetchCol($colnum)
-    {
-        return parent::fetchColumn($colnum);
-    }
-
-    public function fetchOne($colnum = 0, $rownum = null)
-    {
-        return $this->fetch(\PDO::FETCH_NUM)[0];
-    }
-
-    public function fetchRow($mode = null)
-    {
-        if (!$mode) {
-            $mode = \PDO::FETCH_BOTH;
-        }
-
-        return $this->fetch($mode);
     }
 }

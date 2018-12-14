@@ -24,7 +24,7 @@ if ($dbh)
 		WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})
 	")->execute([]);
 
-	while ($bug = $res->fetchRow(PDO::FETCH_ASSOC))
+	while ($bug = $res->fetch())
 	{
 		list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 

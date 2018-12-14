@@ -20,7 +20,7 @@ $reproduced = (int) $_POST['reproduced'];
 $samever = isset($_POST['samever']) ? (int) $_POST['samever'] : 0;
 $sameos = isset($_POST['sameos']) ? (int) $_POST['sameos'] : 0;
 
-if (!$dbh->prepare("SELECT id FROM bugdb WHERE id= ? LIMIT 1")->execute([$id])->fetchOne()) {
+if (!$dbh->prepare("SELECT id FROM bugdb WHERE id= ? LIMIT 1")->execute([$id])->fetch(\PDO::FETCH_NUM)[0]) {
 	session_start();
 
 	// Authenticate
@@ -63,7 +63,7 @@ $ip = ip2long(get_real_ip());
 // Check whether the user has already voted on this bug.
 $bug_check = $dbh->prepare("SELECT bug, ip FROM bugdb_votes WHERE bug = ? AND ip = ? LIMIT 1")
 	->execute([$id, $ip])
-	->fetchRow();
+	->fetch(\PDO::FETCH_BOTH);
 
 if (empty($bug_check)) {
 	// If the user vote isn't found, create one.
