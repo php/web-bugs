@@ -37,19 +37,22 @@ class Bug_Diff_Renderer extends Text_Diff_Renderer
 
 	public function _added($lines)
 	{
-		array_walk($lines, create_function('&$a,$b', '$a=htmlspecialchars($a);'));
+		self::escapeHTML($lines);
+
 		return '<span class="newdiff"> ' . implode("</span>\n<span class='newdiff'> ", $lines) . '</span>';
 	}
 
 	public function _context($lines)
 	{
-		array_walk($lines, create_function('&$a,$b', '$a=htmlspecialchars($a);'));
+		self::escapeHTML($lines);
+
 		return "\n" . parent::_context($lines);
 	}
 
 	public function _deleted($lines)
 	{
-		array_walk($lines, create_function('&$a,$b', '$a=htmlspecialchars($a);'));
+		self::escapeHTML($lines);
+
 		return '<span class="olddiff"> ' . implode("</span>\n<span class='olddiff'> ", $lines) . '</span>';
 	}
 
@@ -61,5 +64,13 @@ class Bug_Diff_Renderer extends Text_Diff_Renderer
 	public function render($diff)
 	{
 		return parent::render($this->diff);
+	}
+
+	protected static function escapeHTML(&$lines)
+	{
+		array_walk($lines, function(&$a, $b)
+		{
+			$a = htmlspecialchars($a);
+		});
 	}
 }
