@@ -1,4 +1,4 @@
-# PHP Bug Tracking System
+﻿# PHP Bug Tracking System
 
 This is a unified bug tracking system for PHP hosted online at
 [bugs.php.net](https://bugs.php.net).
@@ -46,6 +46,7 @@ Source code of this application is structured in the following directories:
 <web-bugs>/
  ├─ .git/                   # Git configuration and source directory
  └─ include/                # Application helper functions and configuration
+    ├─ classes/             # PEAR class overrides
     ├─ prepend.php          # Autoloader, DB connection, container, app initialization
     └─ ...
  └─ scripts/                # Command line development tools and scripts
