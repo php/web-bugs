@@ -91,7 +91,7 @@ function verify_user_password($user, $pass)
 		return false;
 	}
 
-    $_SESSION["user"] = $user;
+	$_SESSION["user"] = $user;
 
 	return true;
 }
@@ -148,7 +148,7 @@ function bugs_authenticate (&$user, &$pw, &$logged_in, &$user_flags)
 	} elseif (isset($auth_user) && is_object($auth_user) && $auth_user->handle) {
 		$user = $auth_user->handle;
 		$pw = $auth_user->password;
-    }
+	}
 
 	// Authentication and user level check
 	// User levels are: reader (0), commenter/patcher/etc. (edit = 3), submitter (edit = 2), developer (edit = 1)
