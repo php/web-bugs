@@ -1,6 +1,7 @@
 <?php
 
 use App\Repository\PackageRepository;
+use App\Repository\ReasonRepository;
 use App\Utils\Captcha;
 use App\Utils\PatchTracker;
 use App\Utils\Uploader;
@@ -279,7 +280,8 @@ REPORT;
 			}
 
 			// provide shortcut URLS for "quick bug fixes"
-			list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($_GET['project'] ?? false);
+			$reasonRepository = new ReasonRepository($dbh);
+			list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($_GET['project'] ?? '');
 
 			$dev_extra = '';
 			$maxkeysize = 0;

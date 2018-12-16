@@ -7,6 +7,7 @@ use App\Repository\PackageRepository;
 use App\Repository\PatchRepository;
 use App\Utils\Captcha;
 use App\Repository\PullRequestRepository;
+use App\Repository\ReasonRepository;
 
 // Obtain common includes
 require_once '../include/prepend.php';
@@ -190,7 +191,8 @@ if ($edit && $edit < 3) {
 
 // Fetch RESOLVE_REASONS array
 if ($edit === 1) {
-	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($project);
+	$reasonRepository = new ReasonRepository($dbh);
+	list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($project);
 }
 
 if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {

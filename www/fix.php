@@ -1,5 +1,7 @@
 <?php
 
+use App\Repository\ReasonRepository;
+
 session_start();
 
 /* Admin interface for closing bug reports via direct link */
@@ -37,7 +39,8 @@ if ($logged_in != 'developer') {
 
 $project = !empty($_GET['project']) ? $_GET['project'] : false;
 
-list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+$reasonRepository = new ReasonRepository($dbh);
+list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
 
 // Handle reason / comments
 $reason = filter_var($_REQUEST['r'], FILTER_SANITIZE_STRING);

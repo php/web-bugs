@@ -1,11 +1,14 @@
 <?php
 
+use App\Repository\ReasonRepository;
+
 session_start();
 
 // Obtain common includes
 require_once '../include/prepend.php';
 
-list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+$reasonRepository = new ReasonRepository($dbh);
+list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
 
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);

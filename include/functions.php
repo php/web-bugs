@@ -1422,38 +1422,6 @@ function unsubscribe($bug_id, $hash)
 	return true;
 }
 
-
-/**
- * Fetch bug resolves
- *
- * @return array array of resolves
- */
-function get_resolve_reasons($project = false)
-{
-	global $dbh;
-
-	$where = '';
-
-	if ($project !== false) {
-		$project = $dbh->quote($project);
-		$where.= "WHERE (project = {$project} OR project = '')";
-	}
-
-	$resolves = $variations = [];
-	$res = $dbh->prepare("SELECT * FROM bugdb_resolves $where")->execute([]);
-	if (!$res) {
-		throw new Exception("SQL Error in get_resolve_reasons");
-	}
-	while ($row = $res->fetch()) {
-		if (!empty($row['package_name'])) {
-			$variations[$row['name']][$row['package_name']] = $row['message'];
-		} else {
-			$resolves[$row['name']] = $row;
-		}
-	}
-	return [$resolves, $variations];
-}
-
 /**
  * Fetch bug data
  *

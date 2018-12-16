@@ -3,6 +3,8 @@
 
 # this script closes bugs due to lack of feedback.
 
+use App\Repository\ReasonRepository;
+
 require __DIR__.'/../../include/prepend.php';
 
 # date interval to close after
@@ -14,7 +16,9 @@ $in = ['status' => 'No Feedback'];
 # Update relevant reports
 if ($dbh)
 {
-	list($RESOLVE_REASONS, $FIX_VARIATIONS) = get_resolve_reasons($site);
+	$reasonRepository = new ReasonRepository($dbh);
+
+	list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
 
 	$res = $dbh->prepare("
 		SELECT id, package_name, bug_type, email, passwd, sdesc, ldesc, php_version,
