@@ -80,44 +80,6 @@ td.head-menu a:visited {
 	text-decoration: none;
 }
 
-/* ========= Sidebars ========= */
-
-td.sidebar_left {
-	width: 149px;
-	background-color: #F0F0F0;
-	vertical-align: top;
-	font-size: 90%;
-	border-right: 1px dashed #ccc;
-	padding: 1em 0.3em 0.3em 0.3em;
-}
-
-td.sidebar_right {
-	width: 149px;
-	background-color: #F0F0F0;
-	vertical-align: top;
-	font-size: 90%;
-	border-left: 1px dashed #ccc;
-	padding: 1em 0.3em 0.3em 0.3em;
-}
-
-table.sidebar-releases {
-	font-size: 100%; /* make IE look normal */
-}
-
-ul.side_pages {
-	margin-top: 0.1em;
-	margin-bottom: 1.5em;
-	margin-left: 1em;
-	padding-left: 1em;
-	list-style: url(../images/box-0.gif) square;
-}
-
-li.side_page {
-	text-indent: -0.4em;
-	white-space: nowrap;
-}
-
-
 /* ========= Footer ========= */
 
 td.foot-bar {
@@ -153,16 +115,6 @@ table.form-holder {
 	width: auto;
 }
 
-caption.form-caption {
-	font-weight: bold;
-	color: #FFFFFF;
-	background-color: #5b69a6;
-	padding: 0.3em;
-	border-left: 1px solid #FFFFFF;
-	border-right: 1px solid #FFFFFF;
-	margin-top: 0.5em;
-}
-
 /* Labels on the left side of form and table rows */
 th.form-label_left {
 	padding: 3px;
@@ -172,16 +124,6 @@ th.form-label_left {
 	color: #FFFFFF;
 	background-color: #5b69a6;
 	width: 25%;
-}
-
-/* Labels on the top of form and table columns */
-th.form-label_top,
-th.form-label_top_center {
-	padding: 3px;
-	text-align: center;
-	font-weight: bold;
-	color: #FFFFFF;
-	background-color: #5b69a6;
 }
 
 td.form-input {
@@ -203,10 +145,6 @@ td.form-input_center input {
 	font-size: 90%;
 }
 
-input.makeDocBug {
-	background-color: #8CDD81;
-	border: 3px ridge green;
-}
 p.cell_note {
 	margin-top: 0.3em;
 	margin-bottom: 0.2em;
@@ -233,34 +171,6 @@ textarea.small {
 form {
 	margin-bottom: 0;
 }
-
-submit {
-	border: 0px;
-}
-
-/* === Voting === */
-
-td.vote-active, td.vote-winner {
-	padding: 3px;
-	text-align: left;
-	vertical-align: top;
-	background-color: #ffbbaa;
-}
-
-td.vote-complete {
-	padding: 3px;
-	text-align: left;
-	vertical-align: top;
-	background-color: #bbaaff;
-}
-
-td.vote-inactive {
-	padding: 3px;
-	text-align: left;
-	vertical-align: top;
-	background-color: #e8e8e8;
-}
-
 
 /* === User Submission Responses === */
 
@@ -377,25 +287,9 @@ a:hover {
 	color: #000033;
 }
 
-th.headrow {
-	text-align: left;
-	border-bottom: 1px solid #000;
-	white-space: nowrap;
-}
-
 th.others {
 	color: #006600;
 	text-align: left;
-}
-
-td.textcell {
-	vertical-align: top;
-	padding-left: 1.2em;
-	padding-bottom: 1em;
-}
-
-td.textcell p {
-	margin-top: 0em;
 }
 
 td.ulcell {
@@ -411,12 +305,6 @@ hr {
 	border: 0px;
 	height: 1px;
 	background-color: #ccc;
-}
-
-.newsDate {
-	font-size: 85%;
-	font-style: italic;
-	color: #66cc66;
 }
 
 code, pre {
@@ -463,38 +351,8 @@ a.small {
 	text-decoration: none;
 }
 
-.tableTitle {
-	font-weight: bold;
-}
-
-.tableExtras {
-	font-size: 85%;
-	color: #FFFFFF;
-}
-
-.tip {
-	border: 1px solid #00c;
-	color: #006;
-	background: #eef;
-	padding: 8px;
-}
-
-ul.spaced li {
-	margin-bottom: 0.75em;
-}
-
 .indent {
 	margin-left: 20px;
-}
-
-hr.greyline {
-	border-top: thin solid #CCCCCC;
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
-
-.underline {
-	text-decoration: underline;
 }
 
 .accesskey {
@@ -519,12 +377,6 @@ td.content table {
   padding-bottom: 15px;
 }
 
-.headertop {
-	background: #5b69a6;
-}
-.headersep {
-	background: #000033;
-}
 .headerbottom {
 	background: #9999cc;
 }
@@ -705,10 +557,6 @@ table#votes {
 	margin:0 0 0 50px;
 }
 /* === Search === */
-
-a.status_active {
-	font-weight: bold;
-}
 
 td.search-prev_next {
 	background-color: #cccccc;
