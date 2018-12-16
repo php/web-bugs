@@ -42,5 +42,11 @@
         "psr-4": {
             "App\\Tests\\": "tests/"
         }
+    },
+    "scripts":{
+        "post-install-cmd": [
+            "App\\Utils\\ComposerScripts::installConfig",
+            "App\\Utils\\ComposerScripts::createDirectories"
+        ]
     }
 }

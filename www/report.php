@@ -2,9 +2,12 @@
 
 use App\Repository\PackageRepository;
 use App\Repository\ReasonRepository;
+use App\Utils\Cache;
 use App\Utils\Captcha;
 use App\Utils\PatchTracker;
 use App\Utils\Uploader;
+use App\Utils\Versions\Client;
+use App\Utils\Versions\Generator;
 
 // Obtain common includes
 require_once '../include/prepend.php';
@@ -22,7 +25,11 @@ $pseudo_pkgs = $packageRepository->findEnabled($_GET['project'] ?? '');
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
-require "{$ROOT_DIR}/include/php_versions.php";
+$versionsClient = new Client();
+$cacheDir = (defined('DEVBOX') && true === DEVBOX) ? __DIR__.'/../var/cache' : '/tmp';
+$cache = new Cache($cacheDir);
+$versionsGenerator = new Generator($versionsClient, $cache);
+$versions = $versionsGenerator->getVersions();
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
