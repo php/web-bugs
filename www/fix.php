@@ -1,5 +1,6 @@
 <?php
 
+use App\Repository\BugRepository;
 use App\Repository\ReasonRepository;
 
 session_start();
@@ -19,7 +20,8 @@ if (!$bug_id) {
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 // fetch info about the bug into $bug
-$bug = bugs_get_bug($bug_id);
+$bugRepository = new BugRepository($dbh);
+$bug = $bugRepository->findOneById($bug_id);
 
 if (!is_array($bug)) {
 	response_header('No Such Bug');

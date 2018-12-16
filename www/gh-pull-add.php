@@ -1,5 +1,6 @@
 <?php
 
+use App\Repository\BugRepository;
 use App\Repository\PullRequestRepository;
 use App\Utils\Captcha;
 use App\Utils\GitHub;
@@ -26,7 +27,9 @@ if (empty($bug_id)) {
 	exit;
 }
 
-if (!($buginfo = bugs_get_bug($bug_id))) {
+$bugRepository = new BugRepository($dbh);
+
+if (!($buginfo = $bugRepository->findOneById($bug_id))) {
 	response_header('Error :: invalid bug selected');
 	display_bug_error("Invalid bug #{$bug_id} selected");
 	response_footer();

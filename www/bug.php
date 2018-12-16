@@ -1,6 +1,7 @@
 <?php
 /* User interface for viewing and editing bug details */
 
+use App\Repository\BugRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ObsoletePatchRepository;
 use App\Repository\PackageRepository;
@@ -131,7 +132,8 @@ $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
 
 // fetch info about the bug into $bug
 if (!isset($bug)) {
-	$bug = bugs_get_bug($bug_id);
+	$bugRepository = new BugRepository($dbh);
+	$bug = $bugRepository->findOneById($bug_id);
 }
 
 // DB error

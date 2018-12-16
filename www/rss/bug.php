@@ -1,5 +1,6 @@
 <?php
 
+use App\Repository\BugRepository;
 use App\Repository\CommentRepository;
 
 /* Generates an RSS/RDF feed for a particular bug specified as the "id"
@@ -15,7 +16,8 @@ require_once '../../include/prepend.php';
 $bug_id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 $format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'rss2';
 
-$bug = bugs_get_bug($bug_id);
+$bugRepository = new BugRepository($dbh);
+$bug = $bugRepository->findOneById($bug_id);
 
 if (!$bug) {
 	header('HTTP/1.0 404 Not Found');

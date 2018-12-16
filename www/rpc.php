@@ -1,5 +1,7 @@
 <?php
 
+use App\Repository\BugRepository;
+
 /**
  * This API page is used by https://svn.php.net/viewvc/SVNROOT/commit-bugs.php
  * to manage bugs automatically.
@@ -37,7 +39,8 @@ if (empty($auth_user->handle)) {
 }
 
 // fetch info about the bug into $bug
-$bug = bugs_get_bug($bug_id);
+$bugRepository = new BugRepository($dbh);
+$bug = $bugRepository->findOneById($bug_id);
 
 if (!is_array($bug)) {
 	echo json_encode(['result' => ['error' => 'No such bug']]);

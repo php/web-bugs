@@ -1,5 +1,6 @@
 <?php
 
+use App\Repository\BugRepository;
 use App\Repository\ObsoletePatchRepository;
 use App\Repository\PatchRepository;
 use App\Utils\PatchTracker;
@@ -40,7 +41,9 @@ if (empty($bug_id)) {
 	$bug_id = (int) $_GET['bug_id'];
 }
 
-if (!($buginfo = bugs_get_bug($bug_id))) {
+$bugRepository = new BugRepository($dbh);
+
+if (!($buginfo = $bugRepository->findOneById($bug_id))) {
 	response_header('Error :: invalid bug selected');
 	display_bug_error("Invalid bug #{$bug_id} selected");
 	response_footer();
