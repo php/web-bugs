@@ -1,6 +1,7 @@
 <?php
 /* User interface for viewing and editing bug details */
 
+use App\Repository\CommentRepository;
 use App\Repository\ObsoletePatchRepository;
 use App\Repository\PackageRepository;
 use App\Repository\PatchRepository;
@@ -1100,7 +1101,9 @@ OUTPUT;
 }
 
 // Display comments
-$bug_comments = bugs_get_bug_comments($bug_id);
+$commentRepository = new CommentRepository($dbh);
+$bug_comments = is_int($bug_id) ? $commentRepository->findByBugId($bug_id) : [];
+
 if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['status'] !== 'Spam') {
 	$history_tabs = [
 		'type_all'     => 'All',

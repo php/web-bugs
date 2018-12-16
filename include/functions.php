@@ -1483,26 +1483,6 @@ function bugs_get_bug($bug_id)
 }
 
 /**
- * Fetch bug comments
- *
- * @return mixed array of bug comments or object with error info
- */
-function bugs_get_bug_comments($bug_id)
-{
-	global $dbh;
-
-	$query = "
-		SELECT c.id, c.email, c.comment, c.comment_type,
-			UNIX_TIMESTAMP(c.ts) AS added,
-			c.reporter_name AS comment_name
-		FROM bugdb_comments c
-		WHERE c.bug = ?
-		GROUP BY c.id ORDER BY c.ts
-	";
-	return $dbh->prepare($query)->execute([$bug_id])->fetchAll();
-}
-
-/**
  * Add bug comment
  */
 function bugs_add_comment($bug_id, $from, $from_name, $comment, $type = 'comment')

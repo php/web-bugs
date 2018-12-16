@@ -1,5 +1,7 @@
 <?php
 
+use App\Repository\CommentRepository;
+
 /* Generates an RSS/RDF feed for a particular bug specified as the "id"
  * parameter.  optionally, if "format" is "xml", generates data in a
  * non-standard xml format.
@@ -25,7 +27,8 @@ if ($bug['private'] == 'Y') {
 	die('Access restricted');
 }
 
-$comments = bugs_get_bug_comments($bug_id);
+$commentRepository = new CommentRepository($dbh);
+$comments = $commentRepository->findByBugId($bug_id);
 
 if ($format == 'xml') {
 	header('Content-type: text/xml; charset=utf-8');
