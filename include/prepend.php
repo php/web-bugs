@@ -2,6 +2,7 @@
 
 use App\Autoloader;
 use App\Database\Statement;
+use App\Template\Engine;
 
 // Dual PSR-4 compatible class autoloader. When Composer is not available, an
 // application specific replacement class is used. Once Composer can be added
@@ -83,3 +84,11 @@ $dbh = new \PDO(
 // Last Updated..
 $tmp = filectime($_SERVER['SCRIPT_FILENAME']);
 $LAST_UPDATED = date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC';
+
+// Initialize template engine.
+$template = new Engine(__DIR__.'/../templates');
+$template->assign([
+    'lastUpdated' => $LAST_UPDATED,
+    'siteScheme'  => $site_method,
+    'siteUrl'     => $site_url,
+]);

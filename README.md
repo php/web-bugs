@@ -45,6 +45,7 @@ Source code of this application is structured in the following directories:
 ```bash
 <web-bugs>/
  ├─ .git/                   # Git configuration and source directory
+ ├─ docs/                   # Application documentation
  └─ include/                # Application helper functions and configuration
     ├─ classes/             # PEAR class overrides
     ├─ prepend.php          # Autoloader, DB connection, container, app initialization
@@ -103,3 +104,7 @@ git remote add upstream git://github.com/php/web-bugs
 git config branch.master.remote upstream
 git pull --rebase
 ```
+
+## Documentation
+
+More information about this application can be found in the [documentation](/docs).
