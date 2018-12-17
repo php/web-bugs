@@ -30,7 +30,7 @@ class ReasonRepository
         $arguments = [];
 
         if ($project !== '') {
-            $sql = " WHERE (project = ? OR project = '')";
+            $sql .= " WHERE (project = ? OR project = '')";
             $arguments[] = $project;
         }
 
