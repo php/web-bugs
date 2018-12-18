@@ -14,44 +14,41 @@ $after = "7 DAY";
 $in = ['status' => 'No Feedback'];
 
 # Update relevant reports
-if ($dbh)
+$reasonRepository = new ReasonRepository($dbh);
+
+list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
+
+$res = $dbh->prepare("
+	SELECT id, package_name, bug_type, email, passwd, sdesc, ldesc, php_version,
+		php_os, status, ts1, ts2, assign, UNIX_TIMESTAMP(ts1) AS submitted,
+		private, reporter_name, UNIX_TIMESTAMP(ts2) AS modified
+	FROM bugdb
+	WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})
+")->execute([]);
+
+while ($bug = $res->fetch())
 {
-	$reasonRepository = new ReasonRepository($dbh);
+	list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 
-	list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
-
-	$res = $dbh->prepare("
-		SELECT id, package_name, bug_type, email, passwd, sdesc, ldesc, php_version,
-			php_os, status, ts1, ts2, assign, UNIX_TIMESTAMP(ts1) AS submitted,
-			private, reporter_name, UNIX_TIMESTAMP(ts2) AS modified
-		FROM bugdb
-		WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})
-	")->execute([]);
-
-	while ($bug = $res->fetch())
-	{
-		list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
-
-		// No feedback message
-		if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS['nofeedback'][$bug['package_name']])) {
-			$message = $FIX_VARIATIONS['nofeedback'][$bug['package_name']];
-		} elseif (isset($RESOLVE_REASONS['nofeedback'])) {
-			$message = $RESOLVE_REASONS['nofeedback']['message'];
-		} else {
-			die('[no-feedback] Could not find resolve reason! (this should not happen!)');
-		}
-		bugs_add_comment($bug['id'], $mailfrom, '', $message, 'comment');
-
-		// Update status
-		$dbh->prepare('
-			UPDATE bugdb
-			SET status = "No Feedback", ts2 = NOW()
-			WHERE id = ?
-		')->execute([
-			$bug['id'],
-		]);
-
-		// Send emails
-		mail_bug_updates($bug, $in, $mailfrom, $message);
+	// No feedback message
+	if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS['nofeedback'][$bug['package_name']])) {
+		$message = $FIX_VARIATIONS['nofeedback'][$bug['package_name']];
+	} elseif (isset($RESOLVE_REASONS['nofeedback'])) {
+		$message = $RESOLVE_REASONS['nofeedback']['message'];
+	} else {
+		die('[no-feedback] Could not find resolve reason! (this should not happen!)');
 	}
+	bugs_add_comment($bug['id'], $mailfrom, '', $message, 'comment');
+
+	// Update status
+	$dbh->prepare('
+		UPDATE bugdb
+		SET status = "No Feedback", ts2 = NOW()
+		WHERE id = ?
+	')->execute([
+		$bug['id'],
+	]);
+
+	// Send emails
+	mail_bug_updates($bug, $in, $mailfrom, $message);
 }
