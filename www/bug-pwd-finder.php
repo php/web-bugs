@@ -70,7 +70,7 @@ echo "<h1>Bug Report Password Finder</h1>\n";
 display_bug_error($errors);
 
 if ($success) {
-	display_bug_success($success);
+	echo '<div class="success">'.$success.'</div>';
 }
 
 $_SESSION['answer'] = $captcha->getAnswer();

@@ -697,18 +697,6 @@ function display_bug_error($in, $class = 'errors', $head = 'ERROR:')
 }
 
 /**
- * Prints a message saying the action succeeded
- *
- * @param string $in	the string to be displayed
- *
- * @return void
- */
-function display_bug_success($in)
-{
-	echo "<div class='success'>{$in}</div>\n";
-}
-
-/**
  * Returns array of changes going to be made
  */
 function bug_diff($bug, $in)
