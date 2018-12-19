@@ -117,4 +117,20 @@ class PackageRepository
 
         return $packages;
     }
+
+    /**
+     * Find all package mailing lists.
+     */
+    public function findLists(): array
+    {
+        $sql = "SELECT name, list_email
+                FROM bugdb_pseudo_packages
+                WHERE project = 'php' AND LENGTH(list_email) > 0
+                ORDER BY list_email
+        ";
+
+        $statement = $this->dbh->query($sql);
+
+        return $statement->fetchAll();
+    }
 }

@@ -1,4 +1,7 @@
 <?php
+
+use App\Repository\PackageRepository;
+
 require_once '../../include/prepend.php';
 session_start();
 
@@ -49,17 +52,8 @@ if ($action === 'phpinfo') {
 	echo $m[1];
 
 } elseif ($action === 'list_lists') {
-
-	$res = $dbh->query("
-		SELECT name, list_email
-		FROM bugdb_pseudo_packages
-		WHERE project = 'php'
-		AND LENGTH(list_email) > 0
-		ORDER BY list_email
-	");
-
 	echo "<dl>\n";
-	while ($row = $res->fetch()) {
+	foreach ((new PackageRepository($dbh))->findLists() as $row) {
 		echo "<dt>", $row['name'], ": </dt>\n<dd>", mailto_list(explode(',', $row['list_email'])), "</dd>\n";
 	}
 	echo "</dl>\n";
