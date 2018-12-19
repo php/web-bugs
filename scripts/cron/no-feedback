@@ -3,12 +3,10 @@
 
 # this script closes bugs due to lack of feedback.
 
+use App\Repository\BugRepository;
 use App\Repository\ReasonRepository;
 
 require __DIR__.'/../../include/prepend.php';
-
-# date interval to close after
-$after = "7 DAY";
 
 # Set "input" array
 $in = ['status' => 'No Feedback'];
@@ -18,15 +16,7 @@ $reasonRepository = new ReasonRepository($dbh);
 
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
 
-$res = $dbh->prepare("
-	SELECT id, package_name, bug_type, email, passwd, sdesc, ldesc, php_version,
-		php_os, status, ts1, ts2, assign, UNIX_TIMESTAMP(ts1) AS submitted,
-		private, reporter_name, UNIX_TIMESTAMP(ts2) AS modified
-	FROM bugdb
-	WHERE status = 'Feedback' AND ts2 < DATE_SUB(NOW(), INTERVAL {$after})
-")->execute([]);
-
-while ($bug = $res->fetch())
+foreach ((new BugRepository($dbh))->findAllWithoutFeedback() as $bug)
 {
 	list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 

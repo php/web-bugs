@@ -1,5 +1,7 @@
 <?php
 
+use App\Repository\BugRepository;
+
 session_start();
 
 // Obtain common includes
@@ -40,25 +42,10 @@ if (!array_key_exists($sort_by, $titles)) {
 	$sort_by = 'Open';
 }
 
-$where = '';
-if (empty($_GET['bug_type']) || $_GET['bug_type'] == 'All') {
-	$bug_type = 'All';
-} else {
-	$bug_type = $_GET['bug_type'];
-	$where = ' AND bug_type = ' . $dbh->quote($bug_type);
-}
+$bug_type = $_GET['bug_type'] ?? 'All';
+$bugRepository = new BugRepository($dbh);
 
-$query  = "
-	SELECT b.package_name, b.status, COUNT(*) AS quant
-	FROM bugdb AS b
-	WHERE 1 = 1 {$where}
-	GROUP BY b.package_name, b.status
-	ORDER BY b.package_name, b.status
-";
-
-$result = $dbh->prepare($query)->execute();
-
-while ($row = $result->fetch()) {
+foreach ($bugRepository->findAllByBugType($bug_type) as $row) {
 	$pkg_tmp[$row['status']][$row['package_name']] = $row['quant'];
 	@$pkg_total[$row['package_name']] += $row['quant'];
 	@$all[$row['status']] += $row['quant'];
@@ -148,19 +135,8 @@ OUTPUT;
 
 echo "</table>\n<hr>\n<p><b>PHP Versions for recent bug reports:</b></p><div>";
 
-$query  = "  SELECT DATE_FORMAT(ts1, '%Y-%m') as d,
-                    IF(b.php_version LIKE '%Git%', LEFT(b.php_version, LOCATE('Git', b.php_version)+2), b.php_version) AS formatted_version,
-                    COUNT(*) AS quant
-               FROM bugdb AS b
-              WHERE ts1 >= CONCAT(YEAR(NOW())-1, '-', MONTH(NOW()), '-01 00:00:00')
-                    {$where}
-           GROUP BY d, formatted_version
-           ORDER BY d, quant";
-
-$result = $dbh->prepare($query)->execute();
-
 $last_date = null;
-while ($row = $result->fetch()) {
+foreach ($bugRepository->findPhpVersions($bug_type) as $row) {
 	if ($row['d'] != $last_date) {
 		if ($last_date !== null) {
 			echo "</table>\n\n";

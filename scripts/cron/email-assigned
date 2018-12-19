@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php /* vim: set ft=phpbugdb noet ts=4 sw=4 : */
 
+use App\Repository\BugRepository;
+
 require __DIR__ . '/../../include/prepend.php';
 
 /*
@@ -8,20 +10,7 @@ require __DIR__ . '/../../include/prepend.php';
   is a little odd that way.
   'No Feedback' was once a part of this, but no longer: https://news.php.net/php.webmaster/8828
 */
-$sql = "SELECT id, package_name, bug_type, sdesc, status, assign, UNIX_TIMESTAMP(ts1) AS ts_opened, UNIX_TIMESTAMP(ts2) AS ts_changed
-		FROM `bugdb`
-		WHERE length(assign) > 1
-		AND status IN ('Assigned', 'Open', 'Re-Opened', 'Feedback', 'Analyzed', 'Verified', 'Critical', 'Suspended')
-		ORDER BY id";
-
-$res = $dbh->query($sql);
-
-// Gather up the data
-while ($row = $res->fetch()) {
-	$data[$row['assign']][] = $row;
-}
-
-foreach ($data as $assigned => $binfos) {
+foreach ((new BugRepository($dbh))->findAllAssigned() as $assigned => $binfos) {
 
 	$mbody      = format_email_body($binfos);
 	$email_user = $assigned . '@php.net';

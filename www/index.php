@@ -4,6 +4,8 @@ session_start();
 
 /* The bug system home page */
 
+use App\Repository\BugRepository;
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
@@ -14,10 +16,7 @@ if ($id) {
 }
 
 if($_SERVER['REQUEST_URI'] == '/random') {
-	$query  = "SELECT id FROM bugdb WHERE status NOT IN('Closed', 'Not a bug', 'Duplicate', 'Spam', 'Wont fix', 'No Feedback') AND private = 'N' ORDER BY RAND() LIMIT 1";
-
-	$result = $dbh->prepare($query)->execute();
-	$id = $result->fetch(\PDO::FETCH_NUM);
+	$id = (new BugRepository($dbh))->findRandom();
 	redirect("bug.php?id={$id[0]}");
 }
 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Repository\BugRepository;
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
@@ -20,7 +22,7 @@ $reproduced = (int) $_POST['reproduced'];
 $samever = isset($_POST['samever']) ? (int) $_POST['samever'] : 0;
 $sameos = isset($_POST['sameos']) ? (int) $_POST['sameos'] : 0;
 
-if (!$dbh->prepare("SELECT id FROM bugdb WHERE id= ? LIMIT 1")->execute([$id])->fetch(\PDO::FETCH_NUM)[0]) {
+if (!(new BugRepository($dbh))->exists($id)) {
 	session_start();
 
 	// Authenticate
