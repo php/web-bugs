@@ -1,6 +1,7 @@
 <?php
 
 use App\Repository\BugRepository;
+use App\Repository\VoteRepository;
 
 // Obtain common includes
 require_once '../include/prepend.php';
@@ -63,11 +64,7 @@ $ip = ip2long(get_real_ip());
 // TODO: check if ip address has been banned. hopefully this will never need to be implemented.
 
 // Check whether the user has already voted on this bug.
-$bug_check = $dbh->prepare("SELECT bug, ip FROM bugdb_votes WHERE bug = ? AND ip = ? LIMIT 1")
-	->execute([$id, $ip])
-	->fetch(\PDO::FETCH_BOTH);
-
-if (empty($bug_check)) {
+if (empty((new VoteRepository($dbh))->findOneByIdAndIp($id, $ip))) {
 	// If the user vote isn't found, create one.
 	$dbh->prepare("
 		INSERT INTO bugdb_votes (bug, ip, score, reproduced, tried, sameos, samever)
