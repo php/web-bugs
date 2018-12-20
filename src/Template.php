@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Template;
+namespace App;
 
 use App\Template\Context;
 
@@ -13,7 +13,7 @@ use App\Template\Context;
  * Engine provides several methods to create main template layout, sections, and
  * escaping of strings to not introduce too common XSS vulnerabilities.
  */
-class Engine
+class Template
 {
     /**
      * Templates directory contains all application templates.
@@ -33,6 +33,11 @@ class Engine
     private $functions = [];
 
     /**
+     * Pool of global variables.
+     */
+    private $variables = [];
+
+    /**
      * Class constructor.
      */
     public function __construct(string $templatesDir, Context $context)
@@ -42,14 +47,37 @@ class Engine
     }
 
     /**
+     * This enables adding new variables in the template scope right after
+     * initializing a template engine. Some variables in templates are like
+     * parameters or globals and should be added only on one place instead of
+     * repeating them at each ...->render() call.
+     */
+    public function add(array $vars = []): void
+    {
+        $this->variables = array_merge($this->variables, $vars);
+    }
+
+    /**
+     * Add a template helper function as a callable defined in the (front)
+     * controller to the template scope. Useful when a custom function or class
+     * method need to be called in the template. A wrapper around the
+     * Context::addFunction().
+     */
+    public function addFunction(string $name, callable $callback)
+    {
+        $this->context->addFunction($name, $callback);
+    }
+
+    /**
      * Renders given template file and populates its scope with variables
      * provided as array elements. Each array key is a variable name in template
-     * scope and array item value is set as a variable value.
+     * scope and array item value is set as a variable value. To not mess with
+     * the variable scopes too much closure arguments are retrieved dynamically
+     * via the func_get_arg(). Note that $this pseudo-variable in the closure
+     * refers to the Context::class scope.
      */
     public function render(string $template, array $vars = []): string
     {
-        // To not mess with the variable scopes too much closure arguments are
-        // retrieved dynamically via func_get_arg
         $closure = \Closure::bind(
             function() {
                 ob_start();
@@ -75,16 +103,10 @@ class Engine
             Context::class
         );
 
-        return $closure($this->templatesDir, $template, $vars);
-    }
+        // Merge variables set on the template render level and ones defined
+        // earlier in the engine creation level.
+        $vars = array_merge($this->variables, $vars);
 
-    /**
-     * Registering function makes a custom callable defined in the (front)
-     * controller available in the template scope. Useful when a customized
-     * function or class method needs to be called in the template.
-     */
-    public function registerFunction(string $name, callable $callback)
-    {
-        $this->context->addFunction($name, $callback);
+        return $closure($this->templatesDir, $template, $vars);
     }
 }

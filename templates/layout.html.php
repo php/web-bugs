@@ -1,7 +1,6 @@
 <?php
-// TODO: Remove such globals scope usage via adding more options when creating template
-global $auth_user, $logged_in, $siteBig, $site_method, $site_url, $basedir, $LAST_UPDATED;
 
+// TODO: Refactor this into a better authentication service
 $is_logged = false;
 
 if ($logged_in === 'developer') {
@@ -17,7 +16,6 @@ if ($logged_in === 'developer') {
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<?php // TODO: Add option to append more footer content - $extraHeaders in the response_footer() ?>
 <base href="<?= $site_method ?>://<?= $site_url.$basedir; ?>/">
 <title><?= $siteBig ?> :: <?= $this->e($title) ?></title>
 <link rel="shortcut icon" href="<?= $site_method ?>://<?= $site_url.$basedir ?>/images/favicon.ico">
@@ -41,15 +39,15 @@ if ($logged_in === 'developer') {
         <a href="search-howto.php">search howto</a>&nbsp;|&nbsp;
         <a href="stats.php">statistics</a>&nbsp;|&nbsp;
         <a href="random">random bug</a>&nbsp;|&nbsp;
-<?php if ($is_logged): ?>
-        <a href="search.php?cmd=display&amp;assign=<?= $username ?>">my bugs</a>&nbsp;|&nbsp;
-    <?php if ($logged_in === 'developer'): ?>
-        <a href="/admin/">admin</a>&nbsp;|&nbsp;
-    <?php endif; ?>
-        <a href="logout.php">logout</a>
-<?php else: ?>
-        <a href="login.php">login</a>
-<?php endif; ?>
+        <?php if ($is_logged): ?>
+            <a href="search.php?cmd=display&amp;assign=<?= $username ?>">my bugs</a>&nbsp;|&nbsp;
+                <?php if ($logged_in === 'developer'): ?>
+                    <a href="/admin/">admin</a>&nbsp;|&nbsp;
+                <?php endif; ?>
+            <a href="logout.php">logout</a>
+        <?php else: ?>
+            <a href="login.php">login</a>
+        <?php endif; ?>
     </td>
 </tr>
 
@@ -75,8 +73,6 @@ if ($logged_in === 'developer') {
 </tr>
 </table>
 
-<?php // TODO: Add option to append more footer content - $extra_html in the response_footer() ?>
-
 <table class="foot" cellspacing="0" cellpadding="0">
 <tr>
     <td class="foot-bar" colspan="2">&nbsp;</td>
@@ -95,5 +91,7 @@ if ($logged_in === 'developer') {
     </td>
 </tr>
 </table>
+
+<?= $this->section('scripts') ?>
 </body>
 </html>

@@ -4,38 +4,34 @@ namespace App\Template;
 
 /**
  * Default template engine context. Context represents a template scope where
- * the $this is used in templates and the context methods can be called in the
- * template as $this->methodCall().
+ * $this pseudo-variable is used in templates and the context methods can be
+ * called in the template as $this->methodCall().
  */
 class Context
 {
     /**
      * Pool of sections in a given template context.
+     * @var array
      */
-    private $sections;
+    private $sections = [];
 
     /**
      * Current layout for the given template context.
+     * @var string
      */
     private $layout;
 
     /**
      * Each layout can have its own variables set in the template directly.
+     * @var array
      */
-    private $layoutVars;
+    private $layoutVars = [];
 
     /**
      * Pool of registered callable functions.
+     * @var array
      */
     private $functions = [];
-
-    /**
-     * Returns given section from a pool of all set sections.
-     */
-    public function section(string $name): string
-    {
-        return $this->sections[$name];
-    }
 
     /**
      * Sets a layout for a given template. Additional variables in the layout
@@ -48,29 +44,24 @@ class Context
     }
 
     /**
-     * Escape given variable if it's a string.
-     * TODO - refactor and fix.
+     * Return a section from the pool by name.
      */
-    public function e(string $var): string
+    public function section(string $name): string
     {
-        return htmlspecialchars($var, ENT_QUOTES);
-    }
-
-    /**
-     * Sanitize strings and remove all HTML.
-     */
-    public function noHtml(string $string): string
-    {
-        return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        return $this->sections[$name] ?? '';
     }
 
     /**
      * Starts a new template section. Under the hood a simple separate output
-     * buffering is used to capture the section content.
+     * buffering is used to capture the section content. Content can be also
+     * appended to previously set same section name.
      */
-    public function start(string $name): void
+    public function start(string $name, bool $append = false): void
     {
-        $this->sections[$name] = '';
+        if (!$append) {
+            $this->sections[$name] = '';
+        }
+
         ob_start();
     }
 
@@ -80,13 +71,38 @@ class Context
      */
     public function end(string $name): void
     {
-        $this->sections[$name] = ob_get_clean();
+        $content = ob_get_clean();
+
+        if (!empty($this->sections[$name])) {
+            $this->sections[$name] .= $content;
+        } else {
+            $this->sections[$name] = $content;
+        }
+    }
+
+    /**
+     * Scalpel when preventing XSS vulnerabilities. This escapes given string
+     * and still preserves certain characters as HTML.
+     * TODO - refactor and fix.
+     */
+    public function e(string $string): string
+    {
+        return htmlspecialchars($string, ENT_QUOTES);
+    }
+
+    /**
+     * Hammer when protecting against XSS. Sanitize strings and replace all
+     * characters to their applicable HTML entities from it.
+     */
+    public function noHtml(string $string): string
+    {
+        return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**
      * Add a callable function to the functions pool.
      */
-    public function addFunction(string $name, callable $callback)
+    public function addFunction(string $name, callable $callback): void
     {
         $this->functions[$name] = $callback;
     }

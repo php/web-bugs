@@ -6,16 +6,28 @@
 
 use App\Repository\BugRepository;
 use App\Template\Context;
-use App\Template\Engine;
+use App\Template;
 
 // Application bootstrap
 require_once __DIR__.'/../include/prepend.php';
 
-// Initialize template engine
-$template = new Engine(__DIR__.'/../templates', new Context());
-
 // Start session
 session_start();
+
+// Authenticate
+bugs_authenticate($user, $pw, $logged_in, $user_flags);
+
+// Initialize template engine
+$template = new Template(__DIR__.'/../templates', new Context());
+$template->add([
+    'LAST_UPDATED' => $LAST_UPDATED,
+    'basedir'      => $basedir,
+    'siteBig'      => $siteBig,
+    'site_method'  => $site_method,
+    'site_url'     => $site_url,
+    'auth_user'    => $auth_user,
+    'logged_in'    => $logged_in,
+]);
 
 // If 'id' is passed redirect to the bug page
 $id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -27,9 +39,6 @@ if($_SERVER['REQUEST_URI'] == '/random') {
     $id = (new BugRepository($dbh))->findRandom();
     redirect("bug.php?id={$id[0]}");
 }
-
-// Authenticate
-bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 $searches = [
     'Most recent open bugs (all)' => '&bug_type=All',
@@ -48,7 +57,5 @@ if (!empty($_SESSION["user"])) {
 
 // Output template with given template variables.
 echo $template->render('pages/index.html.php', [
-    'site_method' => $site_method,
-    'site_url'    => $site_url,
-    'searches'    => $searches,
+    'searches' => $searches,
 ]);
