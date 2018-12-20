@@ -5,8 +5,8 @@
  */
 
 use App\Repository\BugRepository;
-use App\Template\Engine;
 use App\Template\Context;
+use App\Template\Engine;
 
 // Application bootstrap
 require_once __DIR__.'/../include/prepend.php';

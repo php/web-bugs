@@ -25,6 +25,11 @@ class Context
     private $layoutVars;
 
     /**
+     * Pool of registered callable functions.
+     */
+    private $functions = [];
+
+    /**
      * Returns given section from a pool of all set sections.
      */
     public function section(string $name): string
@@ -46,9 +51,17 @@ class Context
      * Escape given variable if it's a string.
      * TODO - refactor and fix.
      */
-    public function e($var)
+    public function e(string $var): string
     {
         return htmlspecialchars($var, ENT_QUOTES);
+    }
+
+    /**
+     * Sanitize strings and remove all HTML.
+     */
+    public function noHtml(string $string): string
+    {
+        return htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 
     /**
@@ -68,5 +81,23 @@ class Context
     public function end(string $name): void
     {
         $this->sections[$name] = ob_get_clean();
+    }
+
+    /**
+     * Add a callable function to the functions pool.
+     */
+    public function addFunction(string $name, callable $callback)
+    {
+        $this->functions[$name] = $callback;
+    }
+
+    /**
+     * A proxy to call registered functions if needed.
+     */
+    public function __call(string $method, $args)
+    {
+        if (isset($this->functions[$method])) {
+            return call_user_func_array($this->functions[$method], $args);
+        }
     }
 }
