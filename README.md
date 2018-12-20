@@ -1,4 +1,4 @@
-﻿# PHP Bug Tracking System
+# PHP Bug Tracking System
 
 This is a unified bug tracking system for PHP hosted online at
 [bugs.php.net](https://bugs.php.net).
@@ -26,8 +26,8 @@ pear install --alldeps Text_Diff
 
 * Database:
 
-Create a new database using `sql/database.sql`, create database schema
-`sql/schema.sql` and insert fixtures using `sql/fixtures.sql`.
+Create a new MySQL/MariaDB database using `sql/database.sql`, create database
+schema `sql/schema.sql` and insert fixtures using `sql/fixtures.sql`.
 
 ## Tests
 
