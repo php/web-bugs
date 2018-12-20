@@ -17,6 +17,7 @@ class Template
 {
     /**
      * Templates directory contains all application templates.
+     * @var string
      */
     private $templatesDir;
 
@@ -29,11 +30,13 @@ class Template
 
     /**
      * Pool of registered functions in the application.
+     * @var array
      */
     private $functions = [];
 
     /**
      * Pool of global variables.
+     * @var array
      */
     private $variables = [];
 
@@ -63,7 +66,7 @@ class Template
      * method need to be called in the template. A wrapper around the
      * Context::addFunction().
      */
-    public function addFunction(string $name, callable $callback)
+    public function addFunction(string $name, callable $callback): void
     {
         $this->context->addFunction($name, $callback);
     }
