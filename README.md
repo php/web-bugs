@@ -103,3 +103,56 @@ git remote add upstream git://github.com/php/web-bugs
 git config branch.master.remote upstream
 git pull --rebase
 ```
+
+## Application architecture
+
+### Templates
+
+Application has a simple template engine built in to separate logic from the
+presentation layer with several options.
+
+Initialization of the template engine:
+
+```php
+<?php
+
+// In front controller (index.php) or bootstrap (includes/prepend.php)
+$template = new App\Template(__DIR__.'/../templates', new App\Template\Context());
+
+// Output the processed template content
+echo $template->render('pages/index.html.php', [
+    'parameter' => 'Value',
+]);
+```
+
+Above template `pages/index.html.php` is located in the templates directory:
+
+```php
+<?php $this->layout('layout.html.php', ['title' => 'Optional additional title']) ?>
+
+<?php $this->start('content') ?>
+    <h1>PHP Bugs System</h1>
+
+    <p>...</p>
+
+    Parameter value: <?= $this->noHtml($parameter) ?>
+<?php $this->end('content') ?>
+```
+
+Main `layout.html.php`:
+
+```php
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/css/style.css">
+        <title>PHP Bug Tracking System :: <?= $title ?? '' ?></title>
+    </head>
+    <body>
+        <?= $this->section('content') ?>
+
+        <script src="/js/app.js"></script>
+    </body>
+</html>
+```
