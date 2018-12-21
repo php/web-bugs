@@ -57,7 +57,7 @@ if ($logged_in === 'developer') {
             <p class="head-search">
                 <input type="hidden" name="cmd" value="display">
                 <small>go to bug id or search bugs for</small>
-                <input class="small" type="text" name="search_for" value="<?= htmlspecialchars($_GET['search_for'] ?? '', ENT_QUOTES); ?>" size="30">
+                <input class="small" type="text" name="search_for" value="<?= $this->e($_GET['search_for'] ?? '') ?>" size="30">
                 <input type="image" src="images/small_submit_white.gif" alt="search" style="vertical-align: middle;">
             </p>
         </form>
@@ -87,7 +87,7 @@ if ($logged_in === 'developer') {
         </small>
     </td>
     <td class="foot-source">
-        <small>Last updated: <?= $LAST_UPDATED ?></small>
+        <small>Last updated: <?= $this->noHtml($LAST_UPDATED) ?></small>
     </td>
 </tr>
 </table>

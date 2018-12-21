@@ -69,7 +69,7 @@ open bug.</p>
 
 <ul>
     <?php foreach ($searches as $title => $sufix): ?>
-        <li><a href="<?= $base_default.htmlspecialchars($sufix); ?>"><?= $title; ?></a></li>
+        <li><a href="<?= $base_default.$this->e($sufix); ?>"><?= $this->e($title); ?></a></li>
     <?php endforeach; ?>
 </ul>
 
