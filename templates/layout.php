@@ -87,7 +87,7 @@ if ($logged_in === 'developer') {
         </small>
     </td>
     <td class="foot-source">
-        <small>Last updated: <?= $this->noHtml($LAST_UPDATED) ?></small>
+        <small>Last updated: <?= $LAST_UPDATED ?></small>
     </td>
 </tr>
 </table>

@@ -1,7 +1,7 @@
-<?php $this->layout('layout.html.php', ['title' => 'Bugs homepage']) ?>
+<?php $this->layout('layout.php', ['title' => 'Bugs homepage']) ?>
 
 <?php $this->start('content'); ?>
-<?= $this->addAsterisks($foo); ?>
+<?= $foo; ?>
 <?php $this->end('content'); ?>
 
 <?php $this->start('sidebar'); ?>

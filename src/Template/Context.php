@@ -4,19 +4,37 @@ namespace App\Template;
 
 /**
  * Default template engine context. Context represents a template scope where
- * $this pseudo-variable is used in templates and the context methods can be
- * called in the template as $this->methodCall().
+ * $this pseudo-variable is used in template files and the context methods can
+ * be called as $this->method().
  */
 class Context
 {
     /**
-     * Pool of sections in a given template context.
+     * Templates directory.
+     * @var string
+     */
+    private $templatesDir;
+
+    /**
+     * The template of this context.
+     * @var string
+     */
+    private $template;
+
+    /**
+     * All assigned and set variables for the template.
+     * @var array
+     */
+    private $variables = [];
+
+    /**
+     * Pool of sections for the template context.
      * @var array
      */
     private $sections = [];
 
     /**
-     * Current layout for the given template context.
+     * Current layout for the template context.
      * @var string
      */
     private $layout;
@@ -25,7 +43,7 @@ class Context
      * Each layout can have its own variables set in the template directly.
      * @var array
      */
-    private $layoutVars = [];
+    private $layoutVariables = [];
 
     /**
      * Pool of registered callable functions.
@@ -33,14 +51,26 @@ class Context
      */
     private $functions = [];
 
+    public function __construct(
+        string $templatesDir,
+        string $template,
+        array $variables = [],
+        array $functions = []
+    ) {
+        $this->templatesDir = $templatesDir;
+        $this->template = $template;
+        $this->variables = $variables;
+        $this->functions = $functions;
+    }
+
     /**
      * Sets a layout for a given template. Additional variables in the layout
      * scope can be defined via second argument.
      */
-    public function layout(string $name, array $vars = []): void
+    public function layout(string $name, array $variables = []): void
     {
         $this->layout = $name;
-        $this->layoutVars = $vars;
+        $this->layoutVariables = $variables;
     }
 
     /**
@@ -100,17 +130,9 @@ class Context
     }
 
     /**
-     * Add a callable function to the functions pool.
-     */
-    public function addFunction(string $name, callable $callback): void
-    {
-        $this->functions[$name] = $callback;
-    }
-
-    /**
      * A proxy to call registered functions if needed.
      */
-    public function __call(string $method, $args)
+    public function __call(string $method, array $args)
     {
         if (isset($this->functions[$method])) {
             return call_user_func_array($this->functions[$method], $args);

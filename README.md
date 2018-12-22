@@ -108,38 +108,38 @@ git pull --rebase
 
 ### Templates
 
-Application has a simple template engine built in to separate logic from the
-presentation layer with several options.
-
-Initialization of the template engine:
+A simple template engine integrated in the application separates logic from the
+presentation.
 
 ```php
 <?php
 
-// In front controller (index.php) or bootstrap (includes/prepend.php)
-$template = new App\Template(__DIR__.'/../templates', new App\Template\Context());
+// Template engine initialization in the bootstrap includes/prepend.php
+$template = new App\Template\Engine(__DIR__.'/../templates');
 
-// Output the processed template content
-echo $template->render('pages/index.html.php', [
-    'parameter' => 'Value',
+// Render template from www/index.php or controller
+echo $template->render('pages/index.php', [
+    'variable' => 'Value',
 ]);
 ```
 
-Above template `pages/index.html.php` is located in the templates directory:
+The `templates/pages/index.php`:
 
 ```php
-<?php $this->layout('layout.html.php', ['title' => 'Optional additional title']) ?>
+<?php $this->layout('layout.php', ['title' => 'Optional additional title']) ?>
 
 <?php $this->start('content') ?>
     <h1>PHP Bugs System</h1>
 
-    <p>...</p>
-
-    Parameter value: <?= $this->noHtml($parameter) ?>
+    <p>Variable: <?= $this->noHtml($variable) ?></p>
 <?php $this->end('content') ?>
+
+<?php $this->start('scripts') ?>
+    <script>/js/feature.js</script>
+<?php $this->end('scripts') ?>
 ```
 
-Main `layout.html.php`:
+The `templates/layout.php`:
 
 ```php
 <!DOCTYPE html>
@@ -153,6 +153,35 @@ Main `layout.html.php`:
         <?= $this->section('content') ?>
 
         <script src="/js/app.js"></script>
+        <?= $this->section('scripts') ?>
     </body>
 </html>
+```
+
+Assigning variables before rendering:
+
+```php
+$template->assign([
+    'site' => 'bugs.php.net',
+]);
+```
+
+Using assigned variables in the template file:
+
+```php
+<p><?= $site ?></p>
+```
+
+Registering additional template helpers:
+
+```php
+$template->register('formatDate' => function (int $timestamp): string {
+    return gmdate('Y-m-d H:i e', $timestamp - date('Z', $timestamp));
+});
+```
+
+Template file:
+
+```php
+<p>Time: <?= $this->formatDate(time()) ?></p>
 ```

@@ -1,4 +1,4 @@
-<?php $this->layout('layout.html.php', ['title' => 'Bugs homepage']) ?>
+<?php $this->layout('layout.php', ['title' => 'Bugs homepage']) ?>
 
 <?php $this->start('content') ?>
 
@@ -68,8 +68,8 @@ open bug.</p>
 <?php $base_default = "{$site_method}://{$site_url}/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open"; ?>
 
 <ul>
-    <?php foreach ($searches as $title => $sufix): ?>
-        <li><a href="<?= $base_default.$this->e($sufix); ?>"><?= $this->e($title); ?></a></li>
+    <?php foreach ($searches as $title => $suffix): ?>
+        <li><a href="<?= $base_default.$this->e($suffix); ?>"><?= $this->e($title); ?></a></li>
     <?php endforeach; ?>
 </ul>
 

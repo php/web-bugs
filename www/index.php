@@ -5,8 +5,7 @@
  */
 
 use App\Repository\BugRepository;
-use App\Template\Context;
-use App\Template;
+use App\Template\Engine;
 
 // Application bootstrap
 require_once __DIR__.'/../include/prepend.php';
@@ -17,9 +16,9 @@ session_start();
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
-// Initialize template engine
-$template = new Template(__DIR__.'/../templates', new Context());
-$template->add([
+// Initialize template engine.
+$template = new Engine(__DIR__.'/../templates');
+$template->assign([
     'LAST_UPDATED' => $LAST_UPDATED,
     'basedir'      => $basedir,
     'siteBig'      => $siteBig,
@@ -56,6 +55,6 @@ if (!empty($_SESSION["user"])) {
 }
 
 // Output template with given template variables.
-echo $template->render('pages/index.html.php', [
+echo $template->render('pages/index.php', [
     'searches' => $searches,
 ]);
