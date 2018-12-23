@@ -45,7 +45,7 @@ if (!empty($_SESSION['user'])) {
     $searches['Your assigned open bugs'] = '&assign='.urlencode($_SESSION['user']);
 }
 
-// Prefix se query strings with base URL
+// Prefix query strings with base URL
 $base = $site_method.'://'.$site_url.'/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open';
 $searches = preg_filter('/^/', $base, $searches);
 
