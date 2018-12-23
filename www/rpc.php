@@ -31,8 +31,6 @@ if (isset($_POST['MAGIC_COOKIE'])) {
 
 bugs_authenticate($user, $pwd, $logged_in, $user_flags);
 
-$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
-
 if (empty($auth_user->handle)) {
 	echo json_encode(['result' => ['error' => 'Invalid user or password']]);
 	exit;

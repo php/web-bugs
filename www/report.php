@@ -22,9 +22,6 @@ $pseudo_pkgs = $packageRepository->findEnabled($_GET['project'] ?? '');
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
-$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
-$is_security_developer = ($user_flags & BUGS_SECURITY_DEV);
-
 require "{$ROOT_DIR}/include/php_versions.php";
 
 // captcha is not necessary if the user is logged in
@@ -74,7 +71,7 @@ if (isset($_POST['in'])) {
 
 			$where_clause = "WHERE package_name != 'Feature/Change Request'";
 
-			if (!$is_security_developer) {
+			if (!($user_flags & BUGS_SECURITY_DEV)) {
 				$where_clause .= " AND private = 'N' ";
 			}
 
@@ -87,7 +84,7 @@ if (isset($_POST['in'])) {
 
 			$possible_duplicates = $dbh->prepare($query)->execute()->fetchAll();
 
-			if (count($possible_duplicates) == 0) {
+			if (!$possible_duplicates) {
 				$ok_to_submit_report = true;
 			} else {
 				response_header("Report - Confirm", $packageAffectedScript);

@@ -44,8 +44,6 @@ if (!($buginfo = $bugRepository->findOneById($bug_id))) {
 
 $package_name = $buginfo['package_name'];
 
-$is_trusted_developer = ($user_flags & BUGS_TRUSTED_DEV);
-
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
 	$captcha = new Captcha();
