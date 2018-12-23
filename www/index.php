@@ -3,7 +3,6 @@
 /**
  * The bug system home page.
  */
-
 use App\Repository\BugRepository;
 
 // Application bootstrap
@@ -16,8 +15,8 @@ session_start();
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 $template->assign([
-    'auth_user'    => $auth_user,
-    'logged_in'    => $logged_in,
+    'auth_user' => $auth_user,
+    'logged_in' => $logged_in,
 ]);
 
 // If 'id' is passed redirect to the bug page
@@ -26,7 +25,7 @@ if ($id) {
     redirect("bug.php?id={$id}");
 }
 
-if($_SERVER['REQUEST_URI'] == '/random') {
+if ('/random' === $_SERVER['REQUEST_URI']) {
     $id = (new BugRepository($dbh))->findRandom();
     redirect("bug.php?id={$id[0]}");
 }
@@ -39,10 +38,10 @@ $searches = [
     'Most recent open bugs (PHP 7.2)' => '&bug_type=All&phpver=7.2',
     'Most recent open bugs (PHP 7.3)' => '&bug_type=All&phpver=7.3',
     'Open Documentation bugs' => '&bug_type=Documentation+Problem',
-    'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y'
+    'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y',
 ];
 
-if (!empty($_SESSION["user"])) {
+if (!empty($_SESSION['user'])) {
     $searches['Your assigned open bugs'] = '&assign='.urlencode($_SESSION['user']);
 }
 

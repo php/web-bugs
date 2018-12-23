@@ -11,46 +11,56 @@ class Context
 {
     /**
      * Templates directory.
+     *
      * @var string
      */
     private $templatesDir;
 
     /**
      * The template of this context.
+     *
      * @var string
      */
     private $template;
 
     /**
      * All assigned and set variables for the template.
+     *
      * @var array
      */
     private $variables = [];
 
     /**
      * Pool of sections for the template context.
+     *
      * @var array
      */
     private $sections = [];
 
     /**
      * Current layout for the template context.
+     *
      * @var string
      */
     private $layout;
 
     /**
      * Each layout can have its own variables set in the template directly.
+     *
      * @var array
      */
     private $layoutVariables = [];
 
     /**
      * Pool of registered callable functions.
+     *
      * @var array
      */
     private $functions = [];
 
+    /**
+     * Class constructor.
+     */
     public function __construct(
         string $templatesDir,
         string $template,
@@ -94,7 +104,8 @@ class Context
     }
 
     /**
-     * Append content to a template section. Same as ::start() except that
+     * Append content to a template section. If no section with the key name
+     * exists yet it starts a new one.
      */
     public function append(string $name): void
     {
@@ -131,11 +142,10 @@ class Context
     /**
      * Scalpel when preventing XSS vulnerabilities. This escapes given string
      * and still preserves certain characters as HTML.
-     * TODO - refactor and fix.
      */
     public function e(string $string): string
     {
-        return htmlspecialchars($string, ENT_QUOTES);
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
     }
 
     /**

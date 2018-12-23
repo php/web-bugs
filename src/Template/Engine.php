@@ -2,8 +2,6 @@
 
 namespace App\Template;
 
-use App\Template\Context;
-
 /**
  * Template engine created for bugs.php.net. Goal is not to reinvent a new
  * template engine and compete with other much better ones out there but instead
@@ -18,12 +16,14 @@ class Engine
 {
     /**
      * Templates directory contains all application templates.
+     *
      * @var string
      */
     private $templatesDir;
 
     /**
      * Pool of registered functions in the application.
+     *
      * @var array
      */
     private $functions = [];
@@ -31,6 +31,7 @@ class Engine
     /**
      * Assigned variables after template initialization and before calling the
      * render method.
+     *
      * @var array
      */
     private $variables = [];
@@ -90,7 +91,7 @@ class Engine
      * Renders given template file and populates its scope with variables
      * provided as array elements. Each array key is a variable name in template
      * scope and array item value is set as a variable value. Note that $this
-     * pseudo-variable in the closure refers to the Context::class scope.
+     * pseudo-variable in the closure refers to the scope of the Context class.
      */
     public function render(string $template, array $variables = []): string
     {

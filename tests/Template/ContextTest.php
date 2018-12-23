@@ -15,19 +15,19 @@ class ContextTest extends TestCase
     public function testSection()
     {
         $this->context->start('foo');
-            echo 'bar';
+        echo 'bar';
         $this->context->end('foo');
 
         $this->assertEquals($this->context->section('foo'), 'bar');
 
         $this->context->append('foo');
-            echo 'baz';
+        echo 'baz';
         $this->context->end('foo');
 
         $this->assertEquals($this->context->section('foo'), 'barbaz');
 
         $this->context->start('foo');
-            echo 'overridden';
+        echo 'overridden';
         $this->context->end('foo');
 
         $this->assertEquals($this->context->section('foo'), 'overridden');

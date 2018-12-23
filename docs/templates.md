@@ -41,7 +41,7 @@ The `templates/pages/index.php` looks something like this:
 <?php $this->end('content') ?>
 
 <?php $this->start('scripts') ?>
-    <script>/js/feature.js</script>
+    <script src="/js/feature.js"></script>
 <?php $this->end('scripts') ?>
 ```
 
@@ -80,7 +80,7 @@ To include partial template snippet file in other template or layout:
 
 ## Sections
 
-Sections are main building block where template snippet can be included into
+Sections are main building blocks where template snippet can be included into
 the main layout file.
 
 Section snippet is started with the `$this->start('section_name')` call:
@@ -112,7 +112,7 @@ In `templates/layout.php`:
 
 In `templates/pages/index.php`:
 
-```html
+```php
 <?php $this->layout('layout.php'); ?>
 
 <?php $this->start('scripts'); ?>
@@ -124,7 +124,7 @@ In `templates/pages/index.php`:
 
 In `templates/forms/form.php`:
 
-```html
+```php
 <?php $this->append('scripts'); ?>
     <script src="/js/bar.js"></script>
 <?php $this->end('scripts'); ?>
@@ -156,4 +156,21 @@ Using helpers in the template file:
 
 ```php
 <p>Time: <?= $this->formatDate(time()) ?></p>
+```
+
+## Escaping
+
+When protecting against XSS there are two built-in methods provided.
+
+To replaces all characters to their applicable HTML entities in the given
+string:
+
+```php
+<?= $this->noHtml($var) ?>
+```
+
+To escape given string and still preserves certain characters as HTML:
+
+```php
+<?= $this->e($var) ?>
 ```

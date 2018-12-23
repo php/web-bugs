@@ -15,8 +15,8 @@ class EngineTest extends TestCase
     public function testView()
     {
         $content = $this->template->render('pages/view.php', [
-            'foo'     => 'Lorem ipsum dolor sit amet.',
-            'sidebar' => 'PHP is a popular general-purpose scripting language that is especially suited to web development'
+            'foo' => 'Lorem ipsum dolor sit amet.',
+            'sidebar' => 'PHP is a popular general-purpose scripting language that is especially suited to web development',
         ]);
 
         $this->assertRegexp('/Lorem ipsum dolor sit amet/', $content);
@@ -25,7 +25,7 @@ class EngineTest extends TestCase
 
     public function testRegister()
     {
-        $this->template->register('addAsterisks', function($var) {
+        $this->template->register('addAsterisks', function ($var) {
             return '***'.$var.'***';
         });
 
@@ -60,10 +60,10 @@ class EngineTest extends TestCase
 
         $this->template->assign([
             'baz',
-            'qux' => 'quuz'
+            'qux' => 'quuz',
         ]);
 
-        $this->assertEquals(['baz', 'bar', 'qux' => 'quuz',], $this->template->getVariables());
+        $this->assertEquals(['baz', 'bar', 'qux' => 'quuz'], $this->template->getVariables());
     }
 
     public function testVariablesScope()
@@ -96,22 +96,22 @@ class EngineTest extends TestCase
 
         $content = $this->template->render('pages/invalid_variables.php', [
             'foo' => 'Lorem ipsum dolor sit amet',
-            1     => 'Invalid overridden value with key 1',
+            1 => 'Invalid overridden value with key 1',
         ]);
     }
 
     public function testOverrides()
     {
         $this->template->assign([
-            'page_parameter_1'   => 'Page parameter 1',
-            'page_parameter_2'   => 'Page parameter 2',
+            'page_parameter_1' => 'Page parameter 1',
+            'page_parameter_2' => 'Page parameter 2',
             'layout_parameter_1' => 'Layout parameter 1',
             'layout_parameter_2' => 'Layout parameter 2',
             'layout_parameter_3' => 'Layout parameter 3',
         ]);
 
         $content = $this->template->render('pages/overrides.php', [
-            'page_parameter_2'   => 'Overridden parameter 2',
+            'page_parameter_2' => 'Overridden parameter 2',
             'layout_parameter_2' => 'Layout overridden parameter 2',
         ]);
 
