@@ -14,5 +14,7 @@
     <?= $layout_parameter_3 ?? '' ?>
 
     <?= $this->section('scripts') ?>
+
+    <?= $this->include('includes/banner.php') ?>
 </body>
 </html>

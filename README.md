@@ -45,7 +45,7 @@ Source code of this application is structured in the following directories:
 ```bash
 <web-bugs>/
  ├─ .git/                   # Git configuration and source directory
- ├─ docs/                   # Application specific documentation files
+ ├─ docs/                   # Application specific documentation
  └─ include/                # Application helper functions and configuration
     ├─ classes/             # PEAR class overrides
     ├─ prepend.php          # Autoloader, DB connection, container, app initialization
@@ -107,8 +107,7 @@ git pull --rebase
 
 ## Application architecture
 
-A more detailed information about this application can be found in the
-[documentation](/docs).
+A more detailed information can be found in the [documentation](/docs).
 
 ### Templates
 
@@ -116,26 +115,20 @@ A simple template engine is integrated in the application to separate logic from
 the presentation.
 
 ```php
-<?php
+$template = new App\Template\Engine('/path/to/templates');
 
-// Template engine initialization in the bootstrap includes/prepend.php
-$template = new App\Template\Engine(__DIR__.'/../templates');
-
-// Render template from www/index.php or controller
 echo $template->render('pages/index.php', [
-    'variable' => 'Value',
+    'heading' => 'PHP Bugs System',
 ]);
 ```
 
 The `templates/pages/index.php`:
 
 ```html
-<?php $this->layout('layout.php', ['title' => 'Bugs']) ?>
+<?php $this->layout('layout.php', ['title' => 'PHP Bug Tracking System Homepage']) ?>
 
 <?php $this->start('content') ?>
-    <h1>PHP Bugs System</h1>
-
-    <p>Variable: <?= $this->noHtml($variable) ?></p>
+    <h1><?= $this->noHtml($heading) ?></h1>
 <?php $this->end('content') ?>
 ```
 
@@ -146,7 +139,7 @@ The `templates/layout.php`:
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>PHP Bug Tracking System :: <?= $title ?? '' ?></title>
+        <title><?= $title ?? 'PHP Bugs' ?></title>
     </head>
     <body>
         <?= $this->section('content') ?>

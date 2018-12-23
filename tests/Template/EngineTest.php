@@ -130,4 +130,13 @@ class EngineTest extends TestCase
         $this->assertRegexp('/file\_1\.js/', $content);
         $this->assertRegexp('/file\_2\.js/', $content);
     }
+
+    public function testIncluding()
+    {
+        $content = $this->template->render('pages/including.php');
+
+        $this->assertRegexp('/\<form method\=\"post\"\>/', $content);
+
+        $this->assertRegexp('/Banner inclusion/', $content);
+    }
 }

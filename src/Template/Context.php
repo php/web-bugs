@@ -121,6 +121,14 @@ class Context
     }
 
     /**
+     * Include template file into existing template.
+     */
+    public function include(string $template): string
+    {
+        return include $this->templatesDir.'/'.$template;
+    }
+
+    /**
      * Scalpel when preventing XSS vulnerabilities. This escapes given string
      * and still preserves certain characters as HTML.
      * TODO - refactor and fix.

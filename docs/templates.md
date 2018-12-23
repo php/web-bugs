@@ -3,7 +3,8 @@
 A simple template engine is integrated in the application to separate logic from
 the presentation.
 
-Template engine is initialized in the application bootstrap `includes/prepend.php`:
+Template engine is initialized in the application bootstrap `includes/prepend.php`
+with the main templates folder defined:
 
 ```php
 $template = new App\Template\Engine(__DIR__.'/../templates');
@@ -69,23 +70,32 @@ Using assigned variables in the template file:
 <p><?= $site ?></p>
 ```
 
-## Template helpers
+## Including templates
 
-Registering additional template helpers:
-
-```php
-$template->register('formatDate' => function (int $timestamp): string {
-    return gmdate('Y-m-d H:i e', $timestamp - date('Z', $timestamp));
-});
-```
-
-Using helpers in the template file:
+To include partial template snippet file in other template or layout:
 
 ```php
-<p>Time: <?= $this->formatDate(time()) ?></p>
+<?php $this->include('forms/form.php') ?>
 ```
 
-## Appending sections
+## Sections
+
+Sections are main building block where template snippet can be included into
+the main layout file.
+
+Section snippet is started with the `$this->start('section_name')` call:
+
+```php
+<?php $this->start('content') ?>
+    <h1>PHP Bugs System</h1>
+
+    <p>Variable: <?= $this->noHtml($variable) ?></p>
+<?php $this->end('content') ?>
+```
+
+To mark end of the section snippet call `$this->end('section_name')`.
+
+### Appending sections
 
 To append section content into existing sections:
 
@@ -109,7 +119,7 @@ In `templates/pages/index.php`:
     <script src="/js/foo.js"></script>
 <?php $this->end('scripts'); ?>
 
-<?php include __DIR__.'/../forms/form.php'; ?>
+<?php $this->include('forms/form.php') ?>
 ```
 
 In `templates/forms/form.php`:
@@ -130,4 +140,20 @@ This way the end result looks something like this:
     <script src="/js/bar.js"></script>
 </body>
 </html>
+```
+
+## Template helpers
+
+Registering additional template helpers:
+
+```php
+$template->register('formatDate' => function (int $timestamp): string {
+    return gmdate('Y-m-d H:i e', $timestamp - date('Z', $timestamp));
+});
+```
+
+Using helpers in the template file:
+
+```php
+<p>Time: <?= $this->formatDate(time()) ?></p>
 ```
