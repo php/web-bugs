@@ -57,11 +57,9 @@ open bug.</p>
 
 <p>Common searches</p>
 
-<?php $base_default = "{$site_method}://{$site_url}/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open"; ?>
-
 <ul>
-    <?php foreach ($searches as $title => $suffix): ?>
-        <li><a href="<?= $base_default.$this->e($suffix); ?>"><?= $this->e($title); ?></a></li>
+    <?php foreach ($searches as $title => $url): ?>
+        <li><a href="<?= $this->e($url); ?>"><?= $this->e($title); ?></a></li>
     <?php endforeach; ?>
 </ul>
 
