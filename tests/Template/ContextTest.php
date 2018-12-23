@@ -20,7 +20,7 @@ class ContextTest extends TestCase
 
         $this->assertEquals($this->context->section('foo'), 'bar');
 
-        $this->context->start('foo', true);
+        $this->context->append('foo');
             echo 'baz';
         $this->context->end('foo');
 

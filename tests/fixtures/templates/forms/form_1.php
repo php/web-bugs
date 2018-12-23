@@ -1,4 +1,4 @@
-<?php $this->start('scripts', true); ?>
+<?php $this->append('scripts'); ?>
 <script src="/path/to/file_2.js"></script>
 <?php $this->end('scripts'); ?>
 

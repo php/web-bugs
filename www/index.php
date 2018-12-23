@@ -5,7 +5,6 @@
  */
 
 use App\Repository\BugRepository;
-use App\Template\Engine;
 
 // Application bootstrap
 require_once __DIR__.'/../include/prepend.php';
@@ -16,14 +15,7 @@ session_start();
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
-// Initialize template engine.
-$template = new Engine(__DIR__.'/../templates');
 $template->assign([
-    'LAST_UPDATED' => $LAST_UPDATED,
-    'basedir'      => $basedir,
-    'siteBig'      => $siteBig,
-    'site_method'  => $site_method,
-    'site_url'     => $site_url,
     'auth_user'    => $auth_user,
     'logged_in'    => $logged_in,
 ]);

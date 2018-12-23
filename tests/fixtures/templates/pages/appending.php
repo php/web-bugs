@@ -2,6 +2,6 @@
 
 <?php include __DIR__.'/../forms/form_1.php'; ?>
 
-<?php $this->start('scripts', true); ?>
+<?php $this->append('scripts'); ?>
 <script src="/path/to/file_1.js"></script>
 <?php $this->end('scripts'); ?>

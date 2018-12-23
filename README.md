@@ -45,6 +45,7 @@ Source code of this application is structured in the following directories:
 ```bash
 <web-bugs>/
  ├─ .git/                   # Git configuration and source directory
+ ├─ docs/                   # Application specific documentation files
  └─ include/                # Application helper functions and configuration
     ├─ classes/             # PEAR class overrides
     ├─ prepend.php          # Autoloader, DB connection, container, app initialization
@@ -106,10 +107,13 @@ git pull --rebase
 
 ## Application architecture
 
+A more detailed information about this application can be found in the
+[documentation](/docs).
+
 ### Templates
 
-A simple template engine integrated in the application separates logic from the
-presentation.
+A simple template engine is integrated in the application to separate logic from
+the presentation.
 
 ```php
 <?php
@@ -125,63 +129,27 @@ echo $template->render('pages/index.php', [
 
 The `templates/pages/index.php`:
 
-```php
-<?php $this->layout('layout.php', ['title' => 'Optional additional title']) ?>
+```html
+<?php $this->layout('layout.php', ['title' => 'Bugs']) ?>
 
 <?php $this->start('content') ?>
     <h1>PHP Bugs System</h1>
 
     <p>Variable: <?= $this->noHtml($variable) ?></p>
 <?php $this->end('content') ?>
-
-<?php $this->start('scripts') ?>
-    <script>/js/feature.js</script>
-<?php $this->end('scripts') ?>
 ```
 
 The `templates/layout.php`:
 
-```php
+```html
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="/css/style.css">
         <title>PHP Bug Tracking System :: <?= $title ?? '' ?></title>
     </head>
     <body>
         <?= $this->section('content') ?>
-
-        <script src="/js/app.js"></script>
-        <?= $this->section('scripts') ?>
     </body>
 </html>
-```
-
-Assigning variables before rendering:
-
-```php
-$template->assign([
-    'site' => 'bugs.php.net',
-]);
-```
-
-Using assigned variables in the template file:
-
-```php
-<p><?= $site ?></p>
-```
-
-Registering additional template helpers:
-
-```php
-$template->register('formatDate' => function (int $timestamp): string {
-    return gmdate('Y-m-d H:i e', $timestamp - date('Z', $timestamp));
-});
-```
-
-Template file:
-
-```php
-<p>Time: <?= $this->formatDate(time()) ?></p>
 ```

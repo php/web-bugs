@@ -86,9 +86,19 @@ class Context
      * buffering is used to capture the section content. Content can be also
      * appended to previously set same section name.
      */
-    public function start(string $name, bool $append = false): void
+    public function start(string $name): void
     {
-        if (!$append) {
+        $this->sections[$name] = '';
+
+        ob_start();
+    }
+
+    /**
+     * Append content to a template section. Same as ::start() except that
+     */
+    public function append(string $name): void
+    {
+        if (!isset($this->sections[$name])) {
             $this->sections[$name] = '';
         }
 
@@ -96,8 +106,8 @@ class Context
     }
 
     /**
-     * Ends started section. Under the hood separate output buffering is used
-     * to capture all section content to a sections pool.
+     * Ends section output buffering and store the section content into sections
+     * pool.
      */
     public function end(string $name): void
     {
