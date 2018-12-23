@@ -2,14 +2,6 @@
 
 <?php $this->start('content') ?>
 
-<script>
-var bugid = window.location.hash.substr(1) * 1;
-if (bugid > 0) {
-    var loc = window.location;
-    loc.href = loc.protocol + '//' + loc.host+(loc.port ? ':'+loc.port : '')+'/'+bugid;
-}
-</script>
-
 <h1>PHP Bug Tracking System</h1>
 
 <p>Before you report a bug, please make sure you have completed the following steps:</p>
@@ -79,3 +71,7 @@ open bug.</p>
 reported on our <a href="stats.php">bug statistics page</a>.</p>
 
 <?php $this->end('content') ?>
+
+<?php $this->start('scripts') ?>
+    <script src="/js/redirect.js"></script>
+<?php $this->end('scripts') ?>
