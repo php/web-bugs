@@ -51,7 +51,9 @@ class BugRepository
         $statement = $this->dbh->prepare($sql);
         $statement->execute([$id]);
 
-        return $statement->fetch();
+        $result = $statement->fetch();
+
+        return $result === false ? [] : $result;
     }
 
     /**

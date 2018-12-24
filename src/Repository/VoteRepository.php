@@ -33,10 +33,6 @@ class VoteRepository
 
         $result = $statement->fetch();
 
-        if ($result === false) {
-            return [];
-        }
-
-        return $result;
+        return $result === false ? [] : $result;
     }
 }
