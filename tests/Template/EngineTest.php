@@ -139,4 +139,11 @@ class EngineTest extends TestCase
 
         $this->assertRegexp('/Banner inclusion/', $content);
     }
+
+    public function testNoLayout()
+    {
+        $content = $this->template->render('pages/no_layout_1.rss');
+
+        $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/pages/no_layout_1.rss'), $content);
+    }
 }

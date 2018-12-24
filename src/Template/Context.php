@@ -59,6 +59,14 @@ class Context
     private $functions = [];
 
     /**
+     * When creating closure in the engine, a buffer is used for storing
+     * transient output data that is finally returned when rendering.
+     *
+     * @var string
+     */
+    private $buffer;
+
+    /**
      * Class constructor.
      */
     public function __construct(

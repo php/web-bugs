@@ -46,7 +46,7 @@ if (!empty($_SESSION['user'])) {
 }
 
 // Prefix query strings with base URL
-$base = $site_method.'://'.$site_url.'/search.php?limit=30&amp;order_by=id&amp;direction=DESC&amp;cmd=display&amp;status=Open';
+$base = $site_method.'://'.$site_url.'/search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open';
 $searches = preg_filter('/^/', $base, $searches);
 
 // Output template with given template variables.

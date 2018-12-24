@@ -120,19 +120,21 @@ class Engine
                     include $this->templatesDir.'/'.$this->template;
                 } catch (\Exception $e) {
                     ob_end_clean();
+
                     throw $e;
                 }
 
-                $content = ob_get_clean();
-
-                ob_start();
+                $this->buffer = ob_get_clean();
 
                 if (isset($this->layout) && is_file($this->templatesDir.'/'.$this->layout)) {
+                    $this->buffer = trim($this->buffer);
+                    ob_start();
                     extract($this->layoutVariables);
                     include $this->templatesDir.'/'.$this->layout;
+                    $this->buffer .= ob_get_clean();
                 }
 
-                return ob_get_clean().$content;
+                return $this->buffer;
             },
             $context,
             Context::class
