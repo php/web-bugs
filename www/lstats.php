@@ -46,7 +46,7 @@ if (!$phpver || ($phpver !== 5 && $phpver !== 7)) {
 
 if (isset($_GET['per_category']))
 {
-	$packageRepository = new PackageRepository($dbh);
+	$packageRepository = $container->get(PackageRepository::class);
 	$pseudo_pkgs = $packageRepository->findAll($_GET['project'] ?? '');
 
 	$totals = [];

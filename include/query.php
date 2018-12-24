@@ -22,7 +22,7 @@ $order_options = [
 ];
 
 // Fetch pseudo packages
-$packageRepository = new PackageRepository($dbh);
+$packageRepository = $container->get(PackageRepository::class);
 $pseudo_pkgs = $packageRepository->findAll();
 
 // Setup input variables..

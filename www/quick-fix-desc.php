@@ -7,7 +7,7 @@ session_start();
 // Obtain common includes
 require_once '../include/prepend.php';
 
-$reasonRepository = new ReasonRepository($dbh);
+$reasonRepository = $container->get(ReasonRepository::class);
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
 
 // Authenticate

@@ -20,7 +20,7 @@ if (!$bug_id) {
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
 // fetch info about the bug into $bug
-$bugRepository = new BugRepository($dbh);
+$bugRepository = $container->get(BugRepository::class);
 $bug = $bugRepository->findOneById($bug_id);
 
 if (!is_array($bug)) {
@@ -39,7 +39,7 @@ if ($logged_in != 'developer') {
 
 $project = !empty($_GET['project']) ? $_GET['project'] : false;
 
-$reasonRepository = new ReasonRepository($dbh);
+$reasonRepository = $container->get(ReasonRepository::class);
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
 
 // Handle reason / comments

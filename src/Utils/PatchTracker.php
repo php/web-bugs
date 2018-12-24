@@ -2,8 +2,6 @@
 
 namespace App\Utils;
 
-use App\Utils\Uploader;
-
 /**
  * Service for handling uploaded patches.
  */
@@ -48,10 +46,10 @@ class PatchTracker
     /**
      * Class constructor.
      */
-    public function __construct(\PDO $dbh, Uploader $uploader)
+    public function __construct(\PDO $dbh, Uploader $uploader, string $uploadsDir)
     {
         $this->dbh = $dbh;
-        $this->uploadsDir = BUG_PATCHTRACKER_TMPDIR;
+        $this->uploadsDir = $uploadsDir;
 
         $this->uploader = $uploader;
         $this->uploader->setMaxFileSize(self::MAX_FILE_SIZE);

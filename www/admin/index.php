@@ -53,7 +53,7 @@ if ($action === 'phpinfo') {
 
 } elseif ($action === 'list_lists') {
 	echo "<dl>\n";
-	foreach ((new PackageRepository($dbh))->findLists() as $row) {
+	foreach ($container->get(PackageRepository::class)->findLists() as $row) {
 		echo "<dt>", $row['name'], ": </dt>\n<dd>", mailto_list(explode(',', $row['list_email'])), "</dd>\n";
 	}
 	echo "</dl>\n";

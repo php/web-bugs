@@ -40,7 +40,7 @@ if (0 !== $id) {
 }
 
 if ('/random' === $_SERVER['REQUEST_URI']) {
-    $id = (new BugRepository($dbh))->findRandom();
+    $id = $container->get(BugRepository::class)->findRandom();
     redirect('bug.php?id='.$id[0]);
 }
 

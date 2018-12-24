@@ -27,7 +27,7 @@ if (empty($bug_id)) {
 	exit;
 }
 
-$bugRepository = new BugRepository($dbh);
+$bugRepository = $container->get(BugRepository::class);
 
 if (!($buginfo = $bugRepository->findOneById($bug_id))) {
 	response_header('Error :: invalid bug selected');
@@ -40,7 +40,7 @@ $package_name = $buginfo['package_name'];
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
-	$captcha = new Captcha();
+	$captcha = $container->get(Captcha::class);
 }
 
 $show_bug_info = bugs_has_access($bug_id, $buginfo, $pw, $user_flags);
@@ -52,8 +52,8 @@ if (!$show_bug_info) {
 	exit;
 }
 
-$pullinfo = new GitHub($dbh);
-$pullRequestRepository = new PullRequestRepository($dbh);
+$pullinfo = $container->get(GitHub::class);
+$pullRequestRepository = $container->get(PullRequestRepository::class);
 
 if (isset($_POST['addpull'])) {
 	$errors = [];
@@ -104,7 +104,7 @@ if (isset($_POST['addpull'])) {
 				$errors[] = 'This pull request is already added.';
 			}
 
-			if (DEVBOX) {
+			if ('dev' === $container->get('env')) {
 				$errors[] = $e->getMessage();
 			}
 		}

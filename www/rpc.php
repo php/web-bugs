@@ -37,7 +37,7 @@ if (empty($auth_user->handle)) {
 }
 
 // fetch info about the bug into $bug
-$bugRepository = new BugRepository($dbh);
+$bugRepository = $container->get(BugRepository::class);
 $bug = $bugRepository->findOneById($bug_id);
 
 if (!is_array($bug)) {

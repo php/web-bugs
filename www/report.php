@@ -5,7 +5,6 @@ use App\Repository\ReasonRepository;
 use App\Utils\Cache;
 use App\Utils\Captcha;
 use App\Utils\PatchTracker;
-use App\Utils\Uploader;
 use App\Utils\Versions\Client;
 use App\Utils\Versions\Generator;
 
@@ -19,7 +18,7 @@ session_start();
 $errors = [];
 $ok_to_submit_report = false;
 
-$packageRepository = new PackageRepository($dbh);
+$packageRepository = $container->get(PackageRepository::class);
 $pseudo_pkgs = $packageRepository->findEnabled($_GET['project'] ?? '');
 
 // Authenticate
@@ -33,7 +32,7 @@ $versions = $versionsGenerator->getVersions();
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
-	$captcha = new Captcha();
+	$captcha = $container->get(Captcha::class);
 }
 
 $packageAffectedScript = <<<SCRIPT
@@ -233,8 +232,7 @@ OUTPUT;
 
 			$redirectToPatchAdd = false;
 			if (!empty($_POST['in']['patchname']) && $_POST['in']['patchname']) {
-				$uploader = new Uploader();
-				$tracker = new PatchTracker($dbh, $uploader);
+				$tracker = $container->get(PatchTracker::class);
 
 				try {
 					$developer = !empty($_POST['in']['handle']) ? $_POST['in']['handle'] : $_POST['in']['email'];
@@ -284,7 +282,7 @@ REPORT;
 			}
 
 			// provide shortcut URLS for "quick bug fixes"
-			$reasonRepository = new ReasonRepository($dbh);
+			$reasonRepository = $container->get(ReasonRepository::class);
 			list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($_GET['project'] ?? '');
 
 			$dev_extra = '';

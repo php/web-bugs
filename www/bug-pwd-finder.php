@@ -10,7 +10,7 @@ require_once '../include/prepend.php';
 // Start session (for captcha!)
 session_start();
 
-$captcha = new Captcha();
+$captcha = $container->get(Captcha::class);
 
 $errors  = [];
 $success = false;

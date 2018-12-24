@@ -4,14 +4,12 @@ use App\Repository\BugRepository;
 use App\Repository\PatchRepository;
 use App\Utils\Captcha;
 use App\Utils\PatchTracker;
-use App\Utils\Uploader;
 
 // Obtain common includes
 require_once '../include/prepend.php';
 
-$uploader = new Uploader();
-$patchTracker = new PatchTracker($dbh, $uploader);
-$patchRepository = new PatchRepository($dbh);
+$patchTracker = $container->get(PatchTracker::class);
+$patchRepository = $container->get(PatchRepository::class);
 
 session_start();
 
@@ -33,7 +31,7 @@ if (empty($bug_id)) {
 	exit;
 }
 
-$bugRepository = new BugRepository($dbh);
+$bugRepository = $container->get(BugRepository::class);
 
 if (!($buginfo = $bugRepository->findOneById($bug_id))) {
 	response_header('Error :: invalid bug selected');
@@ -46,7 +44,7 @@ $package_name = $buginfo['package_name'];
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
-	$captcha = new Captcha();
+	$captcha = $container->get(Captcha::class);
 }
 
 $show_bug_info = bugs_has_access($bug_id, $buginfo, $pw, $user_flags);

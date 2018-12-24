@@ -43,7 +43,7 @@ if (!array_key_exists($sort_by, $titles)) {
 }
 
 $bug_type = $_GET['bug_type'] ?? 'All';
-$bugRepository = new BugRepository($dbh);
+$bugRepository = $container->get(BugRepository::class);
 
 foreach ($bugRepository->findAllByBugType($bug_type) as $row) {
 	$pkg_tmp[$row['status']][$row['package_name']] = $row['quant'];

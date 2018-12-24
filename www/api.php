@@ -15,7 +15,7 @@ $action   = isset($_GET['action'])   ? $_GET['action']         : 'unknown';
 $interval = isset($_GET['interval']) ? (int) $_GET['interval'] : 7;
 
 if ($type === 'docs' && $action === 'closed' && $interval) {
-	$commentRepository = new CommentRepository($dbh);
+	$commentRepository = $container->get(CommentRepository::class);
 	$rows = $commentRepository->findDocsComments($interval);
 
 	//@todo add error handling

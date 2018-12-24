@@ -23,7 +23,7 @@ $reproduced = (int) $_POST['reproduced'];
 $samever = isset($_POST['samever']) ? (int) $_POST['samever'] : 0;
 $sameos = isset($_POST['sameos']) ? (int) $_POST['sameos'] : 0;
 
-if (!(new BugRepository($dbh))->exists($id)) {
+if (!$container->get(BugRepository::class)->exists($id)) {
 	session_start();
 
 	// Authenticate
@@ -64,7 +64,7 @@ $ip = ip2long(get_real_ip());
 // TODO: check if ip address has been banned. hopefully this will never need to be implemented.
 
 // Check whether the user has already voted on this bug.
-if (empty((new VoteRepository($dbh))->findOneByIdAndIp($id, $ip))) {
+if (empty($container->get(VoteRepository::class)->findOneByIdAndIp($id, $ip))) {
 	// If the user vote isn't found, create one.
 	$dbh->prepare("
 		INSERT INTO bugdb_votes (bug, ip, score, reproduced, tried, sameos, samever)

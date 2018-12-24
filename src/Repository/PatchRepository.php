@@ -22,10 +22,10 @@ class PatchRepository
     /**
      * Class constructor.
      */
-    public function __construct(\PDO $dbh)
+    public function __construct(\PDO $dbh, string $uploadsDir)
     {
         $this->dbh = $dbh;
-        $this->uploadsDir = BUG_PATCHTRACKER_TMPDIR;
+        $this->uploadsDir = $uploadsDir;
     }
 
     /**

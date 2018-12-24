@@ -10,7 +10,7 @@ require __DIR__ . '/../../include/prepend.php';
   is a little odd that way.
   'No Feedback' was once a part of this, but no longer: https://news.php.net/php.webmaster/8828
 */
-foreach ((new BugRepository($dbh))->findAllAssigned() as $assigned => $binfos) {
+foreach ($container->get(BugRepository::class)->findAllAssigned() as $assigned => $binfos) {
 
 	$mbody      = format_email_body($binfos);
 	$email_user = $assigned . '@php.net';

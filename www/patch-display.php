@@ -4,7 +4,6 @@ use App\Repository\BugRepository;
 use App\Repository\ObsoletePatchRepository;
 use App\Repository\PatchRepository;
 use App\Utils\PatchTracker;
-use App\Utils\Uploader;
 use App\Utils\Diff;
 
 session_start();
@@ -12,10 +11,9 @@ session_start();
 // Obtain common includes
 require_once '../include/prepend.php';
 
-$obsoletePatchRepository = new ObsoletePatchRepository($dbh);
-$patchRepository = new PatchRepository($dbh);
-$uploader = new Uploader();
-$patchTracker = new PatchTracker($dbh, $uploader);
+$obsoletePatchRepository = $container->get(ObsoletePatchRepository::class);
+$patchRepository = $container->get(PatchRepository::class);
+$patchTracker = $container->get(PatchTracker::class);
 
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
@@ -40,7 +38,7 @@ if (empty($bug_id)) {
 	$bug_id = (int) $_GET['bug_id'];
 }
 
-$bugRepository = new BugRepository($dbh);
+$bugRepository = $container->get(BugRepository::class);
 
 if (!($buginfo = $bugRepository->findOneById($bug_id))) {
 	response_header('Error :: invalid bug selected');

@@ -16,8 +16,8 @@ require_once '../include/prepend.php';
 // Start session
 session_start();
 
-$obsoletePatchRepository = new ObsoletePatchRepository($dbh);
-$patchRepository = new PatchRepository($dbh);
+$obsoletePatchRepository = $container->get(ObsoletePatchRepository::class);
+$patchRepository = $container->get(PatchRepository::class);
 
 define('SPAM_REJECT_MESSAGE', 'Your comment looks like SPAM by its content. Please consider rewording.');
 $email = null;
@@ -125,14 +125,14 @@ if ($edit == 1 && $is_trusted_developer && isset($_GET['delete_comment'])) {
 
 // captcha is not necessary if the user is logged in
 if (!$logged_in) {
-	$captcha = new Captcha();
+	$captcha = $container->get(Captcha::class);
 }
 
 $trytoforce = isset($_POST['trytoforce']) ? (int) $_POST['trytoforce'] : 0;
 
 // fetch info about the bug into $bug
 if (!isset($bug)) {
-	$bugRepository = new BugRepository($dbh);
+	$bugRepository = $container->get(BugRepository::class);
 	$bug = $bugRepository->findOneById($bug_id);
 }
 
@@ -187,13 +187,13 @@ $project = $bug['project'];
 
 // Only fetch stuff when it's really needed
 if ($edit && $edit < 3) {
-	$packageRepository = new PackageRepository($dbh);
+	$packageRepository = $container->get(PackageRepository::class);
 	$pseudo_pkgs = $packageRepository->findEnabled();
 }
 
 // Fetch RESOLVE_REASONS array
 if ($edit === 1) {
-	$reasonRepository = new ReasonRepository($dbh);
+	$reasonRepository = $container->get(ReasonRepository::class);
 	list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($project);
 }
 
@@ -1096,7 +1096,7 @@ OUTPUT;
 	}
 	echo "<p><a href='patch-add.php?bug_id={$bug_id}'>Add a Patch</a></p>";
 
-	$pullRequestRepository = new PullRequestRepository($dbh);
+	$pullRequestRepository = $container->get(PullRequestRepository::class);
 	$pulls = $pullRequestRepository->findAllByBugId($bug_id);
 	echo "<h2>Pull Requests</h2>\n";
 
@@ -1105,7 +1105,7 @@ OUTPUT;
 }
 
 // Display comments
-$commentRepository = new CommentRepository($dbh);
+$commentRepository = $container->get(CommentRepository::class);
 $bug_comments = is_int($bug_id) ? $commentRepository->findByBugId($bug_id) : [];
 
 if ($show_bug_info && is_array($bug_comments) && count($bug_comments) && $bug['status'] !== 'Spam') {

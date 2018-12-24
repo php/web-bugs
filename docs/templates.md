@@ -4,7 +4,7 @@ A simple template engine separates logic from the presentation and provides
 methods for creating nested templates and escaping strings to protect against
 too common XSS vulnerabilities.
 
-It is initialized in the application bootstrap:
+Template engine initialization:
 
 ```php
 $template = new App\Template\Engine(__DIR__.'/../path/to/templates');

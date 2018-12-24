@@ -36,6 +36,7 @@ Source code of this application is structured in the following directories:
 ```bash
 <web-bugs>/
  ├─ .git/                   # Git configuration and source directory
+ ├─ config/                 # Application configuration parameters, services...
  ├─ docs/                   # Application documentation
  └─ include/                # Application helper functions and configuration
     ├─ prepend.php          # Autoloader, DB connection, container, app initialization

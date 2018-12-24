@@ -12,11 +12,11 @@ require __DIR__.'/../../include/prepend.php';
 $in = ['status' => 'No Feedback'];
 
 # Update relevant reports
-$reasonRepository = new ReasonRepository($dbh);
+$reasonRepository = $container->get(ReasonRepository::class);
 
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
 
-foreach ((new BugRepository($dbh))->findAllWithoutFeedback() as $bug)
+foreach ($container->get(BugRepository::class)->findAllWithoutFeedback() as $bug)
 {
 	list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 

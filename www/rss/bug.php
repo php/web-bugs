@@ -16,7 +16,7 @@ require_once '../../include/prepend.php';
 $bug_id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
 $format = isset($_REQUEST['format']) ? $_REQUEST['format'] : 'rss2';
 
-$bugRepository = new BugRepository($dbh);
+$bugRepository = $container->get(BugRepository::class);
 $bug = $bugRepository->findOneById($bug_id);
 
 if (!$bug) {
@@ -29,7 +29,7 @@ if ($bug['private'] == 'Y') {
 	die('Access restricted');
 }
 
-$commentRepository = new CommentRepository($dbh);
+$commentRepository = $container->get(CommentRepository::class);
 $comments = $commentRepository->findByBugId($bug_id);
 
 if ($format == 'xml') {
