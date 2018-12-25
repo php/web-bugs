@@ -3,41 +3,42 @@
 A simple template engine is integrated in the application to separate logic from
 the presentation.
 
-Template engine is initialized in the application bootstrap `includes/prepend.php`
-with the main templates folder defined:
+Several methods are provided to create a template with one main layout, blocks,
+and escaping of strings to not introduce too common XSS vulnerabilities.
+
+It is initialized in the application bootstrap:
 
 ```php
-$template = new App\Template\Engine(__DIR__.'/../templates');
+$template = new App\Template\Engine(__DIR__.'/../path/to/templates');
 ```
 
-Before rendering the template, some site-wide parameters can be assigned to be
+Site-wide configuration parameters can be assigned before rendering so they are
 available in all templates:
 
 ```php
 $template->assign([
-    'LAST_UPDATED' => $LAST_UPDATED,
-    'site_url'     => $site_url,
+    'siteUrl' => 'https://bugs.php.net',
     // ...
 ]);
 ```
 
-Particular template is then rendered in `www/index.php` or controller:
+Page can be rendered in the controller:
 
 ```php
 echo $template->render('pages/index.php', [
-    'variable' => 'Value',
+    'mainHeading' => 'How to report a bug?',
 ]);
 ```
 
-The `templates/pages/index.php` looks something like this:
+The `templates/pages/index.php`:
 
 ```php
-<?php $this->layout('layout.php', ['title' => 'Optional additional title']) ?>
+<?php $this->layout('layout.php', ['title' => 'Homepage']) ?>
 
 <?php $this->start('content') ?>
-    <h1>PHP Bugs System</h1>
+    <h1><?= $this->noHtml($mainHeading) ?></h1>
 
-    <p>Variable: <?= $this->noHtml($variable) ?></p>
+    <p><?= $siteUrl ?></p>
 <?php $this->end('content') ?>
 
 <?php $this->start('scripts') ?>
@@ -51,66 +52,65 @@ The `templates/layout.php`:
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
         <link rel="stylesheet" href="/css/style.css">
         <title>PHP Bug Tracking System :: <?= $title ?? '' ?></title>
     </head>
     <body>
-        <?= $this->section('content') ?>
+        <?= $this->block('content') ?>
+
+        <div><?= $siteUrl ?></div>
 
         <script src="/js/app.js"></script>
-        <?= $this->section('scripts') ?>
+        <?= $this->block('scripts') ?>
     </body>
 </html>
 ```
 
-Using assigned variables in the template file:
-
-```php
-<p><?= $site ?></p>
-```
-
 ## Including templates
 
-To include partial template snippet file in other template or layout:
+To include a partial template snippet file:
 
 ```php
-<?php $this->include('forms/form.php') ?>
+<?php $this->include('forms/report_bug.php') ?>
 ```
 
-## Sections
+which is equivalent to `<?php include __DIR__.'/../forms/report_bug.php' ?>`.
+The variable scope is inherited by the template that included the file.
 
-Sections are main building blocks where template snippet can be included into
-the main layout file.
+## Blocks
 
-Section snippet is started with the `$this->start('section_name')` call:
+Blocks are main building elements that contain template snippets and can be
+included into the main layout file.
+
+Block is started with the `$this->start('block_name')` call and ends with
+`$this->end('block_name')`:
 
 ```php
-<?php $this->start('content') ?>
-    <h1>PHP Bugs System</h1>
+<?php $this->start('block_name') ?>
+    <h1>Heading</h1>
 
-    <p>Variable: <?= $this->noHtml($variable) ?></p>
-<?php $this->end('content') ?>
+    <p>...</p>
+<?php $this->end('block_name') ?>
 ```
 
-To mark end of the section snippet call `$this->end('section_name')`.
+### Appending blocks
 
-### Appending sections
+Block content can be appended to existing blocks by using the
+`$this->append('block_name')`.
 
-To append section content into existing sections:
-
-In `templates/layout.php`:
+The `templates/layout.php`:
 
 ```html
 <html>
 <head></head>
 <body>
-<?= $this->section('scripts'); ?>
+<?= $this->block('scripts'); ?>
 </body>
 </html>
 ```
 
-In `templates/pages/index.php`:
+The `templates/pages/index.php`:
 
 ```php
 <?php $this->layout('layout.php'); ?>
@@ -122,7 +122,7 @@ In `templates/pages/index.php`:
 <?php $this->include('forms/form.php') ?>
 ```
 
-In `templates/forms/form.php`:
+The `templates/forms/form.php`:
 
 ```php
 <?php $this->append('scripts'); ?>
@@ -130,7 +130,7 @@ In `templates/forms/form.php`:
 <?php $this->end('scripts'); ?>
 ```
 
-This way the end result looks something like this:
+The final rendered page:
 
 ```html
 <html>
@@ -142,9 +142,10 @@ This way the end result looks something like this:
 </html>
 ```
 
-## Template helpers
+## Helpers
 
-Registering additional template helpers:
+Registering additional template helpers can be useful when a custom function or
+class method needs to be called in the template.
 
 ```php
 $template->register('formatDate' => function (int $timestamp): string {
@@ -152,7 +153,7 @@ $template->register('formatDate' => function (int $timestamp): string {
 });
 ```
 
-Using helpers in the template file:
+Using helpers in templates:
 
 ```php
 <p>Time: <?= $this->formatDate(time()) ?></p>

@@ -3,14 +3,10 @@
 namespace App\Template;
 
 /**
- * Template engine created for bugs.php.net. Goal is not to reinvent a new
- * template engine and compete with other much better ones out there but instead
- * provide a vanilla PHP approach and separate application logic from
- * presentation.
- *
- * Several methods are provided to create a template with one main layout,
- * sections, and escaping of strings to not introduce too common XSS
- * vulnerabilities.
+ * A simple template engine created for bugs.php.net. Goal is not to reinvent
+ * a new template engine and compete with other much better ones out there but
+ * instead provide a vanilla PHP approach and separate the application logic
+ * from the presentation.
  */
 class Engine
 {
@@ -19,7 +15,7 @@ class Engine
      *
      * @var string
      */
-    private $templatesDir;
+    private $dir;
 
     /**
      * Pool of registered functions in the application.
@@ -39,13 +35,13 @@ class Engine
     /**
      * Class constructor.
      */
-    public function __construct(string $templatesDir)
+    public function __construct(string $dir)
     {
-        if (!is_dir($templatesDir)) {
-            throw new \Exception($templatesDir.' is missing or not a valid directory.');
+        if (!is_dir($dir)) {
+            throw new \Exception($dir.' is missing or not a valid directory.');
         }
 
-        $this->templatesDir = $templatesDir;
+        $this->dir = $dir;
     }
 
     /**
@@ -79,11 +75,16 @@ class Engine
 
     /**
      * Add new template helper function as a callable defined in the (front)
-     * controller to the template scope. Useful when a custom function or class
-     * method needs to be called in the template.
+     * controller to the template scope.
      */
     public function register(string $name, callable $callback): void
     {
+        if (method_exists(Context::class, $name)) {
+            throw new \Exception(
+                $name.' is already registered by the template engine. Use a different name.'
+            );
+        }
+
         $this->functions[$name] = $callback;
     }
 
@@ -95,12 +96,12 @@ class Engine
      */
     public function render(string $template, array $variables = []): string
     {
-        if (!is_file($this->templatesDir.'/'.$template)) {
+        if (!is_file($this->dir.'/'.$template)) {
             throw new \Exception($template.' is missing or not a valid template.');
         }
 
         $context = new Context(
-            $this->templatesDir,
+            $this->dir,
             $template,
             $this->merge($this->variables, $variables),
             $this->functions
@@ -117,7 +118,7 @@ class Engine
                 ob_start();
 
                 try {
-                    include $this->templatesDir.'/'.$this->template;
+                    include $this->dir.'/'.$this->template;
                 } catch (\Exception $e) {
                     ob_end_clean();
 
@@ -126,11 +127,11 @@ class Engine
 
                 $this->buffer = ob_get_clean();
 
-                if (isset($this->layout) && is_file($this->templatesDir.'/'.$this->layout)) {
+                if (isset($this->layout) && is_file($this->dir.'/'.$this->layout)) {
                     $this->buffer = trim($this->buffer);
                     ob_start();
                     extract($this->layoutVariables);
-                    include $this->templatesDir.'/'.$this->layout;
+                    include $this->dir.'/'.$this->layout;
                     $this->buffer .= ob_get_clean();
                 }
 

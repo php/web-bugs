@@ -23,7 +23,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/PHP is a popular general-purpose/', $content);
     }
 
-    public function testRegister()
+    public function testRegisterNew()
     {
         $this->template->register('addAsterisks', function ($var) {
             return '***'.$var.'***';
@@ -34,6 +34,15 @@ class EngineTest extends TestCase
         ]);
 
         $this->assertRegexp('/\*\*\*Lorem ipsum dolor sit amet\.\*\*\*/', $content);
+    }
+
+    public function testRegisterExisting()
+    {
+        $this->expectException(\Exception::class);
+
+        $this->template->register('noHtml', function ($var) {
+            return $var;
+        });
     }
 
     public function testAssignments()
@@ -103,16 +112,16 @@ class EngineTest extends TestCase
     public function testOverrides()
     {
         $this->template->assign([
-            'page_parameter_1' => 'Page parameter 1',
-            'page_parameter_2' => 'Page parameter 2',
-            'layout_parameter_1' => 'Layout parameter 1',
-            'layout_parameter_2' => 'Layout parameter 2',
-            'layout_parameter_3' => 'Layout parameter 3',
+            'pageParameter_1' => 'Page parameter 1',
+            'pageParameter_2' => 'Page parameter 2',
+            'layoutParameter_1' => 'Layout parameter 1',
+            'layoutParameter_2' => 'Layout parameter 2',
+            'layoutParameter_3' => 'Layout parameter 3',
         ]);
 
         $content = $this->template->render('pages/overrides.php', [
-            'page_parameter_2' => 'Overridden parameter 2',
-            'layout_parameter_2' => 'Layout overridden parameter 2',
+            'pageParameter_2' => 'Overridden parameter 2',
+            'layoutParameter_2' => 'Layout overridden parameter 2',
         ]);
 
         $this->assertRegexp('/Page parameter 1/', $content);
@@ -136,14 +145,13 @@ class EngineTest extends TestCase
         $content = $this->template->render('pages/including.php');
 
         $this->assertRegexp('/\<form method\=\"post\"\>/', $content);
-
         $this->assertRegexp('/Banner inclusion/', $content);
     }
 
     public function testNoLayout()
     {
-        $content = $this->template->render('pages/no_layout_1.rss');
+        $content = $this->template->render('pages/no_layout.rss');
 
-        $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/pages/no_layout_1.rss'), $content);
+        $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/pages/no_layout.rss'), $content);
     }
 }

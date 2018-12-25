@@ -13,16 +13,18 @@
     </li>
 
     <li>
-        Make sure you are using the latest stable version or a build from Git, if
-        similar bugs have recently been fixed and committed.
+        Make sure you are using the latest stable version or a build from Git,
+        if similar bugs have recently been fixed and committed.
     </li>
 
     <li>
-        Read our tips on <a href="how-to-report.php">how to report a bug that someone will want to help fix</a>.
+        Read our tips on <a href="how-to-report.php">how to report a bug that
+        someone will want to help fix</a>.
     </li>
 
     <li>
-        Read the <a href="https://wiki.php.net/security">security guidelines</a>, if you think an issue might be security related.
+        Read the <a href="https://wiki.php.net/security">security guidelines</a>,
+        if you think an issue might be security related.
     </li>
 
     <li>
@@ -60,7 +62,7 @@ open bug.</p>
 <ul>
     <?php foreach ($searches as $title => $url): ?>
         <li><a href="<?= $this->e($url) ?>"><?= $this->e($title); ?></a></li>
-    <?php endforeach; ?>
+    <?php endforeach ?>
 </ul>
 
 <h1>Bug System Statistics</h1>

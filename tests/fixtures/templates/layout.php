@@ -3,17 +3,17 @@
     <title><?=$this->e($title)?></title>
 </head>
 <body>
-    <?= $this->section('sidebar') ?>
+    <?= $this->block('sidebar') ?>
 
-    <?= $this->section('content') ?>
+    <?= $this->block('content') ?>
 
-    <?= $this->section('this_section_is_not_set') ?>
+    <?= $this->block('this_block_is_not_set') ?>
 
-    <?= $layout_parameter_1 ?? '' ?>
-    <?= $layout_parameter_2 ?? '' ?>
-    <?= $layout_parameter_3 ?? '' ?>
+    <?= $layoutParameter_1 ?? '' ?>
+    <?= $layoutParameter_2 ?? '' ?>
+    <?= $layoutParameter_3 ?? '' ?>
 
-    <?= $this->section('scripts') ?>
+    <?= $this->block('scripts') ?>
 
     <?= $this->include('includes/banner.php') ?>
 </body>

@@ -1,6 +1,6 @@
-<?php $this->layout('layout.php', ['title' => 'Testing sections appends']) ?>
+<?php $this->layout('layout.php', ['title' => 'Testing blocks appends']) ?>
 
-<?php include __DIR__.'/../forms/form_1.php'; ?>
+<?php include __DIR__.'/../forms/form.php'; ?>
 
 <?php $this->append('scripts'); ?>
 <script src="/path/to/file_1.js"></script>

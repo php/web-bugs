@@ -3,9 +3,8 @@
 namespace App\Template;
 
 /**
- * Default template engine context. Context represents a template scope where
- * $this pseudo-variable is used in template files and the context methods can
- * be called as $this->method().
+ * Context represents a template variable scope where $this pseudo-variable can
+ * be used in the templates and context methods can be called as $this->method().
  */
 class Context
 {
@@ -14,7 +13,7 @@ class Context
      *
      * @var string
      */
-    private $templatesDir;
+    private $dir;
 
     /**
      * The template of this context.
@@ -31,14 +30,14 @@ class Context
     private $variables = [];
 
     /**
-     * Pool of sections for the template context.
+     * Pool of blocks for the template context.
      *
      * @var array
      */
-    private $sections = [];
+    private $blocks = [];
 
     /**
-     * Current layout for the template context.
+     * Layout for the template context.
      *
      * @var string
      */
@@ -60,7 +59,7 @@ class Context
 
     /**
      * When creating closure in the engine, a buffer is used for storing
-     * transient output data that is finally returned when rendering.
+     * transient output data that is finally returned when rendering the template.
      *
      * @var string
      */
@@ -70,12 +69,12 @@ class Context
      * Class constructor.
      */
     public function __construct(
-        string $templatesDir,
+        string $dir,
         string $template,
         array $variables = [],
         array $functions = []
     ) {
-        $this->templatesDir = $templatesDir;
+        $this->dir = $dir;
         $this->template = $template;
         $this->variables = $variables;
         $this->functions = $functions;
@@ -92,50 +91,49 @@ class Context
     }
 
     /**
-     * Return a section from the pool by name.
+     * Return a block content from the pool by name.
      */
-    public function section(string $name): string
+    public function block(string $name): string
     {
-        return $this->sections[$name] ?? '';
+        return $this->blocks[$name] ?? '';
     }
 
     /**
-     * Starts a new template section. Under the hood a simple separate output
-     * buffering is used to capture the section content. Content can be also
-     * appended to previously set same section name.
+     * Starts a new template block. Under the hood a simple separate output
+     * buffering is used to capture the block content. Content can be also
+     * appended to previously set same block name.
      */
     public function start(string $name): void
     {
-        $this->sections[$name] = '';
+        $this->blocks[$name] = '';
 
         ob_start();
     }
 
     /**
-     * Append content to a template section. If no section with the key name
-     * exists yet it starts a new one.
+     * Append content to a template block. If no block with the key name exists
+     * yet it starts a new one.
      */
     public function append(string $name): void
     {
-        if (!isset($this->sections[$name])) {
-            $this->sections[$name] = '';
+        if (!isset($this->blocks[$name])) {
+            $this->blocks[$name] = '';
         }
 
         ob_start();
     }
 
     /**
-     * Ends section output buffering and store the section content into sections
-     * pool.
+     * Ends block output buffering and stores its content into the pool.
      */
     public function end(string $name): void
     {
         $content = ob_get_clean();
 
-        if (!empty($this->sections[$name])) {
-            $this->sections[$name] .= $content;
+        if (!empty($this->blocks[$name])) {
+            $this->blocks[$name] .= $content;
         } else {
-            $this->sections[$name] = $content;
+            $this->blocks[$name] = $content;
         }
     }
 
@@ -144,7 +142,7 @@ class Context
      */
     public function include(string $template): string
     {
-        return include $this->templatesDir.'/'.$template;
+        return include $this->dir.'/'.$template;
     }
 
     /**
