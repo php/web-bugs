@@ -88,9 +88,7 @@ $LAST_UPDATED = date('D M d H:i:s Y', $tmp - date('Z', $tmp)) . ' UTC';
 // Initialize template engine.
 $template = new Engine(__DIR__.'/../templates');
 $template->assign([
-    'LAST_UPDATED' => $LAST_UPDATED,
-    'basedir'      => $basedir,
-    'siteBig'      => $siteBig,
-    'site_method'  => $site_method,
-    'site_url'     => $site_url,
+    'lastUpdated' => $LAST_UPDATED,
+    'siteScheme'  => $site_method,
+    'siteUrl'     => $site_url,
 ]);

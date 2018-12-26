@@ -42,6 +42,13 @@ class ContextTest extends TestCase
         $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/includes/banner.php'), $content);
     }
 
+    public function testIncludeReturn()
+    {
+        $variable = $this->context->include('includes/variable.php');
+
+        $this->assertEquals(include __DIR__.'/../fixtures/templates/includes/variable.php', $variable);
+    }
+
     /**
      * @dataProvider attacksProvider
      */

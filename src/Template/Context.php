@@ -139,8 +139,10 @@ class Context
 
     /**
      * Include template file into existing template.
+     *
+     * @return mixed
      */
-    public function include(string $template): string
+    public function include(string $template)
     {
         return include $this->dir.'/'.$template;
     }

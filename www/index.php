@@ -14,9 +14,22 @@ session_start();
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
+// TODO: Refactor this into a better authentication service
+if ('developer' === $logged_in) {
+    $isLoggedIn = true;
+    $username = $auth_user->handle;
+} elseif (!empty($_SESSION['user'])) {
+    $isLoggedIn = true;
+    $username = $_SESSION['user'];
+} else {
+    $isLoggedIn = false;
+    $username = '';
+}
+
 $template->assign([
-    'auth_user' => $auth_user,
-    'logged_in' => $logged_in,
+    'authIsLoggedIn' => $isLoggedIn,
+    'authUsername'   => $username,
+    'authRole'       => $logged_in,
 ]);
 
 // If 'id' is passed redirect to the bug page
@@ -46,7 +59,7 @@ if (!empty($_SESSION['user'])) {
 }
 
 // Prefix query strings with base URL
-$base = $site_method.'://'.$site_url.'/search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open';
+$base = '/search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open';
 $searches = preg_filter('/^/', $base, $searches);
 
 // Output template with given template variables.
