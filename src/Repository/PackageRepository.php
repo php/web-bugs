@@ -46,7 +46,9 @@ class PackageRepository
 
         $sql .= ' ORDER BY parent, disabled, id';
 
-        $data = $this->dbh->prepare($sql)->execute($arguments)->fetchAll();
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute($arguments);
+        $data = $statement->fetchAll();
 
         return $this->getNested($data);
     }
@@ -67,7 +69,10 @@ class PackageRepository
 
         $sql .= ' ORDER BY parent, id';
 
-        $data = $this->dbh->prepare($sql)->execute($arguments)->fetchAll();
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute($arguments);
+
+        $data = $statement->fetchAll();
 
         return $this->getNested($data);
     }

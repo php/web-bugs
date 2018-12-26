@@ -35,6 +35,9 @@ class PullRequestRepository
                 ORDER BY github_repo, github_pull_id DESC
         ';
 
-        return $this->dbh->prepare($sql)->execute([$bugId])->fetchAll();
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute([$bugId]);
+
+        return $statement->fetchAll();
     }
 }

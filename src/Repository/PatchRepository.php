@@ -39,7 +39,10 @@ class PatchRepository
                 ORDER BY revision DESC
         ';
 
-        return $this->dbh->prepare($sql)->execute([$bugId])->fetchAll();
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute([$bugId]);
+
+        return $statement->fetchAll();
     }
 
     /**
@@ -54,7 +57,10 @@ class PatchRepository
 
         $arguments = [$bugId, $patch, $revision];
 
-        return $this->dbh->prepare($sql)->execute($arguments)->fetch(\PDO::FETCH_NUM)[0];
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute($arguments);
+
+        return $statement->fetch(\PDO::FETCH_NUM)[0];
     }
 
     /**
@@ -68,7 +74,10 @@ class PatchRepository
                 ORDER BY revision DESC
         ';
 
-        return $this->dbh->prepare($sql)->execute([$bugId, $patch])->fetchAll();
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute([$bugId, $patch]);
+
+        return $statement->fetchAll();
     }
 
     /**
@@ -81,7 +90,10 @@ class PatchRepository
                 WHERE bugdb_id = ? AND patch = ? AND revision = ?
         ';
 
-        if ($this->dbh->prepare($sql)->execute([$bugId, $name, $revision])->fetch(\PDO::FETCH_NUM)[0]) {
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute([$bugId, $name, $revision]);
+
+        if ($statement->fetch(\PDO::FETCH_NUM)[0]) {
             $contents = @file_get_contents($this->getPatchPath($bugId, $name, $revision));
 
             if (!$contents) {

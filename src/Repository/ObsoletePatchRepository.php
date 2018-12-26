@@ -31,7 +31,10 @@ class ObsoletePatchRepository
                 WHERE bugdb_id = ? AND obsolete_patch = ? AND obsolete_revision = ?
         ';
 
-        return $this->dbh->prepare($sql)->execute([$bugId, $patch, $revision])->fetchAll();
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute([$bugId, $patch, $revision]);
+
+        return $statement->fetchAll();
     }
 
     /**
@@ -44,6 +47,9 @@ class ObsoletePatchRepository
                 WHERE bugdb_id = ? AND patch = ? AND revision = ?
         ';
 
-        return $this->dbh->prepare($sql)->execute([$bugId, $patch, $revision])->fetchAll();
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute([$bugId, $patch, $revision]);
+
+        return $statement->fetchAll();
     }
 }
