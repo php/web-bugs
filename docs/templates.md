@@ -96,7 +96,7 @@ Block is started with the `$this->start('block_name')` call and ends with
 
 ### Appending blocks
 
-Block content can be appended to existing blocks by using the
+Block content can be appended to existing blocks by the
 `$this->append('block_name')`.
 
 The `templates/layout.php`:
@@ -105,7 +105,9 @@ The `templates/layout.php`:
 <html>
 <head></head>
 <body>
-<?= $this->block('scripts'); ?>
+    <?= $this->block('content'); ?>
+
+    <?= $this->block('scripts'); ?>
 </body>
 </html>
 ```
@@ -119,12 +121,19 @@ The `templates/pages/index.php`:
     <script src="/js/foo.js"></script>
 <?php $this->end('scripts'); ?>
 
-<?php $this->include('forms/form.php') ?>
+<?php $this->start('content') ?>
+    <?php $this->include('forms/form.php') ?>
+<?php $this->end('content') ?>
 ```
 
 The `templates/forms/form.php`:
 
 ```php
+<form>
+    <input type="text" name="title">
+    <input type="submit" value="Submit">
+</form>
+
 <?php $this->append('scripts'); ?>
     <script src="/js/bar.js"></script>
 <?php $this->end('scripts'); ?>
@@ -136,6 +145,11 @@ The final rendered page:
 <html>
 <head></head>
 <body>
+    <form>
+        <input type="text" name="title">
+        <input type="submit" value="Submit">
+    </form>
+
     <script src="/js/foo.js"></script>
     <script src="/js/bar.js"></script>
 </body>
@@ -170,7 +184,7 @@ string:
 <?= $this->noHtml($var) ?>
 ```
 
-To escape given string and still preserves certain characters as HTML:
+To escape given string and still preserve certain characters as HTML:
 
 ```php
 <?= $this->e($var) ?>

@@ -61,7 +61,7 @@ open bug.</p>
 
 <ul>
     <?php foreach ($searches as $title => $url): ?>
-        <li><a href="<?= $this->e($url) ?>"><?= $this->e($title); ?></a></li>
+        <li><a href="<?= $this->e($url) ?>"><?= $this->e($title) ?></a></li>
     <?php endforeach ?>
 </ul>
 
