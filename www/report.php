@@ -127,7 +127,7 @@ if (isset($_POST['in'])) {
 						$summary = substr(trim($summary), 0, 256) . ' ...';
 					}
 
-					$bug_url = "bug.php?id={$row['id']}&amp;edit=2";
+					$bug_url = "bug.php?id={$row['id']}";
 
 					$sdesc		= htmlspecialchars($row['sdesc']);
 					$summary	= htmlspecialchars($summary);
