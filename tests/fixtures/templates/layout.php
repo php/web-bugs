@@ -1,8 +1,6 @@
-<html>
-<head>
-    <title><?=$this->e($title)?></title>
-</head>
-<body>
+<?php $this->extends('base.php') ?>
+
+<?php $this->start('body') ?>
     <?= $this->block('sidebar') ?>
 
     <?= $this->block('content') ?>
@@ -16,5 +14,4 @@
     <?= $this->block('scripts') ?>
 
     <?= $this->include('includes/banner.php') ?>
-</body>
-</html>
+<?php $this->end('body') ?>

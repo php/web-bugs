@@ -1,4 +1,4 @@
-<?php $this->layout('layout.php', ['title' => 'Testing variables']) ?>
+<?php $this->extends('layout.php', ['title' => 'Testing variables']) ?>
 
 <?php $this->start('content'); ?>
 Defined parameter is <?= $parameter; ?>.<br>

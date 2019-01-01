@@ -1,4 +1,4 @@
-<?php $this->layout('layout.php', ['title' => 'Bugs homepage']) ?>
+<?php $this->extends('layout.php', ['title' => 'Bugs homepage']) ?>
 
 <?php $this->start('content'); ?>
 <?= $this->addAsterisks($foo); ?>

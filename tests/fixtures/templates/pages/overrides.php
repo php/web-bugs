@@ -1,4 +1,4 @@
-<?php $this->layout('layout.php', ['title' => 'Testing variables', 'layoutParameter_3' => 'Layout overridden parameter 3']) ?>
+<?php $this->extends('layout.php', ['title' => 'Testing variables', 'layoutParameter_3' => 'Layout overridden parameter 3']) ?>
 
 <?php $this->start('content'); ?>
 <?= $pageParameter_1 ?>

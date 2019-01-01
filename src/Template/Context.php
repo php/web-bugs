@@ -23,6 +23,13 @@ class Context
     private $template;
 
     /**
+     * The current processed template file or snippet.
+     *
+     * @var string
+     */
+    private $current;
+
+    /**
      * All assigned and set variables for the template.
      *
      * @var array
@@ -37,18 +44,11 @@ class Context
     private $blocks = [];
 
     /**
-     * Layout for the template context.
-     *
-     * @var string
-     */
-    private $layout;
-
-    /**
-     * Each layout can have its own variables set in the template directly.
+     * Pool of templates used for extending.
      *
      * @var array
      */
-    private $layoutVariables = [];
+    private $extends = [];
 
     /**
      * Pool of registered callable functions.
@@ -81,13 +81,37 @@ class Context
     }
 
     /**
-     * Sets a layout for a given template. Additional variables in the layout
-     * scope can be defined via second argument.
+     * Sets a parent layout for the given template. Additional variables in the
+     * parent scope can be defined via the second argument.
      */
-    public function layout(string $name, array $variables = []): void
+    public function extends(string $parent, array $variables = []): void
     {
-        $this->layout = $name;
-        $this->layoutVariables = $variables;
+        $this->extends[$this->current] = [$parent, $variables];
+    }
+
+    private function bufferize($file, array $variables = [])
+    {
+        $this->current = $file;
+        $this->variables = array_replace($this->variables, $variables);
+        unset($variables, $file);
+
+        if (count($this->variables) > extract($this->variables, EXTR_SKIP)) {
+            throw new \Exception(
+                'Variables with numeric names $0, $1... cannot be imported to scope '.$this->current
+            );
+        }
+
+        ob_start();
+
+        try {
+            include $this->dir.'/'.$this->current;
+        } catch (\Exception $e) {
+            ob_end_clean();
+
+            throw $e;
+        }
+
+        return ob_get_clean();
     }
 
     /**

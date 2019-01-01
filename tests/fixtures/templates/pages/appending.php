@@ -1,4 +1,4 @@
-<?php $this->layout('layout.php', ['title' => 'Testing blocks appends']) ?>
+<?php $this->extends('layout.php', ['title' => 'Testing blocks appends']) ?>
 
 <?php include __DIR__.'/../forms/form.php'; ?>
 

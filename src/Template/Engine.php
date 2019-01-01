@@ -3,10 +3,8 @@
 namespace App\Template;
 
 /**
- * A simple template engine created for bugs.php.net. Goal is not to reinvent
- * a new template engine and compete with other much better ones out there but
- * instead provide a vanilla PHP approach and separate the application logic
- * from the presentation.
+ * A simple template engine that assigns global variables to the templates and
+ * renders given template.
  */
 class Engine
 {
@@ -52,17 +50,7 @@ class Engine
      */
     public function assign(array $variables = []): void
     {
-        $this->variables = $this->merge($this->variables, $variables);
-    }
-
-    /**
-     * Merge arrays together. Wrapped separately for unit testing the expected
-     * template engine functionality. Numeric and string keys are overridden in
-     * case they repeat in arrays.
-     */
-    protected function merge(array ...$variables): array
-    {
-        return array_replace(...$variables);
+        $this->variables = array_replace($this->variables, $variables);
     }
 
     /**
@@ -103,36 +91,17 @@ class Engine
         $context = new Context(
             $this->dir,
             $template,
-            $this->merge($this->variables, $variables),
+            array_replace($this->variables, $variables),
             $this->functions
         );
 
         $closure = \Closure::bind(
             function () {
-                if (count($this->variables) > extract($this->variables, EXTR_SKIP)) {
-                    throw new \Exception(
-                        'Variables with numeric names $0, $1... cannot be imported to scope '.$this->template
-                    );
-                }
+                $this->buffer = $this->bufferize($this->template, $this->variables);
 
-                ob_start();
-
-                try {
-                    include $this->dir.'/'.$this->template;
-                } catch (\Exception $e) {
-                    ob_end_clean();
-
-                    throw $e;
-                }
-
-                $this->buffer = ob_get_clean();
-
-                if (isset($this->layout) && is_file($this->dir.'/'.$this->layout)) {
+                while (!empty($current = array_shift($this->extends))) {
                     $this->buffer = trim($this->buffer);
-                    ob_start();
-                    extract($this->layoutVariables);
-                    include $this->dir.'/'.$this->layout;
-                    $this->buffer .= ob_get_clean();
+                    $this->buffer .= $this->bufferize($current[0], $current[1]);
                 }
 
                 return $this->buffer;

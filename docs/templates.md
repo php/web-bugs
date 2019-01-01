@@ -1,10 +1,8 @@
 # Templates
 
-A simple template engine is integrated in the application to separate logic from
-the presentation.
-
-Several methods are provided to create a template with one main layout, blocks,
-and escaping of strings to not introduce too common XSS vulnerabilities.
+A simple template engine separates logic from the presentation and provides
+methods for creating nested templates and escaping strings to protect against
+too common XSS vulnerabilities.
 
 It is initialized in the application bootstrap:
 
@@ -25,21 +23,21 @@ $template->assign([
 Page can be rendered in the controller:
 
 ```php
-echo $template->render('pages/index.php', [
+echo $template->render('pages/how_to_report.php', [
     'mainHeading' => 'How to report a bug?',
 ]);
 ```
 
-The `templates/pages/index.php`:
+The `templates/pages/how_to_report.php`:
 
 ```php
-<?php $this->layout('layout.php', ['title' => 'Homepage']) ?>
+<?php $this->extends('layout.php', ['title' => 'Reporting bugs']) ?>
 
-<?php $this->start('content') ?>
+<?php $this->start('main_content') ?>
     <h1><?= $this->noHtml($mainHeading) ?></h1>
 
     <p><?= $siteUrl ?></p>
-<?php $this->end('content') ?>
+<?php $this->end('main_content') ?>
 
 <?php $this->start('scripts') ?>
     <script src="/js/feature.js"></script>
@@ -57,7 +55,7 @@ The `templates/layout.php`:
         <title>PHP Bug Tracking System :: <?= $title ?? '' ?></title>
     </head>
     <body>
-        <?= $this->block('content') ?>
+        <?= $this->block('main_content') ?>
 
         <div><?= $siteUrl ?></div>
 
@@ -81,7 +79,7 @@ The variable scope is inherited by the template that included the file.
 ## Blocks
 
 Blocks are main building elements that contain template snippets and can be
-included into the main layout file.
+included into the parent file(s).
 
 Block is started with the `$this->start('block_name')` call and ends with
 `$this->end('block_name')`:
@@ -115,7 +113,7 @@ The `templates/layout.php`:
 The `templates/pages/index.php`:
 
 ```php
-<?php $this->layout('layout.php'); ?>
+<?php $this->extends('layout.php'); ?>
 
 <?php $this->start('scripts'); ?>
     <script src="/js/foo.js"></script>
