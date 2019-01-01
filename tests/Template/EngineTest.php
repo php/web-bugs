@@ -167,4 +167,11 @@ class EngineTest extends TestCase
             'foo' => 'Lorem ipsum dolor sit amet',
         ]);
     }
+
+    public function testExtending()
+    {
+        $this->expectException(\Exception::class);
+
+        $html = $this->template->render('pages/extends.php');
+    }
 }

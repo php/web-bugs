@@ -28,8 +28,8 @@ if ('developer' === $logged_in) {
 
 $template->assign([
     'authIsLoggedIn' => $isLoggedIn,
-    'authUsername'   => $username,
-    'authRole'       => $logged_in,
+    'authUsername' => $username,
+    'authRole' => $logged_in,
 ]);
 
 // If 'id' is passed redirect to the bug page

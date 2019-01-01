@@ -131,15 +131,24 @@ class Engine
                     );
                 }
 
+                ++$this->bufferLevel;
+
                 ob_start();
 
                 try {
                     include $this->dir.'/'.$this->current;
                 } catch (\Exception $e) {
-                    ob_end_clean();
+                    // Close all opened buffers
+                    while ($this->bufferLevel > 0) {
+                        --$this->bufferLevel;
+
+                        ob_end_clean();
+                    }
 
                     throw $e;
                 }
+
+                --$this->bufferLevel;
 
                 return ob_get_clean();
             },

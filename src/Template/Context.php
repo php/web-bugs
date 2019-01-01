@@ -51,6 +51,11 @@ class Context
     private $functions = [];
 
     /**
+     * Current nesting level of the output buffering mechanism.
+     */
+    private $bufferLevel = 0;
+
+    /**
      * Class constructor.
      */
     public function __construct(
@@ -69,6 +74,10 @@ class Context
      */
     public function extends(string $parent, array $variables = []): void
     {
+        if (isset($this->tree[$this->current])) {
+            throw new \Exception('Extending '.$parent.' is not possible.');
+        }
+
         $this->tree[$this->current] = [$parent, $variables];
     }
 
@@ -89,6 +98,8 @@ class Context
     {
         $this->blocks[$name] = '';
 
+        ++$this->bufferLevel;
+
         ob_start();
     }
 
@@ -102,6 +113,8 @@ class Context
             $this->blocks[$name] = '';
         }
 
+        ++$this->bufferLevel;
+
         ob_start();
     }
 
@@ -110,6 +123,8 @@ class Context
      */
     public function end(string $name): void
     {
+        --$this->bufferLevel;
+
         $content = ob_get_clean();
 
         if (!empty($this->blocks[$name])) {
@@ -149,6 +164,8 @@ class Context
 
     /**
      * A proxy to call registered functions if needed.
+     *
+     * @return mixed
      */
     public function __call(string $method, array $args)
     {

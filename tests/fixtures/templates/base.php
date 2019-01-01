@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title><?=$this->e($title)?></title>
+    <title><?=$this->e($title ?? '')?></title>
 </head>
 <body>
     <?= $this->block('body') ?>
