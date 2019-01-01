@@ -9,7 +9,7 @@ class ContextTest extends TestCase
 {
     public function setUp()
     {
-        $this->context = new Context(__DIR__.'/../fixtures/templates', 'pages/view.php');
+        $this->context = new Context(__DIR__.'/../fixtures/templates');
     }
 
     public function testBlock()

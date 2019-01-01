@@ -154,4 +154,17 @@ class EngineTest extends TestCase
 
         $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/pages/no_layout.rss'), $content);
     }
+
+    public function testMissingTemplate()
+    {
+        $this->template->assign([
+            'parameter' => 'Parameter value',
+        ]);
+
+        $this->expectException(\Exception::class);
+
+        $content = $this->template->render('pages/this/does/not/exist.php', [
+            'foo' => 'Lorem ipsum dolor sit amet',
+        ]);
+    }
 }

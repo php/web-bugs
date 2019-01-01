@@ -16,14 +16,7 @@ class Context
     private $dir;
 
     /**
-     * The template of this context.
-     *
-     * @var string
-     */
-    private $template;
-
-    /**
-     * The current processed template file or snippet.
+     * The current processed template or snippet file.
      *
      * @var string
      */
@@ -44,11 +37,11 @@ class Context
     private $blocks = [];
 
     /**
-     * Pool of templates used for extending.
+     * Parent templates extended by child templates.
      *
      * @var array
      */
-    private $extends = [];
+    public $tree = [];
 
     /**
      * Pool of registered callable functions.
@@ -58,24 +51,14 @@ class Context
     private $functions = [];
 
     /**
-     * When creating closure in the engine, a buffer is used for storing
-     * transient output data that is finally returned when rendering the template.
-     *
-     * @var string
-     */
-    private $buffer;
-
-    /**
      * Class constructor.
      */
     public function __construct(
         string $dir,
-        string $template,
         array $variables = [],
         array $functions = []
     ) {
         $this->dir = $dir;
-        $this->template = $template;
         $this->variables = $variables;
         $this->functions = $functions;
     }
@@ -86,32 +69,7 @@ class Context
      */
     public function extends(string $parent, array $variables = []): void
     {
-        $this->extends[$this->current] = [$parent, $variables];
-    }
-
-    private function bufferize($file, array $variables = [])
-    {
-        $this->current = $file;
-        $this->variables = array_replace($this->variables, $variables);
-        unset($variables, $file);
-
-        if (count($this->variables) > extract($this->variables, EXTR_SKIP)) {
-            throw new \Exception(
-                'Variables with numeric names $0, $1... cannot be imported to scope '.$this->current
-            );
-        }
-
-        ob_start();
-
-        try {
-            include $this->dir.'/'.$this->current;
-        } catch (\Exception $e) {
-            ob_end_clean();
-
-            throw $e;
-        }
-
-        return ob_get_clean();
+        $this->tree[$this->current] = [$parent, $variables];
     }
 
     /**

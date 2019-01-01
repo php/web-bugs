@@ -31,6 +31,13 @@ class Engine
     private $variables = [];
 
     /**
+     * Template context.
+     *
+     * @var Context
+     */
+    private $context;
+
+    /**
      * Class constructor.
      */
     public function __construct(string $dir)
@@ -84,32 +91,62 @@ class Engine
      */
     public function render(string $template, array $variables = []): string
     {
+        $variables = array_replace($this->variables, $variables);
+
+        $this->context = new Context(
+            $this->dir,
+            $variables,
+            $this->functions
+        );
+
+        $buffer = $this->bufferize($template, $variables);
+
+        while (!empty($current = array_shift($this->context->tree))) {
+            $buffer = trim($buffer);
+            $buffer .= $this->bufferize($current[0], $current[1]);
+        }
+
+        return $buffer;
+    }
+
+    /**
+     * Processes given template file, merges variables into template scope
+     * using output buffering and returns the rendered content string.
+     */
+    private function bufferize(string $template, array $variables = []): string
+    {
         if (!is_file($this->dir.'/'.$template)) {
             throw new \Exception($template.' is missing or not a valid template.');
         }
 
-        $context = new Context(
-            $this->dir,
-            $template,
-            array_replace($this->variables, $variables),
-            $this->functions
-        );
-
         $closure = \Closure::bind(
-            function () {
-                $this->buffer = $this->bufferize($this->template, $this->variables);
+            function ($template, $variables) {
+                $this->current = $template;
+                $this->variables = array_replace($this->variables, $variables);
+                unset($variables, $template);
 
-                while (!empty($current = array_shift($this->extends))) {
-                    $this->buffer = trim($this->buffer);
-                    $this->buffer .= $this->bufferize($current[0], $current[1]);
+                if (count($this->variables) > extract($this->variables, EXTR_SKIP)) {
+                    throw new \Exception(
+                        'Variables with numeric names $0, $1... cannot be imported to scope '.$this->current
+                    );
                 }
 
-                return $this->buffer;
+                ob_start();
+
+                try {
+                    include $this->dir.'/'.$this->current;
+                } catch (\Exception $e) {
+                    ob_end_clean();
+
+                    throw $e;
+                }
+
+                return ob_get_clean();
             },
-            $context,
+            $this->context,
             Context::class
         );
 
-        return $closure();
+        return $closure($template, $variables);
     }
 }
