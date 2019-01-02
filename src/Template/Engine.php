@@ -16,11 +16,11 @@ class Engine
     private $dir;
 
     /**
-     * Pool of registered functions in the application.
+     * Registered callables.
      *
      * @var array
      */
-    private $functions = [];
+    private $callables = [];
 
     /**
      * Assigned variables after template initialization and before calling the
@@ -72,7 +72,7 @@ class Engine
      * Add new template helper function as a callable defined in the (front)
      * controller to the template scope.
      */
-    public function register(string $name, callable $callback): void
+    public function register(string $name, callable $callable): void
     {
         if (method_exists(Context::class, $name)) {
             throw new \Exception(
@@ -80,7 +80,7 @@ class Engine
             );
         }
 
-        $this->functions[$name] = $callback;
+        $this->callables[$name] = $callable;
     }
 
     /**
@@ -96,7 +96,7 @@ class Engine
         $this->context = new Context(
             $this->dir,
             $variables,
-            $this->functions
+            $this->callables
         );
 
         $buffer = $this->bufferize($template, $variables);

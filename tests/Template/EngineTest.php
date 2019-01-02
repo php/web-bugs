@@ -25,9 +25,18 @@ class EngineTest extends TestCase
 
     public function testRegisterNew()
     {
+        // Register callable function
         $this->template->register('addAsterisks', function ($var) {
             return '***'.$var.'***';
         });
+
+        // Register callable object and method
+        $object = new class {
+            public $property;
+
+            public function doSomething($argument) {}
+        };
+        $this->template->register('doSomething', [$object, 'doSomething']);
 
         $content = $this->template->render('pages/add_function.php', [
             'foo' => 'Lorem ipsum dolor sit amet.',

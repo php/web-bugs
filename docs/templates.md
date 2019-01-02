@@ -159,24 +159,32 @@ The final rendered page:
 Registering additional template helpers can be useful when a custom function or
 class method needs to be called in the template.
 
+### Registering function
+
 ```php
-$template->register('formatDate' => function (int $timestamp): string {
+$template->register('formatDate', function (int $timestamp): string {
     return gmdate('Y-m-d H:i e', $timestamp - date('Z', $timestamp));
 });
+```
+
+### Registering object method
+
+```php
+$template->register('doSomething', [$object, 'methodName']);
 ```
 
 Using helpers in templates:
 
 ```php
 <p>Time: <?= $this->formatDate(time()) ?></p>
+<div><?= $this->doSomething('arguments') ?></div>
 ```
 
 ## Escaping
 
 When protecting against XSS there are two built-in methods provided.
 
-To replaces all characters to their applicable HTML entities in the given
-string:
+To replace all characters to their applicable HTML entities in the given string:
 
 ```php
 <?= $this->noHtml($var) ?>

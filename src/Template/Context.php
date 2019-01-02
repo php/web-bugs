@@ -44,14 +44,16 @@ class Context
     public $tree = [];
 
     /**
-     * Pool of registered callable functions.
+     * Registered callables.
      *
      * @var array
      */
-    private $functions = [];
+    private $callables = [];
 
     /**
      * Current nesting level of the output buffering mechanism.
+     *
+     * @var int
      */
     private $bufferLevel = 0;
 
@@ -61,11 +63,11 @@ class Context
     public function __construct(
         string $dir,
         array $variables = [],
-        array $functions = []
+        array $callables = []
     ) {
         $this->dir = $dir;
         $this->variables = $variables;
-        $this->functions = $functions;
+        $this->callables = $callables;
     }
 
     /**
@@ -163,14 +165,14 @@ class Context
     }
 
     /**
-     * A proxy to call registered functions if needed.
+     * A proxy to call registered callable.
      *
      * @return mixed
      */
-    public function __call(string $method, array $args)
+    public function __call(string $method, array $arguments)
     {
-        if (isset($this->functions[$method])) {
-            return call_user_func_array($this->functions[$method], $args);
+        if (isset($this->callables[$method])) {
+            return call_user_func_array($this->callables[$method], $arguments);
         }
     }
 }
