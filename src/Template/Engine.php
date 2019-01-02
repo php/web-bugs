@@ -86,8 +86,7 @@ class Engine
     /**
      * Renders given template file and populates its scope with variables
      * provided as array elements. Each array key is a variable name in template
-     * scope and array item value is set as a variable value. Note that $this
-     * pseudo-variable in the closure refers to the scope of the Context class.
+     * scope and array item value is set as a variable value.
      */
     public function render(string $template, array $variables = []): string
     {
@@ -110,8 +109,9 @@ class Engine
     }
 
     /**
-     * Processes given template file, merges variables into template scope
-     * using output buffering and returns the rendered content string.
+     * Processes given template file, merges variables into template scope using
+     * output buffering and returns the rendered content string. Note that $this
+     * pseudo-variable in the closure refers to the scope of the Context class.
      */
     private function bufferize(string $template, array $variables = []): string
     {
