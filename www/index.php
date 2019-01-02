@@ -33,14 +33,15 @@ $template->assign([
 ]);
 
 // If 'id' is passed redirect to the bug page
-$id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
-if ($id) {
-    redirect("bug.php?id={$id}");
+$id = (int) ($_GET['id'] ?? 0);
+
+if (0 !== $id) {
+    redirect('bug.php?id='.$id);
 }
 
 if ('/random' === $_SERVER['REQUEST_URI']) {
     $id = (new BugRepository($dbh))->findRandom();
-    redirect("bug.php?id={$id[0]}");
+    redirect('bug.php?id='.$id[0]);
 }
 
 $searches = [
@@ -59,8 +60,11 @@ if (!empty($_SESSION['user'])) {
 }
 
 // Prefix query strings with base URL
-$base = '/search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open';
-$searches = preg_filter('/^/', $base, $searches);
+$searches = preg_filter(
+    '/^/',
+    '/search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open',
+    $searches
+);
 
 // Output template with given template variables.
 echo $template->render('pages/index.php', [
