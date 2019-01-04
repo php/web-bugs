@@ -8,29 +8,8 @@ use App\Repository\BugRepository;
 // Application bootstrap
 require_once __DIR__.'/../include/prepend.php';
 
-// Start session
-session_start();
-
-// Authenticate
-bugs_authenticate($user, $pw, $logged_in, $user_flags);
-
-// TODO: Refactor this into a better authentication service
-if ('developer' === $logged_in) {
-    $isLoggedIn = true;
-    $username = $auth_user->handle;
-} elseif (!empty($_SESSION['user'])) {
-    $isLoggedIn = true;
-    $username = $_SESSION['user'];
-} else {
-    $isLoggedIn = false;
-    $username = '';
-}
-
-$template->assign([
-    'authIsLoggedIn' => $isLoggedIn,
-    'authUsername' => $username,
-    'authRole' => $logged_in,
-]);
+// Authentication
+require_once __DIR__.'/../include/auth.php';
 
 // If 'id' is passed redirect to the bug page
 $id = (int) ($_GET['id'] ?? 0);
