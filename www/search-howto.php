@@ -92,6 +92,10 @@ options.
 					closed, duplicates, or not-a-bug. Only developers and the original author can affect
 					this date as public comments do not count.
 				</li>
+				<li>
+					<strong>Suspended</strong>: Tickets which are waiting on some action
+					which is outside the scope of the PHP developers.
+				</li>
 				<li><strong>All</strong>: All types, even not-a-bug.</li>
 			</ul>
 		</td>
