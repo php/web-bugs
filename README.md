@@ -11,13 +11,6 @@ This is a unified bug tracking system for PHP hosted online at
 composer install
 ```
 
-* Install required dependencies using PEAR:
-
-```bash
-pear channel-update pear.php.net
-pear install --alldeps Text_Diff
-```
-
 * Configuration:
 
 Modify `local_config.php` according to your local development environment.
@@ -45,14 +38,15 @@ Source code of this application is structured in the following directories:
  ├─ .git/                   # Git configuration and source directory
  ├─ docs/                   # Application documentation
  └─ include/                # Application helper functions and configuration
-    ├─ classes/             # PEAR class overrides
     ├─ prepend.php          # Autoloader, DB connection, container, app initialization
     └─ ...
  └─ scripts/                # Command line development tools and scripts
     ├─ cron/                # Various systems scripts to run periodically on the server
     └─ ...
  ├─ sql/                    # Database schema and fixtures
- ├─ src/                    # Application source code classes
+ └─ src/                    # Application source code classes
+    ├─ Horde/               # https://www.horde.org/libraries/Horde_Text_Diff
+    └─ ...
  ├─ templates/              # Application templates
  ├─ tests/                  # Application automated tests
  ├─ uploads/                # Uploaded patch files

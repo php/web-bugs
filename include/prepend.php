@@ -15,6 +15,15 @@ if (file_exists(__DIR__.'/../vendor/autoload.php')) {
 
     $loader = new Autoloader();
     $loader->addNamespace('App\\', __DIR__.'/../src/');
+
+    $loader->addClassmap('Horde_Text_Diff', __DIR__.'/../src/Horde/Text/Diff.php');
+    $loader->addClassmap('Horde_Text_Diff_Engine_Native', __DIR__.'/../src/Horde/Text/Diff/Engine/Native.php');
+    $loader->addClassmap('Horde_Text_Diff_Op_Add', __DIR__.'/../src/Horde/Text/Diff/Op/Add.php');
+    $loader->addClassmap('Horde_Text_Diff_Op_Base', __DIR__.'/../src/Horde/Text/Diff/Op/Base.php');
+    $loader->addClassmap('Horde_Text_Diff_Op_Change', __DIR__.'/../src/Horde/Text/Diff/Op/Change.php');
+    $loader->addClassmap('Horde_Text_Diff_Op_Copy', __DIR__.'/../src/Horde/Text/Diff/Op/Copy.php');
+    $loader->addClassmap('Horde_Text_Diff_Op_Delete', __DIR__.'/../src/Horde/Text/Diff/Op/Delete.php');
+    $loader->addClassmap('Horde_Text_Diff_Renderer', __DIR__.'/../src/Horde/Text/Diff/Renderer.php');
 }
 
 $site = 'php';

@@ -5,6 +5,7 @@ use App\Repository\ObsoletePatchRepository;
 use App\Repository\PatchRepository;
 use App\Utils\PatchTracker;
 use App\Utils\Uploader;
+use App\Utils\Diff;
 
 session_start();
 
@@ -109,12 +110,13 @@ if (isset($patch_name) && isset($revision)) {
 			exit;
 		}
 
-		require_once "{$ROOT_DIR}/include/classes/bug_diff_renderer.php";
-
 		assert_options(ASSERT_WARNING, 0);
-		$d	= new Text_Diff($orig = file($old), $now = file($new));
-		$diff = new Bug_Diff_Renderer($d);
+
+		$d = new \Horde_Text_Diff('auto', [file($old), file($new)]);
+		$diff = new Diff($d);
+
 		include "{$ROOT_DIR}/templates/patchdiff.php";
+
 		response_footer();
 		exit;
 	}
