@@ -47,7 +47,6 @@ if ('/random' === $_SERVER['REQUEST_URI']) {
 $searches = [
     'Most recent open bugs (all)' => '&bug_type=All',
     'Most recent open bugs (all) with patch or pull request' => '&bug_type=All&patch=Y&pull=Y',
-    'Most recent open bugs (PHP 5.6)' => '&bug_type=All&phpver=5.6',
     'Most recent open bugs (PHP 7.1)' => '&bug_type=All&phpver=7.1',
     'Most recent open bugs (PHP 7.2)' => '&bug_type=All&phpver=7.2',
     'Most recent open bugs (PHP 7.3)' => '&bug_type=All&phpver=7.3',
