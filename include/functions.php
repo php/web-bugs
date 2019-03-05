@@ -234,6 +234,7 @@ function is_spam($string)
 		'jerseys',
 		'wholesale',
 		'fashionretailshop01',
+		'amoxicillin',
 	];
 
 	if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
