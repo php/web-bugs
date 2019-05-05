@@ -150,7 +150,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 <?php
 
 			foreach ($result as $row) {
-				$status_class = $row['private'] == 'Y' ? 'Sec' : $tla[$row['status']];
+				$status_class = $row['private'] == 'Y' ? 'Sec' : ($tla[$row['status']] ?? '');
 
 				echo ' <tr valign="top" class="' , $status_class, '">' , "\n";
 
