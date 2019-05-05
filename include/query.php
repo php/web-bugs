@@ -88,8 +88,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if (!empty($package_name)) {
 		$where_clause .= ' AND bugdb.package_name';
 		if (count($package_name) > 1) {
-			$package_name = array_map([$dbh, 'quote'], $package_name);
-			$where_clause .= " IN (" . join(", ", $package_name) . ")";
+			$items = array_map([$dbh, 'quote'], $package_name);
+			$where_clause .= " IN (" . join(", ", $items) . ")";
 		} else {
 			$where_clause .= ' = ' . $dbh->quote($package_name[0]);
 		}
@@ -98,8 +98,8 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 	if (!empty($package_nname)) {
 		$where_clause .= ' AND bugdb.package_name';
 		if (count($package_nname) > 1) {
-			$package_nname = array_map([$dbh, 'quote'], $package_nname);
-			$where_clause .= " NOT IN (" . join(", ", $package_nname) . ")";
+			$items = array_map([$dbh, 'quote'], $package_nname);
+			$where_clause .= " NOT IN (" . join(", ", $items) . ")";
 		} else {
 			$where_clause .= ' <> ' . $dbh->quote($package_nname[0]);
 		}
