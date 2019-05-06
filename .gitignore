@@ -12,7 +12,7 @@
 
 # Local specific PHPUnit configuration
 /phpunit.xml
-.phpunit.result.cache
+/.phpunit.result.cache
 
 # Transient and temporary generated files
 /var/

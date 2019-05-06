@@ -70,4 +70,24 @@ return [
      * Templates directory.
      */
     'templates_dir' => __DIR__.'/../templates',
+
+    /**
+     * Bug statuses.
+     */
+    'bug_statuses' => [
+        'Open'          => 'Opn',
+        'Not a bug'     => 'Nab',
+        'Feedback'      => 'Fbk',
+        'No Feedback'   => 'NoF',
+        'Wont fix'      => 'Wfx',
+        'Duplicate'     => 'Dup',
+        'Critical'      => 'Ctl',
+        'Assigned'      => 'Asn',
+        'Analyzed'      => 'Ana',
+        'Verified'      => 'Ver',
+        'Suspended'     => 'Sus',
+        'Closed'        => 'Csd',
+        'Spam'          => 'Spm',
+        'Re-Opened'     => 'ReO',
+    ],
 ];

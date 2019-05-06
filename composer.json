@@ -32,7 +32,9 @@
     },
     "require-dev": {
         "ext-pdo_sqlite": "*",
-        "phpunit/phpunit": "^8.1.5"
+        "fzaninotto/faker": "^1.8",
+        "phpunit/phpunit": "^8.1.5",
+        "symfony/console": "^4.2"
     },
     "autoload": {
         "psr-4": {
