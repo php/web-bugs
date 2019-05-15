@@ -63,7 +63,7 @@ class BugRepository
     {
         $sql = "SELECT id
                 FROM bugdb
-                WHERE status NOT IN('Closed', 'Not a bug', 'Duplicate', 'Spam', 'Wont fix', 'No Feedback')
+                WHERE status NOT IN('Closed', 'Not a bug', 'Duplicate', 'Spam', 'Wont fix', 'No Feedback', 'Suspended')
                     AND private = 'N'
                 ORDER BY RAND() LIMIT 1
         ";
