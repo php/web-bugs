@@ -14,7 +14,7 @@ class GeneratorTest extends TestCase
     private $client;
     private $generator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = new Cache($this->cacheDir);
         $this->cache->clear();
@@ -46,7 +46,7 @@ class GeneratorTest extends TestCase
             ->will($this->returnValue(['Git-'.$date.' (snap)', 'Git-'.$date.' (Git)',]));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->cache->clear();
         rmdir($this->cacheDir);
@@ -56,7 +56,7 @@ class GeneratorTest extends TestCase
     {
         $versions = $this->generator->getVersions();
 
-        $this->assertInternalType('array', $versions);
+        $this->assertIsArray($versions);
         $this->assertGreaterThan(5, count($versions));
 
         $fixture = require TEST_FIXTURES_DIRECTORY . '/versions/versions.php';

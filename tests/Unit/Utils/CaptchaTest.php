@@ -9,7 +9,7 @@ class CaptchaTest extends TestCase
 {
     private $captcha;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->captcha = new Captcha();
     }

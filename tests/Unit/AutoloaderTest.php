@@ -24,7 +24,7 @@ class AutoloaderTest extends TestCase
 {
     protected $autoloader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->autoloader = new MockAutoloader;
 

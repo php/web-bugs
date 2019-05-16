@@ -9,7 +9,7 @@ class ClientTest extends TestCase
 {
     private $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = new Client();
 
@@ -26,11 +26,11 @@ class ClientTest extends TestCase
 
     public function testFetchDevVersions()
     {
-        $this->assertInternalType('array', $this->client->fetchDevVersions());
+        $this->assertIsArray($this->client->fetchDevVersions());
     }
 
     public function testFetchStableVersions()
     {
-        $this->assertInternalType('array', $this->client->fetchStableVersions());
+        $this->assertIsArray($this->client->fetchStableVersions());
     }
 }

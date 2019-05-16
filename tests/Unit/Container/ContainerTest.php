@@ -3,6 +3,8 @@
 namespace App\Tests\Unit\Container;
 
 use App\Container\Container;
+use App\Container\Exception\ContainerException;
+use App\Container\Exception\EntryNotFoundException;
 use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
@@ -53,30 +55,26 @@ class ContainerTest extends TestCase
         $this->assertTrue($container->has(MockDependency::class));
     }
 
-    /**
-     * @expectedException App\Container\Exception\EntryNotFoundException
-     */
     public function testServiceNotFound()
     {
         $container = new Container();
+
+        $this->expectException(EntryNotFoundException::class);
+
         $container->get('foo');
     }
 
-    /**
-     * @expectedException        App\Container\Exception\ContainerException
-     * @expectedExceptionMessage entry must be callable
-     */
     public function testBadServiceEntry()
     {
         $container = new Container();
         $container->set(\stdClass::class, '');
+
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage('entry must be callable');
+
         $container->get(\stdClass::class);
     }
 
-    /**
-     * @expectedException        App\Container\Exception\ContainerException
-     * @expectedExceptionMessage circular reference
-     */
     public function testCircularReference()
     {
         $container = new Container();
@@ -88,6 +86,9 @@ class ContainerTest extends TestCase
         $container->set(MockService::class, function ($c) {
             return new MockService($c->get(MockService::class));
         });
+
+        $this->expectException(ContainerException::class);
+        $this->expectExceptionMessage('circular reference');
 
         $container->get(MockService::class);
     }

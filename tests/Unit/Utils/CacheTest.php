@@ -10,13 +10,13 @@ class CacheTest extends TestCase
     private $cacheDir = __DIR__ . '/../../var/cache/test';
     private $cache;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = new Cache($this->cacheDir);
         $this->cache->clear();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->cache->clear();
         rmdir($this->cacheDir);
