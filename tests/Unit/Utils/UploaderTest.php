@@ -16,8 +16,7 @@ class UploaderTest extends TestCase
      */
     public function testUpload(string $validExtension, array $file): void
     {
-        $_FILES = [];
-        $_FILES['uploaded'] = $file;
+        $_FILES = ['uploaded' => $file];
 
         /** @var Uploader|MockObject $uploader */
         $uploader = $this->getMockBuilder(Uploader::class)
@@ -34,7 +33,7 @@ class UploaderTest extends TestCase
 
         $uploader->setMaxFileSize(100 * 1024);
         $uploader->setValidExtension($validExtension);
-        $uploader->setDir(__DIR__.'/../../var/uploads');
+        $uploader->setDir(__DIR__ . '/../../var/uploads');
         $tmpFile = $uploader->upload('uploaded');
 
         $this->assertNotNull($tmpFile);
