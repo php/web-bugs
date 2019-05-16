@@ -15,7 +15,7 @@ class EngineTest extends TestCase
         $this->template = new Engine(TEST_FIXTURES_DIRECTORY . '/templates');
     }
 
-    public function testView()
+    public function testView(): void
     {
         $content = $this->template->render('pages/view.php', [
             'foo' => 'Lorem ipsum dolor sit amet.',
@@ -26,7 +26,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/PHP is a popular general-purpose/', $content);
     }
 
-    public function testRegisterNew()
+    public function testRegisterNew(): void
     {
         // Register callable function
         $this->template->register('addAsterisks', function ($var) {
@@ -48,7 +48,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/\*\*\*Lorem ipsum dolor sit amet\.\*\*\*/', $content);
     }
 
-    public function testRegisterExisting()
+    public function testRegisterExisting(): void
     {
         $this->expectException(\Exception::class);
 
@@ -57,7 +57,7 @@ class EngineTest extends TestCase
         });
     }
 
-    public function testAssignments()
+    public function testAssignments(): void
     {
         $this->template->assign([
             'parameter' => 'FooBarBaz',
@@ -71,7 +71,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/FooBarBaz/', $content);
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
         $this->template->assign([
             'foo',
@@ -87,7 +87,7 @@ class EngineTest extends TestCase
         $this->assertEquals(['baz', 'bar', 'qux' => 'quuz'], $this->template->getVariables());
     }
 
-    public function testVariablesScope()
+    public function testVariablesScope(): void
     {
         $this->template->assign([
             'parameter' => 'Parameter value',
@@ -105,7 +105,7 @@ class EngineTest extends TestCase
         $this->assertEquals($expected, $content);
     }
 
-    public function testInvalidVariables()
+    public function testInvalidVariables(): void
     {
         $this->template->assign([
             'Invalid value with key 0',
@@ -121,7 +121,7 @@ class EngineTest extends TestCase
         ]);
     }
 
-    public function testOverrides()
+    public function testOverrides(): void
     {
         $this->template->assign([
             'pageParameter_1' => 'Page parameter 1',
@@ -144,7 +144,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/Layout overridden parameter 2/', $content);
     }
 
-    public function testAppending()
+    public function testAppending(): void
     {
         $content = $this->template->render('pages/appending.php');
 
@@ -152,7 +152,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/file\_2\.js/', $content);
     }
 
-    public function testIncluding()
+    public function testIncluding(): void
     {
         $content = $this->template->render('pages/including.php');
 
@@ -160,14 +160,14 @@ class EngineTest extends TestCase
         $this->assertRegexp('/Banner inclusion/', $content);
     }
 
-    public function testNoLayout()
+    public function testNoLayout(): void
     {
         $content = $this->template->render('pages/no_layout.rss');
 
         $this->assertEquals(file_get_contents(TEST_FIXTURES_DIRECTORY . '/templates/pages/no_layout.rss'), $content);
     }
 
-    public function testMissingTemplate()
+    public function testMissingTemplate(): void
     {
         $this->template->assign([
             'parameter' => 'Parameter value',
@@ -180,7 +180,7 @@ class EngineTest extends TestCase
         ]);
     }
 
-    public function testExtending()
+    public function testExtending(): void
     {
         $this->expectException(\Exception::class);
 

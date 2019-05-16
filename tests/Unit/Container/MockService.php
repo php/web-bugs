@@ -15,17 +15,17 @@ class MockService
         $this->dependency = $dependency;
     }
 
-    public function getDependency()
+    public function getDependency(): MockDependency
     {
         return $this->dependency;
     }
 
-    public function setProperty($value)
+    public function setProperty(string $value): void
     {
         $this->property = $value;
     }
 
-    public function getProperty()
+    public function getProperty(): string
     {
         return $this->property;
     }

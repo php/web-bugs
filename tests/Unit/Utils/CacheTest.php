@@ -25,7 +25,7 @@ class CacheTest extends TestCase
         rmdir($this->cacheDir);
     }
 
-    public function testHas()
+    public function testHas(): void
     {
         $this->assertFalse($this->cache->has('foo'));
 
@@ -33,7 +33,7 @@ class CacheTest extends TestCase
         $this->assertTrue($this->cache->has('foo'));
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->cache->set('bar', [1, 2, 3]);
         $this->assertFileExists($this->cacheDir.'/bar.php');

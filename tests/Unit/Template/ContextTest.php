@@ -15,7 +15,7 @@ class ContextTest extends TestCase
         $this->context = new Context(TEST_FIXTURES_DIRECTORY . '/templates');
     }
 
-    public function testBlock()
+    public function testBlock(): void
     {
         $this->context->start('foo');
         echo 'bar';
@@ -36,7 +36,7 @@ class ContextTest extends TestCase
         $this->assertEquals($this->context->block('foo'), 'overridden');
     }
 
-    public function testInclude()
+    public function testInclude(): void
     {
         ob_start();
         $this->context->include('includes/banner.php');
@@ -45,7 +45,7 @@ class ContextTest extends TestCase
         $this->assertEquals(file_get_contents(TEST_FIXTURES_DIRECTORY . '/templates/includes/banner.php'), $content);
     }
 
-    public function testIncludeReturn()
+    public function testIncludeReturn(): void
     {
         $variable = $this->context->include('includes/variable.php');
 
@@ -55,7 +55,7 @@ class ContextTest extends TestCase
     /**
      * @dataProvider attacksProvider
      */
-    public function testEscaping($malicious, $escaped, $noHtml)
+    public function testEscaping(string $malicious, string $escaped, string $noHtml): void
     {
         $this->assertEquals($escaped, $this->context->e($malicious));
     }
@@ -63,12 +63,12 @@ class ContextTest extends TestCase
     /**
      * @dataProvider attacksProvider
      */
-    public function testNoHtml($malicious, $escaped, $noHtml)
+    public function testNoHtml(string $malicious, string $escaped, string $noHtml): void
     {
         $this->assertEquals($noHtml, $this->context->noHtml($malicious));
     }
 
-    public function attacksProvider()
+    public function attacksProvider(): array
     {
         return [
             [

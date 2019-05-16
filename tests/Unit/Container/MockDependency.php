@@ -9,12 +9,12 @@ class MockDependency
 {
     private $parameter;
 
-    public function __construct($parameter)
+    public function __construct(string $parameter)
     {
         $this->parameter = $parameter;
     }
 
-    public function getParameter()
+    public function getParameter(): string
     {
         return $this->parameter;
     }

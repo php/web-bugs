@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ContainerTest extends TestCase
 {
-    public function testContainer()
+    public function testContainer(): void
     {
         // Create container
         $container = new Container();
@@ -41,7 +41,7 @@ class ContainerTest extends TestCase
         $this->assertEquals('group.param', $service->getProperty());
     }
 
-    public function testHas()
+    public function testHas(): void
     {
         $container = new Container();
 
@@ -55,7 +55,7 @@ class ContainerTest extends TestCase
         $this->assertTrue($container->has(MockDependency::class));
     }
 
-    public function testServiceNotFound()
+    public function testServiceNotFound(): void
     {
         $container = new Container();
 
@@ -64,7 +64,7 @@ class ContainerTest extends TestCase
         $container->get('foo');
     }
 
-    public function testBadServiceEntry()
+    public function testBadServiceEntry(): void
     {
         $container = new Container();
         $container->set(\stdClass::class, '');
@@ -75,7 +75,7 @@ class ContainerTest extends TestCase
         $container->get(\stdClass::class);
     }
 
-    public function testCircularReference()
+    public function testCircularReference(): void
     {
         $container = new Container();
 
@@ -93,7 +93,7 @@ class ContainerTest extends TestCase
         $container->get(MockService::class);
     }
 
-    public function testParametersAndServices()
+    public function testParametersAndServices(): void
     {
         $container = new Container([
             'foo' => 'bar',

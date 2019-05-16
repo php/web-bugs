@@ -59,7 +59,7 @@ class GeneratorTest extends TestCase
         rmdir($this->cacheDir);
     }
 
-    public function testVersions()
+    public function testVersions(): void
     {
         $versions = $this->generator->getVersions();
 

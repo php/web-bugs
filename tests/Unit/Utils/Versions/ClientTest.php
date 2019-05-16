@@ -25,12 +25,12 @@ class ClientTest extends TestCase
         $stableVersionsUrl->setValue($this->client, TEST_MOCKS_DIRECTORY . '/responses/stable-body.txt');
     }
 
-    public function testFetchDevVersions()
+    public function testFetchDevVersions(): void
     {
         $this->assertIsArray($this->client->fetchDevVersions());
     }
 
-    public function testFetchStableVersions()
+    public function testFetchStableVersions(): void
     {
         $this->assertIsArray($this->client->fetchStableVersions());
     }

@@ -79,12 +79,12 @@ class AutoloaderTest extends TestCase
     /**
      * @dataProvider classesProvider
      */
-    public function testLoad($class, $expected)
+    public function testLoad(string $class, $expected): void
     {
         $this->assertEquals($expected, $this->autoloader->load($class));
     }
 
-    public function classesProvider()
+    public function classesProvider(): array
     {
         return [
             ['Foo\Bar\ClassName', '/vendor/foo.bar/src/ClassName.php'],

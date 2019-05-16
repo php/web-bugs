@@ -18,7 +18,7 @@ class CaptchaTest extends TestCase
     /**
      * @dataProvider mathProvider
      */
-    public function testGetQuestion($first, $last, $operation, $question, $expected)
+    public function testGetQuestion(int $first, int $last, string $operation, string $question, int $expected): void
     {
         $this->captcha->setFirst($first);
         $this->captcha->setLast($last);
@@ -28,7 +28,7 @@ class CaptchaTest extends TestCase
         $this->assertEquals($expected, $this->captcha->getAnswer());
     }
 
-    public function mathProvider()
+    public function mathProvider(): array
     {
         return [
             [1, 2, 'addition', '1 + 2 = ?', 3],

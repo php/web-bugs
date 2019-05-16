@@ -14,7 +14,7 @@ class UploaderTest extends TestCase
     /**
      * @dataProvider filesProvider
      */
-    public function testUpload($validExtension, $file)
+    public function testUpload(string $validExtension, array $file): void
     {
         $_FILES = [];
         $_FILES['uploaded'] = $file;
@@ -40,7 +40,7 @@ class UploaderTest extends TestCase
         $this->assertNotNull($tmpFile);
     }
 
-    public function filesProvider()
+    public function filesProvider(): array
     {
         return [
             [
