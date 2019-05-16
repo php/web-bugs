@@ -46,10 +46,10 @@ class UploaderTest extends TestCase
             [
                 'txt',
                 [
-                    'name' => 'patch.txt',
-                    'tmp_name' => $this->fixturesDirectory.'/patch.txt',
-                    'size' => filesize($this->fixturesDirectory.'/patch.txt'),
-                    'error' => UPLOAD_ERR_OK,
+                    'name'     => 'patch.txt',
+                    'tmp_name' => $this->fixturesDirectory . '/patch.txt',
+                    'size'     => filesize($this->fixturesDirectory . '/patch.txt'),
+                    'error'    => UPLOAD_ERR_OK,
                 ]
             ],
         ];

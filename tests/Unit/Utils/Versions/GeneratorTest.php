@@ -50,7 +50,7 @@ class GeneratorTest extends TestCase
         $date = '2018-12-26';
         $this->generator->expects($this->any())
             ->method('getAffixes')
-            ->will($this->returnValue(['Git-'.$date.' (snap)', 'Git-'.$date.' (Git)',]));
+            ->will($this->returnValue(['Git-' . $date . ' (snap)', 'Git-' . $date . ' (Git)',]));
     }
 
     public function tearDown(): void
@@ -67,7 +67,7 @@ class GeneratorTest extends TestCase
         $this->assertGreaterThan(5, count($versions));
 
         $fixture = require TEST_FIXTURES_DIRECTORY . '/versions/versions.php';
-        $cached = require $this->cacheDir.'/versions.php';
+        $cached = require $this->cacheDir . '/versions.php';
 
         $this->assertEquals($fixture[1], $cached[1]);
         $this->assertContains('Next Major Version', $versions);
