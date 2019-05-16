@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Tests\Utils\Versions;
+namespace App\Tests\Unit\Utils\Versions;
 
 use PHPUnit\Framework\TestCase;
 use App\Utils\Versions\Generator;
@@ -9,12 +9,19 @@ use App\Utils\Cache;
 
 class GeneratorTest extends TestCase
 {
-    private $cacheDir = __DIR__.'/../../../var/cache/test';
+    /** @var string */
+    private $cacheDir = TEST_VAR_DIRECTORY . '/cache/test';
+
+    /** @var Cache */
     private $cache;
+
+    /** @var Client */
     private $client;
+
+    /** @var Generator */
     private $generator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->cache = new Cache($this->cacheDir);
         $this->cache->clear();
@@ -27,11 +34,11 @@ class GeneratorTest extends TestCase
 
         $this->client->expects($this->once())
             ->method('fetchDevVersions')
-            ->will($this->returnValue(json_decode(file_get_contents(__DIR__.'/../../mock/responses/dev-body.txt', true))));
+            ->will($this->returnValue(json_decode(file_get_contents(TEST_MOCKS_DIRECTORY . '/responses/dev-body.txt', true))));
 
         $this->client->expects($this->once())
             ->method('fetchStableVersions')
-            ->will($this->returnValue(json_decode(file_get_contents(__DIR__.'/../../mock/responses/stable-body.txt'), true)));
+            ->will($this->returnValue(json_decode(file_get_contents(TEST_MOCKS_DIRECTORY . '/responses/stable-body.txt'), true)));
 
         $this->generator = $this->getMockBuilder(Generator::class)
             ->setConstructorArgs([$this->client, $this->cache])
@@ -43,24 +50,24 @@ class GeneratorTest extends TestCase
         $date = '2018-12-26';
         $this->generator->expects($this->any())
             ->method('getAffixes')
-            ->will($this->returnValue(['Git-'.$date.' (snap)', 'Git-'.$date.' (Git)',]));
+            ->will($this->returnValue(['Git-' . $date . ' (snap)', 'Git-' . $date . ' (Git)',]));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->cache->clear();
         rmdir($this->cacheDir);
     }
 
-    public function testVersions()
+    public function testVersions(): void
     {
         $versions = $this->generator->getVersions();
 
-        $this->assertInternalType('array', $versions);
+        $this->assertIsArray($versions);
         $this->assertGreaterThan(5, count($versions));
 
-        $fixture = require __DIR__.'/../../fixtures/versions/versions.php';
-        $cached = require $this->cacheDir.'/versions.php';
+        $fixture = require TEST_FIXTURES_DIRECTORY . '/versions/versions.php';
+        $cached = require $this->cacheDir . '/versions.php';
 
         $this->assertEquals($fixture[1], $cached[1]);
         $this->assertContains('Next Major Version', $versions);

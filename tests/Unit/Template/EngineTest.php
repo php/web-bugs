@@ -1,21 +1,24 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Tests\Template;
+namespace App\Tests\Unit\Template;
 
 use PHPUnit\Framework\TestCase;
 use App\Template\Engine;
 
 class EngineTest extends TestCase
 {
-    public function setUp()
+    /** @var Engine */
+    private $template;
+
+    public function setUp(): void
     {
-        $this->template = new Engine(__DIR__.'/../fixtures/templates');
+        $this->template = new Engine(TEST_FIXTURES_DIRECTORY . '/templates');
     }
 
-    public function testView()
+    public function testView(): void
     {
         $content = $this->template->render('pages/view.php', [
-            'foo' => 'Lorem ipsum dolor sit amet.',
+            'foo'     => 'Lorem ipsum dolor sit amet.',
             'sidebar' => 'PHP is a popular general-purpose scripting language that is especially suited to web development',
         ]);
 
@@ -23,7 +26,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/PHP is a popular general-purpose/', $content);
     }
 
-    public function testRegisterNew()
+    public function testRegisterNew(): void
     {
         // Register callable function
         $this->template->register('addAsterisks', function ($var) {
@@ -45,7 +48,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/\*\*\*Lorem ipsum dolor sit amet\.\*\*\*/', $content);
     }
 
-    public function testRegisterExisting()
+    public function testRegisterExisting(): void
     {
         $this->expectException(\Exception::class);
 
@@ -54,7 +57,7 @@ class EngineTest extends TestCase
         });
     }
 
-    public function testAssignments()
+    public function testAssignments(): void
     {
         $this->template->assign([
             'parameter' => 'FooBarBaz',
@@ -68,7 +71,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/FooBarBaz/', $content);
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
         $this->template->assign([
             'foo',
@@ -84,7 +87,7 @@ class EngineTest extends TestCase
         $this->assertEquals(['baz', 'bar', 'qux' => 'quuz'], $this->template->getVariables());
     }
 
-    public function testVariablesScope()
+    public function testVariablesScope(): void
     {
         $this->template->assign([
             'parameter' => 'Parameter value',
@@ -96,13 +99,13 @@ class EngineTest extends TestCase
 
         $expected = var_export([
             'parameter' => 'Parameter value',
-            'foo' => 'Lorem ipsum dolor sit amet',
+            'foo'       => 'Lorem ipsum dolor sit amet',
         ], true);
 
         $this->assertEquals($expected, $content);
     }
 
-    public function testInvalidVariables()
+    public function testInvalidVariables(): void
     {
         $this->template->assign([
             'Invalid value with key 0',
@@ -112,24 +115,24 @@ class EngineTest extends TestCase
 
         $this->expectException(\Exception::class);
 
-        $content = $this->template->render('pages/invalid_variables.php', [
+        $this->template->render('pages/invalid_variables.php', [
             'foo' => 'Lorem ipsum dolor sit amet',
-            1 => 'Invalid overridden value with key 1',
+            1     => 'Invalid overridden value with key 1',
         ]);
     }
 
-    public function testOverrides()
+    public function testOverrides(): void
     {
         $this->template->assign([
-            'pageParameter_1' => 'Page parameter 1',
-            'pageParameter_2' => 'Page parameter 2',
+            'pageParameter_1'   => 'Page parameter 1',
+            'pageParameter_2'   => 'Page parameter 2',
             'layoutParameter_1' => 'Layout parameter 1',
             'layoutParameter_2' => 'Layout parameter 2',
             'layoutParameter_3' => 'Layout parameter 3',
         ]);
 
         $content = $this->template->render('pages/overrides.php', [
-            'pageParameter_2' => 'Overridden parameter 2',
+            'pageParameter_2'   => 'Overridden parameter 2',
             'layoutParameter_2' => 'Layout overridden parameter 2',
         ]);
 
@@ -141,7 +144,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/Layout overridden parameter 2/', $content);
     }
 
-    public function testAppending()
+    public function testAppending(): void
     {
         $content = $this->template->render('pages/appending.php');
 
@@ -149,7 +152,7 @@ class EngineTest extends TestCase
         $this->assertRegexp('/file\_2\.js/', $content);
     }
 
-    public function testIncluding()
+    public function testIncluding(): void
     {
         $content = $this->template->render('pages/including.php');
 
@@ -157,14 +160,14 @@ class EngineTest extends TestCase
         $this->assertRegexp('/Banner inclusion/', $content);
     }
 
-    public function testNoLayout()
+    public function testNoLayout(): void
     {
         $content = $this->template->render('pages/no_layout.rss');
 
-        $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/pages/no_layout.rss'), $content);
+        $this->assertEquals(file_get_contents(TEST_FIXTURES_DIRECTORY . '/templates/pages/no_layout.rss'), $content);
     }
 
-    public function testMissingTemplate()
+    public function testMissingTemplate(): void
     {
         $this->template->assign([
             'parameter' => 'Parameter value',
@@ -172,15 +175,15 @@ class EngineTest extends TestCase
 
         $this->expectException(\Exception::class);
 
-        $content = $this->template->render('pages/this/does/not/exist.php', [
+        $this->template->render('pages/this/does/not/exist.php', [
             'foo' => 'Lorem ipsum dolor sit amet',
         ]);
     }
 
-    public function testExtending()
+    public function testExtending(): void
     {
         $this->expectException(\Exception::class);
 
-        $html = $this->template->render('pages/extends.php');
+        $this->template->render('pages/extends.php');
     }
 }

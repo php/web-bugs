@@ -1,18 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Tests\Template;
+namespace App\Tests\Unit\Template;
 
 use PHPUnit\Framework\TestCase;
 use App\Template\Context;
 
 class ContextTest extends TestCase
 {
-    public function setUp()
+    /** @var Context */
+    private $context;
+
+    public function setUp(): void
     {
-        $this->context = new Context(__DIR__.'/../fixtures/templates');
+        $this->context = new Context(TEST_FIXTURES_DIRECTORY . '/templates');
     }
 
-    public function testBlock()
+    public function testBlock(): void
     {
         $this->context->start('foo');
         echo 'bar';
@@ -33,26 +36,26 @@ class ContextTest extends TestCase
         $this->assertEquals($this->context->block('foo'), 'overridden');
     }
 
-    public function testInclude()
+    public function testInclude(): void
     {
         ob_start();
         $this->context->include('includes/banner.php');
         $content = ob_get_clean();
 
-        $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/includes/banner.php'), $content);
+        $this->assertEquals(file_get_contents(TEST_FIXTURES_DIRECTORY . '/templates/includes/banner.php'), $content);
     }
 
-    public function testIncludeReturn()
+    public function testIncludeReturn(): void
     {
         $variable = $this->context->include('includes/variable.php');
 
-        $this->assertEquals(include __DIR__.'/../fixtures/templates/includes/variable.php', $variable);
+        $this->assertEquals(include TEST_FIXTURES_DIRECTORY . '/templates/includes/variable.php', $variable);
     }
 
     /**
      * @dataProvider attacksProvider
      */
-    public function testEscaping($malicious, $escaped, $noHtml)
+    public function testEscaping(string $malicious, string $escaped, string $noHtml): void
     {
         $this->assertEquals($escaped, $this->context->e($malicious));
     }
@@ -60,12 +63,12 @@ class ContextTest extends TestCase
     /**
      * @dataProvider attacksProvider
      */
-    public function testNoHtml($malicious, $escaped, $noHtml)
+    public function testNoHtml(string $malicious, string $escaped, string $noHtml): void
     {
         $this->assertEquals($noHtml, $this->context->noHtml($malicious));
     }
 
-    public function attacksProvider()
+    public function attacksProvider(): array
     {
         return [
             [

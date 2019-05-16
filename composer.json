@@ -31,7 +31,7 @@
         "ext-session": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5"
+        "phpunit/phpunit": "^8.1.5"
     },
     "autoload": {
         "psr-4": {

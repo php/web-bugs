@@ -1,3 +1,9 @@
+# These files are generated during application running or testing and are
+# intentionally untracked to ignore by Git. For other development environment
+# specific files, such as editor configuration, a good practice is to exclude
+# them using the .git/info/exclude in the cloned repository or a global
+# .gitignore file.
+
 # Uploaded patches
 /uploads/
 
@@ -6,6 +12,7 @@
 
 # Local specific PHPUnit configuration
 /phpunit.xml
+.phpunit.result.cache
 
 # Transient and temporary generated files
 /var/

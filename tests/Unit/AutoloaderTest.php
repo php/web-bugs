@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\Unit;
 
 use App\Autoloader;
 use PHPUnit\Framework\TestCase;
@@ -22,9 +22,10 @@ class MockAutoloader extends Autoloader
 
 class AutoloaderTest extends TestCase
 {
+    /** @var MockAutoloader */
     protected $autoloader;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->autoloader = new MockAutoloader;
 
@@ -78,12 +79,12 @@ class AutoloaderTest extends TestCase
     /**
      * @dataProvider classesProvider
      */
-    public function testLoad($class, $expected)
+    public function testLoad(string $class, $expected): void
     {
         $this->assertEquals($expected, $this->autoloader->load($class));
     }
 
-    public function classesProvider()
+    public function classesProvider(): array
     {
         return [
             ['Foo\Bar\ClassName', '/vendor/foo.bar/src/ClassName.php'],
