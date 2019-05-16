@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Template;
+namespace App\Tests\Unit\Template;
 
 use PHPUnit\Framework\TestCase;
 use App\Template\Context;
@@ -9,7 +9,7 @@ class ContextTest extends TestCase
 {
     public function setUp()
     {
-        $this->context = new Context(__DIR__.'/../fixtures/templates');
+        $this->context = new Context(TEST_FIXTURES_DIRECTORY . '/templates');
     }
 
     public function testBlock()
@@ -39,14 +39,14 @@ class ContextTest extends TestCase
         $this->context->include('includes/banner.php');
         $content = ob_get_clean();
 
-        $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/includes/banner.php'), $content);
+        $this->assertEquals(file_get_contents(TEST_FIXTURES_DIRECTORY . '/templates/includes/banner.php'), $content);
     }
 
     public function testIncludeReturn()
     {
         $variable = $this->context->include('includes/variable.php');
 
-        $this->assertEquals(include __DIR__.'/../fixtures/templates/includes/variable.php', $variable);
+        $this->assertEquals(include TEST_FIXTURES_DIRECTORY . '/templates/includes/variable.php', $variable);
     }
 
     /**

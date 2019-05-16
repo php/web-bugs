@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Utils\Versions;
+namespace App\Tests\Unit\Utils\Versions;
 
 use PHPUnit\Framework\TestCase;
 use App\Utils\Versions\Client;
@@ -17,11 +17,11 @@ class ClientTest extends TestCase
 
         $devVersionsUrl = $reflection->getProperty('devVersionsUrl');
         $devVersionsUrl->setAccessible(true);
-        $devVersionsUrl->setValue($this->client, __DIR__.'/../../mock/responses/dev-body.txt');
+        $devVersionsUrl->setValue($this->client, TEST_MOCKS_DIRECTORY . '/responses/dev-body.txt');
 
         $stableVersionsUrl = $reflection->getProperty('stableVersionsUrl');
         $stableVersionsUrl->setAccessible(true);
-        $stableVersionsUrl->setValue($this->client, __DIR__.'/../../mock/responses/stable-body.txt');
+        $stableVersionsUrl->setValue($this->client, TEST_MOCKS_DIRECTORY . '/responses/stable-body.txt');
     }
 
     public function testFetchDevVersions()

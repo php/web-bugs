@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Container;
+namespace App\Tests\Unit\Container;
 
 /**
  * Mock service dependency class for testing container.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Template;
+namespace App\Tests\Unit\Template;
 
 use PHPUnit\Framework\TestCase;
 use App\Template\Engine;
@@ -9,7 +9,7 @@ class EngineTest extends TestCase
 {
     public function setUp()
     {
-        $this->template = new Engine(__DIR__.'/../fixtures/templates');
+        $this->template = new Engine(TEST_FIXTURES_DIRECTORY . '/templates');
     }
 
     public function testView()
@@ -161,7 +161,7 @@ class EngineTest extends TestCase
     {
         $content = $this->template->render('pages/no_layout.rss');
 
-        $this->assertEquals(file_get_contents(__DIR__.'/../fixtures/templates/pages/no_layout.rss'), $content);
+        $this->assertEquals(file_get_contents(TEST_FIXTURES_DIRECTORY . '/templates/pages/no_layout.rss'), $content);
     }
 
     public function testMissingTemplate()

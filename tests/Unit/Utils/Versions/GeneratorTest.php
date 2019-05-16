@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Utils\Versions;
+namespace App\Tests\Unit\Utils\Versions;
 
 use PHPUnit\Framework\TestCase;
 use App\Utils\Versions\Generator;
@@ -9,7 +9,7 @@ use App\Utils\Cache;
 
 class GeneratorTest extends TestCase
 {
-    private $cacheDir = __DIR__.'/../../../var/cache/test';
+    private $cacheDir = __DIR__ . '/../../../var/cache/test';
     private $cache;
     private $client;
     private $generator;
@@ -27,11 +27,11 @@ class GeneratorTest extends TestCase
 
         $this->client->expects($this->once())
             ->method('fetchDevVersions')
-            ->will($this->returnValue(json_decode(file_get_contents(__DIR__.'/../../mock/responses/dev-body.txt', true))));
+            ->will($this->returnValue(json_decode(file_get_contents(TEST_MOCKS_DIRECTORY . '/responses/dev-body.txt', true))));
 
         $this->client->expects($this->once())
             ->method('fetchStableVersions')
-            ->will($this->returnValue(json_decode(file_get_contents(__DIR__.'/../../mock/responses/stable-body.txt'), true)));
+            ->will($this->returnValue(json_decode(file_get_contents(TEST_MOCKS_DIRECTORY . '/responses/stable-body.txt'), true)));
 
         $this->generator = $this->getMockBuilder(Generator::class)
             ->setConstructorArgs([$this->client, $this->cache])
@@ -59,7 +59,7 @@ class GeneratorTest extends TestCase
         $this->assertInternalType('array', $versions);
         $this->assertGreaterThan(5, count($versions));
 
-        $fixture = require __DIR__.'/../../fixtures/versions/versions.php';
+        $fixture = require TEST_FIXTURES_DIRECTORY . '/versions/versions.php';
         $cached = require $this->cacheDir.'/versions.php';
 
         $this->assertEquals($fixture[1], $cached[1]);

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Tests\Utils;
+namespace App\Tests\Unit\Utils;
 
 use App\Utils\Cache;
 use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
 {
-    private $cacheDir = __DIR__.'/../../var/cache/test';
+    private $cacheDir = __DIR__ . '/../../var/cache/test';
     private $cache;
 
     public function setUp()

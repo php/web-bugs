@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Utils;
+namespace App\Tests\Unit\Utils;
 
 use PHPUnit\Framework\TestCase;
 use App\Utils\Captcha;

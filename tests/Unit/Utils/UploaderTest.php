@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Tests\Utils;
+namespace App\Tests\Unit\Utils;
 
 use PHPUnit\Framework\TestCase;
 use App\Utils\Uploader;
 
 class UploaderTest extends TestCase
 {
-    private $fixturesDirectory = __DIR__.'/../fixtures/files';
+    private $fixturesDirectory = TEST_FIXTURES_DIRECTORY . '/files';
 
     /**
      * @dataProvider filesProvider
