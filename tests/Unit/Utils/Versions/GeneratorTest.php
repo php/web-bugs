@@ -9,9 +9,16 @@ use App\Utils\Cache;
 
 class GeneratorTest extends TestCase
 {
+    /** @var string */
     private $cacheDir = __DIR__ . '/../../../var/cache/test';
+
+    /** @var Cache */
     private $cache;
+
+    /** @var Client */
     private $client;
+
+    /** @var Generator */
     private $generator;
 
     public function setUp(): void

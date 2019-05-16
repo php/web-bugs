@@ -7,6 +7,9 @@ use App\Template\Engine;
 
 class EngineTest extends TestCase
 {
+    /** @var Engine */
+    private $template;
+
     public function setUp(): void
     {
         $this->template = new Engine(TEST_FIXTURES_DIRECTORY . '/templates');

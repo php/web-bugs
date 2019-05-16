@@ -7,6 +7,7 @@ use App\Utils\Captcha;
 
 class CaptchaTest extends TestCase
 {
+    /** @var Captcha */
     private $captcha;
 
     public function setUp(): void

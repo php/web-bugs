@@ -7,6 +7,9 @@ use App\Template\Context;
 
 class ContextTest extends TestCase
 {
+    /** @var Context */
+    private $context;
+
     public function setUp(): void
     {
         $this->context = new Context(TEST_FIXTURES_DIRECTORY . '/templates');

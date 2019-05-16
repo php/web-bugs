@@ -2,11 +2,13 @@
 
 namespace App\Tests\Unit\Utils;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use App\Utils\Uploader;
 
 class UploaderTest extends TestCase
 {
+    /** @var string */
     private $fixturesDirectory = TEST_FIXTURES_DIRECTORY . '/files';
 
     /**
@@ -17,6 +19,7 @@ class UploaderTest extends TestCase
         $_FILES = [];
         $_FILES['uploaded'] = $file;
 
+        /** @var Uploader|MockObject $uploader */
         $uploader = $this->getMockBuilder(Uploader::class)
             ->setMethods(['isUploadedFile', 'moveUploadedFile'])
             ->getMock();

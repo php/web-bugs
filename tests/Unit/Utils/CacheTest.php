@@ -7,7 +7,10 @@ use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
 {
+    /** @var string */
     private $cacheDir = __DIR__ . '/../../var/cache/test';
+
+    /** @var Cache */
     private $cache;
 
     public function setUp(): void

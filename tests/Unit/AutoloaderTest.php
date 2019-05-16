@@ -22,6 +22,7 @@ class MockAutoloader extends Autoloader
 
 class AutoloaderTest extends TestCase
 {
+    /** @var MockAutoloader */
     protected $autoloader;
 
     protected function setUp(): void

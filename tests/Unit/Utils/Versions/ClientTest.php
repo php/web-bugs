@@ -7,6 +7,7 @@ use App\Utils\Versions\Client;
 
 class ClientTest extends TestCase
 {
+    /** @var Client */
     private $client;
 
     public function setUp(): void

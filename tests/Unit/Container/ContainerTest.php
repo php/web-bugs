@@ -15,14 +15,14 @@ class ContainerTest extends TestCase
         $container = new Container();
 
         // Service definitions
-        $container->set(MockService::class, function ($c) {
-            $service = new MockService($c->get(MockDependency::class), 'foo');
+        $container->set(MockService::class, function (Container $container) {
+            $service = new MockService($container->get(MockDependency::class));
             $service->setProperty('group.param');
 
             return $service;
         });
 
-        $container->set(MockDependency::class, function ($c) {
+        $container->set(MockDependency::class, function (Container $container) {
             return new MockDependency('group.param');
         });
 
@@ -47,7 +47,7 @@ class ContainerTest extends TestCase
 
         $this->assertFalse($container->has(MockDependency::class));
 
-        $container->set(MockDependency::class, function ($c) {
+        $container->set(MockDependency::class, function (Container $container) {
             return new MockDependency('group.param');
         });
 
@@ -79,12 +79,12 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
 
-        $container->set(MockService::class, function ($c) {
-            return new MockService($c->get(MockService::class));
+        $container->set(MockService::class, function (Container $container) {
+            return new MockService($container->get(MockService::class));
         });
 
-        $container->set(MockService::class, function ($c) {
-            return new MockService($c->get(MockService::class));
+        $container->set(MockService::class, function (Container $container) {
+            return new MockService($container->get(MockService::class));
         });
 
         $this->expectException(ContainerException::class);
@@ -97,8 +97,8 @@ class ContainerTest extends TestCase
     {
         $container = new Container([
             'foo' => 'bar',
-            'baz' => function ($c) {
-                return $c->get('foo');
+            'baz' => function (Container $container) {
+                return $container->get('foo');
             },
         ]);
 
