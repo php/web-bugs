@@ -10,7 +10,7 @@ use App\Utils\Cache;
 class GeneratorTest extends TestCase
 {
     /** @var string */
-    private $cacheDir = TEST_CACHE_DIRECTORY . '/test';
+    private $cacheDir = TEST_VAR_DIRECTORY . '/cache/test';
 
     /** @var Cache */
     private $cache;

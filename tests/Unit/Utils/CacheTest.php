@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 class CacheTest extends TestCase
 {
     /** @var string */
-    private $cacheDir = __DIR__ . '/../../var/cache/test';
+    private $cacheDir = TEST_VAR_DIRECTORY . '/cache/test';
 
     /** @var Cache */
     private $cache;

@@ -33,7 +33,7 @@ class UploaderTest extends TestCase
 
         $uploader->setMaxFileSize(100 * 1024);
         $uploader->setValidExtension($validExtension);
-        $uploader->setDir(__DIR__ . '/../../var/uploads');
+        $uploader->setDir(TEST_VAR_DIRECTORY . '/uploads');
         $tmpFile = $uploader->upload('uploaded');
 
         $this->assertNotNull($tmpFile);
