@@ -75,6 +75,11 @@ class ContextTest extends TestCase
                 '<iframe src="javascript:alert(\'Xss\')";></iframe>',
                 '&lt;iframe src=&quot;javascript:alert(&#039;Xss&#039;)&quot;;&gt;&lt;/iframe&gt;',
                 '&lt;iframe src&equals;&quot;javascript&colon;alert&lpar;&apos;Xss&apos;&rpar;&quot;&semi;&gt;&lt;&sol;iframe&gt;'
+            ],
+            [
+                'javascript:alert(1)',
+                'javascript&colon;alert(1)',
+                'javascript&colon;alert&lpar;1&rpar;'
             ]
         ];
     }

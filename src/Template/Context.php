@@ -152,7 +152,14 @@ class Context
      */
     public function e(string $string): string
     {
-        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+        $escapedString = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+
+        // prevent XSS in attributes using the javascript: scheme
+        if (stripos($string, 'javascript:') === 0) {
+            $escapedString = sprintf('%s&colon;%s', substr($string, 0, 10), substr($string, 11));
+        }
+
+        return $escapedString;
     }
 
     /**
