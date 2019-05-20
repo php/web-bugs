@@ -43,7 +43,7 @@ $reasonRepository = $container->get(ReasonRepository::class);
 list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site);
 
 // Handle reason / comments
-$reason = filter_var($_REQUEST['r'], FILTER_SANITIZE_STRING);
+$reason = isset($_REQUEST['r']) ? filter_var($_REQUEST['r'], FILTER_SANITIZE_STRING) : '';
 $ncomment = isset($_POST['ncomment']) ? trim($_POST['ncomment']) : '';
 
 if (!$reason || !isset($RESOLVE_REASONS[$reason])) {
