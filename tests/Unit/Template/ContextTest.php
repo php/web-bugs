@@ -80,7 +80,7 @@ class ContextTest extends TestCase
                 'javascript:alert(1)',
                 'javascript&colon;alert(1)',
                 'javascript&colon;alert&lpar;1&rpar;'
-            ]
+            ],
         ];
     }
 }
