@@ -1,11 +1,15 @@
 <?php
 
+use App\Repository\DatabaseStatusRepository;
 use App\Repository\PackageRepository;
+use App\Repository\PhpInfoRepository;
+use App\Repository\ReasonRepository;
 
+// Application bootstrap
 require_once '../../include/prepend.php';
-session_start();
 
-bugs_authenticate($user, $pw, $logged_in, $user_flags);
+// Authentication
+require_once __DIR__.'/../../include/auth.php';
 
 if (!$logged_in) {
     response_header("Bugs admin suite");
@@ -13,102 +17,37 @@ if (!$logged_in) {
     exit;
 }
 
-$actions = [
-    'phpinfo'         => 'phpinfo()',
-    'list_lists'        => 'Package mailing lists',
-    'list_responses'    => 'Quick fix responses',
-    'mysql'            => 'Database status',
-];
+$action = 'list_lists';
 
-$action  = !empty($_GET['action']) && isset($actions[$_GET['action']]) ? $_GET['action'] : 'list_lists';
-
-response_header("Bugs admin suite");
-inline_content_menu('/admin/', $action, $actions);
-
-if ($action === 'phpinfo') {
-    ob_start();
-    phpinfo();
-
-    $phpinfo = ob_get_clean();
-
-    // Attempt to hide certain ENV vars
-    $vars = [
-            getenv('AUTH_TOKEN'),
-            getenv('USER_TOKEN'),
-            getenv('USER_PWD_SALT')
-            ];
-
-    $phpinfo = str_replace($vars, '&lt;hidden&gt;', $phpinfo);
-
-    // Semi stolen from php-web
-    $m = [];
-
-    preg_match('!<body.*?>(.*)</body>!ims', $phpinfo, $m);
-
-    $m[1] = preg_replace('!<a href="http://www.php.net/"><img.*?></a>!ims', '', $m[1]);
-    $m[1] = preg_replace('!<a href="http://www.zend.com/"><img.*?></a>!ims', '', $m[1]);
-    $m[1] = str_replace(' width="600"', ' width="80%"', $m[1]);
-
-    echo $m[1];
-
-} elseif ($action === 'list_lists') {
-    echo "<dl>\n";
-    foreach ($container->get(PackageRepository::class)->findLists() as $row) {
-        echo "<dt>", $row['name'], ": </dt>\n<dd>", mailto_list(explode(',', $row['list_email'])), "</dd>\n";
-    }
-    echo "</dl>\n";
-} elseif ($action === 'list_responses') {
-
-    $res = $dbh->query("
-        SELECT *
-        FROM bugdb_resolves
-    ");
-
-    echo "<h3>List Responses</h3>\n";
-
-    $rows = [];
-    while ($row = $res->fetch()) {
-        // This is ugly but works (tm)
-        $row['message'] = nl2br($row['message']);
-
-        $rows[] = $row;
-    }
-
-    admin_table_dynamic($rows);
-} elseif ($action === 'mysql') {
-    $res = $dbh->query("SHOW TABLES");
-
-    $sql = "SELECT version() mysql_version\n";
-
-    while ($row = $res->fetch(\PDO::FETCH_NUM)) {
-        $table = $row[0];
-        $sql .= "\t, (SELECT COUNT(*) FROM `$table`) `cnt_$table`\n";
-    }
-
-    $res = $dbh->query($sql);
-    $row = $res->fetch();
-
-    echo "<p>Running MySQL <b>".$row['mysql_version']."</b></p>";
-    unset($row['mysql_version']);
-
-    echo "<h3>Number of rows:</h3>\n";
-
-    $rows = [];
-
-    foreach($row as $key => $value) {
-        $rows[] = [str_replace('cnt_', '', $key), $value];
-    }
-
-    admin_table_static(['Table', 'Rows'], $rows);
-
-    $rows = [];
-    $res = $dbh->query("SHOW TABLE STATUS");
-    echo "<h3>Table status:</h3>\n";
-    while ($row = $res->fetch()) {
-        $rows[] = $row;
-    }
-
-    admin_table_dynamic($rows);
+if (isset($_GET['action'])) {
+    $action = $_GET['action'];
 }
 
-response_footer();
+switch ($action) {
+    case 'phpinfo':
+        echo $template->render('pages/admin/phpinfo.php', [
+            'info' => $container->get(PhpInfoRepository::class)->getInfo(),
+        ]);
+        break;
+
+    case 'list_responses':
+        echo $template->render('pages/admin/quick_responses.php', [
+            'responses' => $container->get(ReasonRepository::class)->findAll(),
+        ]);
+        break;
+
+    case 'mysql':
+        echo $template->render('pages/admin/database_status.php', [
+            'mysqlVersion'         => $container->get(DatabaseStatusRepository::class)->getMysqlVersion(),
+            'numberOfRowsPerTable' => $container->get(DatabaseStatusRepository::class)->getNumberOfRowsInTables(),
+            'statusPerTable'       => $container->get(DatabaseStatusRepository::class)->getStatusOfTables(),
+        ]);
+        break;
+
+    case 'list_lists':
+    default:
+        echo $template->render('pages/admin/mailing_lists.php', [
+            'lists' => $container->get(PackageRepository::class)->findLists(),
+        ]);
+        break;
+}

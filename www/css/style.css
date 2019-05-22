@@ -676,6 +676,13 @@ td.tbl-row-message {
     text-align: left;
 }
 
+/* menu */
+a.active {
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}
+
 /* phpinfo() */
 div.center {
     margin: 0px auto;

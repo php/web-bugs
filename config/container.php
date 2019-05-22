@@ -33,6 +33,10 @@ $container->set(App\Repository\CommentRepository::class, function ($c) {
     return new App\Repository\CommentRepository($c->get(\PDO::class));
 });
 
+$container->set(App\Repository\DatabaseStatusRepository::class, function ($c) {
+    return new App\Repository\DatabaseStatusRepository($c->get(\PDO::class));
+});
+
 $container->set(App\Repository\ObsoletePatchRepository::class, function ($c) {
     return new App\Repository\ObsoletePatchRepository($c->get(\PDO::class));
 });
@@ -43,6 +47,10 @@ $container->set(App\Repository\PackageRepository::class, function ($c) {
 
 $container->set(App\Repository\PatchRepository::class, function ($c) {
     return new App\Repository\PatchRepository($c->get(\PDO::class), $c->get('uploads_dir'));
+});
+
+$container->set(App\Repository\PhpInfoRepository::class, function ($c) {
+    return new App\Repository\PhpInfoRepository();
 });
 
 $container->set(App\Repository\PullRequestRepository::class, function ($c) {
