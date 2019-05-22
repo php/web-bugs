@@ -1707,32 +1707,6 @@ function inline_content_menu($base_url, $current_action, array $menu)
     echo "</p>\n";
 }
 
-/**
- * Inline content menu for backtraces
- *
- * Specify either 'Unix' or 'Windows' to select the current page
- */
-function backtrace_inline_menu($platform)
-{
-    if ($platform != 'Unix' && $platform != 'Windows') {
-        return;
-    }
-
-    $buffer = '';
-
-    foreach (['Unix' => '', 'Windows' => '-win32'] as $platform_key => $platform_suffix) {
-        if ($platform_key == $platform) {
-            $buffer .= sprintf('<strong>%s</strong> | ', $platform_key);
-        } else {
-            $buffer .= sprintf('<a href="/bugs-generating-backtrace%s.php">%s</a> | ', $platform_suffix, $platform_key);
-        }
-    }
-
-    echo "<p>";
-    echo rtrim($buffer, ' | ');
-    echo "</p>\n";
-}
-
 function admin_table_static(array $header, array $rows)
 {
     if (!$header || !$rows || sizeof($header) != sizeof($rows[0])) {
