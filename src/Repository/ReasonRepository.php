@@ -52,4 +52,14 @@ class ReasonRepository
 
         return [$resolves, $variations];
     }
+
+    /**
+     * @return array<int,array<string,mixed>>
+     */
+    public function findAll(): array
+    {
+        $sql = 'SELECT * FROM bugdb_resolves';
+
+        return $this->dbh->query($sql)->fetchAll();
+    }
 }
