@@ -107,6 +107,12 @@ class Generator
             }
         }
 
+        // Append PHP-7.4 dev branch to the versions list.
+        // TODO: once PHP-7.4.0alpha1 or some PHP 7.4.0 is released remove this.
+        foreach ($this->getAffixes() as $item) {
+            $sorted[] = '7.4-'.$item;
+        }
+
         // Append master branch to the versions list
         foreach ($this->getAffixes() as $item) {
             $sorted[] = 'master-'.$item;
