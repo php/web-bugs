@@ -60,7 +60,7 @@ open bug and see if you can help resolve it. We have made it easy. Hit
 
 <ul>
     <?php foreach ($searches as $title => $link): ?>
-        <li><a href="<?= $this->e($link) ?>"><?= $this->e($title) ?></a></li>
+        <li><a href="<?= $this->noHtml($link) ?>"><?= $this->e($title) ?></a></li>
     <?php endforeach ?>
 </ul>
 
