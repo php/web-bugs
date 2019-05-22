@@ -31,7 +31,7 @@ Application unit tests can be executed in development environment after
 installing dependencies by running `phpunit`:
 
 ```bash
-phpunit
+./vendor/bin/phpunit
 ```
 
 ## Directory structure
