@@ -20,30 +20,30 @@ $bugRepository = $container->get(BugRepository::class);
 $bug = $bugRepository->findOneById($bug_id);
 
 if (!$bug) {
-	header('HTTP/1.0 404 Not Found');
-	die('Nothing found');
+    header('HTTP/1.0 404 Not Found');
+    die('Nothing found');
 }
 
 if ($bug['private'] == 'Y') {
-	header('HTTP/1.0 403 Forbidden');
-	die('Access restricted');
+    header('HTTP/1.0 403 Forbidden');
+    die('Access restricted');
 }
 
 $commentRepository = $container->get(CommentRepository::class);
 $comments = $commentRepository->findByBugId($bug_id);
 
 if ($format == 'xml') {
-	header('Content-type: text/xml; charset=utf-8');
-	include './xml.php';
-	exit;
+    header('Content-type: text/xml; charset=utf-8');
+    include './xml.php';
+    exit;
 } elseif ($format == "rss2") {
-	header('Content-type: application/rss+xml; charset=utf-8');
-	$uri = "{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
-	include './rss.php';
-	exit;
+    header('Content-type: application/rss+xml; charset=utf-8');
+    $uri = "{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
+    include './rss.php';
+    exit;
 } else {
-	header('Content-type: application/rdf+xml; charset=utf-8');
-	$uri = "{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
-	include './rdf.php';
-	exit;
+    header('Content-type: application/rdf+xml; charset=utf-8');
+    $uri = "{$site_method}://{$site_url}{$basedir}/bug.php?id={$bug['id']}";
+    include './rdf.php';
+    exit;
 }

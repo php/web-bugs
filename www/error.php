@@ -10,7 +10,7 @@ require_once '../include/prepend.php';
 // If 'id' is passed redirect to the bug page
 $id = !empty($_GET['id']) ? (int) $_GET['id'] : 0;
 if ($id) {
-	redirect("bug.php?id={$id}");
+    redirect("bug.php?id={$id}");
 }
 
 // Authenticate

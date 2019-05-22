@@ -5,17 +5,17 @@
  */
 
 $site_data = [
-	'method' => 'https',
-	'url' => 'bugs.php.net',
-	'basedir' => '/bugs',
-	'email' => 'php-bugs@lists.php.net',
-	'doc_email' => 'doc-bugs@lists.php.net',
-	'security_email' => 'security@php.net',
-	'db' => 'phpbugsdb',
-	'db_user' => 'nobody',
-	'db_pass' => '',
-	'db_host' => 'localhost',
-	'patch_tmp' => "{$ROOT_DIR}/uploads/patches/",
+    'method' => 'https',
+    'url' => 'bugs.php.net',
+    'basedir' => '/bugs',
+    'email' => 'php-bugs@lists.php.net',
+    'doc_email' => 'doc-bugs@lists.php.net',
+    'security_email' => 'security@php.net',
+    'db' => 'phpbugsdb',
+    'db_user' => 'nobody',
+    'db_pass' => '',
+    'db_host' => 'localhost',
+    'patch_tmp' => "{$ROOT_DIR}/uploads/patches/",
 ];
 
 define('DEVBOX', true);

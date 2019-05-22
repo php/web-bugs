@@ -20,26 +20,26 @@ response_header('Quick Fix Descriptions');
 <?php
 
 foreach ($RESOLVE_REASONS as $key => $reason) {
-	if (!empty($reason['package_name']))
-		$reason['title'] = "{$reason['title']} ({$reason['package_name']})";
+    if (!empty($reason['package_name']))
+        $reason['title'] = "{$reason['title']} ({$reason['package_name']})";
 
-	echo "
-		<tr>
-			<td>{$reason['title']}</td>
-			<td>Status: {$reason['status']}</td>
-			<td><pre>{$reason['message']}</pre></td>
-		</tr>
-	";
+    echo "
+        <tr>
+            <td>{$reason['title']}</td>
+            <td>Status: {$reason['status']}</td>
+            <td><pre>{$reason['message']}</pre></td>
+        </tr>
+    ";
     if (isset($FIX_VARIATIONS[$key])) {
-		foreach ($FIX_VARIATIONS[$key] as $type => $variation) {
-			echo "
-				<tr>
-					<td>{$reason['title']} ({$type})</td>
-					<td>Status: {$reason['status']}</td>
-					<td><pre>{$variation}</pre></td>
-				</tr>";
-		}
-	}
+        foreach ($FIX_VARIATIONS[$key] as $type => $variation) {
+            echo "
+                <tr>
+                    <td>{$reason['title']} ({$type})</td>
+                    <td>Status: {$reason['status']}</td>
+                    <td><pre>{$variation}</pre></td>
+                </tr>";
+        }
+    }
 }
 ?>
 </table>

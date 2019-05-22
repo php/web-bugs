@@ -18,27 +18,27 @@ list($RESOLVE_REASONS, $FIX_VARIATIONS) = $reasonRepository->findByProject($site
 
 foreach ($container->get(BugRepository::class)->findAllWithoutFeedback() as $bug)
 {
-	list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
+    list($mailto, $mailfrom, $bcc, $params) = get_package_mail($bug['package_name'], false, $bug['bug_type']);
 
-	// No feedback message
-	if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS['nofeedback'][$bug['package_name']])) {
-		$message = $FIX_VARIATIONS['nofeedback'][$bug['package_name']];
-	} elseif (isset($RESOLVE_REASONS['nofeedback'])) {
-		$message = $RESOLVE_REASONS['nofeedback']['message'];
-	} else {
-		die('[no-feedback] Could not find resolve reason! (this should not happen!)');
-	}
-	bugs_add_comment($bug['id'], $mailfrom, '', $message, 'comment');
+    // No feedback message
+    if (isset($FIX_VARIATIONS) && isset($FIX_VARIATIONS['nofeedback'][$bug['package_name']])) {
+        $message = $FIX_VARIATIONS['nofeedback'][$bug['package_name']];
+    } elseif (isset($RESOLVE_REASONS['nofeedback'])) {
+        $message = $RESOLVE_REASONS['nofeedback']['message'];
+    } else {
+        die('[no-feedback] Could not find resolve reason! (this should not happen!)');
+    }
+    bugs_add_comment($bug['id'], $mailfrom, '', $message, 'comment');
 
-	// Update status
-	$dbh->prepare('
-		UPDATE bugdb
-		SET status = "No Feedback", ts2 = NOW()
-		WHERE id = ?
-	')->execute([
-		$bug['id'],
-	]);
+    // Update status
+    $dbh->prepare('
+        UPDATE bugdb
+        SET status = "No Feedback", ts2 = NOW()
+        WHERE id = ?
+    ')->execute([
+        $bug['id'],
+    ]);
 
-	// Send emails
-	mail_bug_updates($bug, $in, $mailfrom, $message);
+    // Send emails
+    mail_bug_updates($bug, $in, $mailfrom, $message);
 }

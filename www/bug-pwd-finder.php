@@ -18,46 +18,46 @@ $bug_id = isset($_REQUEST['id']) ? (int) $_REQUEST['id'] : 0;
 $bug_id = $bug_id ? $bug_id : '';
 
 if (isset($_POST['captcha']) && $bug_id != '') {
-	 // Check if session answer is set, then compare it with the post captcha value.
-	 // If it's not the same, then it's an incorrect password.
-	if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
-		$errors[] = 'Incorrect Captcha';
-	}
+     // Check if session answer is set, then compare it with the post captcha value.
+     // If it's not the same, then it's an incorrect password.
+    if (!isset($_SESSION['answer']) || $_POST['captcha'] != $_SESSION['answer']) {
+        $errors[] = 'Incorrect Captcha';
+    }
 
-	// Try to find the email and the password
-	if (empty($errors)) {
-		$query = "SELECT email, passwd FROM bugdb WHERE id = '{$bug_id}'";
+    // Try to find the email and the password
+    if (empty($errors)) {
+        $query = "SELECT email, passwd FROM bugdb WHERE id = '{$bug_id}'";
 
-		// Run the query
-		$row = $dbh->prepare($query)->execute()->fetch();
+        // Run the query
+        $row = $dbh->prepare($query)->execute()->fetch();
 
-		if (is_null($row)) {
-			$errors[] = "Invalid bug id provided: #{$bug_id}";
-		} else {
-			if (empty($row['passwd'])) {
-				$errors[] = "No password found for #$bug_id bug report, sorry.";
-			} else {
-				$new_passwd = bugs_gen_passwd();
+        if (is_null($row)) {
+            $errors[] = "Invalid bug id provided: #{$bug_id}";
+        } else {
+            if (empty($row['passwd'])) {
+                $errors[] = "No password found for #$bug_id bug report, sorry.";
+            } else {
+                $new_passwd = bugs_gen_passwd();
 
-				$dbh->prepare(
-				'UPDATE bugdb
-				 SET passwd = ?
-				 WHERE id = ?
-				')->execute([bugs_get_hash($new_passwd), $bug_id]);
+                $dbh->prepare(
+                'UPDATE bugdb
+                 SET passwd = ?
+                 WHERE id = ?
+                ')->execute([bugs_get_hash($new_passwd), $bug_id]);
 
-				$resp = bugs_mail($row['email'],
-						 "Password for {$siteBig} bug report #{$bug_id}",
-						 "The password for {$siteBig} bug report #{$bug_id} has been set to: {$new_passwd}",
-						 'From: noreply@php.net');
+                $resp = bugs_mail($row['email'],
+                         "Password for {$siteBig} bug report #{$bug_id}",
+                         "The password for {$siteBig} bug report #{$bug_id} has been set to: {$new_passwd}",
+                         'From: noreply@php.net');
 
-				if ($resp) {
-					$success = "The password for bug report #{$bug_id} has been sent to the address associated with this report.";
-				} else {
-					$errors[] = 'Sorry. Mail can not be sent at this time, please try again later.';
-				}
-			}
-		}
-	}
+                if ($resp) {
+                    $success = "The password for bug report #{$bug_id} has been sent to the address associated with this report.";
+                } else {
+                    $errors[] = 'Sorry. Mail can not be sent at this time, please try again later.';
+                }
+            }
+        }
+    }
 }
 
 // Authenticate
@@ -70,7 +70,7 @@ echo "<h1>Bug Report Password Finder</h1>\n";
 display_bug_error($errors);
 
 if ($success) {
-	echo '<div class="success">'.$success.'</div>';
+    echo '<div class="success">'.$success.'</div>';
 }
 
 $_SESSION['answer'] = $captcha->getAnswer();

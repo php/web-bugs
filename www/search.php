@@ -10,7 +10,7 @@ require_once '../include/prepend.php';
 
 // Redirect early if a bug id is passed as search string
 if (isset($_GET['search_for']) && preg_match('/^\d+$/', trim($_GET['search_for']), $search_for_id_array)) {
-	redirect("bug.php?id=${search_for_id_array[0]}");
+    redirect("bug.php?id=${search_for_id_array[0]}");
 }
 
 // For bug count only, used in places like doc.php.net
@@ -23,11 +23,11 @@ $is_security_developer = ($user_flags & (BUGS_TRUSTED_DEV | BUGS_SECURITY_DEV));
 $newrequest = http_build_query(array_merge($_GET, $_POST));
 
 if (!$count_only) {
-	response_header(
-		'Bugs :: Search', "
-			<link rel='alternate' type='application/rss+xml' title='Search bugs - RDF' href='rss/search.php?{$newrequest}'>
-			<link rel='alternate' type='application/rss+xml' title='Search bugs - RSS 2.0' href='rss/search.php?format=rss2&{$newrequest}'>
-	");
+    response_header(
+        'Bugs :: Search', "
+            <link rel='alternate' type='application/rss+xml' title='Search bugs - RDF' href='rss/search.php?{$newrequest}'>
+            <link rel='alternate' type='application/rss+xml' title='Search bugs - RSS 2.0' href='rss/search.php?format=rss2&{$newrequest}'>
+    ");
 }
 
 // Include common query handler (used also by rss/search.php)
@@ -35,86 +35,86 @@ require "{$ROOT_DIR}/include/query.php";
 
 if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 {
-	// FIXME: this if doesn't make sense, check is already performed in
-	// query.php - whole condition can be removed, reducing level of
-	// nesting by one.
-	if (!isset($result)) {
-		$errors[] = 'Invalid query';
-	} else {
-		// For count only, simply print the count and exit
-		if ($count_only) {
-			echo (int) $total_rows;
-			exit;
-		}
+    // FIXME: this if doesn't make sense, check is already performed in
+    // query.php - whole condition can be removed, reducing level of
+    // nesting by one.
+    if (!isset($result)) {
+        $errors[] = 'Invalid query';
+    } else {
+        // For count only, simply print the count and exit
+        if ($count_only) {
+            echo (int) $total_rows;
+            exit;
+        }
 
-		// Selected packages to search in
-		$package_name_string = '';
-		if (count($package_name) > 0) {
-			foreach ($package_name as $type_str) {
-				$package_name_string.= '&amp;package_name[]=' . urlencode($type_str);
-			}
-		}
+        // Selected packages to search in
+        $package_name_string = '';
+        if (count($package_name) > 0) {
+            foreach ($package_name as $type_str) {
+                $package_name_string.= '&amp;package_name[]=' . urlencode($type_str);
+            }
+        }
 
-		// Selected packages NOT to search in
-		$package_nname_string = '';
-		if (count($package_nname) > 0) {
-			foreach ($package_nname as $type_str) {
-				$package_nname_string.= '&amp;package_nname[]=' . urlencode($type_str);
-			}
-		}
+        // Selected packages NOT to search in
+        $package_nname_string = '';
+        if (count($package_nname) > 0) {
+            foreach ($package_nname as $type_str) {
+                $package_nname_string.= '&amp;package_nname[]=' . urlencode($type_str);
+            }
+        }
 
-		$link_params = [
-			'search_for'  => urlencode($search_for),
-			'project'     => urlencode($project),
-			'php_os'      => urlencode($php_os),
-			'php_os_not'  => $php_os_not,
-			'author_email' => urlencode($author_email),
-			'bug_type'    => urlencode($bug_type),
-			'boolean'     => $boolean_search,
-			'bug_age'     => $bug_age,
-			'bug_updated' => $bug_updated,
-			'order_by'    => $order_by,
-			'direction'   => $direction,
-			'limit'       => $limit,
-			'phpver'      => urlencode($phpver),
-			'cve_id'      => urlencode($cve_id),
-			'cve_id_not'  => $cve_id_not,
-			'patch'       => urlencode($patch),
-			'pull'        => urlencode($pull),
-			'assign'      => urlencode($assign),
-			'commented_by' => urlencode($commented_by),
-		];
+        $link_params = [
+            'search_for'  => urlencode($search_for),
+            'project'     => urlencode($project),
+            'php_os'      => urlencode($php_os),
+            'php_os_not'  => $php_os_not,
+            'author_email' => urlencode($author_email),
+            'bug_type'    => urlencode($bug_type),
+            'boolean'     => $boolean_search,
+            'bug_age'     => $bug_age,
+            'bug_updated' => $bug_updated,
+            'order_by'    => $order_by,
+            'direction'   => $direction,
+            'limit'       => $limit,
+            'phpver'      => urlencode($phpver),
+            'cve_id'      => urlencode($cve_id),
+            'cve_id_not'  => $cve_id_not,
+            'patch'       => urlencode($patch),
+            'pull'        => urlencode($pull),
+            'assign'      => urlencode($assign),
+            'commented_by' => urlencode($commented_by),
+        ];
 
-		if ($is_security_developer) {
-			$link_params['private'] = $private;
-		}
+        if ($is_security_developer) {
+            $link_params['private'] = $private;
+        }
 
-		// Remove empty URL parameters
-		foreach ($link_params as $index => $param) {
-			if (empty($param))
-				unset($link_params[$index]);
-		}
+        // Remove empty URL parameters
+        foreach ($link_params as $index => $param) {
+            if (empty($param))
+                unset($link_params[$index]);
+        }
 
-		// Create link params string
-		$link_params_string = '';
-		foreach ($link_params as $index => $param) {
-			$link_params_string .= "&amp;$index=$param";
-		}
+        // Create link params string
+        $link_params_string = '';
+        foreach ($link_params as $index => $param) {
+            $link_params_string .= "&amp;$index=$param";
+        }
 
-		$link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params_string}";
-		$clean_link = "search.php?cmd=display{$link_params_string}";
+        $link = "search.php?cmd=display{$package_name_string}{$package_nname_string}{$link_params_string}";
+        $clean_link = "search.php?cmd=display{$link_params_string}";
 
-		if (isset($_GET['showmenu'])) {
-			$link .= '&amp;showmenu=1';
-		}
+        if (isset($_GET['showmenu'])) {
+            $link .= '&amp;showmenu=1';
+        }
 
-		if (!$rows) {
-			$errors[] = 'No bugs were found.';
-			display_bug_error($errors, 'warnings', '');
-		} else {
-			display_bug_error($warnings, 'warnings', 'WARNING:');
-			$link .= '&amp;status=' . urlencode($status);
-			$package_count = count($package_name);
+        if (!$rows) {
+            $errors[] = 'No bugs were found.';
+            display_bug_error($errors, 'warnings', '');
+        } else {
+            display_bug_error($warnings, 'warnings', 'WARNING:');
+            $link .= '&amp;status=' . urlencode($status);
+            $package_count = count($package_name);
 ?>
 
 <table border="0" cellspacing="2" width="100%">
@@ -125,9 +125,9 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
  <tr>
   <td class="search-prev_next" style="text-align: center;" colspan="10">
 <?php
-	$pck = htmlspecialchars($package_name[0]);
-	$pck_url = urlencode($pck);
-	echo "Bugs for {$pck}\n";
+    $pck = htmlspecialchars($package_name[0]);
+    $pck_url = urlencode($pck);
+    echo "Bugs for {$pck}\n";
 ?>
   </td>
  </tr>
@@ -149,62 +149,62 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
  </tr>
 <?php
 
-			foreach ($result as $row) {
-				$status_class = $row['private'] == 'Y' ? 'Sec' : ($tla[$row['status']] ?? '');
+            foreach ($result as $row) {
+                $status_class = $row['private'] == 'Y' ? 'Sec' : ($tla[$row['status']] ?? '');
 
-				echo ' <tr valign="top" class="' , $status_class, '">' , "\n";
+                echo ' <tr valign="top" class="' , $status_class, '">' , "\n";
 
-				// Bug ID
-				echo '  <td align="center"><a href="bug.php?id=', $row['id'], '">', $row['id'], '</a>';
-				echo '<br><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a></td>', "\n";
+                // Bug ID
+                echo '  <td align="center"><a href="bug.php?id=', $row['id'], '">', $row['id'], '</a>';
+                echo '<br><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a></td>', "\n";
 
-				// Date
-				echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
+                // Date
+                echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
 
-				// Last Modified
-				$ts2 = strtotime($row['ts2']);
-				echo '  <td align="center">' , ($ts2 ? format_date($ts2) : 'Not modified') , "</td>\n";
+                // Last Modified
+                $ts2 = strtotime($row['ts2']);
+                echo '  <td align="center">' , ($ts2 ? format_date($ts2) : 'Not modified') , "</td>\n";
 
-				// Package
-				if ($package_count !== 1) {
-					$pck = htmlspecialchars($row['package_name']);
-					$pck_url = urlencode($pck);
-					echo "<td><a href='{$clean_link}&amp;package_name[]={$pck_url}'>{$pck}</a></td>\n";
-				}
+                // Package
+                if ($package_count !== 1) {
+                    $pck = htmlspecialchars($row['package_name']);
+                    $pck_url = urlencode($pck);
+                    echo "<td><a href='{$clean_link}&amp;package_name[]={$pck_url}'>{$pck}</a></td>\n";
+                }
 
-				/// Bug type
-				$type_idx = !empty($row['bug_type']) ? $row['bug_type'] : 'Bug';
-				echo '  <td>', htmlspecialchars($bug_types[$type_idx]), '</td>', "\n";
+                /// Bug type
+                $type_idx = !empty($row['bug_type']) ? $row['bug_type'] : 'Bug';
+                echo '  <td>', htmlspecialchars($bug_types[$type_idx]), '</td>', "\n";
 
-				// Status
-				echo '  <td>', htmlspecialchars($row['status']);
-				if ($row['status'] == 'Feedback' && $row['unchanged'] > 0) {
-					printf ("<br>%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
-				}
-				echo '</td>', "\n";
+                // Status
+                echo '  <td>', htmlspecialchars($row['status']);
+                if ($row['status'] == 'Feedback' && $row['unchanged'] > 0) {
+                    printf ("<br>%d day%s", $row['unchanged'], $row['unchanged'] > 1 ? 's' : '');
+                }
+                echo '</td>', "\n";
 
-				/// PHP version
-				echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
+                /// PHP version
+                echo '  <td>', htmlspecialchars($row['php_version']), '</td>';
 
-				// OS
-				echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>', "\n";
+                // OS
+                echo '  <td>', $row['php_os'] ? htmlspecialchars($row['php_os']) : '&nbsp;', '</td>', "\n";
 
-				// Short description
-				echo '  <td><a href="bug.php?id=', $row['id'], '">', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</a></td>', "\n";
+                // Short description
+                echo '  <td><a href="bug.php?id=', $row['id'], '">', $row['sdesc']  ? htmlspecialchars($row['sdesc']) : '&nbsp;', '</a></td>', "\n";
 
-				// Assigned to
-				echo '  <td>',  ($row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=" . urlencode($row['assign']) . '">' . htmlspecialchars($row['assign']) . '</a>') : '&nbsp;'), '</td>';
-				echo " </tr>\n";
-			}
+                // Assigned to
+                echo '  <td>',  ($row['assign'] ? ("<a href=\"{$clean_link}&amp;assign=" . urlencode($row['assign']) . '">' . htmlspecialchars($row['assign']) . '</a>') : '&nbsp;'), '</td>';
+                echo " </tr>\n";
+            }
 
-			show_prev_next($begin, $rows, $total_rows, $link, $limit);
+            show_prev_next($begin, $rows, $total_rows, $link, $limit);
 
-			echo "</table>\n\n";
-		}
+            echo "</table>\n\n";
+        }
 
-		response_footer();
-		exit;
-	}
+        response_footer();
+        exit;
+    }
 }
 
 display_bug_error($errors);
@@ -228,9 +228,9 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
    <select name="order_by"><?php show_order_options($limit);?></select>
    <br>
    <small>
-	<input type="radio" name="direction" value="ASC" <?php if($direction != "DESC") { echo('checked="checked"'); }?>>Ascending
-	&nbsp;
-	<input type="radio" name="direction" value="DESC" <?php if($direction == "DESC") { echo('checked="checked"'); }?>>Descending
+    <input type="radio" name="direction" value="ASC" <?php if($direction != "DESC") { echo('checked="checked"'); }?>>Ascending
+    &nbsp;
+    <input type="radio" name="direction" value="DESC" <?php if($direction == "DESC") { echo('checked="checked"'); }?>>Descending
    </small>
    <br><br>
    <input type="hidden" name="cmd" value="display">
@@ -307,10 +307,10 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">Return bugs <b>assigned</b> to</td>
   <td><input type="text" name="assign" value="<?php echo htmlspecialchars($assign, ENT_COMPAT, 'UTF-8'); ?>">
 <?php
-	if (!empty($auth_user->handle)) {
-		$u = htmlspecialchars($auth_user->handle);
-		echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\">";
-	}
+    if (!empty($auth_user->handle)) {
+        $u = htmlspecialchars($auth_user->handle);
+        echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.assign.value='$u'\">";
+    }
 ?>
   </td>
 </tr>
@@ -320,10 +320,10 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">Return bugs with author email</td>
   <td><input accesskey="m" type="text" name="author_email" value="<?php echo htmlspecialchars($author_email, ENT_COMPAT, 'UTF-8'); ?>">
 <?php
-	if (!empty($auth_user->handle)) {
-		$u = htmlspecialchars($auth_user->handle);
-		echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u@php.net'\">";
-	}
+    if (!empty($auth_user->handle)) {
+        $u = htmlspecialchars($auth_user->handle);
+        echo "<input type=\"button\" value=\"set to $u\" onclick=\"form.author_email.value='$u@php.net'\">";
+    }
 ?>
   </td>
 </tr>
@@ -347,12 +347,12 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td><input type="checkbox" name="pull" value="Y" <?php echo $pull == 'Y' ? " checked" : "" ?>></td>
 </tr>
 <tr>
-	<th>Commented by</th>
-	<td style="white-space: nowrap">Return bugs that have been <strong>commented by</strong></td>
-	<td><input type="email" name="commented_by" placeholder="me@example.com" value="<?php echo htmlspecialchars($commented_by, ENT_COMPAT, 'UTF-8'); ?>"></td>
+    <th>Commented by</th>
+    <td style="white-space: nowrap">Return bugs that have been <strong>commented by</strong></td>
+    <td><input type="email" name="commented_by" placeholder="me@example.com" value="<?php echo htmlspecialchars($commented_by, ENT_COMPAT, 'UTF-8'); ?>"></td>
 </tr>
 <?php
-	if ($is_security_developer) {
+    if ($is_security_developer) {
 ?>
 <tr valign="top">
   <th>Private</th>
@@ -368,46 +368,46 @@ response_footer();
 
 function show_prev_next($begin, $rows, $total_rows, $link, $limit)
 {
-	echo "<!-- BEGIN PREV/NEXT -->\n";
-	echo " <tr>\n";
-	echo '  <td class="search-prev_next" colspan="11">' . "\n";
+    echo "<!-- BEGIN PREV/NEXT -->\n";
+    echo " <tr>\n";
+    echo '  <td class="search-prev_next" colspan="11">' . "\n";
 
-	if ($limit=='All') {
-		echo "$total_rows Bugs</td></tr>\n";
-		return;
-	}
+    if ($limit=='All') {
+        echo "$total_rows Bugs</td></tr>\n";
+        return;
+    }
 
-	echo '   <table border="0" cellspacing="0" cellpadding="0" width="100%">' . "\n";
-	echo "	<tr>\n";
-	echo '    <td class="search-prev">';
-	if ($begin > 0) {
-		echo '<a href="' . $link . '&amp;begin=';
-		echo max(0, $begin - $limit);
-		echo '">&laquo; Show Previous ' . $limit . ' Entries</a>';
-	} else {
-		echo '&nbsp;';
-	}
-	echo "</td>\n";
+    echo '   <table border="0" cellspacing="0" cellpadding="0" width="100%">' . "\n";
+    echo "    <tr>\n";
+    echo '    <td class="search-prev">';
+    if ($begin > 0) {
+        echo '<a href="' . $link . '&amp;begin=';
+        echo max(0, $begin - $limit);
+        echo '">&laquo; Show Previous ' . $limit . ' Entries</a>';
+    } else {
+        echo '&nbsp;';
+    }
+    echo "</td>\n";
 
-	echo '   <td class="search-showing">Showing ' . ($begin+1);
-	echo '-' . ($begin+$rows) . ' of ' . $total_rows . "</td>\n";
+    echo '   <td class="search-showing">Showing ' . ($begin+1);
+    echo '-' . ($begin+$rows) . ' of ' . $total_rows . "</td>\n";
 
-	echo '   <td class="search-next">';
-	if ($begin+$rows < $total_rows) {
-		echo '<a href="' . $link . '&amp;begin=' . ($begin+$limit);
-		echo '">Show Next ' . $limit . ' Entries &raquo;</a>';
-	} else {
-		echo '&nbsp;';
-	}
-	echo "</td>\n	</tr>\n   </table>\n  </td>\n </tr>\n";
-	echo "<!-- END PREV/NEXT -->\n";
+    echo '   <td class="search-next">';
+    if ($begin+$rows < $total_rows) {
+        echo '<a href="' . $link . '&amp;begin=' . ($begin+$limit);
+        echo '">Show Next ' . $limit . ' Entries &raquo;</a>';
+    } else {
+        echo '&nbsp;';
+    }
+    echo "</td>\n    </tr>\n   </table>\n  </td>\n </tr>\n";
+    echo "<!-- END PREV/NEXT -->\n";
 }
 
 function show_order_options($current)
 {
-	global $order_options;
+    global $order_options;
 
-	foreach ($order_options as $k => $v) {
-		echo '<option value="', $k, '"', ($v == $current ? ' selected="selected"' : ''), '>Sort by ', $v, "</option>\n";
-	}
+    foreach ($order_options as $k => $v) {
+        echo '<option value="', $k, '"', ($v == $current ? ' selected="selected"' : ''), '>Sort by ', $v, "</option>\n";
+    }
 }

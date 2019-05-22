@@ -16,8 +16,8 @@ backtrace_inline_menu('Windows');
 
 <p>You'll need to install MS Visual Studio 2008, 2012 or later. You'll also need to</p>
 <ul>
-	<li>either download the debug-pack for your PHP version from <a href="https://windows.php.net/download/">windows.php.net/download</a></li>
-	<li>or compile your own PHP with <code>--enable-dbg-pack</code> or <code>--enable-debug</code></li>
+    <li>either download the debug-pack for your PHP version from <a href="https://windows.php.net/download/">windows.php.net/download</a></li>
+    <li>or compile your own PHP with <code>--enable-dbg-pack</code> or <code>--enable-debug</code></li>
 </ul>
 
 <p>If you downloaded the debug-pack from the snaps site, extract it into
@@ -45,8 +45,8 @@ KERNEL32! 77e81af6()
 </code></pre>
 
 <!--
-	Everything below is stolen from Pierre Joye
-	https://blog.thepimp.net/index.php/post/2007/06/10/debug-pack-or-how-to-generate-backtrack-on-windows-without-compiling
+    Everything below is stolen from Pierre Joye
+    https://blog.thepimp.net/index.php/post/2007/06/10/debug-pack-or-how-to-generate-backtrack-on-windows-without-compiling
 -->
 <h1>Generating backtrace, <u>without</u> compiler, on Windows</h1>
 <p>You'll need:</p>

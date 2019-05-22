@@ -21,7 +21,7 @@ if (!empty($errors)) {
 <table>
 <?php
 if (!$logged_in) {
-	$_SESSION['answer'] = $captcha->getAnswer();
+    $_SESSION['answer'] = $captcha->getAnswer();
 ?>
  <tr>
   <th class="form-label_left">

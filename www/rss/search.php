@@ -17,11 +17,11 @@ $format = (isset($_GET['format']) && $_GET['format'] === 'rss2') ? 'rss2' : 'rdf
 
 // Maximum number of bugs to return
 if ($format === 'rss2') {
-	// RSS channel shows way more data (e.g. no bug description) thus
-	// we can fetch more rows
-	define ('MAX_BUGS_RETURN', 500);
+    // RSS channel shows way more data (e.g. no bug description) thus
+    // we can fetch more rows
+    define ('MAX_BUGS_RETURN', 500);
 } else {
-	define ('MAX_BUGS_RETURN', 150);
+    define ('MAX_BUGS_RETURN', 150);
 }
 
 // Obtain common includes
@@ -29,16 +29,16 @@ require_once '../../include/prepend.php';
 require "{$ROOT_DIR}/include/query.php";
 
 if ($format === 'rss2') {
-	require "{$ROOT_DIR}/templates/search-rss2.php";
+    require "{$ROOT_DIR}/templates/search-rss2.php";
 } else {
-	require "{$ROOT_DIR}/templates/search-rdf.php";
+    require "{$ROOT_DIR}/templates/search-rdf.php";
 }
 
 if (count($warnings) > 0) {
-	echo "<!--\n\n";
-	echo "The following warnings occured during your request:\n\n";
-	foreach($warnings as $warning) {
-		echo clean('* ' . $warning) . "\n";
-	}
-	echo "-->\n";
+    echo "<!--\n\n";
+    echo "The following warnings occured during your request:\n\n";
+    foreach($warnings as $warning) {
+        echo clean('* ' . $warning) . "\n";
+    }
+    echo "-->\n";
 }
