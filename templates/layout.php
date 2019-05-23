@@ -22,7 +22,7 @@
             <a href="/search-howto.php">search howto</a>&nbsp;|&nbsp;
             <a href="/stats.php">statistics</a>&nbsp;|&nbsp;
             <a href="/random">random bug</a>&nbsp;|&nbsp;
-            <?php if ($authIsLoggedIn): ?>
+            <?php if (isset($authIsLoggedIn) && $authIsLoggedIn): ?>
                 <a href="/search.php?cmd=display&assign=<?= $this->e($authUsername) ?>">my bugs</a>&nbsp;|&nbsp;
                     <?php if ('developer' === $authRole): ?>
                         <a href="/admin/">admin</a>&nbsp;|&nbsp;
