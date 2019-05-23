@@ -52,6 +52,14 @@ class ContextTest extends TestCase
         $this->assertEquals(include TEST_FIXTURES_DIRECTORY . '/templates/includes/variable.php', $variable);
     }
 
+    public function testIncludeOnInvalidVariableCounts(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Variables with numeric names $0, $1... cannot be imported to scope includes/variable.php');
+
+        $this->context->include('includes/variable.php', ['var1', 'var2', 'var3']);
+    }
+
     /**
      * @dataProvider attacksProvider
      */

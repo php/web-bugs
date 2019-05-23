@@ -73,8 +73,13 @@ To include a partial template snippet file:
 <?php $this->include('forms/report_bug.php') ?>
 ```
 
-which is equivalent to `<?php include __DIR__.'/../forms/report_bug.php' ?>`.
-The variable scope is inherited by the template that included the file.
+which is equivalent to `<?php include __DIR__.'/../forms/contact.php' ?>`,
+except that the variable scope is not inherited by the template that included
+the file. To import variables into the included template snippet file:
+
+```php
+<?php $this->include('forms/contact.php', ['formHeading' => 'value', 'foo' => 'bar']) ?>
+```
 
 ## Blocks
 
