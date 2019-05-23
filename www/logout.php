@@ -11,10 +11,4 @@ if (!isset($_SESSION['user']) || empty($_SESSION['user'])) {
 unset($_SESSION['user']);
 session_destroy();
 
-response_header('Logout');
-
-?>
-
-<p>You've been logged out.</p>
-
-<?php response_footer();
+echo $template->render('pages/logged_out.php');
