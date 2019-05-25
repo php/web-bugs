@@ -17,13 +17,8 @@ Modify `local_config.php` according to your local development environment.
 
 * Database:
 
-Create a new MySQL, MariaDB, Percona Server, or equivalent database using
-`sql/database.sql`, create database schema `sql/schema.sql` and insert demo data
-fixtures by running:
-
-```bash
-php scripts/console app:fixtures:insert
-```
+Create a new MySQL/MariaDB database using `sql/database.sql`, create database
+schema `sql/schema.sql` and insert fixtures using `sql/fixtures.sql`.
 
 ## Tests
 
@@ -47,10 +42,9 @@ Source code of this application is structured in the following directories:
     ├─ prepend.php          # Autoloader, DB connection, container, app initialization
     └─ ...
  └─ scripts/                # Command line development tools and scripts
-    ├─ console              # Application's main script for running CLI commands
     ├─ cron/                # Various systems scripts to run periodically on the server
     └─ ...
- ├─ sql/                    # Database schema
+ ├─ sql/                    # Database schema and fixtures
  └─ src/                    # Application source code classes
     ├─ Horde/               # https://www.horde.org/libraries/Horde_Text_Diff
     └─ ...

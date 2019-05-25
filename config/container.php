@@ -89,25 +89,4 @@ $container->set(App\Utils\Uploader::class, function ($c) {
     return new App\Utils\Uploader();
 });
 
-$container->set(App\Fixtures\AppFixtures::class, function ($c) {
-    return new App\Fixtures\AppFixtures($c->get(\PDO::class), Faker\Factory::create(), $c->get('bug_statuses'));
-});
-
-$container->set(App\Command\InsertFixturesCommand::class, function ($c) {
-    $insertFixturesCommand = new App\Command\InsertFixturesCommand(
-        $c->get(\PDO::class),
-        $c->get(App\Fixtures\AppFixtures::class),
-        $c->get('env')
-    );
-
-    return $insertFixturesCommand;
-});
-
-$container->set(Symfony\Component\Console\Application::class, function ($c) {
-    $application = new Symfony\Component\Console\Application();
-    $application->add($c->get(App\Command\InsertFixturesCommand::class));
-
-    return $application;
-});
-
 return $container;
