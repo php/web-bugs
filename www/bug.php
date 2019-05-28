@@ -227,8 +227,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     if (is_spam($ncomment)) {
         $errors[] = SPAM_REJECT_MESSAGE;
     }
-
     if (is_spam($_POST['in']['commentemail'])) {
+        $errors[] = "Please do not SPAM our bug system.";
+    }
+    if (is_spam_user($_POST['in']['commentemail'])) {
         $errors[] = "Please do not SPAM our bug system.";
     }
 
@@ -267,6 +269,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 
     $from = $_POST['in']['commentemail'];
+    if (is_spam_user($from)) {
+        $errors[] = "Please do not SPAM our bug system.";
+    }
 
 } elseif (isset($_POST['in']) && !isset($_POST['preview']) && $edit == 2) {
     // Edits submitted by original reporter for old bugs
@@ -322,6 +327,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         $from = $_POST['in']['email'];
     } else {
         $from = $bug['email'];
+    }
+
+    if (is_spam_user($from)) {
+        $errors[] = "Please do not SPAM our bug system.";
     }
 
     if (!$errors && !($errors = incoming_details_are_valid($_POST['in'], false))) {
@@ -381,6 +390,9 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     // primitive spam detection
     if (is_spam($ncomment)) {
         $errors[] = SPAM_REJECT_MESSAGE;
+    }
+    if (is_spam_user($from)) {
+        $errors[] = "Please do not SPAM our bug system.";
     }
 
 } elseif (isset($_POST['in']) && is_array($_POST['in']) && !isset($_POST['preview']) && $edit == 1) {

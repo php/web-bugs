@@ -244,6 +244,14 @@ function is_spam($string)
     return false;
 }
 
+/* Primitive check for SPAMmy user. Add more later. */
+function is_spam_user($email)
+{
+    if (preg_match("/(rhsoft)/i", $email)) {
+        return true;
+    }
+    return false;
+}
 
 /**
  * Obfuscates email addresses to hinder spammer's spiders
