@@ -414,11 +414,15 @@ your configure settings should be
      */
     public function findByProject(string $project = ''): array
     {
-		$reasons = array_filter(
-			self::REASONS,
-			function ($reason) use ($project) {
-				return ($reason['project'] ?? '') === $project;
-			});
+		$reasons = self::REASONS;
+		if ($project !== '') {
+			$reasons = array_filter(
+				$reasons,
+				function ($reason) use ($project) {
+					return ((($reason['project'] ?? '') === $project) ||
+							(($reason['project'] ?? '') === ''));
+				});
+		}
 
         $resolves = $variations = [];
 		foreach ($reasons as $row) {
