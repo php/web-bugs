@@ -12,66 +12,13 @@ namespace App\Repository;
 class ReasonRepository
 {
     const REASONS = [
-        [
-            'id' => '1',
-            'name' => 'trysnapshot54',
-            'status' => 'Feedback',
-            'title' => 'Try a snapshot (PHP 5.4)',
-            'message' => 'Please try using this snapshot:
-
-        http://snaps.php.net/php5.4-latest.tar.gz
-
-For Windows:
-
-        http://windows.php.net/snapshots/',
-            'project' => 'php',
-            'package_name' => '',
-            'webonly' => '0',
-        ], [
-            'id' => '2',
-            'name' => 'trysnapshot55',
-            'status' => 'Feedback',
-            'title' => 'Try a snapshot (PHP 5.5)',
-            'message' => 'Please try using this snapshot:
-
-        http://snaps.php.net/php5.5-latest.tar.gz
-
-For Windows:
-
-        http://windows.php.net/snapshots/',
-            'project' => 'php',
-            'package_name' => '',
-            'webonly' => '0',
-        ], [
-            'id' => '3',
-            'name' => 'trysnapshottrunk',
-            'status' => 'Feedback',
-            'title' => 'Try a snapshot (trunk)',
-            'message' => 'Please try using this snapshot:
-
-        http://snaps.php.net/php-trunk-latest.tar.gz
-
-For Windows:
-
-        http://windows.php.net/snapshots/',
-            'project' => 'php',
-            'package_name' => '',
-            'webonly' => '0',
-        ], [
+		[
             'id' => '4',
             'name' => 'fixed',
             'status' => 'Closed',
-            'title' => 'Fixed in SVN',
+            'title' => 'Fix committed',
             'message' => 'The fix for this bug has been committed.
-
-Snapshots of the sources are packaged every three hours; this change
-will be in the next snapshot. You can grab the snapshot at
-http://snaps.php.net/.
-
- For Windows:
-
-http://windows.php.net/snapshots/
-
+If you are still experiencing this bug, try to check out latest source from https://github.com/php/php-src and re-test.
 Thank you for the report, and for helping us make PHP better.',
             'project' => 'php',
             'package_name' => '',
@@ -80,7 +27,7 @@ Thank you for the report, and for helping us make PHP better.',
             'id' => '5',
             'name' => 'fixed',
             'status' => 'Closed',
-            'title' => 'Fixed in SVN',
+            'title' => 'Fix committed',
             'message' => 'The fix for this bug has been committed. Since the websites are not directly
 updated from the repository, the fix might need some time to spread
 across the globe to all mirror sites, including PHP.net itself.
@@ -93,7 +40,7 @@ Thank you for the report, and for helping us make PHP.net better.',
             'id' => '6',
             'name' => 'fixed',
             'status' => 'Closed',
-            'title' => 'Fixed in SVN',
+            'title' => 'Fix committed',
             'message' => 'This bug has been fixed in the documentation\'s XML sources. Since the
 online and downloadable versions of the documentation need some time
 to get updated, we would like to ask you to be a bit patient.
@@ -106,7 +53,7 @@ Thank you for the report, and for helping us make our documentation better.',
             'id' => '7',
             'name' => 'fixed',
             'status' => 'Closed',
-            'title' => 'Fixed in SVN',
+            'title' => 'Fix committed',
             'message' => 'This bug has been fixed in the documentation\'s XML sources. Since the
 online and downloadable versions of the documentation need some time
 to get updated, we would like to ask you to be a bit patient.
@@ -119,7 +66,7 @@ Thank you for the report, and for helping us make our documentation better.',
             'id' => '8',
             'name' => 'fixed',
             'status' => 'Closed',
-            'title' => 'Fixed in SVN',
+            'title' => 'Fix committed',
             'message' => 'The fix for this bug has been committed. Since the websites are not directly
 updated from the repository, the fix might need some time to spread
 across the globe to all mirror sites, including PHP.net itself.
@@ -132,8 +79,8 @@ Thank you for the report, and for helping us make PHP.net better.',
             'id' => '9',
             'name' => 'fixed',
             'status' => 'Closed',
-            'title' => 'Fixed in SVN',
-            'message' => 'This bug has been fixed in SVN, and should show up online in an
+            'title' => 'Fix committed',
+            'message' => 'This bug has been fixed and the fix has been committed. It should show up online in an
 hour or three.
 
 Thank you for the report, and for helping us make PHP.net better.',
@@ -144,7 +91,7 @@ Thank you for the report, and for helping us make PHP.net better.',
             'id' => '10',
             'name' => 'fixed',
             'status' => 'Closed',
-            'title' => 'Fixed in SVN',
+            'title' => 'Fix committed',
             'message' => 'The fix for this bug has been committed. Since the PHP Documentation Tools website
 is updated from the repository at a regular interval, the fix might need
 some time to take effect.
@@ -303,10 +250,17 @@ part of our efforts to make PHP scripting more secure and portable.',
             'webonly' => '0',
         ], [
             'id' => '22',
-            'name' => 'php4',
+            'name' => 'phptooold',
             'status' => 'Wont fix',
-            'title' => 'PHP 4 support discontinued',
-            'message' => 'We are sorry, but we can not support PHP 4 related problems anymore.',
+            'title' => 'PHP version support discontinued',
+            'message' => 'The version of PHP you are reporting on is no longer supported.
+				Please download a new PHP version from http://www.php.net/downloads.php
+
+				If you are able to reproduce the bug with one of the latest
+				versions of PHP, please change the PHP version on this bug report
+				to the version you tested and change the status back to "Open".
+				Again, thank you for your continued support of PHP.
+',
             'project' => 'php',
             'package_name' => '',
             'webonly' => '0',
