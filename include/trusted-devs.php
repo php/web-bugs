@@ -19,6 +19,7 @@ $trusted_developers = [
     'kalle',
     'danbrown',
     'nikic',
+    'cmb',
 ];
 
 // Distro people (security related)
