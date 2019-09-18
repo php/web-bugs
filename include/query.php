@@ -275,7 +275,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
             $rows = count($result);
             $total_rows = $dbh->prepare('SELECT FOUND_ROWS()')->execute()->fetch(\PDO::FETCH_NUM)[0];
         } catch (Exception $e) {
-            $errors[] = 'Invalid query: ' . $e->getMessage();
+            $errors[] = 'Invalid query' /*. $e->getMessage() */;
         }
         if (defined('MAX_BUGS_RETURN') && $total_rows > $rows) {
             $warnings[] = 'The search was too general, only ' . MAX_BUGS_RETURN . ' bugs will be returned';
