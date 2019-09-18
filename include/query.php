@@ -27,19 +27,19 @@ $pseudo_pkgs = $packageRepository->findAll();
 
 // Setup input variables..
 $boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
-$status = !empty($_GET['status']) ? $_GET['status'] : 'Open';
-$search_for = !empty($_GET['search_for']) ? $_GET['search_for'] : '';
-$bug_type = (!empty($_GET['bug_type']) && $_GET['bug_type'] != 'All') ? $_GET['bug_type'] : '';
+$status = !empty($_GET['status']) ? (string)$_GET['status'] : 'Open';
+$search_for = !empty($_GET['search_for']) ? (string)$_GET['search_for'] : '';
+$bug_type = (!empty($_GET['bug_type']) && $_GET['bug_type'] != 'All') ? (string)$_GET['bug_type'] : '';
 $bug_age = (int) (isset($_GET['bug_age']) ? $_GET['bug_age'] : 0);
 $bug_updated = (int) (isset($_GET['bug_updated']) ? $_GET['bug_updated'] : 0);
-$php_os = !empty($_GET['php_os']) ? $_GET['php_os'] : '';
+$php_os = (!empty($_GET['php_os']) && is_string($_GET['php_os'])) ? $_GET['php_os'] : '';
 $php_os_not = !empty($_GET['php_os_not']) ? 'not' : '';
-$phpver = !empty($_GET['phpver']) ? $_GET['phpver'] : '';
-$cve_id = !empty($_GET['cve_id']) ? $_GET['cve_id'] : '';
+$phpver = (!empty($_GET['phpver']) && is_string($_GET['phpver'])) ? $_GET['phpver'] : '';
+$cve_id = (!empty($_GET['cve_id']) && is_string($_GET['cve_id'])) ? $_GET['cve_id'] : '';
 $cve_id_not = !empty($_GET['cve_id_not']) ? 'not' : '';
-$patch = !empty($_GET['patch']) ? $_GET['patch'] : '';
-$pull = !empty($_GET['pull']) ? $_GET['pull'] : '';
-$private = !empty($_GET['private']) ? $_GET['private'] : '';
+$patch = (!empty($_GET['patch']) && is_string($_GET['patch'])) ? $_GET['patch'] : '';
+$pull = (!empty($_GET['pull']) && is_string($_GET['pull'])) ? $_GET['pull'] : '';
+$private = (!empty($_GET['private']) && is_string($_GET['private'])) ? $_GET['private'] : '';
 $begin = (int) ((!empty($_GET['begin']) && $_GET['begin'] > 0) ? $_GET['begin'] : 0);
 $limit = (defined('MAX_BUGS_RETURN')) ? MAX_BUGS_RETURN : 30;
 $project = (!empty($_GET['project']) && $_GET['project'] != 'All') ? $_GET['project'] : '';
@@ -49,7 +49,7 @@ if (!empty($_GET['limit'])) {
 $direction = (!empty($_GET['direction']) && $_GET['direction'] != 'DESC') ? 'ASC' : 'DESC';
 $order_by = (!empty($_GET['order_by']) && array_key_exists($_GET['order_by'], $order_options)) ? $_GET['order_by'] : '';
 $reorder_by = (!empty($_GET['reorder_by']) && array_key_exists($_GET['reorder_by'], $order_options)) ? $_GET['reorder_by'] : '';
-$assign = !empty($_GET['assign']) ? $_GET['assign'] : '';
+$assign = (!empty($_GET['assign']) && is_string($_GET['assign'])) ? $_GET['assign'] : '';
 $author_email = !empty($_GET['author_email']) ? spam_protect($_GET['author_email'], 'reverse') : '';
 $package_name = (isset($_GET['package_name']) && is_array($_GET['package_name'])) ? $_GET['package_name'] : [];
 $package_nname = (isset($_GET['package_nname']) && is_array($_GET['package_nname'])) ? $_GET['package_nname'] : [];
