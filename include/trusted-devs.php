@@ -70,7 +70,8 @@ $security_developers = [
     'kalle',
     'cmb',
     'danbrown',
-    'yohgaki'
+    'yohgaki',
+    'bukka'
 ];
 
 $security_developers = array_merge($security_developers, $security_distro_people);
