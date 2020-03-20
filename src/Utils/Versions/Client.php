@@ -28,7 +28,7 @@ class Client
     {
         $json = file_get_contents($this->devVersionsUrl);
 
-        return json_decode($json, true);
+        return json_decode($json, true) ?? [];
     }
 
     /**
@@ -38,6 +38,6 @@ class Client
     {
         $json = file_get_contents($this->stableVersionsUrl);
 
-        return json_decode($json, true);
+        return json_decode($json, true) ?? [];
     }
 }
