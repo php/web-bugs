@@ -549,7 +549,7 @@ display_bug_error($errors);
 ?>
             <tr>
                 <th><?php echo $captcha_label; ?><br><?php echo htmlspecialchars($captcha->getQuestion()); ?></th>
-                <td class="form-input"><input type="text" name="captcha" autocomplete="off"></td>
+                <td class="form-input"><input type="number" inputmode="numeric" pattern="[0-9]*" name="captcha" autocomplete="off"></td>
             </tr>
 <?php } ?>
 
