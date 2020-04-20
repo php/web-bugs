@@ -1037,8 +1037,8 @@ if (!$logged_in) {
         <tr>
             <th class="details">Subscribe to this entry?</th>
             <td class="form-input">
-                <input type="submit" name="subscribe_to_bug" value="Subscribe">
-                <input type="submit" name="unsubscribe_to_bug" value="Unsubscribe">
+                <input type="submit" name="subscribe_to_bug" value="Subscribe" onclick="if (document.querySelector('[name=ncomment]').value.length) return confirm('You will lose your typed comment, when subscribe. proceed?');">
+                <input type="submit" name="unsubscribe_to_bug" value="Unsubscribe" onclick="if (document.querySelector('[name=ncomment]').value.length) return confirm('You will lose your typed comment, when unsubscribe. proceed?');">
             </td>
         </tr>
     </table>
