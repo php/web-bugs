@@ -24,12 +24,11 @@ if ('/random' === $_SERVER['REQUEST_URI']) {
 }
 
 $searches = [
-    'Most recent open bugs (all)' => '&bug_type=All',
-    'Most recent open bugs (all) with patch or pull request' => '&bug_type=All&patch=Y&pull=Y',
-    'Most recent open bugs (PHP 7.1)' => '&bug_type=All&phpver=7.1',
-    'Most recent open bugs (PHP 7.2)' => '&bug_type=All&phpver=7.2',
-    'Most recent open bugs (PHP 7.3)' => '&bug_type=All&phpver=7.3',
-    'Most recent open bugs (PHP 7.4)' => '&bug_type=All&phpver=7.4',
+    'Most recent open bugs (all)' => '&bug_type=All&project=PHP',
+    'Most recent open bugs (all) with patch or pull request' => '&bug_type=All&project=PHP&patch=Y&pull=Y',
+    'Most recent open bugs (PHP 7.2)' => '&bug_type=All&phpver=7.2&project=PHP',
+    'Most recent open bugs (PHP 7.3)' => '&bug_type=All&phpver=7.3&project=PHP',
+    'Most recent open bugs (PHP 7.4)' => '&bug_type=All&phpver=7.4&project=PHP',
     'Open Documentation bugs' => '&bug_type=Documentation+Problem',
     'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y',
 ];
