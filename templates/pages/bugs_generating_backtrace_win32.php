@@ -38,68 +38,38 @@ PHP! mainCRTStartup + 227 bytes
 KERNEL32! 77e81af6()
 </code></pre>
 
-<!--
-    Everything below is stolen from Pierre Joye
-    https://blog.thepimp.net/index.php/post/2007/06/10/debug-pack-or-how-to-generate-backtrack-on-windows-without-compiling
--->
 <h1>Generating backtrace, <u>without</u> compiler, on Windows</h1>
 
-<p>You'll need:</p>
+<p>Generating a backtrace without compiler is usually a two step process:</p>
+<ul>
+<li>Generate a crash dump file (.dmp)</li>
+<li>Analyze the crash dump file to get a stack backtrace</li>
+</ul>
+<p>There are several solutions for either step; in the following we describe one solution each.</p>
+
+<h2>Use ProcDump to generate crash dump files</h2>
+
+<p>Download <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procdump">ProcDump</a>,
+and register it as the Just-in-Time (AeDebug) debugger:</p>
+<pre><code>procdump -ma -i C:\dumps</code></pre>
+<p>Use any suitable folder to store the crash dump files instead of <code>C:\dumps</code>.
+Whenever a process crashes, a crash dump file will be written to the specified folder.</p>
+
+<h2>Use Debug Diagnostic Tool to analyze the crash dump</h2>
 
 <ul>
-<li>A PHP <a href="https://windows.php.net/downloads/snaps/">snapshot</a> or <a href="https://windows.php.net/download/">stable</a> release</li>
-<li>PHP Debug pack (<a href="https://windows.php.net/downloads/snaps/">snapshot</a> or <a href="https://windows.php.net/download/">stable</a>)</li>
-<li>Microsoft <a href="https://www.microsoft.com/en-us/download/details.aspx?id=49924">Debug Diagnostic Tools</a></li>
-<li>Evil script to crash PHP</li>
+<li>Download and install <a
+href="https://www.microsoft.com/en-us/download/details.aspx?id=58210">Debug Diagnostic Tool</a></li>
+<li><a href="https://windows.php.net/downloads/">Download</a> and unpack the PHP debug pack corresponding to the PHP version you are running</li>
+<li>Start the Debug Diagnostic Tool</li>
+<li>Add the path to the unpacked PHP debug pack as symbol search path in the settings</li>
+<li>Press "add data file" and select the crash dump file formerly generated</li>
+<li>Select "default analysis"</li>
+<li>Press "start analysis"</li>
 </ul>
-
-<p>For the sake of this example, we will simply use PHP in the shell. The same
-method can be used for IIS or any other process or services.</p>
-
-
-<p>Once you have installed the Debug diagnostic tools and uncompressed PHP and
-its debug pack (they can be kept in two separate folders), the first step is to
-configure the diagnostic tools. Select the tools menu and click on "Options and
-settings". The first tab contains the path to the symbols files, add the "debug
-folder" to the existing list using the "browse" button:</p>
-
-<p><img src="/images/backtrace-images-win32/dbg_options.png" alt="Options"></p>
-
-<p>Now we are ready to generate our backtrace.</p>
-
-<p>We will use the wizard, click the "Add a rule" button and choose "Crash" as
-the rule type:</p>
-<p><img src="/images/backtrace-images-win32/dbg_wizard_1.png" alt="Wizard #1"></p>
-
-<p>In the next window, select "a specific process":</p>
-
-<p><img src="/images/backtrace-images-win32/dbg_wizard_2.png" alt="Wizard #2"></p>
-
-<p>Add a "sleep(10);" for the first run (from the cmd: "php.exe crashme.php"),
-it will let you enough time to click "next" and select the php process. If you
-are debugging the Apache module, start Apache with -X option and choose
-httpd.exe instead of php.exe from the process list. Then proceed further:</p>
-
-<p><img src="/images/backtrace-images-win32/dbg_select_php.png" alt="Select the php process"></p>
-
-<p>Click again next and let it crash. If everything went well, you should see
-your new rule as shown in the image below:</p>
-
-<p><img src="/images/backtrace-images-win32/rules.jpg" alt="rules list"></p>
-
-<p>It also detected that "php.exe" was used. A rule has been created for all
-instance of "php.exe". It will save you the sleep and process selection.</p>
-
-<p>Now you can click the "Analyze data" button:</p>
-
-<p><img src="/images/backtrace-images-win32/analyze.jpg" alt="Analyze"></p>
-
-<p>Et voila, the complete report will show up in your internet explorer
-(compressed html):</p>
-
+<p>After the analysis has finished, the DebugDiag Analysis Report opens in Internet
+Explorer; the relevant part of that report is the stack backtrace, which looks similar
+to the following:</p>
 <p><img src="/images/backtrace-images-win32/backtrace.jpg" alt="Debug report backtrace screenshot"></a></p>
-
-<p>What we need is the backtrace itself which can be found under "Thread X -
-System ID XXX".</p>
 
 <?php $this->end('content') ?>
