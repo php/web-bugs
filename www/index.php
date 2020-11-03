@@ -29,6 +29,7 @@ $searches = [
     'Most recent open bugs (PHP 7.2)' => '&bug_type=All&phpver=7.2&project=PHP',
     'Most recent open bugs (PHP 7.3)' => '&bug_type=All&phpver=7.3&project=PHP',
     'Most recent open bugs (PHP 7.4)' => '&bug_type=All&phpver=7.4&project=PHP',
+    'Most recent open bugs (PHP 8.0)' => '&bug_type=All&phpver=8.0&project=PHP',
     'Open Documentation bugs' => '&bug_type=Documentation+Problem',
     'Open Documentation bugs (with patches)' => '&bug_type=Documentation+Problem&patch=Y',
 ];
