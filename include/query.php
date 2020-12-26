@@ -28,7 +28,7 @@ $pseudo_pkgs = $packageRepository->findAll();
 // Setup input variables..
 $boolean_search = isset($_GET['boolean']) ? (int) $_GET['boolean'] : 0;
 $status = !empty($_GET['status']) ? (string)$_GET['status'] : 'Open';
-$search_for = !empty($_GET['search_for']) ? (string)$_GET['search_for'] : '';
+$search_for = !empty($_GET['search_for']) ? (string)trim($_GET['search_for']) : '';
 $bug_type = (!empty($_GET['bug_type']) && $_GET['bug_type'] != 'All') ? (string)$_GET['bug_type'] : '';
 $bug_age = (int) (isset($_GET['bug_age']) ? $_GET['bug_age'] : 0);
 $bug_updated = (int) (isset($_GET['bug_updated']) ? $_GET['bug_updated'] : 0);
