@@ -15,9 +15,9 @@ if [ ! -f "/var/app/local_config.php" ]; then
     echo " */" >> /var/app/local_config.php
     echo "" >> /var/app/local_config.php
     echo "\$site_data = [" >> /var/app/local_config.php
-    echo "    'method' => 'https'," >> /var/app/local_config.php
-    echo "    'url' => 'bugs.php.net'," >> /var/app/local_config.php
-    echo "    'basedir' => '/bugs'," >> /var/app/local_config.php
+    echo "    'method' => 'http'," >> /var/app/local_config.php
+    echo "    'url' => '127.0.0.1'," >> /var/app/local_config.php
+    echo "    'basedir' => ''," >> /var/app/local_config.php
     echo "    'email' => 'php-bugs@lists.php.net'," >> /var/app/local_config.php
     echo "    'doc_email' => 'doc-bugs@lists.php.net'," >> /var/app/local_config.php
     echo "    'security_email' => 'security@php.net'," >> /var/app/local_config.php

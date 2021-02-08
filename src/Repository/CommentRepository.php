@@ -62,4 +62,66 @@ class CommentRepository
 
         return $statement->fetchAll();
     }
+
+
+    public function getCommentById(int $comment_id)
+    {
+        $sql = <<< SQL
+SELECT
+  bugdb_comments.id,
+  bugdb_comments.email,
+  bugdb.private    #,
+  #bugdb_comments.reporter_name
+from
+  bugdb_comments
+left join
+   bugdb
+on
+   bugdb.id = bugdb_comments.bug
+where
+  bugdb_comments.comment_type = 'comment' and
+  bugdb_comments.id = ?
+SQL;
+
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute([$comment_id]);
+
+        // No comment found
+        $row = $statement->fetch();
+        if (!$row) {
+            return ["comment_id not found or is not type 'comment'."];
+        }
+
+        // don't give out details of private bug reports.
+        if ($row['private'] !== 'N') {
+            return [
+                $row['id'],
+                'bug report is private'
+            ];
+        }
+
+        // return the protected data
+        return [
+            $row['id'],
+            spam_protect($row['email'])
+        ];
+    }
+
+    public function getMaxCommentId(): int
+    {
+        $sql = <<< SQL
+SELECT bugdb_comments.id from bugdb_comments
+where comment_type = 'comment'
+order by bugdb_comments.id desc
+limit 1;
+SQL;
+
+        $statement = $this->dbh->query($sql);
+        $row = $statement->fetch();
+        if ($row) {
+            return $row["id"];
+        }
+
+        return 0;
+    }
 }
