@@ -20,6 +20,12 @@ Modify `local_config.php` according to your local development environment.
 Create a new MySQL/MariaDB database using `sql/database.sql`, create database
 schema `sql/schema.sql` and insert fixtures using `sql/fixtures.sql`.
 
+## Docker compose
+
+Running `docker-compose up --build` will bring a docker development environment up.
+
+This generates the file `local_config.php` which may clash if you already have one for non-docker development. The database is stored in the `data` directory. Stopping the docker containers, deleting that directory, and then bringing the containers back up will recreate the DB from scratch.
+
 ## Tests
 
 Application unit tests can be executed in development environment after
