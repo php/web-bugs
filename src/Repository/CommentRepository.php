@@ -89,21 +89,33 @@ SQL;
         // No comment found
         $row = $statement->fetch();
         if (!$row) {
-            return ["comment_id not found or is not type 'comment'."];
+            return [
+                'error' => "comment_id not found or is not type 'comment'."
+            ];
         }
 
         // don't give out details of private bug reports.
         if ($row['private'] !== 'N') {
             return [
-                $row['id'],
-                'bug report is private'
+                'comment_id' => $row['id'],
+                'error' => 'bug report is private'
             ];
         }
 
+        // Obfuscate the email a bit more than on the webpage
+        $protected_email = spam_protect($row['email']);
+        $parts = explode(" ", $protected_email);
+        if (array_key_exists(0, $parts)) {
+            $length = strlen($parts[0]);
+            $parts[0] = substr($parts[0], 0, 4);
+            $parts[0] = str_pad($parts[0], $length, '.');
+        }
+        $protected_email = implode(' ', $parts);
+
         // return the protected data
         return [
-            $row['id'],
-            spam_protect($row['email'])
+            'comment_id' => $row['id'],
+            'email' => $protected_email
         ];
     }
 
