@@ -68,7 +68,8 @@ class CommentRepository
     {
         $sql = <<< SQL
 SELECT
-  bugdb_comments.id,
+  bugdb_comments.id as comment_id,
+  bugdb_comments.bug as bug_id,
   bugdb_comments.email,
   bugdb.private    #,
   #bugdb_comments.reporter_name
@@ -97,7 +98,8 @@ SQL;
         // don't give out details of private bug reports.
         if ($row['private'] !== 'N') {
             return [
-                'comment_id' => $row['id'],
+                'comment_id' => $row['comment_id'],
+                'bug_id' => $row['bug_id'],
                 'error' => 'bug report is private'
             ];
         }
@@ -114,7 +116,8 @@ SQL;
 
         // return the protected data
         return [
-            'comment_id' => $row['id'],
+            'comment_id' => $row['comment_id'],
+            'bug_id' => $row['bug_id'],
             'email' => $protected_email
         ];
     }
