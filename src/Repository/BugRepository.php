@@ -45,7 +45,7 @@ class BugRepository
                 FROM bugdb b
                 LEFT JOIN bugdb_votes ON b.id = bug
                 WHERE b.id = ?
-                GROUP BY bug
+                GROUP BY b.id
         ';
 
         $statement = $this->dbh->prepare($sql);
