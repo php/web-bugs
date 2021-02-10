@@ -2,16 +2,15 @@
 set -e
 set -x
 
-if [ ! -f "composer.phar" ]; then
-    echo "composer.phar does not exist, downloading.";
-    curl "https://getcomposer.org/download/2.0.9/composer.phar" -o composer.phar
-fi
-
+# Generate a local_config.php if it doesn't already exist.
 if [ ! -f "/var/app/local_config.php" ]; then
     echo "<?php" > /var/app/local_config.php
     echo "" >> /var/app/local_config.php
     echo "/**" >> /var/app/local_config.php
-    echo " * Add your local changes here and copy to local_config.php" >> /var/app/local_config.php
+    echo " * Generated from containers/installer/entrypoint.sh" >> /var/app/local_config.php
+
+    echo " * Feel free to edit. Delete to have it re-generated from" >> /var/app/local_config.php
+    echo " * scratch on next 'docker-compose up'" >> /var/app/local_config.php
     echo " */" >> /var/app/local_config.php
     echo "" >> /var/app/local_config.php
     echo "\$site_data = [" >> /var/app/local_config.php
@@ -31,6 +30,11 @@ if [ ! -f "/var/app/local_config.php" ]; then
     echo "define('DEVBOX', true);" >> /var/app/local_config.php
 fi
 
+
+if [ ! -f "composer.phar" ]; then
+    echo "composer.phar does not exist, downloading.";
+    curl "https://getcomposer.org/download/2.0.9/composer.phar" -o composer.phar
+fi
 php composer.phar install
 
 echo "Installer is finished."
