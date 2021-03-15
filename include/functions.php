@@ -237,6 +237,7 @@ function is_spam($string)
         'amoxicillin',
         'helpdeskaustralia',
         'porn',
+        'aarinkaur',
     ];
 
     if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
