@@ -76,6 +76,8 @@ php-webmaster@lists.php.net.
 Application source code is located in the
 [github.com/php/web-bugs](https://github.com/php/web-bugs) repository.
 
+To contribute:
+
 ```bash
 git clone git@github.com:your-username/web-bugs
 cd web-bugs
