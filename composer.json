@@ -16,7 +16,7 @@
         "issues": "https://bugs.php.net/",
         "wiki": "https://wiki.php.net/",
         "irc": "irc://irc.efnet.org/php.pecl",
-        "source": "https://git.php.net/?p=web/bugs.git",
+        "source": "https://github.com/php/web-bugs",
         "docs": "https://php.net/manual",
         "rss": "https://bugs.php.net/rss"
     },

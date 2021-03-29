@@ -74,10 +74,7 @@ Issues with the application and new feature requests can be reported to
 php-webmaster@lists.php.net.
 
 Application source code is located in the
-[git.php.net](https://git.php.net/?p=web/bugs.git) repository.
-
-Contributions can be done by forking the [GitHub mirror](https://github.com/php/web-bugs)
-repository and sending a pull request.
+[github.com/php/web-bugs](https://github.com/php/web-bugs) repository.
 
 ```bash
 git clone git@github.com:your-username/web-bugs

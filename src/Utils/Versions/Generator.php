@@ -13,7 +13,7 @@ use App\Utils\Cache;
  * are pulled from the https://qa.php.net.
  *
  * To add a new PHP version add it to:
- * https://git.php.net/?p=web/qa.git;a=blob;f=include/release-qa.php
+ * https://github.com/php/web-qa/blob/master/include/release-qa.php
  *
  * The versions are weighted by the following criteria:
  * - major+minor version desc (7>5.4>5.3>master)
