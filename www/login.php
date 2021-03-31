@@ -24,7 +24,7 @@ if (isset($_POST['user'])) {
     redirect('index.php');
   } else {
 ?>
-    <div style="background: #AB1616; padding: 3px; width: 300px; color: #FFF; margin: 3px;">Wrong username or password!</div>
+    <div style="background: #AB1616; padding: 3px; width: 300px; color: #FFF; margin: 3px;">Wrong username or password! <a href="https://master.php.net/forgot.php">Forgot your password?</a></div>
 <?php
   }
 } else {
