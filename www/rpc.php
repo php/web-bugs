@@ -19,20 +19,13 @@ if (!$bug_id) {
 // Obtain common includes
 require_once '../include/prepend.php';
 
-if (isset($_POST['MAGIC_COOKIE'])) {
-    list($user, $pwd) = explode(":", base64_decode($_POST['MAGIC_COOKIE']), 2);
-    $auth_user = new stdClass;
-    $auth_user->handle = $user;
-    $auth_user->password = $pwd;
-} else {
-    echo json_encode(['result' => ['error' => 'Missing credentials']]);
+if (!isset($_POST['MAGIC_COOKIE'])) {
+    echo json_encode(['result' => ['error' => 'Missing token']]);
     exit;
 }
 
-bugs_authenticate($user, $pwd, $logged_in, $user_flags);
-
-if (empty($auth_user->handle)) {
-    echo json_encode(['result' => ['error' => 'Invalid user or password']]);
+if (sha1($_POST['MAGIC_COOKIE']) !== '8514f801cfba2ec74ec08264567ba291485f2765') {
+    echo json_encode(['result' => ['error' => 'Invalid token']]);
     exit;
 }
 
@@ -45,7 +38,8 @@ if (!is_array($bug)) {
     exit;
 }
 
-if (!bugs_has_access($bug_id, $bug, $pwd, $user_flags)) {
+// Be conservative: Do not allow access to private bugs.
+if ($bug['private'] === 'Y') {
     echo json_encode(['result' => ['error' => 'No access to bug']]);
     exit;
 }
