@@ -156,6 +156,10 @@ input {
     font-family: verdana,arial,helvetica,sans-serif;
 }
 
+select {
+    resize: both;
+}
+
 textarea {
     font-family: "andale mono", "monotype.com", "courier new", monospace;
 }
