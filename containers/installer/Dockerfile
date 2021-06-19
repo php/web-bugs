@@ -18,7 +18,7 @@ RUN  apt-get update -qq \
     php7.4-mysql php7.4-curl php7.4-xml php7.4-mbstring \
     php7.4-intl php7.4-zip php7.4-sqlite3 unzip
 
-# Make the default directory you
+# Set the default directory be the one with the project files in.
 WORKDIR /var/app
 
 # CMD tail -f README.md
