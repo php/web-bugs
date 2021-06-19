@@ -720,11 +720,7 @@ if ($bug_id !== 'PREVIEW') {
         control(1, 'Developer'),
         (!$email || $bug['email'] == $email? control(2, 'Edit') : ''),
         '</div>', "\n";
-
-
-
-
-    ?>
+?>
 <div class="clear"></div>
 
 <?php if ($show_bug_info && !$edit && canvote($thanks, $bug['status'])) { ?>

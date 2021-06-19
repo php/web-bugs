@@ -8,7 +8,7 @@ RUN apt-get update -qq \
     mariadb-client wget curl iputils-ping \
     ca-certificates lsb-release apt-transport-https gnupg
 
-# Install 3rd party PHP 7.2 packages
+# Install 3rd party PHP packages
 RUN echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee -a /etc/apt/sources.list.d/php.list
 
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
