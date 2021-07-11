@@ -436,8 +436,12 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
         }
     }
 
+    global $state_types;
+    $allowed_state_types = array_filter($state_types, function ($var) {
+        return $var !== 0;
+    });
     // Require comment for open bugs only
-    if (empty($_POST['in']['status'])) {
+    if (empty($_POST['in']['status']) || !isset($allowed_state_types[$_POST['in']['status']])) {
         $errors[] = "You must provide a status";
     } else {
         if ($_POST['in']['status'] == 'Not a bug' &&
