@@ -41,8 +41,8 @@ options.
             subject, and description. Minimum term length is three characters.
             There are three types of searches:
             <ul>
-                <li><i>all</i> : (default) All search terms are required.</li>
-                <li><i>any</i> : One or more (any) of the search terms may be present.</li>
+                <li><i>all</i> : All search terms are required.</li>
+                <li><i>any</i> : (default) One or more (any) of the search terms may be present.</li>
                 <li>
                     <i>raw</i> : Allows full use of MySQL's
                     <a href="https://dev.mysql.com/doc/en/fulltext-search.html">FULLTEXT</a>
