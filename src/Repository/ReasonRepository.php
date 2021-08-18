@@ -254,12 +254,12 @@ part of our efforts to make PHP scripting more secure and portable.',
             'status' => 'Wont fix',
             'title' => 'PHP version support discontinued',
             'message' => 'The version of PHP you are reporting on is no longer supported.
-				Please download a new PHP version from http://www.php.net/downloads.php
+Please download a new PHP version from http://www.php.net/downloads.php
 
-				If you are able to reproduce the bug with one of the latest
-				versions of PHP, please change the PHP version on this bug report
-				to the version you tested and change the status back to "Open".
-				Again, thank you for your continued support of PHP.
+If you are able to reproduce the bug with one of the latest
+versions of PHP, please change the PHP version on this bug report
+to the version you tested and change the status back to "Open".
+Again, thank you for your continued support of PHP.
 ',
             'project' => 'php',
             'package_name' => '',
