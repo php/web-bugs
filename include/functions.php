@@ -195,7 +195,9 @@ function is_spam($string)
         return false;
     }
 
-    if (substr_count(strtolower($string), 'http://') > 5) {
+    $count = substr_count(strtolower($string), 'http://')
+           + substr_count(strtolower($string), 'https://');
+    if ($count > 5) {
         return true;
     }
 
