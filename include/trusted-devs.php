@@ -22,6 +22,7 @@ $trusted_developers = [
     'cmb',
     'salathe',
     'peehaa',
+    'mikemike',
 ];
 
 // Distro people (security related)
