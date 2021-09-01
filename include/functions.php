@@ -240,6 +240,7 @@ function is_spam($string)
         'helpdeskaustralia',
         'porn',
         'aarinkaur',
+        'lildurk',
     ];
 
     if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
