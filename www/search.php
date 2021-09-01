@@ -228,9 +228,8 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
    <select name="order_by"><?php show_order_options($limit);?></select>
    <br>
    <small>
-    <input type="radio" name="direction" value="ASC" <?php if($direction != "DESC") { echo('checked="checked"'); }?>>Ascending
-    &nbsp;
-    <input type="radio" name="direction" value="DESC" <?php if($direction == "DESC") { echo('checked="checked"'); }?>>Descending
+    <input type="radio" name="direction" id="directionasc" value="ASC" <?= $direction != 'DESC' ? 'checked="checked"':'' ?>><label for="directionasc">Ascending</label>
+    <input type="radio" name="direction" id="directiondesc" value="DESC" <?= $direction == 'DESC' ? 'checked="checked"':'' ?>><label for="directiondesc">Descending</label>
    </small>
    <br><br>
    <input type="hidden" name="cmd" value="display">
