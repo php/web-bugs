@@ -673,11 +673,11 @@ function show_boolean_options($current)
 {
     $options = ['any', 'all', 'raw'];
     foreach ($options as $val => $type) {
-        echo '<input type="radio" name="boolean" value="', $val, '"';
+        echo '<input type="radio" id="boolean' . $val . '" name="boolean" value="', $val, '"';
         if ($val === $current) {
             echo ' checked="checked"';
         }
-        echo ">$type&nbsp;\n";
+        echo '><label for="boolean' . $val . '">'.$type.'</label>';
     }
 }
 
