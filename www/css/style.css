@@ -582,6 +582,7 @@ td.search-next {
     width: 33%;
 }
 
+input[id^="direction"] + label,
 input[id^="boolean"] + label {
     padding-right: 1em;
 }
