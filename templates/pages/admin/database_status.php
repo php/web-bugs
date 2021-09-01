@@ -61,7 +61,7 @@
                 <td class="bug_bg1"><?= $tableStatus['Data_free']; ?></td>
                 <td class="bug_bg0"><?= $tableStatus['Auto_increment']; ?></td>
                 <td class="bug_bg1"><?= $this->e($tableStatus['Create_time']); ?></td>
-                <td class="bug_bg0"><?= $this->e($tableStatus['Update_time']); ?></td>
+                <td class="bug_bg0"><?= $this->e($tableStatus['Update_time']?:''); ?></td>
                 <td class="bug_bg1"><?php echo $tableStatus['Check_time'] ? $this->e($tableStatus['Check_time']) : ''; ?></td>
                 <td class="bug_bg0"><?= $this->e($tableStatus['Collation']); ?></td>
                 <td class="bug_bg1"><?php echo $tableStatus['Checksum'] ? $this->e($tableStatus['Checksum']) : ''; ?></td>
