@@ -273,6 +273,12 @@ a.bug_stats_choosen {
     background-color: #aabbcc;
 }
 
+.bugstatrecent table {
+    display:inline-block;
+    vertical-align:top;
+    margin-right:1em;
+    margin-top:1em;
+}
 /* ========= Other ========= */
 
 a:link {
