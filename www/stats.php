@@ -133,7 +133,9 @@ OUTPUT;
     }
 }
 
-echo "</table>\n<hr>\n<p><b>PHP Versions for recent bug reports:</b></p><div>";
+echo "</table>\n<hr>\n<p><b>PHP Versions for recent bug reports:</b></p>";
+                    
+echo '<div class="bugstatrecent">';
 
 $last_date = null;
 foreach ($bugRepository->findPhpVersions($bug_type) as $row) {
@@ -141,7 +143,7 @@ foreach ($bugRepository->findPhpVersions($bug_type) as $row) {
         if ($last_date !== null) {
             echo "</table>\n\n";
         }
-        echo "<table style='float:left; margin-right:20px'>\n".
+        echo "<table>\n".
              "<tr class='bug_header'><th colspan='2'>{$row["d"]}</th></tr>\n";
         $last_date = $row['d'];
     }
