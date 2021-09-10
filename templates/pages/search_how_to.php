@@ -165,7 +165,7 @@ options.
 
 <p>
 You can view a variety of statistics about the bugs that have been reported on
-our <a href="/stats.php">bug statistics page</a>.
+our <a href="stats.php">bug statistics page</a>.
 </p>
 
 <?php $this->end('content') ?>
