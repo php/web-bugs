@@ -50,6 +50,11 @@ if (file_exists($localConfigFile)) {
     define('DEVBOX', false);
 }
 
+// make sure $site_data['basedir'] ends with / 
+if (substr($site_data['basedir'], -1) !== '/') {
+        $site_data['basedir'] .= '/';
+}
+
 if (!isset($site_data['security_email'])) {
     $site_data['security_email'] = 'security@php.net';
 }
