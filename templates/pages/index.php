@@ -54,7 +54,7 @@ for instructions on how search works.</p>
 
 <p>If you have 10 minutes to kill and you want to help us out, grab a random
 open bug and see if you can help resolve it. We have made it easy. Hit
-<a href="random">random</a> to go directly to a random open bug.</p>
+<a href="index.php?random">random</a> to go directly to a random open bug.</p>
 
 <p>Common searches</p>
 
