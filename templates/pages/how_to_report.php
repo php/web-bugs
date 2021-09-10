@@ -40,7 +40,7 @@ get, and what you actually got, we don't have to guess.</p>
 <h2>Always search the bug database first.</h2>
 
 <p>Advice is so good, we'll repeat it twice. Always <a
-href="/search.php">search</a> the bug database first. As we said above, there's
+href="search.php">search</a> the bug database first. As we said above, there's
 a lot of users of PHP. The odds are good that if you've found a problem,
 someone else has found it, too. If you spend a few minutes of your time making
 sure that you're not filing a duplicate bug, that's a few more minutes someone
@@ -77,12 +77,12 @@ as a feature request.)</p>
     </li>
     <li>
         If PHP is crashing, include a backtrace. Instructions for doing this
-        can be found <a href="/bugs-generating-backtrace.php">here for *NIX users</a> and
-        <a href="/bugs-generating-backtrace-win32.php">here for Windows users</a>.
+        can be found <a href="bugs-generating-backtrace.php">here for *NIX users</a> and
+        <a href="bugs-generating-backtrace-win32.php">here for Windows users</a>.
     </li>
     <li>
         <a href="http://valgrind.org">Valgrind</a> log can be also very useful.
-        See <a href="/bugs-getting-valgrind-log.php">instructions how to generate it</a>.
+        See <a href="bugs-getting-valgrind-log.php">instructions how to generate it</a>.
     </li>
 </ul>
 
