@@ -41,7 +41,7 @@ if (!empty($_SESSION['user'])) {
 // Prefix query strings with base URL
 $searches = preg_filter(
     '/^/',
-    '/search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open',
+    'search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open',
     $searches
 );
 
