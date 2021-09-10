@@ -3,7 +3,7 @@
 <?php $this->start('content') ?>
 
 <p>
-<a href="/bugs-generating-backtrace.php">Unix</a> | <strong>Windows</strong>
+<a href="bugs-generating-backtrace.php">Unix</a> | <strong>Windows</strong>
 </p>
 
 <h1>Generating a backtrace, <u>with</u> a compiler, on Windows</h1>
@@ -70,6 +70,6 @@ href="https://www.microsoft.com/en-us/download/details.aspx?id=58210">Debug Diag
 <p>After the analysis has finished, the DebugDiag Analysis Report opens in Internet
 Explorer; the relevant part of that report is the stack backtrace, which looks similar
 to the following:</p>
-<p><img src="/images/backtrace-images-win32/backtrace.jpg" alt="Debug report backtrace screenshot"></a></p>
+<p><img src="images/backtrace-images-win32/backtrace.jpg" alt="Debug report backtrace screenshot"></a></p>
 
 <?php $this->end('content') ?>
