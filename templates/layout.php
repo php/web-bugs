@@ -11,7 +11,7 @@
 <table id="top" class="head" cellspacing="0" cellpadding="0">
     <tr>
         <td class="head-logo">
-            <a href="/"><img src="images/logo.png" alt="Bugs" vspace="2" hspace="2"></a>
+            <a href=""><img src="images/logo.png" alt="Bugs" vspace="2" hspace="2"></a>
         </td>
 
         <td class="head-menu">
