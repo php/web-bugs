@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>PHP :: <?= $this->e($title) ?></title>
     <base href="<?= $siteScheme ?>://<?= $siteUrl.$GLOBALS['basedir'] ?>">
-    <link rel="shortcut icon" href="<?= $siteScheme ?>://<?= $siteUrl ?>/images/favicon.ico">
+    <link rel="shortcut icon" href="<?= $siteScheme ?>://<?= $siteUrl.$GLOBALS['basedir'] ?>images/favicon.ico">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
