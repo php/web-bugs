@@ -3,7 +3,7 @@
 <?php $this->start('content') ?>
 
 <p>
-<strong>Unix</strong> | <a href="/bugs-generating-backtrace-win32.php">Windows</a>
+<strong>Unix</strong> | <a href="bugs-generating-backtrace-win32.php">Windows</a>
 </p>
 
 <h1>Generating a gdb backtrace</h1>
