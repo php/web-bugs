@@ -18,7 +18,7 @@ if (0 !== $id) {
     redirect('bug.php?id='.$id);
 }
 
-if ('/random' === $_SERVER['REQUEST_URI']) {
+if ($basedir.'index.php?random' === $_SERVER['REQUEST_URI']) {
     $id = $container->get(BugRepository::class)->findRandom();
     redirect('bug.php?id='.$id[0]);
 }
