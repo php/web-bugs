@@ -40,7 +40,7 @@ The `templates/pages/how_to_report.php`:
 <?php $this->end('main_content') ?>
 
 <?php $this->start('scripts') ?>
-    <script src="/js/feature.js"></script>
+    <script src="js/feature.js"></script>
 <?php $this->end('scripts') ?>
 ```
 
@@ -123,7 +123,7 @@ The `templates/pages/index.php`:
 <?php $this->extends('layout.php'); ?>
 
 <?php $this->start('scripts'); ?>
-    <script src="/js/foo.js"></script>
+    <script src="js/foo.js"></script>
 <?php $this->end('scripts'); ?>
 
 <?php $this->start('content') ?>
