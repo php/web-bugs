@@ -65,7 +65,9 @@ window.addEventListener(
                             moveOptions(select, previousGroup);
                         }
 
-                        moveOptions(nextGroup, select);
+                        if (nextGroup !== null) {
+                            moveOptions(nextGroup, select);
+                        }
 
                         select.selectedIndex = -1;
                     }
