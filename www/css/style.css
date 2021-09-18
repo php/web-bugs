@@ -158,6 +158,7 @@ input {
 
 select {
     resize: both;
+    vertical-align:top;
 }
 
 textarea {
