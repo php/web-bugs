@@ -14,7 +14,7 @@ report is what setup found the bug, so other setups may apply.
 <h3>Basic Search</h3>
 
 <p>
-Within every <a href="/"><?= $siteUrl ?></a> webpage header is a search box,
+Within every <a href=""><?= $siteUrl ?></a> webpage header is a search box,
 this is the <i>basic</i> search option. You may enter in a numeric bug ID to
 redirect to that bugs page or enter in a search term to perform a default bug
 search. Load the advanced search to view the default values.
@@ -23,7 +23,7 @@ search. Load the advanced search to view the default values.
 <h3>Advanced Search</h3>
 
 <p>
-Some explanations for most of the PHP bugs <a href="/search.php">advanced search</a>
+Some explanations for most of the PHP bugs <a href="search.php">advanced search</a>
 options.
 </p>
 
@@ -75,7 +75,7 @@ options.
                     requests feedback will be marked as <i>No Feedback</i> if no feedback transpires
                     after 15 days.
                 </li>
-                <li><strong>Old feedback</strong>: Bugs that have been requesting feedback for over60 days.</li>
+                <li><strong>Old feedback</strong>: Bugs that have been requesting feedback for over 60 days.</li>
                 <li>
                     <strong>Fresh</strong> : Bugs commented on in the last 30 days that are not closed,
                     duplicates, or not-a-bug. Only developers and the original author can affect this
@@ -165,7 +165,7 @@ options.
 
 <p>
 You can view a variety of statistics about the bugs that have been reported on
-our <a href="/stats.php">bug statistics page</a>.
+our <a href="stats.php">bug statistics page</a>.
 </p>
 
 <?php $this->end('content') ?>

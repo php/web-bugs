@@ -40,7 +40,7 @@ The `templates/pages/how_to_report.php`:
 <?php $this->end('main_content') ?>
 
 <?php $this->start('scripts') ?>
-    <script src="/js/feature.js"></script>
+    <script src="js/feature.js"></script>
 <?php $this->end('scripts') ?>
 ```
 
@@ -51,15 +51,17 @@ The `templates/layout.php`:
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="/css/style.css">
-        <title>PHP Bug Tracking System :: <?= $title ?? '' ?></title>
+        <title>PHP :: <?= $this->e($title) ?></title>
+        <base href="<?= $siteScheme ?>://<?= $siteUrl.$GLOBALS['basedir'] ?>">
+        <link rel="shortcut icon" href="<?= $siteScheme ?>://<?= $siteUrl.$GLOBALS['basedir'] ?>images/favicon.ico">
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
         <?= $this->block('main_content') ?>
 
         <div><?= $siteUrl ?></div>
 
-        <script src="/js/app.js"></script>
+        <script src="js/app.js"></script>
         <?= $this->block('scripts') ?>
     </body>
 </html>
@@ -121,7 +123,7 @@ The `templates/pages/index.php`:
 <?php $this->extends('layout.php'); ?>
 
 <?php $this->start('scripts'); ?>
-    <script src="/js/foo.js"></script>
+    <script src="js/foo.js"></script>
 <?php $this->end('scripts'); ?>
 
 <?php $this->start('content') ?>
@@ -138,7 +140,7 @@ The `templates/forms/form.php`:
 </form>
 
 <?php $this->append('scripts'); ?>
-    <script src="/js/bar.js"></script>
+    <script src="js/bar.js"></script>
 <?php $this->end('scripts'); ?>
 ```
 
@@ -153,8 +155,8 @@ The final rendered page:
         <input type="submit" value="Submit">
     </form>
 
-    <script src="/js/foo.js"></script>
-    <script src="/js/bar.js"></script>
+    <script src="js/foo.js"></script>
+    <script src="js/bar.js"></script>
 </body>
 </html>
 ```

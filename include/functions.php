@@ -1542,11 +1542,11 @@ function response_header($title, $extraHeaders = '')
             <a href="search.php">advanced search</a>&nbsp;|&nbsp;
             <a href="search-howto.php">search howto</a>&nbsp;|&nbsp;
             <a href="stats.php">statistics</a>&nbsp;|&nbsp;
-            <a href="random">random bug</a>&nbsp;|&nbsp;
+            <a href="index.php?random">random bug</a>&nbsp;|&nbsp;
 <?php if ($is_logged) { ?>
             <a href="search.php?cmd=display&amp;assign=<?php echo $username;?>">my bugs</a>&nbsp;|&nbsp;
 <?php if ($logged_in === 'developer') { ?>
-            <a href="/admin/">admin</a>&nbsp;|&nbsp;
+            <a href="admin/">admin</a>&nbsp;|&nbsp;
 <?php } ?>
             <a href="logout.php">logout</a>
 <?php } else { ?>

@@ -18,7 +18,7 @@ if (0 !== $id) {
     redirect('bug.php?id='.$id);
 }
 
-if ('/random' === $_SERVER['REQUEST_URI']) {
+if ($basedir.'index.php?random' === $_SERVER['REQUEST_URI']) {
     $id = $container->get(BugRepository::class)->findRandom();
     redirect('bug.php?id='.$id[0]);
 }
@@ -41,7 +41,7 @@ if (!empty($_SESSION['user'])) {
 // Prefix query strings with base URL
 $searches = preg_filter(
     '/^/',
-    '/search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open',
+    'search.php?limit=30&order_by=id&direction=DESC&cmd=display&status=Open',
     $searches
 );
 
