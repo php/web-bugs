@@ -52,6 +52,11 @@ if (isset($_POST['in'])) {
         } elseif ($_POST['captcha'] != $_SESSION['answer']) {
             $errors[] = 'Incorrect Captcha';
         }
+
+        if (isset($_POST['in']['passwd']) && !is_string($_POST['in']['passwd'])) {
+            $errors[] = 'Invalid password parameter';
+        }
+
         if (is_spam($_POST['in']['ldesc']) ||
             is_spam($_POST['in']['expres']) ||
             is_spam($_POST['in']['repcode'])) {
@@ -415,7 +420,7 @@ display_bug_error($errors);
             <tr>
                 <th class="form-label_left"><span class="accesskey">P</span>assword:</th>
                 <td class="form-input">
-                    <input type="password" size="20" maxlength="20" name="in[passwd]" value="<?php echo htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8');?>" accesskey="p"><br>
+                    <input type="password" size="20" maxlength="20" name="in[passwd]" value="<?= is_string($_POST['in']['passwd']) ? htmlspecialchars($_POST['in']['passwd'], ENT_COMPAT, 'UTF-8'):'' ?>" accesskey="p"><br>
                     You <strong>must</strong> enter any password here, which will be stored for this bug report.<br>
                     This password allows you to come back and modify your submitted bug report at a later date.
                     [<a href="bug-pwd-finder.php">Lost a bug password?</a>]
