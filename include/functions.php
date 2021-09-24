@@ -1150,9 +1150,11 @@ function is_valid_email($email, $phpnet_allowed = true)
 /**
  * Validate an incoming bug report
  *
- * @param
+ * @param mixed $in usually $_POST['in']
+ * @param bool $initial
+ * @param bool $logged_in
  *
- * @return void
+ * @return array
  */
 function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
 {
@@ -1168,33 +1170,34 @@ function incoming_details_are_valid($in, $initial = 0, $logged_in = false)
             $errors[] = 'Please provide a valid email address.';
         }
     }
-    if (!$logged_in && $initial && empty($in['passwd'])) {
+
+    if (!$logged_in && $initial && (empty($in['passwd']) || !is_string($in['passwd']))) {
         $errors[] = 'Please provide a password for this bug report.';
     }
 
-    if (isset($in['php_version']) && $in['php_version'] == 'earlier') {
+    if (isset($in['php_version']) && is_string($in['php_version']) && $in['php_version'] == 'earlier') {
         $errors[] = 'Please select a valid PHP version. If your PHP version is too old, please upgrade first and see if the problem has not already been fixed.';
     }
 
-    if (empty($in['php_version']) || ($initial && !in_array($in['php_version'], $versions))) {
+    if (empty($in['php_version']) || !is_string($in['php_version']) || ($initial && !in_array($in['php_version'], $versions))) {
         $errors[] = 'Please select a valid PHP version.';
     }
 
-    if (empty ($in['package_name']) || $in['package_name'] == 'none') {
+    if (empty($in['package_name']) || !is_string($in['package_name']) || $in['package_name'] == 'none') {
         $errors[] = 'Please select an appropriate package.';
     } else if (!package_exists($in['package_name'])) {
         $errors[] = 'Please select an appropriate package.';
     }
 
-    if (empty($in['bug_type']) || !array_key_exists($in['bug_type'], $bug_types)) {
+    if (empty($in['bug_type']) || !is_string($in['bug_type']) || !array_key_exists($in['bug_type'], $bug_types)) {
         $errors[] = 'Please select a valid bug type.';
     }
 
-    if (empty($in['sdesc'])) {
+    if (empty($in['sdesc']) || !is_string($in['sdesc'])) {
         $errors[] = 'You must supply a short description of the bug you are reporting.';
     }
 
-    if ($initial && empty($in['ldesc'])) {
+    if ($initial && (empty($in['ldesc']) || !is_string($in['ldesc']))) {
         $errors[] = 'You must supply a long description of the bug you are reporting.';
     }
 
