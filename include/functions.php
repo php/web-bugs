@@ -1514,6 +1514,7 @@ function response_header($title, $extraHeaders = '')
     $_header_done = true;
 
     header('Content-Type: text/html; charset=UTF-8');
+    header('X-Frame-Options: SAMEORIGIN');
 ?>
 <!DOCTYPE html>
 <html lang="en">

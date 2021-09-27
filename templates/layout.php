@@ -5,6 +5,7 @@
     <title>PHP :: <?= $this->e($title) ?></title>
     <link rel="shortcut icon" href="<?= $siteScheme ?>://<?= $siteUrl ?>/images/favicon.ico">
     <link rel="stylesheet" href="/css/style.css">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 </head>
 <body>
 <table id="top" class="head" cellspacing="0" cellpadding="0">
