@@ -495,7 +495,7 @@ function show_type_options($current = 'Bug', $all = false)
  */
 function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0)
 {
-    global $state_types;
+    global $state_types, $tla;
 
     if (!$state && !$default) {
         $state = $assigned ? 'Assigned' : 'Open';
@@ -512,21 +512,25 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
              */
             case 'Feedback':
                 if ($assigned) {
-                    echo "<option>Assigned</option>\n";
+                    echo '<option class="'.$tla['Assigned'].'">Assigned</option>'."\n";
                 } else {
-                    echo "<option>Open</option>\n";
+                    echo '<option class="'.$tla['Open'].'">Open</option>'."\n";
                 }
                 break;
             case 'No Feedback':
-                echo "<option>Re-Opened</option>\n";
+                echo '<option class="'.$tla['Re-Opened'].'">Re-Opened</option>'."\n";
                 break;
             default:
-                echo "<option>$state</option>\n";
+                echo '<option';
+                if (isset($tla[$state])) {
+                    echo ' class="'.$tla[$state].'"';
+                }
+                echo '>'.$state.'</option>'."\n";
                 break;
         }
         /* Allow state 'Closed' always when current state is not 'Not a bug' */
         if ($state != 'Not a bug') {
-            echo "<option>Closed</option>\n";
+            echo '<option class="'.$tla['Closed'].'">Closed</option>'."\n";
         }
     } else {
         foreach($state_types as $type => $mode) {
@@ -536,6 +540,9 @@ function show_state_options($state, $user_mode = 0, $default = '', $assigned = 0
             }
             if ($mode >= $user_mode) {
                 echo '<option';
+                if (isset($tla[$type])) {
+                    echo ' class="'.$tla[$type].'"';
+                }
                 if ($type == $state) {
                     echo ' selected="selected"';
                 }
