@@ -241,6 +241,7 @@ function is_spam($string)
         'porn',
         'aarinkaur',
         'lildurk',
+        'tvfun',
     ];
 
     if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
