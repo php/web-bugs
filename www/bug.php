@@ -928,7 +928,7 @@ if ($edit == 1 || $edit == 2) { ?>
             <th class="details">Bug Type:</th>
             <td colspan="3">
                 <select name="in[bug_type]">
-                    <?php show_type_options($bug['bug_type']); ?>
+                    <?php show_type_options($bug['bug_type'], /* deprecated */ true); ?>
                 </select>
             </td>
         </tr>
