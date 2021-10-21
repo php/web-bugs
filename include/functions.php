@@ -457,11 +457,12 @@ function show_limit_options($limit = 30)
  * Options include "Bug", "Documentation Problem" and "Feature/Change Request."
  *
  * @param string    $current    bug's current type
- * @param bool        $all        whether or not 'All' should be an option
+ * @param bool      $deprecated whether or not deprecated types should be shown
+ * @param bool      $all        whether or not 'All' should be an option
  *
  * @retun void
  */
-function show_type_options($current = 'Bug', $all = false)
+function show_type_options($current, $deprecated, $all = false)
 {
     global $bug_types;
 
@@ -479,6 +480,9 @@ function show_type_options($current = 'Bug', $all = false)
     }
 
     foreach ($bug_types as $k => $v) {
+        if ($k === 'Documentation Problem' && !$deprecated) {
+            continue;
+        }
         $selected = strcasecmp($current, $k) ? '' : ' selected="selected"';
         $k = htmlentities($k, ENT_QUOTES);
         echo "<option value=\"$k\"$selected>$k</option>";

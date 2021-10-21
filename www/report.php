@@ -376,7 +376,11 @@ if (!isset($_POST['in'])) {
         <strong>Failure to follow these instructions may result in your bug simply being marked as &quot;not a bug.&quot;</strong>
     </p>
 
-    <p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="https://pear.php.net/bugs/">here</a></p>
+    <p style="background-color: #ffa;">
+        <strong>Documentation issues should now be reported on the <a href="https://github.com/php/doc-en/issues">php/doc-en</a> repository.</strong>
+    </p>
+
+    <p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="https://pear.php.net/bugs/">here</a>.</p>
 
     <p>
         <strong>If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, then email
@@ -445,7 +449,7 @@ display_bug_error($errors);
                 <th class="form-label_left">Bug Type:</th>
                 <td class="form-input">
                     <select name="in[bug_type]">
-                        <?php show_type_options($_POST['in']['bug_type']); ?>
+                        <?php show_type_options($_POST['in']['bug_type'], /* deprecated */ false); ?>
                     </select>
                 </td>
             </tr>

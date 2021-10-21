@@ -250,7 +250,7 @@ display_bug_error($warnings, 'warnings', 'WARNING:');
   <td style="white-space: nowrap">
    <label for="bug_type">Return bugs with <b>type</b></label>
   </td>
-  <td><select id="bug_type" name="bug_type"><?php show_type_options($bug_type, true);?></select></td>
+  <td><select id="bug_type" name="bug_type"><?php show_type_options($bug_type, /* deprecated */ true, /* all */ true);?></select></td>
 </tr>
 <tr valign="top">
   <th>Project</th>

@@ -78,7 +78,7 @@ if ($total > 0) {
             <td style="white-space: nowrap">
                 <strong>Bug Type:</strong>
                 <select class="small" id="bug_type" name="bug_type" onchange="this.form.submit(); return false;">
-                    <?php show_type_options($bug_type, true) ?>
+                    <?php show_type_options($bug_type, /* deprecated */ true, /* all */ true) ?>
                 </select>
                 <input class="small" type="submit" name="submitStats" value="Search">
             </td>
