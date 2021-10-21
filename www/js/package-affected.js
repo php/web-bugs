@@ -48,6 +48,10 @@ window.addEventListener(
                         );
 
                     function updateGroup() {
+                        if (!packageGroup.value) {
+                            return;
+                        }
+
                         select.disabled = false;
 
                         if (instructions instanceof HTMLElement) {
