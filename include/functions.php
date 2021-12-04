@@ -480,7 +480,7 @@ function show_type_options($current, $deprecated, $all = false)
     }
 
     foreach ($bug_types as $k => $v) {
-        if ($k === 'Documentation Problem' && !$deprecated) {
+        if ($k !== 'Security' && !$deprecated) {
             continue;
         }
         $selected = strcasecmp($current, $k) ? '' : ' selected="selected"';

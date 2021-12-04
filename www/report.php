@@ -362,31 +362,15 @@ if (!isset($_POST['in'])) {
     response_header('Report - New', $packageAffectedScript);
 ?>
 
-    <p>
-        Before you report a bug, make sure to search for similar bugs using the &quot;Bug List&quot; link.
-        Also, read the instructions for <a target="top" href="how-to-report.php">how to report a bug that someone will want to help fix</a>.
-    </p>
-
-    <p>
-        If you aren't sure that what you're about to report is a bug, you should ask for help using one of the means for support
-        <a href="https://php.net/support.php">listed here</a>.
-    </p>
-
-    <p>
-        <strong>Failure to follow these instructions may result in your bug simply being marked as &quot;not a bug.&quot;</strong>
-    </p>
-
-    <p style="background-color: #ffa;">
-        <strong>Documentation issues should now be reported on the <a href="https://github.com/php/doc-en/issues">php/doc-en</a> repository.</strong>
-    </p>
-
-    <p>Report <img src="images/pear_item.gif"><b>PEAR</b> related bugs <a href="https://pear.php.net/bugs/">here</a>.</p>
-
-    <p>
-        <strong>If you feel this bug concerns a security issue, e.g. a buffer overflow, weak encryption, etc, then email
-
-        <?php echo make_mailto_link("{$site_data['security_email']}?subject=%5BSECURITY%5D+possible+new+bug%21", $site_data['security_email']); ?>
-        who will assess the situation or use <strong>Security</strong> as bug type in the form below.</strong>
+    <p style="background-color: #faa;">
+        <strong>This bug tracker no longer accepts new non-security issues. Instead use one of the following.</strong>
+        <ul style="background-color: #faa">
+            <li>Implementation issues: <a href="https://github.com/php/php-src/issues">php/php-src repository</a></li>
+            <li>Documentation issues: <a href="https://github.com/php/doc-en/issues">php/doc-en repository</a></li>
+            <li>PECL extension issues: Find the correct extension-specific bug tracker at <a href="https://pecl.php.net/">pecl.php.net</a></li>
+            <li>PEAR issues: <a href="https://pear.php.net/bugs/">pear.php.net/bugs</a></li>
+            <li>Security issues: Use the form below, or email <?php echo make_mailto_link("{$site_data['security_email']}?subject=%5BSECURITY%5D+possible+new+bug%21", $site_data['security_email']); ?></li>
+        </ul>
     </p>
 
 <?php
