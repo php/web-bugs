@@ -90,7 +90,7 @@ options.
                     <strong>Suspended</strong>: Tickets which are waiting on some action
                     which is outside the scope of the PHP developers.
                 </li>
-                </li>
+                <li>
                     <strong>Wont fix</strong>: Tickets where PHP developers won't fix an issue
                     (even though it is acknowlegded as such), for reasons to be stated in the
                     closing comment.
