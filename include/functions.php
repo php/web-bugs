@@ -254,7 +254,7 @@ function is_spam($string)
 /* Primitive check for SPAMmy user. Add more later. */
 function is_spam_user($email)
 {
-    if (preg_match("/(rhsoft|reindl|phpbugreports|bugreprtsz|bugreports\d*@gmail)/i", $email)) {
+    if (preg_match("/(rhsoft|reindl|phpbugreports|bugreprtsz|bugreports\d*@gmail|training365)/i", $email)) {
         return true;
     }
     return false;
