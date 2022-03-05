@@ -19,7 +19,6 @@ session_start();
 $obsoletePatchRepository = $container->get(ObsoletePatchRepository::class);
 $patchRepository = $container->get(PatchRepository::class);
 
-define('SPAM_REJECT_MESSAGE', 'Your comment looks like SPAM by its content. Please consider rewording.');
 $email = null;
 
 // Handle preview
@@ -224,8 +223,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 
     // primitive spam detection
-    if (is_spam($ncomment)) {
-        $errors[] = SPAM_REJECT_MESSAGE;
+    if ($message = is_spam($ncomment)) {
+        $errors[] = $message;
     }
     if (is_spam($_POST['in']['commentemail'])) {
         $errors[] = "Please do not SPAM our bug system.";
@@ -264,8 +263,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     $ncomment = trim($_POST['ncomment']);
 
     // primitive spam detection
-    if (is_spam($ncomment)) {
-        $errors[] = SPAM_REJECT_MESSAGE;
+    if ($message = is_spam($ncomment)) {
+        $errors[] = $message;
     }
 
     $from = $_POST['in']['commentemail'];
@@ -317,8 +316,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 
     // primitive spam detection
-    if ($ncomment && is_spam($ncomment)) {
-        $errors[] = SPAM_REJECT_MESSAGE;
+    if ($ncomment && $message = is_spam($ncomment)) {
+        $errors[] = $message;
     }
 
     if (!empty($_POST['in']['email']) &&
@@ -388,8 +387,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     $from = isset($_POST['in']['commentemail']) ? $_POST['in']['commentemail'] : '';
 
     // primitive spam detection
-    if (is_spam($ncomment)) {
-        $errors[] = SPAM_REJECT_MESSAGE;
+    if ($message = is_spam($ncomment)) {
+        $errors[] = $message;
     }
     if (is_spam_user($from)) {
         $errors[] = "Please do not SPAM our bug system.";
@@ -417,8 +416,8 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     }
 
     // primitive spam detection
-    if ($ncomment && is_spam($ncomment)) {
-        $errors[] = SPAM_REJECT_MESSAGE;
+    if ($ncomment && $message = is_spam($ncomment)) {
+        $errors[] = $message;
     }
 
     // Just trusted dev can set CVE-ID

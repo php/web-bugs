@@ -52,10 +52,10 @@ if (isset($_POST['in'])) {
         } elseif ($_POST['captcha'] != $_SESSION['answer']) {
             $errors[] = 'Incorrect Captcha';
         }
-        if (is_spam($_POST['in']['ldesc']) ||
-            is_spam($_POST['in']['expres']) ||
-            is_spam($_POST['in']['repcode'])) {
-            $errors[] = 'Spam detected';
+        if (($message = is_spam($_POST['in']['ldesc'])) ||
+            ($message = is_spam($_POST['in']['expres'])) ||
+            ($message = is_spam($_POST['in']['repcode']))) {
+            $errors[] = $message;
         }
     }
 

@@ -195,10 +195,12 @@ function is_spam($string)
         return false;
     }
 
-    $count = substr_count(strtolower($string), 'http://')
-           + substr_count(strtolower($string), 'https://');
-    if ($count > 5) {
-        return true;
+    if (preg_match_all('/https?:\/\/(\S+)/', $string, $matches)) {
+        foreach ($matches[1] as $match) {
+            if (strpos($match, 'php.net') === false && strpos($match, 'github.com') === false) {
+                return "Due to large amounts of spam, only links to php.net and github.com (including subdomains like gist.github.com) are allowed.";
+            }
+        }
     }
 
     $keywords = [
@@ -245,7 +247,7 @@ function is_spam($string)
     ];
 
     if (preg_match('/\b('. implode('|', $keywords) . ')\b/i', $string)) {
-        return true;
+        return "Comment contains spam word, consider rewording.";
     }
 
     return false;
