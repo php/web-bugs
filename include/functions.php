@@ -197,7 +197,7 @@ function is_spam($string)
 
     if (preg_match_all('/https?:\/\/(\S+)/', $string, $matches)) {
         foreach ($matches[1] as $match) {
-            if (!preg_match('/^[^\/]*(php\.net|github\.com)/', $match)) {
+            if (!preg_match('/^[^\/)]*(php\.net|github\.com)/', $match)) {
                 return "Due to large amounts of spam, only links to php.net and github.com (including subdomains like gist.github.com) are allowed.";
             }
         }
