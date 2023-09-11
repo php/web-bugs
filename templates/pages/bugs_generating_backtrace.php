@@ -19,8 +19,8 @@ error logs, and looking for SEGV (Apache 1.2) or Segmentation Fault (Apache
 1.3).
 
 <h3>Important!</h3>
-To get a backtrace with correct information you must have PHP configured with
-<code>--enable-debug</code>!
+To get a backtrace with correct information you must have
+a non stripped PHP binary!
 
 <h3>If you don't have a core file yet:</h3>
 
