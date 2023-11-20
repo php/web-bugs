@@ -968,10 +968,10 @@ DEV_TEXT;
             $bug['email'],
             "{$subj}: {$sdesc}",
             $user_text,
-            "From: {$siteBig} Bug Database <{$mailfrom}>\n" .
-            "Bcc: {$bcc}\n" .
-            "X-PHP-Bug: {$bug['id']}\n" .
-            "X-PHP-Site: {$siteBig}\n" .
+            "From: {$siteBig} Bug Database <{$mailfrom}>\r\n" .
+            "Bcc: {$bcc}\r\n" .
+            "X-PHP-Bug: {$bug['id']}\r\n" .
+            "X-PHP-Site: {$siteBig}\r\n" .
             "In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
         );
 
@@ -988,15 +988,15 @@ DEV_TEXT;
             $mailto,
             "{$subj}: {$sdesc}",
             $dev_text,
-            "From: {$from}\n".
-            "X-PHP-Bug: {$bug['id']}\n" .
-            "X-PHP-Site: {$siteBig}\n" .
-            "X-PHP-Type: {$tmp['bug_type']}\n" .
-            "X-PHP-Version: {$tmp['php_version']}\n" .
-            "X-PHP-Category: {$tmp['package_name']}\n" .
-            "X-PHP-OS: {$tmp['php_os']}\n" .
-            "X-PHP-Status: {$tmp['new_status']}\n" .
-            "X-PHP-Old-Status: {$tmp['old_status']}\n" .
+            "From: {$from}\r\n".
+            "X-PHP-Bug: {$bug['id']}\r\n" .
+            "X-PHP-Site: {$siteBig}\r\n" .
+            "X-PHP-Type: {$tmp['bug_type']}\r\n" .
+            "X-PHP-Version: {$tmp['php_version']}\r\n" .
+            "X-PHP-Category: {$tmp['package_name']}\r\n" .
+            "X-PHP-OS: {$tmp['php_os']}\r\n" .
+            "X-PHP-Status: {$tmp['new_status']}\r\n" .
+            "X-PHP-Old-Status: {$tmp['old_status']}\r\n" .
             "In-Reply-To: <bug-{$bug['id']}@{$site_url}>",
             $params
         );
@@ -1016,8 +1016,8 @@ DEV_TEXT;
             $email,
             $bug_types[$bug['bug_type']] . ' #' . $bug['id'] . ' ' . txfield('sdesc', $bug, $in),
             "{$in['assign']} you have just been assigned to this bug by {$from}\n\n{$dev_text}",
-            "From: {$from}\n" .
-            "X-PHP-Bug: {$bug['id']}\n" .
+            "From: {$from}\r\n" .
+            "X-PHP-Bug: {$bug['id']}\r\n" .
             "In-Reply-To: <bug-{$bug['id']}@{$site_url}>"
         );
     }
@@ -1393,8 +1393,8 @@ USER_TEXT;
             $email,
             "[$siteBig-BUG-unsubscribe] #{$bug_id}",
             $user_text,
-            "From: {$siteBig} Bug Database <{$bugEmail}>\n".
-            "X-PHP-Bug: {$bug_id}\n".
+            "From: {$siteBig} Bug Database <{$bugEmail}>\r\n".
+            "X-PHP-Bug: {$bug_id}\r\n".
             "In-Reply-To: <bug-{$bug_id}@{$site_url}>"
         );
     }
