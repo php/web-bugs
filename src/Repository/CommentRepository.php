@@ -62,4 +62,81 @@ class CommentRepository
 
         return $statement->fetchAll();
     }
+
+
+    public function getCommentById(int $comment_id)
+    {
+        $sql = <<< SQL
+SELECT
+  bugdb_comments.id as comment_id,
+  bugdb_comments.bug as bug_id,
+  bugdb_comments.email,
+  bugdb.private    #,
+  #bugdb_comments.reporter_name
+from
+  bugdb_comments
+left join
+   bugdb
+on
+   bugdb.id = bugdb_comments.bug
+where
+  bugdb_comments.comment_type = 'comment' and
+  bugdb_comments.id = ?
+SQL;
+
+        $statement = $this->dbh->prepare($sql);
+        $statement->execute([$comment_id]);
+
+        // No comment found
+        $row = $statement->fetch();
+        if (!$row) {
+            return [
+                'error' => "comment_id not found or is not type 'comment'."
+            ];
+        }
+
+        // don't give out details of private bug reports.
+        if ($row['private'] !== 'N') {
+            return [
+                'comment_id' => $row['comment_id'],
+                'bug_id' => $row['bug_id'],
+                'error' => 'bug report is private'
+            ];
+        }
+
+        // Obfuscate the email a bit more than on the webpage
+        $protected_email = spam_protect($row['email']);
+        $parts = explode(" ", $protected_email);
+        if (array_key_exists(0, $parts)) {
+            $length = strlen($parts[0]);
+            $parts[0] = substr($parts[0], 0, 4);
+            $parts[0] = str_pad($parts[0], $length, '.');
+        }
+        $protected_email = implode(' ', $parts);
+
+        // return the protected data
+        return [
+            'comment_id' => $row['comment_id'],
+            'bug_id' => $row['bug_id'],
+            'email' => $protected_email
+        ];
+    }
+
+    public function getMaxCommentId(): int
+    {
+        $sql = <<< SQL
+SELECT bugdb_comments.id from bugdb_comments
+where comment_type = 'comment'
+order by bugdb_comments.id desc
+limit 1;
+SQL;
+
+        $statement = $this->dbh->query($sql);
+        $row = $statement->fetch();
+        if ($row) {
+            return $row["id"];
+        }
+
+        return 0;
+    }
 }

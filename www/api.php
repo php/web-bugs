@@ -25,9 +25,28 @@ if ($type === 'docs' && $action === 'closed' && $interval) {
     }
 
     echo serialize($rows);
+}
+// Allow fetching the max comment id
+// http://127.0.0.1/api.php?type=max_comment_id
+else if ($type === 'max_comment_id') {
+    $commentRepository = $container->get(CommentRepository::class);
+    $max_comment_id = $commentRepository->getMaxCommentId();
+    $params = [
+        'max_comment_id' => $max_comment_id
+    ];
+    echo json_encode($params);
+}
+// Allow fetching the a comments email and bug id
+// http://127.0.0.1/api.php?type=comment_details&comment_id=2
+// This is to allow faster spam monitoring.
+else if ($type === 'comment_details') {
+    $comment_id = intval($_GET['comment_id'] ?? 0);
+    $commentRepository = $container->get(CommentRepository::class);
+    $comment_details = $commentRepository->getCommentById($comment_id);
 
-} else {
+    echo json_encode($comment_details);
+}
 
+else {
     echo "Unknown action";
-
 }
