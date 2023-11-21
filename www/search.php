@@ -156,14 +156,17 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 
                 // Bug ID
                 echo '  <td align="center"><a href="bug.php?id=', $row['id'], '">', $row['id'], '</a>';
-                echo '<br><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a></td>', "\n";
+                if (is_string($logged_in) && $logged_in === 'developer') {
+                    echo '<br><a href="bug.php?id=', $row['id'], '&amp;edit=1">(edit)</a>';
+                }
+                echo '</td>'."\n";
 
                 // Date
-                echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
+                echo '  <td align="center">', format_date(strtotime($row['ts1'], 'Y-m-d H:i')), "</td>\n";
 
                 // Last Modified
                 $ts2 = strtotime($row['ts2']);
-                echo '  <td align="center">' , ($ts2 ? format_date($ts2) : 'Not modified') , "</td>\n";
+                echo '  <td align="center">' , ($ts2 ? format_date($ts2, 'Y-m-d H:i') : '') , "</td>\n";
 
                 // Package
                 if ($package_count !== 1) {
