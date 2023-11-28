@@ -504,6 +504,17 @@ th.results {
     background-color: #aaaaaa;
     text-align: left;
 }
+
+th.results.asc, th.results.desc{
+    background-color:#ddf;
+}
+th.results.asc:after{
+    content:'▲';
+}
+th.results.desc:after{
+    content:'▼';
+}
+
 table#details td {
     vertical-align: top;
 }

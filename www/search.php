@@ -134,18 +134,18 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
 <?php } ?>
 
  <tr>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=ts1">Date</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=ts2">Last Modified</a></th>
+  <th class="results<?= $order_by === 'id' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=id">ID#</a></th>
+  <th class="results<?= $order_by === 'ts1' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=ts1">Date</a></th>
+  <th class="results<?= $order_by === 'ts2' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=ts2">Last Modified</a></th>
 <?php if ($package_count !== 1) { ?>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=package_name">Package</a></th>
+  <th class="results<?= $order_by === 'package_name' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=package_name">Package</a></th>
 <?php } ?>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=php_version">PHP Version</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=sdesc">Summary</a></th>
-  <th class="results"><a href="<?php echo $link;?>&amp;reorder_by=assign">Assigned</a></th>
+  <th class="results<?= $order_by === 'bug_type' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=bug_type">Type</a></th>
+  <th class="results<?= $order_by === 'status' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=status">Status</a></th>
+  <th class="results<?= $order_by === 'php_version' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=php_version">PHP Version</a></th>
+  <th class="results<?= $order_by === 'php_os' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=php_os">OS</a></th>
+  <th class="results<?= $order_by === 'sdesc' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=sdesc">Summary</a></th>
+  <th class="results<?= $order_by === 'assign' ? (strcasecmp('desc', $direction)===0 ?' desc':' asc'):''; ?>"><a href="<?php echo $link;?>&amp;reorder_by=assign">Assigned</a></th>
  </tr>
 <?php
 
