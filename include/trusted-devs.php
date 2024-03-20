@@ -26,6 +26,7 @@ $trusted_developers = [
     'dharman',
     'stas',
     'ilutov',
+    'nielsdos',
 ];
 
 // Distro people (security related)
@@ -79,6 +80,7 @@ $security_developers = [
     'yohgaki',
     'bukka',
     'ilutov',
+    'nielsdos',
 ];
 
 $security_developers = array_merge($security_developers, $security_distro_people);
