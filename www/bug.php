@@ -1288,5 +1288,5 @@ function control($num, $desc)
 
 function canvote($thanks, $status)
 {
-    return ($thanks != 4 && $thanks != 6 && $status != 'Closed' && $status != 'Not a bug' && $status != 'Duplicate');
+    return false;
 }
