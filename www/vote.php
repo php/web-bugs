@@ -3,6 +3,8 @@
 use App\Repository\BugRepository;
 use App\Repository\VoteRepository;
 
+die('Voting on tickets is disabled');
+
 // Obtain common includes
 require_once '../include/prepend.php';
 
