@@ -185,7 +185,7 @@ $RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = [];
 $project = $bug['project'];
 
 // Only fetch stuff when it's really needed
-if ($edit && $edit < 3) {
+if ($edit && $edit < 2) {
     $packageRepository = $container->get(PackageRepository::class);
     $pseudo_pkgs = $packageRepository->findEnabled();
 }
@@ -210,11 +210,10 @@ if (isset($_POST['ncomment']) && !isset($_POST['preview']) && $edit == 3) {
     // Check if session answer is set, then compare it with the post captcha value.
     // If it's not the same, then it's an incorrect password.
     if (!$logged_in) {
-        if (!isset($_SESSION['answer'])) {
-            $errors[] = 'Please enable cookies so the Captcha system can work';
-        } elseif ($_POST['captcha'] != $_SESSION['answer']) {
-            $errors[] = 'Incorrect Captcha';
-        }
+        response_header('Developers only');
+        display_bug_error('Only developers are allowed to comment; if you are the original reporter use the Edit tab');
+        response_footer();
+        exit;
     }
 
     $ncomment = trim($_POST['ncomment']);
@@ -719,7 +718,6 @@ if (!$show_bug_info) {
 if ($bug_id !== 'PREVIEW') {
     echo '<div class="controls">', "\n",
         control(0, 'View'),
-        ($bug['private'] == 'N' ? control(3, 'Add Comment') : ''),
         control(1, 'Developer'),
         (!$email || $bug['email'] == $email? control(2, 'Edit') : ''),
         '</div>', "\n";
@@ -804,9 +802,7 @@ if ($edit == 1 || $edit == 2) { ?>
         <?php if (!isset($_POST['in'])) { ?>
             Welcome back! If you're the original bug submitter, here's
             where you can edit the bug or add additional notes.<br>
-            If this is not your bug, you can
-            <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>.<br>
-            If this is your bug, but you forgot your password, <a href="bug-pwd-finder.php?id=<?php echo $bug_id; ?>">you can retrieve your password here</a>.<br>
+            If you forgot your password, <a href="bug-pwd-finder.php?id=<?php echo $bug_id; ?>">you can retrieve your password here</a>.<br>
         <?php } ?>
 
             <table>
@@ -831,8 +827,7 @@ if ($edit == 1 || $edit == 2) { ?>
 ?>
         <div class="explain">
             Welcome! If you don't have a Git account, you can't do anything here.<br>
-            You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
-            or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
+            If you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
             <div class="details">
                 <label for="svnuser">php.net Username:</label>
                 <input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user); ?>" size="10" maxlength="20">

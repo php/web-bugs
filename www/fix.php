@@ -73,8 +73,7 @@ if ($logged_in == 'developer') {
 <?php } else { ?>
     <div class="explain">
         Welcome! If you don't have a Git account, you can't do anything here.<br>
-        You can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=3">add a comment by following this link</a>
-        or if you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
+        If you reported this bug, you can <a href="bug.php?id=<?php echo $bug_id; ?>&amp;edit=2">edit this bug over here</a>.
         <div class="details">
             <label for="svnuser">php.net Username:</label>
             <input type="text" id="svnuser" name="user" value="<?php echo htmlspecialchars($user) ?>" size="10" maxlength="20">
