@@ -16,6 +16,13 @@ session_start();
 // Authenticate
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
+if (!$logged_in) {
+    response_header('Developers only');
+    display_bug_error('Only developers are allowed to add patches');
+    response_footer();
+    exit;
+}
+
 $canpatch = true;
 
 /// Input vars

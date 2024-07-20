@@ -1109,7 +1109,9 @@ if ($show_bug_info && $bug_id != 'PREVIEW' && $bug['status'] !== 'Spam') {
 <br>
 OUTPUT;
     }
-    echo "<p><a href='patch-add.php?bug_id={$bug_id}'>Add a Patch</a></p>";
+    if ($logged_in) {
+        echo "<p><a href='patch-add.php?bug_id={$bug_id}'>Add a Patch</a></p>";
+    }
 
     $pullRequestRepository = $container->get(PullRequestRepository::class);
     $pulls = $pullRequestRepository->findAllByBugId($bug_id);
