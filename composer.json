@@ -21,7 +21,7 @@
         "rss": "https://bugs.php.net/rss"
     },
     "require": {
-        "php": "^7.3",
+        "php": "^8.2",
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
