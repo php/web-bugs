@@ -13,6 +13,7 @@ class Statement extends \PDOStatement
      * \PDOStatement::execute(), on the other hand, returns boolean. Change it
      * to return $this and thus allow further method chaining.
      */
+    #[\ReturnTypeWillChange]
     public function execute($parameters = null): self
     {
         parent::execute($parameters);
