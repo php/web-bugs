@@ -334,7 +334,7 @@ function field($n)
 {
     return oneof(isset($_POST['in']) ?
         htmlspecialchars(isset($_POST['in'][$n]) ? $_POST['in'][$n] : '') : null,
-            htmlspecialchars($GLOBALS['bug'][$n]));
+            htmlspecialchars($GLOBALS['bug'][$n] ?? ''));
 }
 
 /**
@@ -656,7 +656,7 @@ function show_package_options($current, $show_any, $default = '')
 
 
     foreach ($bug_groups as $key => $bug_group) {
-        echo "<optgroup label=\"${bug_group[0]}\"" .
+        echo "<optgroup label=\"{$bug_group[0]}\"" .
             (($bug_group[1]) ? $disabled_style : ''), "\n>";
 
         array_unshift($bug_group[2], $key);
@@ -1240,7 +1240,7 @@ function get_package_mail($package_name, $bug_id = false, $bug_type = 'Bug')
         // Security problems *always* go to the sec team
         $to[] = $secBugEmail;
         foreach ($security_distro_people as $user) {
-            $to[] = "${user}@php.net";
+            $to[] = "{$user}@php.net";
         }
         $params = '-f bounce-no-user@php.net';
     }

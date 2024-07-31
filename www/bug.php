@@ -686,7 +686,7 @@ if (!$show_bug_info) {
 <?php if (!empty($bug['assign'])) { ?>
             <td><a href="search.php?cmd=display&amp;assign=<?php echo urlencode($bug['assign']), '">', htmlspecialchars($bug['assign']); ?></a> (<a href="https://people.php.net/<?php echo urlencode($bug['assign']); ?>">profile</a>)</td>
 <?php } else { ?>
-            <td><?php echo htmlspecialchars($bug['assign']); ?></td>
+            <td><?php echo htmlspecialchars($bug['assign'] ?? ''); ?></td>
 <?php } ?>
         </tr>
 
@@ -701,7 +701,7 @@ if (!$show_bug_info) {
             <th class="details">PHP Version:</th>
             <td><?php echo htmlspecialchars($bug['php_version']); ?></td>
             <th class="details">OS:</th>
-            <td><?php echo htmlspecialchars($bug['php_os']); ?></td>
+            <td><?php echo htmlspecialchars($bug['php_os'] ?? ''); ?></td>
         </tr>
 
         <tr id="private">

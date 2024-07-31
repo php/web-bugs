@@ -10,7 +10,7 @@ require_once '../include/prepend.php';
 
 // Redirect early if a bug id is passed as search string
 if (isset($_GET['search_for']) && preg_match('/^\d+$/', trim($_GET['search_for']), $search_for_id_array)) {
-    redirect("bug.php?id=${search_for_id_array[0]}");
+    redirect("bug.php?id={$search_for_id_array[0]}");
 }
 
 // For bug count only, used in places like doc.php.net
@@ -162,7 +162,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
 
                 // Last Modified
-                $ts2 = strtotime($row['ts2']);
+                $ts2 = strtotime($row['ts2'] ?? date('Y-m-d H:i:s'));
                 echo '  <td align="center">' , ($ts2 ? format_date($ts2) : 'Not modified') , "</td>\n";
 
                 // Package
