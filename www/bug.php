@@ -185,7 +185,7 @@ $RESOLVE_REASONS = $FIX_VARIATIONS = $pseudo_pkgs = [];
 $project = $bug['project'];
 
 // Only fetch stuff when it's really needed
-if ($edit && $edit < 2) {
+if ($edit && $edit < 3) {
     $packageRepository = $container->get(PackageRepository::class);
     $pseudo_pkgs = $packageRepository->findEnabled();
 }
