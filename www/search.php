@@ -162,7 +162,7 @@ if (isset($_GET['cmd']) && $_GET['cmd'] == 'display')
                 echo '  <td align="center">', format_date(strtotime($row['ts1'])), "</td>\n";
 
                 // Last Modified
-                $ts2 = strtotime($row['ts2'] ?? date('Y-m-d H:i:s'));
+                $ts2 = $row['ts2'] ? strtotime($row['ts2']) : false;
                 echo '  <td align="center">' , ($ts2 ? format_date($ts2) : 'Not modified') , "</td>\n";
 
                 // Package
