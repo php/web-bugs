@@ -1113,7 +1113,9 @@ OUTPUT;
     echo "<h2>Pull Requests</h2>\n";
 
     require "{$ROOT_DIR}/templates/listpulls.php";
-    echo "<p><a href='gh-pull-add.php?bug_id={$bug_id}'>Add a Pull Request</a></p>";
+    if ($logged_in) {
+        echo "<p><a href='gh-pull-add.php?bug_id={$bug_id}'>Add a Pull Request</a></p>";
+    }
 }
 
 // Display comments
