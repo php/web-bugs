@@ -18,6 +18,13 @@ $count_only = isset($_REQUEST['count_only']) && $_REQUEST['count_only'];
 
 bugs_authenticate($user, $pw, $logged_in, $user_flags);
 
+if ($logged_in === false) {
+	response_header('Search Restricted');
+	display_bug_error("You must be logged in to use search");
+	response_footer();
+	exit;
+}
+
 $is_security_developer = ($user_flags & (BUGS_TRUSTED_DEV | BUGS_SECURITY_DEV));
 
 $newrequest = http_build_query(array_merge($_GET, $_POST));
