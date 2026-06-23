@@ -67,7 +67,6 @@ $security_developers = [
     'chregu',
     'dsp',
     'jpauli',
-    'tyrael',
     'ab',
     'kaplan',
     'davey',
